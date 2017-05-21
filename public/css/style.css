@@ -1,0 +1,184 @@
+body {
+  font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
+  font-size: 16px;
+  width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+	height: 100%;
+}
+
+htnml {
+	height: 100%;
+}
+
+#wrapper {
+	margin : auto;
+	width: 1000px;
+	text-align: center;
+	background-color: #DDDDDD;
+    margin-top: 5px;
+    height: 100%;
+	position: relative;
+}
+
+header {
+	width: 930px;
+	margin: auto;
+}
+
+header #h1name {
+	float: left;
+}
+
+header #h1uhr {
+	float: right;
+}
+
+header #subtitle {
+	clear: both;
+	font-size: 80%;
+	float: right;
+/*	float:left;
+	margin-left: 20px;
+	margin-top: 30px;
+*/}
+
+#buttons {
+	clear: both;
+	margin: auto;
+/*	text-align: right; */
+	width: 100%;
+}
+
+#buttonsLeft {
+	text-align: left;
+	width: 70%;
+	float: left;
+	margin-bottom: 15px;
+}
+
+#buttonsRight {
+	text-align: right;
+	width: 30%;
+	float: right;
+	margin-bottom: 15px;
+}
+
+button {
+	width: 15%;
+	height: 30px;
+	margin-left: 1.5%;
+	margin-top: 15px;
+}
+
+#btnHelp, #btnMap, #btnSet {
+	width: 70px;
+	margin-right: 10px;
+}
+
+.btn-primary {
+	background: #0099cc;
+	color: #ffffff;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+	background: red;
+}
+
+.btn-primary:active, .btn-primary.active {
+	background: #007299;
+	box-shadow: none;
+}
+
+/* Grafik-Fenster */
+/*
+#placeholderFS_1, #placeholderTHP_1,#placeholderFS_2, #placeholderTHP_2,#placeholderFS_3, #placeholderTHP_3 {
+	width: 100%;
+	margin: auto;
+}
+*/
+
+.infoTafel th,td {
+	margin: auto;
+	text-align: left;
+	padding: 0 10px;
+	border: 1px solid black;
+}
+
+.infoTafel th {
+	text-align: center;
+}
+
+.infoTafel tr {
+	height: 20px;
+}
+
+#author {
+	font-size:80%;
+	width: 95%;
+	margin: auto;
+	padding-bottom: 30px;
+	padding-top: 10px;
+
+}
+
+#mailadr {
+	float: left;
+}
+
+#versn {
+	float: right;
+}
+
+#help {
+	width: 700px;
+}
+
+#sensors {
+	margin: 30px auto;
+	align:center;
+}
+
+#sensors td, #sensors th{
+	text-align: center;
+	width: 200px;
+}
+#fstb {
+	padding-top: 30px;
+}
+#alert {
+	text-align: center;
+}
+
+#map {
+	clear: both;
+	height: 600px;
+	width: 95%;
+	margin: 50px auto 10px auto;
+	border: 2px solid blue;
+}
+
+#infoTable table, #infoTable tr, #infoTable td {
+	margin: auto;
+	text-align: center;
+	border: none !important;
+}
+
+#infoHref {
+	margin-top: 10px;
+}
+
+label, input { display: block; }
+
+.ui-dialog-titlebar-close { width: 30px !important; }
+
+
+#page-mask {
+	background: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	visibility: hidden;
+}

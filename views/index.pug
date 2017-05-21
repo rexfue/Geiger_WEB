@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    script.
+        var selName='#{name}';
+
+    header
+        h3#h1name Daten werden geladen ...
+        h3#h1uhr
+        #subtitle
+
+    #buttons
+        #buttonsLeft
+            button.btn.btn-primary#bntye(value="year") 365 Tage
+            button.btn.btn-primary#btnmo(value="month") 30 Tage
+            button.btn.btn-primary#btnwe(value="week") 7 Tage
+            button.btn.btn-primary#btnda(autofocus="true",value="day") 24 Stunden
+        #buttonsRight
+            button.btn.btn-primary#btnMap(value='map') Karte
+            button.btn.btn-primary#btnSet(value='map') Einstell
+            button.btn.btn-primary#btnHelp(value='help') Info
+
+    #placeholderFS_1
+    #placeholderTHP_1
+    #placeholderFS_2
+    #placeholderTHP_2
+    #placeholderFS_3
+    #placeholderTHP_3
+    #dialogWinSet
+    #dialogWinHelp
+    #page-mask
+
+    img#mySpinner(style='display:none' src="spinner.svg" alt="Lade Daten ...")
+
+
+

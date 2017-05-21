@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    title= title
+    // meta(name="viewport" content="initial-scale=1.0")
+    link(rel='stylesheet', href='/css/jBox.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/jquery-ui-1.12.1/jquery-ui.min.css')
+    link(rel='stylesheet', href='/css/style.css')
+    script(src="/jquery.min.js")
+    script(src="/js/jquery-ui.min.js")
+
+  body
+    #wrapper
+      block content
+      #author
+        #mailadr
+          a(href="mailto:rexfue@gmail.com") mailto:rexfue@gmail.com
+        #versn Version: #{version} vom #{date}
+
+    script(src="https://code.highcharts.com/highcharts.js")
+    script(src="https://code.highcharts.com/highcharts-more.js")
+    script(src="/js/jBox.min.js")
+    script(src="/moment.min.js")
+    if name == 'map'
+      script(src='/js/mapit.js')
+      script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpQm2BKLtU2oxdrgy45s27ao3J1cBj64E&callback=initMap")
+    script(src='/js/global.js')

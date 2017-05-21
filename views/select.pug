@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    script.
+        var selName='#{name}';
+        var nameMap='#{JSON.stringify(map)}';
+
+    header
+        h2#fstb Feinstaub - Auswertungen
+        h3 Folgende Sensoren können angewählt werden:
+        
+    table#sensors
+        thead
+            tr#trUebS
+                th Sensor-Nummer
+                th Namenskürzel
+                th Standort
+        tbody
+            each m, i in map
+                tr
+                    td 
+                        a(href='/'+ m.sensor) #{m.sensor}
+                    td= m.urlName
+                    td= m.location
+
+    how2.
+        Auswahl entweder durch Anklicken der 
+        Sensor-Nummer in der Tabelle oder direkt Aufrufen durch 
+        Anhängen der Sensornummer an die URL (z.B.
+        <strong> feinstaub.rexfue.de/140</strong>).
+            

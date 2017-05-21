@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    script.
+        var selName='#{name}';
+
+    header
+        h2#h1name Feinstaub-Map
+        h2#h1uhr
+
+        #buttons
+            #buttonsLeft
+                button.btn.btn-primary#btnBack(value="back") zurück
+                button.btn.btn-primary#btnCent(value='map') Zemtrieren
+    #buttonsRight
+                button.btn.btn-primary#btnHelp(value='help') Info
+    #map
+    #dialogCenter
+    #dialogWinHelpM
+    #page-mask
+

@@ -1,0 +1,4 @@
+[
+		{ "urlName": "rxf", "realName": "Reinhard", "showName": true,"sensor": "140", "location":"Stuttgart-West"},
+		{ "urlName": "lowa", "realName": "Lothar", "showName": true, "sensor": "187","location":"Stuttgart-West", "sensorpress": "13927446"}
+]
