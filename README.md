@@ -1,4 +1,4 @@
 # Feinstaub_WEB
-Graphical processing for data of particulate matter sensor
+Verschieden Grafiken zur Auswertung der Feinstaub-Senoren
 
-Definitions an descritions will follow ....
+Beschreibung folgt ...
