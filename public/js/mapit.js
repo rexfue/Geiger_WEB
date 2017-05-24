@@ -8,10 +8,13 @@ var boundBox;
 var newBound = false;
 var geocod;
 
-// default-Breite der Säulen
+
+var w = $('#btnTraf span').width();
+$('#btnTraf').css('width',w+30);
 
 // Karte und die Marker erzeugen
 function initMap() {												// Map initialisieren
+    var trafficLayer;
     var myLatLng = {lat: 48.784373, lng: 9.182};					// Zentrum
 
     // 'globale' Variable
@@ -21,7 +24,8 @@ function initMap() {												// Map initialisieren
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,													// Start-Zoom-Wert
         center: myLatLng,
-		maxZoom: 17,												// max. Zoom Level
+		maxZoom: 17,                                                // max. Zoom Level
+        scrollwheel: false,
     });
 
     var town = localStorage.getItem('defaultmapCenter');
@@ -30,13 +34,6 @@ function initMap() {												// Map initialisieren
     }
     setCenter(town);
 
- /*
-    google.maps.event.addListenerOnce(map, 'idle', function(){
-        boundBox = this.getBounds().toJSON();
-        newBounds=true;
-    });
-
-*/
 
     $('#btnBack').click(function() {
         var sensor = localStorage.getItem('currentSensor');
@@ -58,6 +55,19 @@ function initMap() {												// Map initialisieren
     $('#btnCent').click(function() {
         dialogCenter.dialog("open");
     });
+
+    $('#btnTraf').click(function() {
+        trafficLayer = new google.maps.TrafficLayer();
+        var t = $('#btnTraf').text();
+//        if(t == "Verkehr einblenden") {
+            trafficLayer.setMap(map);
+//            $('#btnTraf').text('Verkehr ausblenden');
+//        } else {
+//            trafficLayer.setMap(null);                    // <<<<< that doesn't work !!!
+//            $('#btnTraf').text('Verkehr einblenden');
+//        }
+    });
+
 
 
     var dialogHelp = $('#dialogWinHelpM').dialog({
@@ -105,6 +115,7 @@ function initMap() {												// Map initialisieren
             $('#page-mask').css('visibility','hidden');
         },
     });
+
 
     // Listener für das Ändern des ZOOM-Level:
 	// Wenn der Zoom-Level > 15 wird, dann die Säulen abh. vom Level in der Dicke anpassen
@@ -181,6 +192,11 @@ function initMap() {												// Map initialisieren
         dialogCenter.dialog("close");
         $('#btnCent').css('background','#0099cc');
     }
+
+    google.maps.event.addListener(infowindow,'closeclick',function(){
+        infowindow.setContent("");
+    });
+
 }
 
 

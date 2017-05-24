@@ -76,6 +76,11 @@ button {
 	margin-right: 10px;
 }
 
+#btnTraf {
+	width: 160px;
+}
+
+
 .btn-primary {
 	background: #0099cc;
 	color: #ffffff;
