@@ -24,8 +24,6 @@ router.get('/', function(req, res, next) {
 });
 
 
-
-
 router.get('/:nam', function(req, res, next) {
 	var name = req.params.nam;
     if(name == 'index') {

@@ -28,26 +28,34 @@ app.use(express.static("node_modules/bootstrap/dist"));
 app.use(express.static("node_modules/jquery/dist"));
 app.use(express.static("node_modules/moment/min"));
 
+
 app.get('*', function(req, res, next){
-    console.log(req.headers.host);
+//    console.log("Host:",req.headers.host);
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
-        (req.headers.host == 'feinstaub.rexfue.de:3008') ||
         (req.headers.host == 'fs.localhost:3005') ||
-        (req.headers.host == 'fs.localhost:3008') ||
         (req.headers.host == 'castor') ||
-        (req.headers.host == 'macbig') ||
         (req.headers.host == 'macbig:3005')                  //Port is important if the url has it
         ) {
         req.url = '/fs' + req.url;
     }
-    console.log(req.path);
+//    console.log("Path:",req.path);
     if(req.path.startsWith('/TEST')) {
     	req.url = '/TEST' + req.url;	
     }
-    console.log(req.url); 	
+//    console.log("URL:",req.url);
     next();
 });
+
+//app.use(bodyParser.json());
+//
+//app.post('/sensors', function(res,req,next){
+//    var body = res.body;
+//    var espid = res.headers['x-sensor'];
+//
+//    console.log(espid,body);
+//
+//})
 
 
 app.get('/fs/fsdata/help', function(req, res, next) {
