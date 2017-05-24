@@ -7,7 +7,7 @@ var MongoClient = require('mongodb').MongoClient;
 var os = require('os');
 
 // Consts
-const PORT = 3005;												// Port for server
+const PORT = 3005;											// Port for server
 
 var mongoPort = 27017;
 var mongoHost = 'localhost';
@@ -35,7 +35,7 @@ app.get('*', function(req, res, next){
         (req.headers.host == 'feinstaub.rexfue.de') ||
         (req.headers.host == 'fs.localhost:3005') ||
         (req.headers.host == 'castor') ||
-        (req.headers.host == 'macbig:3005')                  //Port is important if the url has it
+        (req.headers.host == 'macbig:3005')                 //Port is important if the url has it
         ) {
         req.url = '/fs' + req.url;
     }
