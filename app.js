@@ -95,7 +95,7 @@ MongoClient.connect(MONGO_URL, function(err,db) {
 	console.log("Bitte erst den SSH-Tunnel aufbauen: 'ssh -fN -L 27018:localhost:27017 rxf@rexfue.de' !!");
         process.exit(-1);    
 }	
-    app.set('dbase',db);								// Übergabe von db
+    app.set('dbase',db);								    // Übergabe von db
     app.listen(PORT, function () {
         console.log("App listens on port " + PORT);
     });
