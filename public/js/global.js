@@ -404,7 +404,7 @@ $(document).ready(function() {
 
                         count = count - 1
                         if (count != 0) {
-	                        currentSensor = korrelation.sensors[1];
+	                        currentSensor = korrelation.sensors[2];
 							callopts.sensorname = currentSensor.name;
 							callopts.sensorid = currentSensor.id;
 
@@ -572,7 +572,6 @@ function createGlobObtions() {
 //		console.log("Plotting Feinstaub ...");
 		// Arrays zur Berechnung der Min, Max und Mittewerte über die kompletten 24h
 		var tempa=[],huma=[],presa=[];
-		var minmax = {};
 		var p1m24,p2m24,tempm24,hunm24,pewssm24;
 
 		// Put values into the arrays
@@ -598,24 +597,14 @@ function createGlobObtions() {
 		});
 
 		if(what == 'oneday') {
-			// Min, max Mittelwer berechnen (für die 24 Stunden)
-			minmax['p1ak'] = data[data.length-1].P10;
-			minmax['p1mi'] = datas.maxima.P10_min;
-			minmax['p1md'] = datas.maxima.P10_avg;
-			minmax['p1mx'] = datas.maxima.P10_max;
-			minmax['p2ak'] = data[data.length-1].P2_5;
-			minmax['p2mi'] = datas.maxima.P2_5_min;
-			minmax['p2md'] = datas.maxima.P2_5_avg;
-			minmax['p2mx'] = datas.maxima.P2_5_max;
-
 			// InfoTafel füllen
 			var infoTafel = '<div class="infoTafel">' +
             '<table><tr >' +
 			'<th colspan="3">Aktuelle Werte</th>' +
             '</tr><tr>' +
-            '<td>P10</td><td>' + minmax.p1ak + '</td><td>µg/m<sup>3</sup></td>' +
+            '<td>P10</td><td>' + data[data.length-1].P10 + '</td><td>µg/m<sup>3</sup></td>' +
             '</tr><tr>' +
-            '<td>P2.5</td><td>' + minmax.p2ak + '</td><td>µg/m<sup>3</sup></td>' +
+            '<td>P2.5</td><td>' + data[data.length-1].P2_5 + '</td><td>µg/m<sup>3</sup></td>' +
             '</tr></table>' +
             '</div>';
 
@@ -829,7 +818,7 @@ function createGlobObtions() {
 
 		// Arrays for Berechnung der Min, Max und Mittewerte über die kompletten 24h
 		var presa=[];
-		var minmax = {};
+		var aktVal = {};
 
 		// Put values into the arrays
 		var cnt=0;
@@ -856,27 +845,28 @@ function createGlobObtions() {
 
         if(data.length != 0) {
             if (what == 'oneday') {
-                // Min, max Mittelwer berechnen (für die 24 Stunden)
+                // Aktuelle Werte speichern
+                aktVal['pressak'] = null;
                 if (data[0].press_mav !== undefined) {
-                    minmax['pressak'] = calcSealevelPressure(data[data.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
-                } else {
-                    minmax['pressak'] = 0;
+                    aktVal['pressak'] = calcSealevelPressure(data[data.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
+                } else  if (dataB[0].press_mav !== undefined) {
+                    aktVal['pressak'] = calcSealevelPressure(dataB[dataB.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
                 }
-                minmax['tempak'] = data[data.length - 1].temp_mav
-                minmax['humak'] = data[data.length - 1].humi_mav;
+                aktVal['tempak'] = data[data.length - 1].temp_mav
+                aktVal['humak'] = data[data.length - 1].humi_mav;
 
                 // InfoTafel füllen
                 var infoTafel =
                     '<table class="infoTafel"><tr >' +
                     '<th colspan="3">Aktuelle Werte</th>' +
                     '</tr><tr>' +
-                    '<td>Temperatur</td><td>' + (minmax.tempak).toFixed(1) + '</td><td>°C</td>' +
+                    '<td>Temperatur</td><td>' + (aktVal.tempak).toFixed(1) + '</td><td>°C</td>' +
                     '</tr><tr>' +
-                    '<td>Feuchte</td><td>' + (minmax.humak).toFixed(0) + '</td><td>%</td>';
-                if (data[0].press_mav !== undefined) {
+                    '<td>Feuchte</td><td>' + (aktVal.humak).toFixed(0) + '</td><td>%</td>';
+                if (aktVal['pressak'] != null) {
                     infoTafel +=
                         '</tr><tr>' +
-                        '<td>Luftdruck</td><td>' + (minmax.pressak).toFixed(0) + '</td><td>hPa</td>';
+                        '<td>Luftdruck</td><td>' + (aktVal.pressak).toFixed(0) + '</td><td>hPa</td>';
                 }
                 infoTafel +=
                     '</tr></table>' +
@@ -963,7 +953,7 @@ function createGlobObtions() {
 
 		var mitBMP=false;
         if((typeof dataB !== 'undefined') && (typeof dataB[0].press_mav !== 'undefined')) {
-        	mitBMP==true;
+        	mitBMP=true;
         }
         if((data.length != 0) && (typeof data[0].press_mav !== 'undefined')) {
             mitBMP = true;
