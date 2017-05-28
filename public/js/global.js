@@ -291,8 +291,12 @@ $(document).ready(function() {
 	//	Rückgabe: normierter Druck auf Sehhhöhe
 	//	
 	function calcSealevelPressure(press,temp) {
+		var alti = korrelation.location.altitude;
+		if (alti == 0) {
+			alti = ALTITUDE;
+		}
 		var Th = temp + 273.15;
-		var divisor = Th + (0.0065 * ALTITUDE);
+		var divisor = Th + (0.0065 * alti);
 		var quotient = Th / divisor;
 		var power = Math.pow(quotient, -5.255);
 		var p0 = press * power;
