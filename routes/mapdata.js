@@ -33,7 +33,7 @@ router.get('/getaktdata/', function (req, res) {
             var item = docs[i];
             var oneAktData = {};
             oneAktData['loc'] = item.loc.coordinates;
-            oneAktData['id'] = item._id;                                // ID des Sensors holen
+            oneAktData['id'] = item._id  // ID des Sensors holen
             var dt = new Date(item.data[0].time);
             if((now-dt) >= 7*24*3600*1000) {                            // älter als 1 WOCHE ->
                 oneAktData['value10'] = -2;                             // -2 zurückgeben

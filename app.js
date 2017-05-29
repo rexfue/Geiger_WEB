@@ -12,9 +12,9 @@ const PORT = 3005;											// Port for server
 var mongoPort = 27017;
 var mongoHost = 'localhost';
 
-//if (os.hostname() != "rexfue.de") {
-//	mongoPort = 27018;
-//}
+if (os.hostname() != "rexfue.de") {
+	mongoPort = 27018;
+}
 console.log(os.hostname());
 
 const MONGO_URL = 'mongodb://'+mongoHost+':'+mongoPort+'/Feinstaub_AllNew';  	// URL to mongo database

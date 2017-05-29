@@ -129,6 +129,16 @@ $(document).ready(function() {
 					return -1;
 			}
 			korrelation = data[0];
+			// sort array of sensor, so that SDS are the first ones
+			korrelation.sensors.sort(function(a,b) {
+				if (a.name < b.name) {
+                    return 1;
+                }
+				if(a.name > b.name)	{
+					return -1;
+				}
+				return 0;
+			});
 			console.log("Korrelation: ",korrelation);
 
 			buildHeaderline(korrelation.sensors);
@@ -853,7 +863,7 @@ function createGlobObtions() {
                 aktVal['pressak'] = null;
                 if (data[0].press_mav !== undefined) {
                     aktVal['pressak'] = calcSealevelPressure(data[data.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
-                } else  if (dataB[0].press_mav !== undefined) {
+                } else  if ((dataB !== undefined) && (dataB[0].press_mav !== undefined)) {
                     aktVal['pressak'] = calcSealevelPressure(dataB[dataB.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
                 }
                 aktVal['tempak'] = data[data.length - 1].temp_mav
