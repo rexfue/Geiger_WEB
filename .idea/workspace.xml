@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/style.css" afterPath="$PROJECT_DIR$/public/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/help.html" afterPath="$PROJECT_DIR$/public/help.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/helpmap.html" afterPath="$PROJECT_DIR$/public/helpmap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/global.js" afterPath="$PROJECT_DIR$/public/js/global.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/mapit.js" afterPath="$PROJECT_DIR$/public/js/mapit.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/mapdata.js" afterPath="$PROJECT_DIR$/routes/mapdata.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/mapit.pug" afterPath="$PROJECT_DIR$/views/mapit.pug" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -105,27 +98,37 @@
       <file leaf-file-name="mapit.pug" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/mapit.pug">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="12" lean-forward="false" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+            <state relative-caret-position="225">
+              <caret line="15" column="12" lean-forward="false" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.pug" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/index.pug">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2385">
-              <caret line="159" column="15" lean-forward="false" selection-start-line="159" selection-start-column="15" selection-end-line="159" selection-end-column="15" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mapdata.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mapdata.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
+            <state relative-caret-position="540">
               <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
               <folding />
             </state>
@@ -142,21 +145,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="centermap.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/centermap.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="46" lean-forward="false" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getDataFromDB</find>
       <find>others</find>
       <find>netData</find>
       <find>neuData</find>
@@ -186,6 +178,7 @@
       <find>fetch</find>
       <find>uhr</find>
       <find>map</find>
+      <find>back</find>
     </findStrings>
     <replaceStrings>
       <replace>aktsensorid</replace>
@@ -226,13 +219,13 @@
         <option value="$PROJECT_DIR$/public/settings.html" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/views/mapit.pug" />
         <option value="$PROJECT_DIR$/public/help.html" />
         <option value="$PROJECT_DIR$/public/js/mapit.js" />
-        <option value="$PROJECT_DIR$/public/css/style.css" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/public/js/global.js" />
         <option value="$PROJECT_DIR$/routes/mapdata.js" />
+        <option value="$PROJECT_DIR$/views/mapit.pug" />
+        <option value="$PROJECT_DIR$/public/css/style.css" />
       </list>
     </option>
   </component>
@@ -254,6 +247,7 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="42" />
     <option name="y" value="23" />
     <option name="width" value="1680" />
     <option name="height" value="947" />
@@ -558,7 +552,7 @@
       <workItem from="1495824489932" duration="912000" />
       <workItem from="1495862254575" duration="2210000" />
       <workItem from="1496047104570" duration="2219000" />
-      <workItem from="1496057509696" duration="2675000" />
+      <workItem from="1496057509696" duration="4846000" />
     </task>
     <task id="LOCAL-00001" summary="added map usage&#10;&#10;- infowindow&#10;- säulen&#10;- link zu Grafik&#10;">
       <created>1480856091421</created>
@@ -756,11 +750,18 @@
       <option name="project" value="LOCAL" />
       <updated>1496003780912</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Sort korrelation-sensor-array Map height is now 785px&#10;&#10;public/css/style.css&#10;   map height now 785px&#10;   &#10;app.js&#10;   Port for Mongo is 2017, if host == rexfue.de, otherwise it is 2018,&#10;   so we have to use ssh tunnel to get to mongo on rexfue.de&#10;   &#10;public/js/global.js   &#10;   sort sensor array from korrelation, that SDS011 is first sensor">
+      <created>1496063186727</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1496063186727</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="369714000" />
+    <option name="totallyTimeSpent" value="371885000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -772,7 +773,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="947" extended-state="6" />
+    <frame x="42" y="23" width="1680" height="947" extended-state="0" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32007232" sideWeight="0.49675626" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23763955" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -837,7 +838,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Neuaufbau in fsdata.js&#10;&#10;- Ablauf nun für Tag/Woche/Jahr gettrennt&#10;- Ablauf mit Promises&#10;&#10;Tag und Week für SDS011 tur, sonst noch nix !" />
     <MESSAGE value="Weiter mit dem Neuaufbau&#10;&#10;map: wenn die Daten älter als 01min sind wird die Säule zur schwarzen Scheibe, falls älter als 1 Woche entfällt die Säule" />
     <MESSAGE value="Map-Text angepasst&#10;&#10;Text bei den scharzen Scheiben geäöndert&#10;Schwarze Scheiben werden es jetzt erst ab 1h" />
     <MESSAGE value="Nur wegen Übergabe an laptop (es tut noch nix richtig !!)" />
@@ -862,7 +862,8 @@
     <MESSAGE value="Plot pressure shows correct if it comes from a third sensor&#10;&#10;public/js/global.js:&#10;   If besides DHT22 there is an BME280 as third sensor, use only the&#10;   pressure value from BME280&#10;   &#10;app.js&#10;   delete needless require statement &#10;   &#10;package.json&#10;   adapt version nunmber and date" />
     <MESSAGE value="Refresh graphics 15sec after every 5 min" />
     <MESSAGE value="Map height is now 785px&#10;&#10;public/css/style.css&#10;   map heght new value&#10;   &#10;app.js&#10;   Port for Mongo is 2017, if host == rexfue.de, otherwise it is 2018,&#10;   so we have to use ssh tunnel to get to mongo on rexfue.de" />
-    <option name="LAST_COMMIT_MESSAGE" value="Map height is now 785px&#10;&#10;public/css/style.css&#10;   map heght new value&#10;   &#10;app.js&#10;   Port for Mongo is 2017, if host == rexfue.de, otherwise it is 2018,&#10;   so we have to use ssh tunnel to get to mongo on rexfue.de" />
+    <MESSAGE value="Sort korrelation-sensor-array Map height is now 785px&#10;&#10;public/css/style.css&#10;   map height now 785px&#10;   &#10;app.js&#10;   Port for Mongo is 2017, if host == rexfue.de, otherwise it is 2018,&#10;   so we have to use ssh tunnel to get to mongo on rexfue.de&#10;   &#10;public/js/global.js   &#10;   sort sensor array from korrelation, that SDS011 is first sensor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sort korrelation-sensor-array Map height is now 785px&#10;&#10;public/css/style.css&#10;   map height now 785px&#10;   &#10;app.js&#10;   Port for Mongo is 2017, if host == rexfue.de, otherwise it is 2018,&#10;   so we have to use ssh tunnel to get to mongo on rexfue.de&#10;   &#10;public/js/global.js   &#10;   sort sensor array from korrelation, that SDS011 is first sensor" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="406" key="Git.Branch.Popup" />
@@ -1124,13 +1125,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/settings.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -1157,14 +1151,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/mapit.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="12" lean-forward="false" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -1215,14 +1201,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2385">
-          <caret line="159" column="15" lean-forward="false" selection-start-line="159" selection-start-column="15" selection-end-line="159" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/global.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11512">
@@ -1251,8 +1229,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
+        <state relative-caret-position="540">
           <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/mapit.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="12" lean-forward="false" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

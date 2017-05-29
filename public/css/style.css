@@ -1,10 +1,10 @@
 body {
-  font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
-  font-size: 16px;
-  width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-	height: 100%;
+  	font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
+  	font-size: 16px;
+  	width: 1100px;
+  	margin-left: auto;
+  	margin-right: auto;
+  	height: 100%;
 }
 
 htnml {
@@ -45,7 +45,8 @@ header #subtitle {
 
 #buttons {
 	clear: both;
-	margin: auto;
+/*	margin: auto; */
+/*	margin-left:0px; */
 /*	text-align: right; */
 	width: 100%;
 }
@@ -54,14 +55,14 @@ header #subtitle {
 	text-align: left;
 	width: 70%;
 	float: left;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 }
 
 #buttonsRight {
 	text-align: right;
 	width: 30%;
 	float: right;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 }
 
 button {
@@ -71,9 +72,14 @@ button {
 	margin-top: 15px;
 }
 
-#btnHelp, #btnMap, #btnSet {
+#btnMap, #btnSet {
 	width: 70px;
 	margin-right: 10px;
+}
+
+#btnHelp {
+	width: 70px;
+	margin-right: 12px;
 }
 
 #btnTraf {
@@ -124,7 +130,6 @@ button {
 	margin: auto;
 	padding-bottom: 30px;
 	padding-top: 10px;
-
 }
 
 #mailadr {
@@ -148,9 +153,11 @@ button {
 	text-align: center;
 	width: 200px;
 }
+
 #fstb {
 	padding-top: 30px;
 }
+
 #alert {
 	text-align: center;
 }
@@ -158,8 +165,9 @@ button {
 #map {
 	clear: both;
 	height: 785px;
-	width: 95%;
-	margin: 50px auto 10px auto;
+	width: 98%;
+/*	margin: 0px auto 10px auto; */
+	margin: auto;
 	border: 2px solid blue;
 }
 
