@@ -30,6 +30,24 @@ header #h1name {
 	float: left;
 }
 
+header #btnssel {
+    float: left;
+    width: 80px;
+    height: 40px;
+    font-size: 1.2em;
+}
+/*
+header #sensorselect {
+    width: 70px;
+    height: 30px;
+    float: right;
+    margin-left: 10px;
+    margin-top: -3px;
+    background-color: #0099cc;
+    color: white;
+}
+*/
+
 header #h1uhr {
 	float: right;
 }
@@ -157,10 +175,14 @@ button {
 
 #map {
 	clear: both;
-	height: 600px;
+	height: 785px;
 	width: 95%;
 	margin: 50px auto 10px auto;
 	border: 2px solid blue;
+}
+
+#mapdate {
+	font-size: 70%;
 }
 
 #infoTable table, #infoTable tr, #infoTable td {
@@ -187,3 +209,4 @@ label, input { display: block; }
 	left: 0;
 	visibility: hidden;
 }
+

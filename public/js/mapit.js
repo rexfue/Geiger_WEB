@@ -90,10 +90,12 @@ function initMap() {												// Map initialisieren
     var dialogCenter = $('#dialogCenter').dialog({
         autoOpen: false,
         width: 800,
-        title: 'Zemtrieren',
+        title: 'Zentrieren',
         open: function() {
             $('#page-mask').css('visibility','visible');
-            $(this).load('/fsdata/centermap')
+            $(this).load('/fsdata/centermap', function() {
+                $('#newmapcenter').focus();
+            });
         },
         buttons: [
             {
@@ -208,6 +210,7 @@ function geocodeLatLng(latlon) {
             for (var i =0; i<results.length; i++) {
                 console.log(results[i].formatted_address)
             }
+            console.log("DAS ist GUT:",results[2].formatted_address);
         } else {
             window.alert('Geocoder failed due to: ' + status);
         }
@@ -255,9 +258,17 @@ function fetchAktualData() {
             } else {
                 updateValues(data1);
             }
+            showLastDate(data1.lastDate);
         }
     });
 }
+
+// Show the last date below tha map grafics
+function showLastDate(dt) {
+    var ld = moment(dt);
+    $("#mapdate").html("Werte von " + ld.format('YYYY-MM-DD HH:mm'));
+}
+
 
 // Aus den GeoDaten und dem akt. Feinstaubwert den Marker bauen. Es wird eine
 // Säule erzeugt mit 20 Pixel Duchmesswer und Höhe abh. vom Feinstaubwert
@@ -311,17 +322,17 @@ function buildMarkers(data) {
     for (x in data) {											// alle daten durchgehen
         var offset = 0;											// deault Offset ist 0
         var item = data[x];
-        if (item.loc[0] == lold ) {					// Wenn Marker auf gleicher Lönge liegen, dann
+        if (item.loc[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
             offset = 5;											// enen neuen etwas nach rechts verscheiben
         }
-        lold = item.loc[0];							// und die Länge merken
+        lold = item.loc[0];							            // und die Länge merken
         var oneMarker = new google.maps.Marker({				// Marker-Objekt erzeugen
             position: new google.maps.LatLng(item.loc[1],item.loc[0]), // mit den Koordinaten aus den daten
             icon: getBalken(item.value10,sBreit,offset),			// die Säule dazu
             werte: [item.value10, item.value25],				// auch die Werte mit speichern
             sensorid: item.id,						        	// und auch die Sensor-Nummer
             url: '/'+item.id,		    						// URL zum Aufruf der Grafik
-            latlon:  {lat: parseFloat(item.latitude), lng: parseFloat(item.longitude)}, // und extra nocmla die
+            latlon:  {lat: parseFloat(item.loc[1]), lng: parseFloat(item.loc[0])}, // und extra nocmla die
             // Koordinaten
             offset: offset,
         });
@@ -360,6 +371,7 @@ function buildMarkers(data) {
             }													// und das Neue mit den Werten
             infowindow.setContent(infoContent);
             infowindow.open(map, this);							// am Marker anzeigen
+            geocodeLatLng(this.latlon);
         });
         marker[x].setMap(map);									// dann  hin zeichnen
     }
@@ -370,6 +382,9 @@ function updateValues(data) {
     for (x in data) {
 //        marker[x].setMap(null);
         var item = data[x];
+        if(marker[x] ==  undefined) {
+            console.log("Marker["+x+"] undefined");
+        }
         marker[x].icon = getBalken(item.value10, sBreit, marker[x].offset);
         marker[x].setMap(map);
     }

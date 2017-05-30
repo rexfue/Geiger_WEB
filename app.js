@@ -9,12 +9,12 @@ var os = require('os');
 // Consts
 const PORT = 3005;											// Port for server
 
-var mongoPort = 27017;
+var mongoPort = 27018;
 var mongoHost = 'localhost';
 
-//if (os.hostname() != "rexfue.de") {
-//	mongoPort = 27018;
-//}
+if (os.hostname() != "rexfue.de") {
+	mongoPort = 27018;
+}
 console.log(os.hostname());
 
 const MONGO_URL = 'mongodb://'+mongoHost+':'+mongoPort+'/Feinstaub_AllNew';  	// URL to mongo database
@@ -72,6 +72,10 @@ app.get('/fs/fsdata/centermap', function(req, res, next) {
 
 app.get('/fs/fsdata/helpmap', function(req, res, next) {
     res.sendFile(__dirname+'/public/helpmap.html');
+});
+
+app.get('/fs/fsdata/selsensor', function(req, res, next) {
+    res.sendFile(__dirname+'/public/selsensor.html');
 });
 
 

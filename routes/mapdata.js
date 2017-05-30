@@ -17,6 +17,7 @@ router.get('/getaktdata/', function (req, res) {
     var collection = db.collection('aktwerte');                         // die 'korrelation' verwenden
     var aktData = [];                                                   // hier die daten sammeln
     var now = moment();                                                 // akt. Uhrzeit
+    var lastDate = 0;
     console.log("fetching data ");
     collection.find({                                                   // find all data within map borders (box)
         loc: {
@@ -34,7 +35,13 @@ router.get('/getaktdata/', function (req, res) {
             var oneAktData = {};
             oneAktData['loc'] = item.loc.coordinates;
             oneAktData['id'] = item._id;                                // ID des Sensors holen
-            var dt = new Date(item.data[0].time);
+            var dati = 0;
+            for (var k=0; k< item.data.length; k++) {
+                if(item.data[k].time > dati) {
+                    dati = item.data[k].time;
+                }
+            }
+            var dt = new Date(dati);
             if((now-dt) >= 7*24*3600*1000) {                            // älter als 1 WOCHE ->
                 oneAktData['value10'] = -2;                             // -2 zurückgeben
                 oneAktData['value25'] = -2;
@@ -52,11 +59,16 @@ router.get('/getaktdata/', function (req, res) {
                         oneAktData['value25'] = item.average.P2_5_avg.toFixed(2);      // und merken
                     }
                 }
+                if (dati > lastDate) {
+                    lastDate = dati;
+                }
             }
             aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
+            console.log('lastDate:',lastDate);
  //           console.log("Daten für "+ oneAktData.id + " geholt");
         }
-        res.json(aktData);                                              // alles bearbeitet _> Array senden
+        console.log("Komm direkt vor res.json in route.get(/getaktdata und lastDate ist:", lastDate);
+        res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
         console.log("Array-Länge:",aktData.length);
     });
 });

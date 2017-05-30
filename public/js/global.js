@@ -50,7 +50,9 @@ $(document).ready(function() {
 		title: 'Einstellungen',
 		open: function() {
             $('#page-mask').css('visibility','visible');
-            $(this).load('/fsdata/setting')
+            $(this).load('/fsdata/setting', function() {
+            	$('#mapcenter').focus();
+			});
 		},
 		buttons: [
             {
@@ -88,6 +90,33 @@ $(document).ready(function() {
             $('#btnHelp').css('background','#0099cc');
         },
     });
+
+
+	var dialogNewSensor = $('#dialogNewSensor').dialog({
+		autoOpen: false,
+		width: 300,
+		title:"Neue Sensor-Nr wählen",
+		position: {my:'center', at: 'top+100px', of:window},
+        open: function() {
+            $('#page-mask').css('visibility', 'visible');
+            $(this).load('/fsdata/selsensor', function () {
+                $('#selsensor').focus();
+            });
+        },
+    	close: function() {
+        	$('#page-mask').css('visibility','hidden');
+        	$('#btnHelp').css('background','#0099cc');
+        	var newSens = $('#selsensor').val();
+        	checkSensorNr(newSens, function(erg) {
+        		if(erg) {
+                    window.location = '/' + newSens;
+                } else {
+					showError(2,"",newSens);
+				}
+    		});
+		},
+		modal: true
+	});
 
 
 	var aktsensorid = selName;
@@ -129,6 +158,16 @@ $(document).ready(function() {
 					return -1;
 			}
 			korrelation = data[0];
+			// sort array of sensor, so that SDS are the first ones
+			korrelation.sensors.sort(function(a,b) {
+				if (a.name < b.name) {
+                    return 1;
+                }
+				if(a.name > b.name)	{
+					return -1;
+				}
+				return 0;
+			});
 			console.log("Korrelation: ",korrelation);
 
 			buildHeaderline(korrelation.sensors);
@@ -186,6 +225,17 @@ $(document).ready(function() {
 		switchPlot(active);								// gewählten Plot aktivieren
 	});
 
+    $('#btnssel').click(function() {
+        dialogNewSensor.dialog("open");
+    });
+
+    $('#dialogNewSensor').keypress(function(e) {
+    	if (e.keyCode == 13) {
+    		console.log("Enter got2");
+    		dialogNewSensor.dialog('close');
+		}
+	});
+
 
 // Einstellungen - Eingaben
     $('#in_mapcenter').click(function(){
@@ -195,6 +245,18 @@ $(document).ready(function() {
 
 
 //	*************  Functions *****************
+
+	// Prüfen, ob die übergeben Sensornummer in der Korrelations-Tabelle enthalten ist
+	// Return TRUE, wenn enthalten
+	function checkSensorNr(sid, callBack) {
+        $.getJSON('fsdata/getfs/korr', {sensorid: sid}, function (data, err) {				// AJAX Call
+            if (err != 'success') {
+                callBack(false);						// if error, show it
+            } else {
+                callBack(true);
+            }
+        });
+    }
 
 	// Umschalten der Plots
 	function switchPlot(what) {
@@ -226,25 +288,23 @@ $(document).ready(function() {
 	
 	/* Alle Minute die ktuelle Urzeit anzeigen und
 	 * den Plot für Tages - und Wochendaten updaten.
-	 * Wenn ein Tag um, dann auch den Monats/Jahresplot erneuern
-	 * Wenn gerade die Karte (map) in der Anzeieg sit, dann
-	 * diese Daten updaten
+	 * Alle 'refreshRate' plus 15sec die Grafiken neu zeichnen
 	 * Die Funktion wird alle Sekunde aufgerufen !
 	 */
 	function showUhrzeit(sofort) {
         var d = moment()								// akt. Zeit holen
 		if (sofort || (d.second() == 0)) {				// Wenn Minute grade um
             $('#h1uhr').text(d.format('HH:mm'));		// dann zeit anzeigen
-            if (!sofort && ((d.minute() % refreshRate) == 0)) {		// alle ganzen refreshRate Minuten
-                console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
-                if (aktsensorid != 'map') {					// Wenn nicht die Karte, dann
-                    doPlot('oneday');						// Tages- und
-                    doPlot('oneweek');						// Wochenplot erneuern
-                }
-                else {
-                    fetchAktualData();
-                }
-            }
+        }
+		if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
+			console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
+			if (aktsensorid != 'map') {					// Wenn nicht die Karte, dann
+				doPlot('oneday');						// Tages- und
+				doPlot('oneweek');						// Wochenplot erneuern
+			}
+			else {
+				fetchAktualData();
+			}
         }
     }
 
@@ -267,8 +327,10 @@ $(document).ready(function() {
 		}
 		hl = hl.slice(0,-2);
 		$('#subtitle').html(hl);
-		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + korr[0].id);
-		console.log(hl);
+//		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + korr[0].id);
+		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: ");
+		$('#btnssel').html(korr[0].id);
+
 	}
 
 
@@ -336,33 +398,8 @@ $(document).ready(function() {
         return promise;
     }
 
- /*   function doThePlots(data) {
-		console.log("Data-Länge: " + data.length)
-	}
 
-
-    function doPlot(what, start)
-	{
-    	habBMP = false;
-    	if (start === undefined) {
-        	start = moment();									// then star 'now'
-    	}
-    	var allData = [];
-    	var d1, d2 = null, d3 = null;
-    	var url = '/fsdata/getfs/' + what;
-    	var count = korrelation.sensors.length;				// Anzahl der Sensoren
-		var i=0;
-        getDataFromDB(url, start, i)
-            .then(d => {
-            console.log("Länge_Docs:", d.docs.length);
-        	allData[i] = d;
-        	i >= count || getDataFromDB(url, start, i+1)
-    		});
-	}
-
-*/
-
-//	doPlot
+    //	doPlot
 //	Fetch relevant data from the server and plot it
 
 	function doPlot(what,start) {								// if 'start' not defined,
@@ -853,7 +890,7 @@ function createGlobObtions() {
                 aktVal['pressak'] = null;
                 if (data[0].press_mav !== undefined) {
                     aktVal['pressak'] = calcSealevelPressure(data[data.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
-                } else  if (dataB[0].press_mav !== undefined) {
+                } else  if ((dataB !== undefined) && (dataB[0].press_mav !== undefined)) {
                     aktVal['pressak'] = calcSealevelPressure(dataB[dataB.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
                 }
                 aktVal['tempak'] = data[data.length - 1].temp_mav
