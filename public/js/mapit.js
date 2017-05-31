@@ -53,6 +53,8 @@ function initMap() {												// Map initialisieren
 
 
     $('#btnCent').click(function() {
+        infowindow.setContent("");
+        infowindow.close();								// löschen
         dialogCenter.dialog("open");
     });
 
@@ -100,6 +102,7 @@ function initMap() {												// Map initialisieren
         buttons: [
             {
                 text: "OK",
+                class: 'btnOK',
                 click: setNewCenter,
                 style: "margin-right:40px;",
                 width: 100,
@@ -116,6 +119,12 @@ function initMap() {												// Map initialisieren
         close: function() {
             $('#page-mask').css('visibility','hidden');
         },
+    });
+
+    $('.dialog').keypress(function(e) {
+        if (e.keyCode == 13) {
+            $('.btnOK').focus();
+        }
     });
 
 
@@ -171,7 +180,7 @@ function initMap() {												// Map initialisieren
                     break;
                 }
             }
-            console.log("Info on screen >"+info+"<");
+//            console.log("Info on screen >"+info+"<");
         }
     });
 
@@ -253,10 +262,10 @@ function fetchAktualData() {
             alert("Fehler <br />" + err);						// ggf. fehler melden
         } else {
             if (first) {
-                buildMarkers(data1);								// mit den Daten die Marker bauen
+                buildMarkers(data1.avgs);								// mit den Daten die Marker bauen
                 first = false;
             } else {
-                updateValues(data1);
+                updateValues(data1.avgs);
             }
             showLastDate(data1.lastDate);
         }

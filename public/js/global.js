@@ -30,6 +30,8 @@ $(document).ready(function() {
 	}
 
 
+
+
 //	localStorage.clear();
 
 
@@ -57,6 +59,7 @@ $(document).ready(function() {
 		buttons: [
             {
                 text: "Sichern",
+                class: "btnOK",
                 click: saveSettings,
                 style: "margin-right:40px;",
                 width: 100,
@@ -103,17 +106,34 @@ $(document).ready(function() {
                 $('#selsensor').focus();
             });
         },
+		buttons:  [
+            {
+                text: "OK",
+				class: "btnOK",
+                click: function () {
+                    var newSens = $('#selsensor').val();
+                    checkSensorNr($('#selsensor').val(), function (erg) {
+                        if (erg) {
+                            dialogSet.dialog("close");
+                            window.location = '/' + newSens;
+                        } else {
+                            showError(2, "", newSens);
+                        }
+                    });
+                },
+                width: 100,
+            },{
+                text: "Abbrechen",
+                id: "newSensorAbbr",
+                click : function() {
+                    dialogNewSensor.dialog("close");
+                },
+                width: 100,
+            }
+        ],
     	close: function() {
         	$('#page-mask').css('visibility','hidden');
         	$('#btnHelp').css('background','#0099cc');
-        	var newSens = $('#selsensor').val();
-        	checkSensorNr(newSens, function(erg) {
-        		if(erg) {
-                    window.location = '/' + newSens;
-                } else {
-					showError(2,"",newSens);
-				}
-    		});
 		},
 		modal: true
 	});
@@ -170,7 +190,7 @@ $(document).ready(function() {
 			});
 			console.log("Korrelation: ",korrelation);
 
-			buildHeaderline(korrelation.sensors);
+			buildHeaderline(korrelation.sensors,korrelation.address);
 			doPlot('oneday');						// Start with plotting one day from now on
 			doPlot('oneweek');						// Start with plotting one day from now on
 			doPlot('onemonth');						// Start with plotting one day from now on
@@ -229,10 +249,9 @@ $(document).ready(function() {
         dialogNewSensor.dialog("open");
     });
 
-    $('#dialogNewSensor').keypress(function(e) {
+    $('.dialog').keypress(function(e) {
     	if (e.keyCode == 13) {
-    		console.log("Enter got2");
-    		dialogNewSensor.dialog('close');
+            $('.btnOK').focus();
 		}
 	});
 
@@ -319,8 +338,8 @@ $(document).ready(function() {
 		return(value * 1.0 / mul); 
 	}
 
-	// Sensornummer und Name obe mit einragen
-	function buildHeaderline(korr) {
+	// Sensornummer und Name und Adresse oben mit eintragen
+	function buildHeaderline(korr,addr) {
 		var hl = 'Sensoren: ';
 		for (var i in korr) {
 			hl += korr[i].id+"-"+korr[i].name+" / ";
@@ -330,7 +349,20 @@ $(document).ready(function() {
 //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + korr[0].id);
 		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: ");
 		$('#btnssel').html(korr[0].id);
-
+		adtxt = '';
+		if(addr.region !== undefined) {
+			adtxt += addr.region + ', ';
+		}
+		if(addr.plz !== undefined) {
+			adtxt += addr.plz + ' ';
+		}
+        if(addr.city !== undefined) {
+            adtxt += addr.city + ', ';
+        }
+        if(addr.country !== undefined) {
+            adtxt += addr.country;
+        }
+		$('#adresse').html(adtxt);
 	}
 
 
@@ -355,7 +387,7 @@ $(document).ready(function() {
 	function calcSealevelPressure(press,temp) {
 		var alti = korrelation.location.altitude;
 		if (alti == 0) {
-			alti = ALTITUDE;
+			return(press);
 		}
 		var Th = temp + 273.15;
 		var divisor = Th + (0.0065 * alti);
