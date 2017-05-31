@@ -29,8 +29,10 @@ $(document).ready(function() {
 		return;
 	}
 
-
-
+    var extAddr = false;
+	if (!((typeof parm == 'undefined') || (parm == ""))) {
+	    extAddr = true;
+    }
 
 //	localStorage.clear();
 
@@ -349,7 +351,16 @@ $(document).ready(function() {
 //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + korr[0].id);
 		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: ");
 		$('#btnssel').html(korr[0].id);
+		console.log(addr);
 		adtxt = '';
+		if (extAddr) {
+            if(addr.number !== undefined) {
+                adtxt += addr.number + ', ';
+            }
+            if(addr.street !== undefined) {
+                adtxt += addr.street + ', ';
+            }
+        }
 		if(addr.region !== undefined) {
 			adtxt += addr.region + ', ';
 		}

@@ -19,7 +19,8 @@ router.get('/', function(req, res, next) {
         title: 'Feinstaub-Map',
         version: pkg.version,
         date: pkg.date,
-        name: 'map'
+        name: 'map',
+        param: req.query.addr
     });
 });
 
@@ -36,12 +37,14 @@ router.get('/:nam', function(req, res, next) {
     		title: 'Feinstaub-Map',
     		version : pkg.version,
     		date : pkg.date,
+            param: req.query.addr,
     		name: 'map'});
     } else {
     res.render(idx, {
       title: title+'-'+name,
       version : pkg.version,
       date : pkg.date,
+        param: req.query.addr,
       name : name});
     }
 });
