@@ -125,6 +125,15 @@ button {
 	height: 20px;
 }
 
+.errTafel {
+	text-align: center;
+}
+
+.errTafelsmall {
+	font-size:75%;
+	color: black;
+}
+
 #author {
 	font-size:80%;
 	width: 95%;

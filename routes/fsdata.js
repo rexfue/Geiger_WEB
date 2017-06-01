@@ -168,6 +168,9 @@ function getDayData(db,sensorid,sensorname, st) {
                     reject(e);
                 }
                 console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
+                if (docs.length == 0) {
+                    resolve({'docs': []})
+                };
 //              console.log("Inhalt 2-2 von 'others':",others);
                 if (sensorname == "SDS011") {
                     var x = calcCappedMovingAverage(docs, 30);
@@ -211,6 +214,9 @@ function getWeekData(db,sensorid,sensorname,st) {
                     reject(e);
                 }
                 console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
+                if (docs.length == 0) {
+                    resolve({'docs': []})
+                };
                 if (sensorname == "SDS011") {
                     var wdata = movAvgSDSWeek(docs);
 //                    var y = calcMinMaxAvgSDS(wdata);
@@ -230,95 +236,96 @@ function getWeekData(db,sensorid,sensorname,st) {
 // Daten für ein ganzes Jahr abholen
 function getYearData(db,sensorid,sensorname,st,what) {
     var p = new Promise(function(resolve,reject) {
+        if(sensorname === undefined) {
+            reslove({'docs':[]});
+        }
         var start = moment(st);
         var end = moment(st);
-//        findKorrelations(db,sensorid,sensorname)
-//            .then(others => {
-            var colstr = 'data_' + sensorid + '_' + sensorname;
-            var collection = db.collection(colstr);
-            start=start.startOf('day');
-            end = end.startOf('day');
-            if(what == 'oneyear') {
-                start.subtract(366, 'd');
-            } else {
-                start.subtract(32, 'd');
-            }
-            start.add(1,'h');                           // UTC-Anpassung !!!!!!! Sommerzeit !!!!!!!
-            end.add(1,'h');
-            var datRange = {date: {$gte: new Date(start), $lt: new Date(end)}};
+        var colstr = 'data_' + sensorid + '_' + sensorname;
+        var collection = db.collection(colstr);
+        start=start.startOf('day');
+        end = end.startOf('day');
+        if(what == 'oneyear') {
+            start.subtract(366, 'd');
+        } else {
+            start.subtract(32, 'd');
+        }
+        start.add(1,'h');                           // UTC-Anpassung !!!!!!! Sommerzeit !!!!!!!
+        end.add(1,'h');
+        var datRange = {date: {$gte: new Date(start), $lt: new Date(end)}};
 //            console.log('datrange:', datRange);
-            var sorting = {date: 1};
-            var grpId = {$dateToString: {format: '%Y-%m-%d', date: '$date'}};
-            var cursor;
-            var stt = new Date();
-            if (sensorname == 'SDS011') {
-                cursor = collection.aggregate([
-                    {$sort: sorting},
-                    {$match: datRange},
-                    {
-                        $group: {
-                            _id: grpId,
-                            avgP10: {$avg: '$P10'},
-                            avgP2_5: {$avg: '$P2_5'},
-                            count: { $sum: 1 }
-                        }
-                    },
-                    {$sort: {_id: 1}}
-                ]);
-                cursor.toArray(function (err, docs) {
+        var sorting = {date: 1};
+        var grpId = {$dateToString: {format: '%Y-%m-%d', date: '$date'}};
+        var cursor;
+        var stt = new Date();
+
+        if (sensorname == 'SDS011') {
+            cursor = collection.aggregate([
+                {$sort: sorting},
+                {$match: datRange},
+                {
+                    $group: {
+                        _id: grpId,
+                        avgP10: {$avg: '$P10'},
+                        avgP2_5: {$avg: '$P2_5'},
+                        count: { $sum: 1 }
+                    }
+                },
+                {$sort: {_id: 1}}
+            ]);
+            cursor.toArray(function (err, docs) {
 //                    console.log(docs);
-                    console.log("Dauer SDS:",new Date() - stt)
-                    resolve({'docs': docs});
-                });
-            } else if (sensorname == 'DHT22') {
-                cursor = collection.aggregate([
-                    {$sort: sorting},
-                    {$match: datRange},
-                    {
-                        $group: {
-                            _id: grpId,
-                            tempAV: {$avg: '$temperature'},
-                            tempMX: {$max: '$temperature'},
-                            tempMI: {$min: '$temperature'},
-                        }
-                    },
-                    {$sort: {_id: 1}}
-                ], {cursor: {batchSize: 1}});
-                cursor.toArray(function (err, docs) {
-                    var min = Infinity, max = -Infinity, x;
-                    for (x in docs) {
-                        if( docs[x].tempMI < min) min = docs[x].tempMI;
-                        if( docs[x].tempMX > max) max = docs[x].tempMX;
+                console.log("Dauer SDS:",new Date() - stt)
+                resolve({'docs': docs});
+            });
+        } else if (sensorname == 'DHT22') {
+            cursor = collection.aggregate([
+                {$sort: sorting},
+                {$match: datRange},
+                {
+                    $group: {
+                        _id: grpId,
+                        tempAV: {$avg: '$temperature'},
+                        tempMX: {$max: '$temperature'},
+                        tempMI: {$min: '$temperature'},
                     }
-                    console.log("Dauer DHT:",new Date() - stt)
-                    resolve({'docs':docs , 'maxima': { 'tmax': max, 'tmin': min}});
-                });
-            } else if ((sensorname == 'BMP180') || (sensorname == 'BME280')) {
-                cursor = collection.aggregate([
-                    {$sort: sorting},
-                    {$match: datRange},
-                    {
-                        $group: {
-                            _id: grpId,
-                            pressAV: {$avg: '$pressure'},
-                            tempAV: {$avg: '$temperature'},
-                            tempMX: {$max: '$temperature'},
-                            tempMI: {$min: '$temperature'},
-                        }
-                    },
-                    {$sort: {_id: 1}}
-                ], {cursor: {batchSize: 1}});
-                cursor.toArray(function (err, docs) {
-                    var min = Infinity, max = -Infinity, x;
-                    for (x in docs) {
-                        if( docs[x].tempMI < min) min = docs[x].tempMI;
-                        if( docs[x].tempMX > max) max = docs[x].tempMX;
+                },
+                {$sort: {_id: 1}}
+            ], {cursor: {batchSize: 1}});
+            cursor.toArray(function (err, docs) {
+                var min = Infinity, max = -Infinity, x;
+                for (x in docs) {
+                    if( docs[x].tempMI < min) min = docs[x].tempMI;
+                    if( docs[x].tempMX > max) max = docs[x].tempMX;
+                }
+                console.log("Dauer DHT:",new Date() - stt)
+                resolve({'docs':docs , 'maxima': { 'tmax': max, 'tmin': min}});
+            });
+        } else if ((sensorname == 'BMP180') || (sensorname == 'BME280')) {
+            cursor = collection.aggregate([
+                {$sort: sorting},
+                {$match: datRange},
+                {
+                    $group: {
+                        _id: grpId,
+                        pressAV: {$avg: '$pressure'},
+                        tempAV: {$avg: '$temperature'},
+                        tempMX: {$max: '$temperature'},
+                        tempMI: {$min: '$temperature'},
                     }
-                    console.log("Dauer BMP/E:",new Date() - stt)
-                    resolve({'docs': docs,  'maxima': { 'tmax': max, 'tmin': min}});
-                });
-            }
- //       });
+                },
+                {$sort: {_id: 1}}
+            ], {cursor: {batchSize: 1}});
+            cursor.toArray(function (err, docs) {
+                var min = Infinity, max = -Infinity, x;
+                for (x in docs) {
+                    if( docs[x].tempMI < min) min = docs[x].tempMI;
+                    if( docs[x].tempMX > max) max = docs[x].tempMX;
+                }
+                console.log("Dauer BMP/E:",new Date() - stt)
+                resolve({'docs': docs,  'maxima': { 'tmax': max, 'tmin': min}});
+            });
+        }
     });
     return p;
 }
@@ -522,6 +529,7 @@ function movAvgSDSWeek(data) {
     // finally shrink datasize, so that max. 1000 values will be returned
     var neu1 = [];
     var step = Math.round(neuData.length / 500);
+    if (step == 0) step = 1;
     for (var i = 0, j=0; i < neuData.length; i+=step, j++) {
         var d = neuData.slice(i,i+step)
         var p1=0, p2=0;

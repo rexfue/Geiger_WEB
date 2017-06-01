@@ -1,0 +1,414 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Korrelation von Sensor-ID zu Location
+#
+# 2017-04-16  rxf
+#	Erste Version
+#
+
+# Aufbau der Collectionen in der MongoDB:
+# {
+#	_id,
+#	latitude
+#	longitude
+#	espid,
+#	sensors [{id,name},{id,name},.....]
+#   }
+#
+# Daten-Collection: data_<sensID>_<sensName>
+# {
+#	_id: ObjectId("582c6d8a4bb090779d357a81"),
+#	date: 2016-11-16 14:30:34.013Z,
+#	P10: 4.67,
+#	P2_5: 7.67
+# }
+
+import glob
+import json
+from pymongo import MongoClient
+from datetime import datetime, timedelta
+import requests
+import re
+import os.path
+import requests
+
+
+# Globale Konstanten
+MONGOHOST = "localhost"
+# APIURL = 'https://api.luftdaten.info/v1/now/'
+SENSORCSVURL = "http://archive.luftdaten.info/"
+MONGOURL= 'mongodb://'+MONGOHOST+':27017/'
+MONGODBASE = 'Feinstaub_AllNew'
+KORRCOLL = 'korrelations'
+MADAVICVS = 'https://www.madavi.de/sensor/csvfiles.php'
+MADAVIDATA = 'https://www.madavi.de/sensor/data/' #data-esp8266-13928303-2016-11-03.csv
+DATAPATH = '../data/'
+PATH2DATUM = '../data/curDatum'
+APIURL = 'http://api.luftdaten.info/static/v1/data.json'
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#  Wird nimmer benötigt bis zum nächsten #<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+# Zugehörigkeit der Daten in den ESP-CSV-Dateien
+INDEXTABLE = { 
+	'SDS011': {
+		'esp':[7,8],
+		'sensor': [ 6, 9 ]
+		},
+	'DHT22': {
+		'esp': [ 9, 10 ],
+		'sensor': [ 6,  7 ]
+		},
+	'PPD42NS':{
+		'esp': [ 3, 6 ],
+		'sensor': [ 6, 9 ]
+		},
+	'BMP180': {
+		'eps': [ 9, 10,  11 ],
+		'sensor': [ 9, 10,  11]
+		}
+	}
+
+# Definition der aktData-Datei	
+#		{
+#			"id":27625905,
+#			"sampling_rate":null,"
+#			timestamp":"2016-11-24T07:14:06.742522Z",
+#			"sensordatavalues":[
+#				{
+#					"id":128858947,
+#					"value":"93.00",
+#					"value_type":"P2"
+#				},{
+#					"id":128858946,
+#					"value":"0.18",
+#					"value_type":"ratioP2"
+#				},{
+#					"id":128858945,
+#					"value":"53360",
+#					"value_type":"durP2"
+#				},{
+#					"id":128858944,
+#					"value":"542.57",
+#					"value_type":"P1"
+#				},{
+#					"id":128858943,
+#					"value":"1.05",
+#					"value_type":"ratioP1"
+#				},{
+#					"id":128858942,
+#					"value":"314338",
+#					"value_type":"durP1"
+#				}
+#			],
+#			"location":{
+#				"id":28,
+#				"latitude":"48.777",
+#				"longitude":"9.235"
+#			},
+#			"sensor":{
+#				"id":61,
+#				"pin":"-",
+#				"sensor_type":{
+#					"id":1,
+#					"name":"PPD42NS",
+#					"manufacturer":"Shinyei"
+#				}
+#			}
+#		}
+
+	
+def doKorrelation(db,sensor,loc, allow):
+	""" Der Sensor ist noch nicht in der Korrelations-DB
+	Nun zunächst die Datei von 'vorgestern' für diesen
+	Sensor einlesen und die ersten 10 Werte speichern. Dann 
+	in allen ESP-CSV-Dateien von 'vorgestern' suchen, ob die
+	gleiche 10 Werte abgelegt sind (es müssen von den 10 Werte
+	nur 5 übereoinstimmen).  Wenn ja, die ESP-ID übergeben
+	und einen neuen Eintrag in der Korrelations-DB erstellen.
+	Wenn nix gefunden wird, dann xx0001 zurückgeben """
+	
+	def enter2KorrelationDB(espID):
+		""" den Sensor in die richtige Korreltionstabelle eintragen
+		"""		
+		collkorr = db[KORRCOLL]								# collekcion für Korrelation
+		erg = collkorr.find_one({'espid':espID})			# ist die ESP_ID schon vorhanden
+		if erg == None:										# nein -> neuen Eintrag erzeugen
+			sen = []										# Array zum zusammenbauen der Sensoren
+			for y in loc['sensors']:						# alle Sensoren bei dieser espID
+				sen.append({'id':y['id'], 'name': y['name']})  # in das Array eintragen
+			collkorr.insert_one({'espid':espID, 'latitude':loc['latitude'], 'longitude':loc['longitude'],
+								'sensors': sen})			# und das Alles nun in die DB
+	# Ende def enter2KorrelationDB(espID):
+	
+		
+	def getSensorCSV():
+		""" CSV-Datei vom 'vorgestern' lesen und die
+		ersten 5 Entries übergeben 
+		"""
+		if sensor['name'] != 'SDS011':						# nur neue Feinstaub-Sensoren in die Tabelle nehmen
+			return None
+		url = dstr + '_' + sensor['name'].lower() + '_sensor_' + str(sensor['id']) + '.csv'
+		print (url)
+		r = requests.get(SENSORCSVURL+dstr+'/'+url)
+		if r.status_code != 200:
+			return None
+		erg = r.content.split("\n")
+		erg = erg[1:11]
+		sv = []
+		for e in erg:
+			e = e.split(';')
+			sv.append(e)
+		return sv										# die ersten 10 Datenzeilen
+	# Ende def getSensorCSV():
+	
+		
+	def readESPFiles():
+		""" Alles ESP_CVS-Dateien für 'vorgestern' einlesen
+		und auf der Platte im Verzeichnis 'data' speichern.
+		Zusätzlich alle Dateien in 'data', die NICHT dieses
+		Datum haben, löschen
+		"""
+		for f in glob.glob(DATAPATH+'data-esp8266*'):			# erst alle alten löschen
+			os.remove(f)
+		r = requests.get(MADAVICVS)						# Einlesen der Directory
+		erg = r.content									# in r ist die HTML-Dateiliste
+		esps = re.findall(r'=esp8266-[0-9]+',erg)		# Aus dem HTML Dateinamen extrahieren
+		esps = [e[1:] for e in esps]					# das '=' vorne entfernen
+		for esp in esps:								# Nun alle durchgehen
+			fn = MADAVIDATA+'data-'+esp+'-'+dstr+'.csv'
+			print(fn)
+			r = requests.get(fn)						# einlesen
+			if r.status_code != 200:					# Alles OK
+				continue								# nein, also skippen
+			print('^^^^ used')
+			erg = r.text.split("\n");					# in Zeilen zerlegen
+			erg = erg[1:11]								# nur die ersten 10 Zeilen behalten 
+			fn = DATAPATH+'data-'+esp+'-'+dstr+'.csv'	# Filename auf der Disk
+			if os.path.exists(fn) == True:				# wenn das schon da ist
+				break									# dann wurde schon eingelesen, d.h. nicht nochmal
+			f = open(fn,'w')							# File nun zeilenweise
+			for s in erg:								# auf die Disk schreiben
+				s = s+'\n'
+				f.write(s);
+			f.close()									# schließen -> fertig
+	# Ende def readESPFiles():
+	
+			
+	def findESP():
+		"""in den Dateien auf der Disk nun nach Übereinstimmung suchen. Wenn gefunden, dann
+		die ESP-Nummer zurückgeben.
+		Wenn nicht gefunden, dann 'ignore' übergeben
+		"""
+		idxE = INDEXTABLE[sensorCSV[0][1]]['esp'][0]	# Index für diesen Senor in dem ESP-File
+		idxS =  INDEXTABLE[sensorCSV[0][1]]['sensor'][0]	# Index für diesen Senor in dem Sensor-File
+		espID = 'ignore'								# dummy ESP-Nummer
+		for x in range(len(dirlist)):					# die Direktory abarbeiten
+			fname = dirlist[x]
+			f = open(fname,'r');						# File öffenen
+			txt = f.read();								# File lesen
+			f.close()									# und schließen
+			txt = txt.split('\n')						# Zeilen erzeugen
+			giltCnt = 0
+			for n in range(len(txt)-1):					# der Reihe nach alle 10 Zeilen untersuchen
+				line = txt[n]							# Zeile lesen
+				if line == '' or sensorCSV[n][0] == '':							# nur wenn die Zeile nicht leer ist
+					break
+				line = line.split(';')				# dann zerlegen
+				if line[idxE] == sensorCSV[n][idxS]:	# Vergleichen
+					giltCnt += 1					# Gleichheiten zählen
+			if giltCnt >= 5:							# Wenn 5 oder mehr identisch sind
+				espID = fname[21:35]					# ESPID extrahieren
+				espID = espID[:espID.find('-')]			# und die Schleife abbrechne
+				break;
+		return espID
+	# Ende def findESP()
+
+	if not allow:
+		return 'ignore'									# KEINE Korrelation durchführen				
+	dat = datetime.now()								# 'Heute'
+	dat = dat - timedelta(days=2)						# 'Vorgestern' einstellen
+	dstr = dat.strftime("%Y-%m-%d")						# String draus machen
+	eID = 'ignore'										# falls der Sensor gar nicht gefunden wird (keine Datei da)
+	sensorCSV = getSensorCSV()							# Daten aus dem CSV-File von vorgestern holen und merken
+	if sensorCSV != None:								# wenn es ein File zu diesem Sensor gibt, dann
+		dirlist = glob.glob(DATAPATH+'/data-esp8266-*-'+dstr+'.csv')	# Liste der ESP-Dateien auf der Disk
+		if len(dirlist) == 0:							# ist diese 0, 
+			readESPFiles()								# die ESP-CSV-Dateien für 'vorgestern' holen und speichern
+		eID = findESP()									# Durch Vergleich der Daten die ESP_ID finden
+		if eID != 'ignore':								# Wenn die ID gefunden wurde,
+			enter2KorrelationDB(eID)					# diese in die Korrelationstabelle eintragen
+	return(eID)											# gefundene ESP_ID übergeben
+# Ende def doKorrelation(sensor,loc):
+
+	
+			
+def findSensoInKorrelation(db,sensor):	
+	""" Prüfen, ob der Sneor in der Korrelations-Tabelle existiert.
+	Wenn ja, die ESP_ID zurückgeben, wenn nein, dann korrelieren und
+	wintragen und dann auch die ESB-ID zurückgeben """
+	
+	sensorID = sensor['id']							# ID rausholen
+	collkorr = db[KORRCOLL]
+	erg = collkorr.find_one({'sensors.id':sensorID})
+	if erg == None:
+		return 'Unknown'
+	return str(erg['espid'])
+# Ende def findSensoInKorrelation(db,sensor):	
+	
+
+	
+def enterinDB(db,location,doKorr):
+	""" Die Werte in 'sensors' in die DB eintragen. """
+	# Dazu erst mal prüfen, ob dieser Sensor schon in der Korrelationtabelle
+	# existiert
+	for sensor in location['sensors']:
+		espID = findSensoInKorrelation(db,sensor)
+		if espID == 'Unknown':
+			print ("Sensor", sensor['id'],sensor['name'],"nicht in der Tabelle - versuche Korrelation")
+			espID = doKorrelation(db,sensor,location, doKorr)
+			if espID == 'ignore':						# wenn espID auf 'ignore' steht,
+				print("Korrelation war NICHT erfogreich")
+				return									# dann gar nix machen
+			else:
+				print("Korrelation gelungen - Eintrag in die DB")
+		coll = db['ESP_'+espID+'.'+ str(sensor['name'])]  # andernfalls
+		for w in sensor['values']:					# die Werte des Sensoor
+			w['date'] = datetime.strptime(w['date'],'%Y-%m-%dT%H:%M:%S.%fZ')		# 2016-11-29T12:54:06.973556Z
+			erg = coll.find_one({'date':w['date']}) # eintragen, ween nicht
+			if erg == None:							# schon drin
+				erg = coll.insert_one(w)
+				# print("Eintrag in die DB mit " + str(espID)+ ' und ' + sensor['name'])
+# Ende def enterinDB(db,location,nbr):
+
+
+# hier oberhalb wird nimmer verwendet !!!!
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+def checkLocations(db, dest, src):
+	""" Alle DB-Einträge aus 'dest' durchgehen, mit der Geolocation suchen,
+	ob in der DB 'dest' die gleichen Locations vorhanden sind. Falls ja, dann die
+	Sensor-ID aus dest in das 'othersensor-Feld von src eintragen. """
+	collsrc = db[src]
+	colldest = db[dest]
+	for dahin in colldest.find():
+		for erg in collsrc.find({'longitude':dahin['longitude'], 'latitude':dahin['latitude']}):
+			colldest.update({'_id': dahin['_id']},{ '$addToSet': { 'sensors': { 'id': erg['id'], 'name':src[5:] } } })
+								
+							
+	
+def addAltitude(loc):
+	""" Via Google-API doe Höhe bei den übergeben Koordinaten holen """
+	try:
+		r = requests.get('https://maps.googleapis.com/maps/api/elevation/json?locations={0},{1}&key=AIzaSyBpQm2BKLtU2oxdrgy45s27ao3J1cBj64E'.format(loc[0],loc[1]))
+		places = r.json();
+		print ('At {0} elevation is: {1}').format(loc, places['results'][0]['elevation'])
+	except:
+		print ('Error in altitude for location: {0}').format(loc)
+		return 0
+		
+	return round(places['results'][0]['elevation'])
+	
+def addAddress(loc):
+	""" Via Google-API die Adressdaten zu den Koordinaten holen """
+	try:
+		r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?latlng={0},{1}&key=AIzaSyBpQm2BKLtU2oxdrgy45s27ao3J1cBj64E'.format(loc[0],loc[1]))
+		addr = r.json()
+#		print (addr)
+	except:
+		print('Error in address for location: {0}').format(loc)
+		return ""
+	return addr['results'][0]['address_components']
+
+
+def getAktdata(db):
+	""" Die gerade aktuellen Daten von madavi holen, die wichtigen (die SDS011-) Daten
+	extrahieren, über die Korrelationstabelle die ESP-ID holen und dann in die DB eintragen
+	"""	
+	def holDaten(live):
+		""" Die aktuellen Daten vom madavi oder von Disk holen """
+		dstr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+		if live == True:
+			print(dstr + ' - Hole von Madavi');
+			r = requests.get(APIURL)
+			if r.status_code == 200:
+				with open('../data/curdata.txt','w') as f:  # und auch zusätzlich auf
+					f.write(r.text);						# Disk schreiben
+				return r.json()
+		else:
+			with open('../data/curdata.txt') as f:
+				return json.loads(f.read())	
+	# Ende def holDaten():
+		
+	
+	aktDaten = holDaten(True)
+	for x in aktDaten:	
+		# print(x)
+		sensorname = x['sensor']['sensor_type']['name'] 
+		if  sensorname == 'PPD42NS':						# diese Sensoren ignorieren
+			continue		
+		sid = int(x['sensor']['id'])						# Sensor-ID
+		# Geokoordinaten in Float umrechnen
+		lat = float(x['location']['latitude'])	
+		lon = float(x['location']['longitude'])
+		lid = int(x['location']['id'])
+		one = {}
+		one['location'] = {'longitude':lon, 'latitude':lat, 'altitude':0, 'id':lid }  # Daten zusammestellen
+		one['espid'] = ''
+		one['sensors'] = [{'id':sid,'name':sensorname}]
+		collStr = KORRCOLL							# Name der collection
+		collection = db[collStr]
+		res = collection.find_one({'location.id':lid})
+		if res == None: 							# falls noch nicht eingetragen
+			print("Neu-Eintrag " + sensorname + ' ' + str(sid))
+			one['location']['altitude'] =  addAltitude([lat,lon])	# bei Google die Höhe holen und eintragen
+			addr = addAddress([lat,lon])			# und bei Google die Adresse holen
+			toinsert = {}
+			if addr != "":
+				for i in range(0,len(addr)):
+					if addr[i]['types'][0] == 'street_number':
+						toinsert['number'] = addr[i]['short_name']
+					if addr[i]['types'][0] == 'route':
+						toinsert['street'] = addr[i]['short_name']
+					if addr[i]['types'][0] == 'locality':
+						toinsert['city'] = addr[i]['long_name']
+					if addr[i]['types'][0] == 'country':
+						toinsert['country'] = addr[i]['short_name']
+					if addr[i]['types'][0] == 'political':
+						toinsert['region'] = addr[i]['short_name']
+					if addr[i]['types'][0] == 'postal_code':
+						toinsert['plz'] = addr[i]['short_name']
+				one['address'] = toinsert	
+				print(one['address'])
+			collection.insert_one(one)				# nun eintragen
+		else:										# ist dieser Sensor schon eingetragen?
+			erg = collection.find_one({'sensors':{'$elemMatch':{'id':sid}}}) 
+			if  erg == None:	# Nein -> also eintragen
+				collection.update({'location.id':lid}, {'$push': {'sensors': {'id':sid,'name':sensorname}}})	
+
+			
+# Ende def getAktdata(db):
+
+		
+def main():
+	# Vorbereitung für die Dataenbank
+	client = MongoClient(MONGOURL)
+	db = client[MONGODBASE]
+	
+	print("Start um "+ str(datetime.now()))
+	# Ablauf des Ganzen
+	getAktdata(db)
+	
+	# Datenbank schließen
+	client.close()
+	
+	print("Alles fertig. Ende - Aus  " +  str(datetime.now()))
+# Ende def main():
+
+
+# Programm starten
+if __name__ == "__main__":
+	main()
+	

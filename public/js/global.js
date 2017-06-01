@@ -176,20 +176,24 @@ $(document).ready(function() {
 			alert("Fehler <br />" + err);						// if error, show it
 		} else {
 			if (data.length == 0) {
-				showError(2,"No data at korrelation ", aktsensorid);
-					return -1;
-			}
-			korrelation = data[0];
-			// sort array of sensor, so that SDS are the first ones
-			korrelation.sensors.sort(function(a,b) {
-				if (a.name < b.name) {
-                    return 1;
-                }
-				if(a.name > b.name)	{
-					return -1;
-				}
-				return 0;
-			});
+				korrelation = {'address':{},'location': {},'espid': "", 'sensors': [{'id': aktsensorid}]};
+//				showError(2,"No data at korrelation ", aktsensorid);
+//					return -1;
+			} else {
+                korrelation = data[0];
+            }
+            // sort array of sensor, so that SDS are the first ones
+			if (korrelation.sensors.length > 1) {
+                korrelation.sensors.sort(function (a, b) {
+                    if (a.name < b.name) {
+                        return 1;
+                    }
+                    if (a.name > b.name) {
+                        return -1;
+                    }
+                    return 0;
+                });
+            }
 			console.log("Korrelation: ",korrelation);
 
 			buildHeaderline(korrelation.sensors,korrelation.address);
@@ -201,7 +205,6 @@ $(document).ready(function() {
 
 		}
     });
-
 
 
 
@@ -341,39 +344,43 @@ $(document).ready(function() {
 	}
 
 	// Sensornummer und Name und Adresse oben mit eintragen
-	function buildHeaderline(korr,addr) {
-		var hl = 'Sensoren: ';
-		for (var i in korr) {
-			hl += korr[i].id+"-"+korr[i].name+" / ";
-		}
-		hl = hl.slice(0,-2);
-		$('#subtitle').html(hl);
-//		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + korr[0].id);
-		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: ");
-		$('#btnssel').html(korr[0].id);
-		console.log(addr);
+	function buildHeaderline(sensors,addr) {
+		if(sensors.length > 0) {
+            var hl = 'Sensoren: ';
+            for (var i in sensors) {
+                hl += sensors[i].id + "-" + sensors[i].name + " / ";
+            }
+            hl = hl.slice(0, -2);
+            $('#subtitle').html(hl);
+            //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + sensors[0].id);
+            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
+            $('#btnssel').html(sensors[0].id);
+        }
+        console.log(addr);
 		adtxt = '';
-		if (extAddr) {
-            if(addr.number !== undefined) {
-                adtxt += addr.number + ', ';
+		if(addr != {}) {
+            if (extAddr) {
+                if (addr.number !== undefined) {
+                    adtxt += addr.number + ', ';
+                }
+                if (addr.street !== undefined) {
+                    adtxt += addr.street + ', ';
+                }
             }
-            if(addr.street !== undefined) {
-                adtxt += addr.street + ', ';
+            if (addr.region !== undefined) {
+                adtxt += addr.region + ', ';
             }
+            if (addr.plz !== undefined) {
+                adtxt += addr.plz + ' ';
+            }
+            if (addr.city !== undefined) {
+                adtxt += addr.city + ', ';
+            }
+            if (addr.country !== undefined) {
+                adtxt += addr.country;
+            }
+            $('#adresse').html(adtxt);
         }
-		if(addr.region !== undefined) {
-			adtxt += addr.region + ', ';
-		}
-		if(addr.plz !== undefined) {
-			adtxt += addr.plz + ' ';
-		}
-        if(addr.city !== undefined) {
-            adtxt += addr.city + ', ';
-        }
-        if(addr.country !== undefined) {
-            adtxt += addr.country;
-        }
-		$('#adresse').html(adtxt);
 	}
 
 
@@ -462,9 +469,9 @@ $(document).ready(function() {
 				alert("Fehler <br />" + err);						// if error, show it
 			} else {
                 console.log(moment().format() + " --> " +data1.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
-			    if (data1.docs.length == 0) {
-                    showError(1,"No data at " + what, aktsensorid);
-                }
+//			    if (data1.docs.length == 0) {
+//                    showError(1,"No data at " + what, aktsensorid);
+//                }
                 if((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
                     PlotYearfs (what,data1);
                 } else {
@@ -529,7 +536,7 @@ function createGlobObtions() {
 	// Options, die für alle Plots identisch sind
 	globObject = {
 			chart: {
-				height: 400,
+				height: 600,
 				width: 1000,
 				spacingRight: 20,
 				spacingLeft: 20,
@@ -681,14 +688,16 @@ function createGlobObtions() {
 		});
 
 		if(what == 'oneday') {
+			var p10 = (data.length > 0) ? data[data.length-1].P10 : "";
+			var p25 = (data.length > 0) ? data[data.length-1].P2_5 : "";
 			// InfoTafel füllen
 			var infoTafel = '<div class="infoTafel">' +
             '<table><tr >' +
 			'<th colspan="3">Aktuelle Werte</th>' +
             '</tr><tr>' +
-            '<td>P10</td><td>' + data[data.length-1].P10 + '</td><td>µg/m<sup>3</sup></td>' +
+            '<td>P10</td><td>' + p10 + '</td><td>µg/m<sup>3</sup></td>' +
             '</tr><tr>' +
-            '<td>P2.5</td><td>' + data[data.length-1].P2_5 + '</td><td>µg/m<sup>3</sup></td>' +
+            '<td>P2.5</td><td>' + p25 + '</td><td>µg/m<sup>3</sup></td>' +
             '</tr></table>' +
             '</div>';
 
@@ -794,9 +803,11 @@ function createGlobObtions() {
 
 		// Check for maxP10/P2_5
 		var maxY = 80;
-        if (datas.maxima.P10_max > 70) {
+        if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 70)) {
             maxY = datas.maxima.P10_max;
         }
+
+        var labelText =  (datas.docs.length==0)? '' : 'Grenzwert 50µg/m<sup>3</sup>';
 
 		var yAxis_dust =  {											// 0
 //				opposite: true,
@@ -814,7 +825,7 @@ function createGlobObtions() {
 					width: 2, // Width of the line
 					label: {
 						useHTML: true,
-						text : 'Grenzwert 50µg/m<sup>3</sup>',
+						text : labelText,
 						y: -10,
 						align: 'center',
 						style : { color: 'red'},
@@ -864,6 +875,11 @@ function createGlobObtions() {
 			dlt.subtract(7,'d');
 			options.xAxis.min = dlt.valueOf();
         }
+        var errorTafel = '<div class="errTafel">' +
+            'Fehler: <br />Sensor unbekannt <br />' +
+				'<span class="errTafelsmall">Bitte einen anderen Sensor wählen</span>' +
+            '</div>';
+
 
 
 //        spinnerBox.close();
@@ -873,7 +889,7 @@ function createGlobObtions() {
 		} else {
 			$('#placeholderFS_1').css('margin-bottom','');
 			Highcharts.chart($('#placeholderFS_1')[0],options,function(chart) {
-				var text = chart.renderer.label(
+                var text = chart.renderer.label(
                     infoTafel,
 					750,
 					60,'rect',0,0,true)
@@ -883,7 +899,25 @@ function createGlobObtions() {
 					.attr({
 						zIndex: 5,
 					}).add();
-			});
+                if(datas.docs.length == 0) {
+                	labeText = "";
+                    var errtext = chart.renderer.label(
+                        errorTafel,
+                        350,
+                        120, 'rect', 0, 0, true)
+                        .css({
+                            fontSize: '20pt',
+                            color: 'red'
+                        })
+                        .attr({
+                            zIndex: 1000,
+							stroke: 'black',
+							'stroke-width': 2,
+							fill: 'white',
+							padding: 10,
+                        }).add();
+                }
+            });
 		}
 	};
 
