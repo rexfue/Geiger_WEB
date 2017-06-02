@@ -182,14 +182,14 @@ $(document).ready(function() {
 			} else {
                 korrelation = data[0];
             }
-            // sort array of sensor, so that SDS are the first ones
+            // sort array of sensor, order is sensor-Nr
 			if (korrelation.sensors.length > 1) {
                 korrelation.sensors.sort(function (a, b) {
-                    if (a.name < b.name) {
-                        return 1;
-                    }
-                    if (a.name > b.name) {
+                    if (a.id < b.id) {
                         return -1;
+                    }
+                    if (a.id > b.id) {
+                        return 1;
                     }
                     return 0;
                 });
@@ -210,28 +210,11 @@ $(document).ready(function() {
 
 
 // ************** Event-Handler **************
-	
-	// Wenn das Fenster den Focus bekommt
-//	$(window).focus(function() {
-//			doPlot(active);
-//	});
-
-
 
     $('#btnMap').click(function() {
         localStorage.setItem('currentSensor',aktsensorid);			// remember actual sensor
         window.location = "/map";
     });
-
-    /*
-	$('#btnHelp').jBox("Modal",{
-	 	ajax: {
-		//	 url: aktsensorid == 'map' ? '/fsdata/helpmap' : '/fsdata/help',
-			url: '/fsdata/help',
-	 		reload: true
-	 	}
-	 });
-*/
 
 
     $('#btnSet').click(function() {
@@ -250,9 +233,24 @@ $(document).ready(function() {
 		switchPlot(active);								// gewählten Plot aktivieren
 	});
 
-    $('#btnssel').click(function() {
-        dialogNewSensor.dialog("open");
-    });
+ //   $('#btnssel').click(function() {
+ //       dialogNewSensor.dialog("open");
+ //   });
+
+	$('#ssel').keypress(function(event) {
+		if(event.which == 13) {
+            var newSens = $('#ssel').val();
+            checkSensorNr(newSens, function (erg) {
+                if (erg) {
+                    dialogSet.dialog("close");
+                    window.location = '/' + newSens;
+                } else {
+                    showError(2, "", newSens);
+                }
+            });
+		}
+	});
+
 
     $('.dialog').keypress(function(e) {
     	if (e.keyCode == 13) {
@@ -345,16 +343,24 @@ $(document).ready(function() {
 
 	// Sensornummer und Name und Adresse oben mit eintragen
 	function buildHeaderline(sensors,addr) {
-		if(sensors.length > 0) {
+		var idx;
+		var count = sensors.length;
+		if(count > 0) {
+/*			// Find aktualsensir in sensors
+            for(idx=0; idx<count; idx++) {
+                if (aktsensorid == sensors[idx].id) {
+                    break;
+                }
+            }
             var hl = 'Sensoren: ';
-            for (var i in sensors) {
+            for (var i=0; i<count; i++) {
                 hl += sensors[i].id + "-" + sensors[i].name + " / ";
             }
             hl = hl.slice(0, -2);
             $('#subtitle').html(hl);
             //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + sensors[0].id);
-            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
-            $('#btnssel').html(sensors[0].id);
+*/            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
+			$('#ssel').val(aktsensorid);
         }
         console.log(addr);
 		adtxt = '';
@@ -449,6 +455,24 @@ $(document).ready(function() {
     }
 
 
+    function startPlot(what,d1,d2,sensor) {
+		var name = sensor.name;
+		if((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
+            if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
+                PlotYearfs(what, d1, sensor);
+            } else {
+                PlotItfs(what, d1, sensor);
+            }
+        } else {
+            if((what == 'oneyear') || (what == 'onemonth')) {
+                PlotYearTHP(what,d1,d2,sensor);
+            } else {
+                PlotItTHP(what, d1,d2,sensor)
+            }
+		}
+    }
+
+
     //	doPlot
 //	Fetch relevant data from the server and plot it
 
@@ -461,8 +485,18 @@ $(document).ready(function() {
 		var d1, d2=null, d3=null;
 		var url = '/fsdata/getfs/'+what;
 		var count = korrelation.sensors.length;				// Anzahl der Sensoren
-		var currentSensor = korrelation.sensors[0];
+		var korridx = 0;
+		console.log(aktsensorid, korrelation);
 
+		for(korridx=0; korridx<count; korridx++) {
+			if (aktsensorid == korrelation.sensors[korridx].id) {
+				break;
+            }
+		}
+		// *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
+
+
+        var currentSensor = korrelation.sensors[korridx];
 		var callopts = {start: start.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
@@ -472,18 +506,14 @@ $(document).ready(function() {
 //			    if (data1.docs.length == 0) {
 //                    showError(1,"No data at " + what, aktsensorid);
 //                }
-                if((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
-                    PlotYearfs (what,data1);
-                } else {
-                    PlotItfs(what, data1);
-                }
+				startPlot(what,data1,null,currentSensor);
 
-                count = count -1
-                if (count == 0) {
+                korridx++;
+                if ((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3)) {
                     return;
                 }
 
-                currentSensor = korrelation.sensors[1];
+                currentSensor = korrelation.sensors[korridx];
 				callopts.sensorname = currentSensor.name;
 				callopts.sensorid = currentSensor.id;
                 $.getJSON(url,callopts, function(data2,err) {		// AJAX Call
@@ -493,9 +523,9 @@ $(document).ready(function() {
                         d2 = data2;
                         console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
 
-                        count = count - 1
-                        if (count != 0) {
-	                        currentSensor = korrelation.sensors[2];
+                        korridx++;
+                        if (!((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3))) {
+	                        currentSensor = korrelation.sensors[korridx];
 							callopts.sensorname = currentSensor.name;
 							callopts.sensorid = currentSensor.id;
 
@@ -504,19 +534,11 @@ $(document).ready(function() {
                                     alert("Fehler <br />" + err);				// if error, show it
                                 } else {
                                     d3 = data3;
-                                    if((what == 'oneyear') || (what == 'onemonth')) {
-                                        PlotYearTHP(what,d2,d3);
-                                    } else {
-                                        PlotItTHP(what, d2,d3)
-                                    }
+                                    startPlot(what,d2,d3,currentSensor);
                                 }
                             });
                         } else {
-                            if((what == 'oneyear') || (what == 'onemonth')) {
-                                PlotYearTHP(what,d2,null);
-                            } else {
-                                PlotItTHP(what, d2, null)
-                            }
+                        	startPlot(what,d2,null,currentSensor);
                         }
 	                }
 				});
@@ -536,7 +558,7 @@ function createGlobObtions() {
 	// Options, die für alle Plots identisch sind
 	globObject = {
 			chart: {
-				height: 600,
+				height: 400,
 				width: 1000,
 				spacingRight: 20,
 				spacingLeft: 20,
@@ -645,8 +667,23 @@ function createGlobObtions() {
         return days;
     };
 
-	// Plot Feinstaub
-	var PlotItfs = function(what, datas) {
+    function addSensorID2chart(chart, sensor) {
+        var sens = chart.renderer.label(
+            'Sensor: ' + sensor.id + ' - ' + sensor.name,
+            400, 55,
+            'text', 0, 0, true)
+            .css({
+                fontSize: '12pt',
+                'font-weight': 'bold',
+            })
+            .attr({
+                zIndex: 5,
+            }).add();
+    }
+
+
+    // Plot Feinstaub
+	var PlotItfs = function(what, datas, sensor) {
 
         var series1 = [];
 		var series2 = [];
@@ -882,13 +919,17 @@ function createGlobObtions() {
 
 
 
-//        spinnerBox.close();
+        //        spinnerBox.close();
 		if(what == 'oneweek') {
 			$('#placeholderFS_2').css('margin-bottom','');
-			$('#placeholderFS_2').highcharts(options);
+//			$('#placeholderFS_2').highcharts(options);
+            Highcharts.chart($('#placeholderFS_2')[0],options, function(chart) {
+            	addSensorID2chart(chart, sensor);
+			}) ;
 		} else {
 			$('#placeholderFS_1').css('margin-bottom','');
 			Highcharts.chart($('#placeholderFS_1')[0],options,function(chart) {
+				addSensorID2chart(chart,sensor);
                 var text = chart.renderer.label(
                     infoTafel,
 					750,
@@ -923,7 +964,7 @@ function createGlobObtions() {
 
 
 	// Plot Temp/Hum/Press
-	var PlotItTHP = function(what, datas, datasBMP) {
+	var PlotItTHP = function(what, datas, datasBMP, sensor) {
 
 		var series1 = [];
 		var series2 = [];
@@ -1110,9 +1151,13 @@ function createGlobObtions() {
 		}
 
 		if(what == 'oneweek') {
-			$('#placeholderTHP_2').highcharts(options);
+            chr = Highcharts.chart($('#placeholderTHP_2')[0],options,function(chart) {
+                addSensorID2chart(chart, sensor);
+            }) ;
+//			$('#placeholderTHP_2').highcharts(options);
 		} else {
             chr = Highcharts.chart($('#placeholderTHP_1')[0],options,function(chart) {
+                addSensorID2chart(chart, sensor);
                 var text = chart.renderer.label(
                     infoTafel,
                     730,
@@ -1137,7 +1182,7 @@ function createGlobObtions() {
 
 
 	// Plot Year
-	var PlotYearfs = function(what,d1) {
+	var PlotYearfs = function(what,d1,sensor) {
 		var series1 = [];
 		var series2 = [];
 
@@ -1271,7 +1316,7 @@ function createGlobObtions() {
 //        ch.renderer.text("Sensor-Nr 141", 10, 10).add();
 	};
 
-	var PlotYearTHP = function(what,dat1, dat2) {
+	var PlotYearTHP = function(what,dat1, dat2,sensor) {
 		var seriesTmx = [];
 		var seriesTmi = [];
 		var seriesDru = [];
