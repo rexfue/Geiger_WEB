@@ -33,8 +33,9 @@ header #h1name {
 header #btnssel {
     float: left;
     width: 80px;
-    height: 40px;
-    font-size: 1.2em;
+    height: 30px;
+	padding-bottom: 25px;
+    font-size: 1.1em;
 }
 header #h1uhr {
 	float: right;
