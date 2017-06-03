@@ -9,7 +9,7 @@ var os = require('os');
 // Consts
 const PORT = 3005;											// Port for server
 
-var mongoPort = 27018;
+var mongoPort = 27017;
 var mongoHost = 'localhost';
 
 if (os.hostname() != "rexfue.de") {
