@@ -37,6 +37,18 @@ header #btnssel {
 	padding-bottom: 25px;
     font-size: 1.1em;
 }
+
+header #ssel {
+	float: left;
+	width: 80px;
+/*	padding-top: 30px; */
+	margin-top: 20px;
+	margin-left: 10px;
+	font-size: 1.1em;
+	background-color: #0099cc;
+	color: white;
+	padding-left: 10px;
+}
 header #h1uhr {
 	float: right;
 }

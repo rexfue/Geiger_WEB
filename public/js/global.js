@@ -210,28 +210,11 @@ $(document).ready(function() {
 
 
 // ************** Event-Handler **************
-	
-	// Wenn das Fenster den Focus bekommt
-//	$(window).focus(function() {
-//			doPlot(active);
-//	});
-
-
 
     $('#btnMap').click(function() {
         localStorage.setItem('currentSensor',aktsensorid);			// remember actual sensor
         window.location = "/map";
     });
-
-    /*
-	$('#btnHelp').jBox("Modal",{
-	 	ajax: {
-		//	 url: aktsensorid == 'map' ? '/fsdata/helpmap' : '/fsdata/help',
-			url: '/fsdata/help',
-	 		reload: true
-	 	}
-	 });
-*/
 
 
     $('#btnSet').click(function() {
@@ -250,9 +233,24 @@ $(document).ready(function() {
 		switchPlot(active);								// gewählten Plot aktivieren
 	});
 
-    $('#btnssel').click(function() {
-        dialogNewSensor.dialog("open");
-    });
+ //   $('#btnssel').click(function() {
+ //       dialogNewSensor.dialog("open");
+ //   });
+
+	$('#ssel').keypress(function(event) {
+		if(event.which == 13) {
+            var newSens = $('#ssel').val();
+            checkSensorNr(newSens, function (erg) {
+                if (erg) {
+                    dialogSet.dialog("close");
+                    window.location = '/' + newSens;
+                } else {
+                    showError(2, "", newSens);
+                }
+            });
+		}
+	});
+
 
     $('.dialog').keypress(function(e) {
     	if (e.keyCode == 13) {
@@ -348,7 +346,7 @@ $(document).ready(function() {
 		var idx;
 		var count = sensors.length;
 		if(count > 0) {
-			// Find aktualsensir in sensors
+/*			// Find aktualsensir in sensors
             for(idx=0; idx<count; idx++) {
                 if (aktsensorid == sensors[idx].id) {
                     break;
@@ -361,8 +359,8 @@ $(document).ready(function() {
             hl = hl.slice(0, -2);
             $('#subtitle').html(hl);
             //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + sensors[0].id);
-            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
-            $('#btnssel').html(sensors[idx].id);
+*/            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
+			$('#ssel').val(aktsensorid);
         }
         console.log(addr);
 		adtxt = '';
@@ -457,6 +455,24 @@ $(document).ready(function() {
     }
 
 
+    function startPlot(what,d1,d2,sensor) {
+		var name = sensor.name;
+		if((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
+            if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
+                PlotYearfs(what, d1, sensor);
+            } else {
+                PlotItfs(what, d1, sensor);
+            }
+        } else {
+            if((what == 'oneyear') || (what == 'onemonth')) {
+                PlotYearTHP(what,d1,d2,sensor);
+            } else {
+                PlotItTHP(what, d1,d2,sensor)
+            }
+		}
+    }
+
+
     //	doPlot
 //	Fetch relevant data from the server and plot it
 
@@ -490,11 +506,7 @@ $(document).ready(function() {
 //			    if (data1.docs.length == 0) {
 //                    showError(1,"No data at " + what, aktsensorid);
 //                }
-                if((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
-                    PlotYearfs (what,data1, currentSensor);
-                } else {
-                    PlotItfs(what, data1,currentSensor);
-                }
+				startPlot(what,data1,null,currentSensor);
 
                 korridx++;
                 if ((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3)) {
@@ -522,19 +534,11 @@ $(document).ready(function() {
                                     alert("Fehler <br />" + err);				// if error, show it
                                 } else {
                                     d3 = data3;
-                                    if((what == 'oneyear') || (what == 'onemonth')) {
-                                        PlotYearTHP(what,d2,d3,currentSensor);
-                                    } else {
-                                        PlotItTHP(what, d2,d3,currentSensor)
-                                    }
+                                    startPlot(what,d2,d3,currentSensor);
                                 }
                             });
                         } else {
-                            if((what == 'oneyear') || (what == 'onemonth')) {
-                                PlotYearTHP(what,d2,null),currentSensor;
-                            } else {
-                                PlotItTHP(what, d2, null,currentSensor)
-                            }
+                        	startPlot(what,d2,null,currentSensor);
                         }
 	                }
 				});
