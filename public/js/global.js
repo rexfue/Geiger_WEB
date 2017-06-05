@@ -1105,8 +1105,8 @@ function createGlobObtions() {
 				text: 'Luftdruck hPa'
 			},
 			gridLineColor: 'lightgray',
-			min: 950,
-			max: 1050,
+			min: 980,
+			max: 1030,
 			tickAmount: 11,
 		};
 
@@ -1360,8 +1360,8 @@ function createGlobObtions() {
                     text: 'Luftdruck hPa'
                 },
                 gridLineColor: 'lightgray',
-                min: 950,
-                max: 1050,
+                min: 980,
+                max: 1030,
                 tickAmount: 5,
             };
 
