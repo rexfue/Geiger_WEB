@@ -55,8 +55,6 @@ MONGODBASE = 'Feinstaub_AllNew'
 APIURL = 'https://api.luftdaten.info/static/v1/data.json'
 COLLECTION = 'aktwerte'
 
-times = []
-
 def getDataValues(x):
     ''' aus dem übergeben Record x nun die enthaltenen Daten rausbasteln und
     in einem Objekt übergeen
@@ -64,7 +62,6 @@ def getDataValues(x):
     ts = dateutil.parser.parse(x['timestamp'])
     werte = {}
     werte['time'] = ts
-    times.append(ts);
     sv = x['sensordatavalues']
     for val in sv:                              # die richtigen Werte rausbasteln
         t = val['value_type']
@@ -85,6 +82,11 @@ def checkParticulate(values):
             return True
     return False
 
+def checklatlon(wert):
+    if wert == None or wert == '':
+        return 999.0
+    else:
+        return float(wert)
 
 def getandsaveAktdata(db,live):
     """ Die gerade aktuellen Daten von luftdaten.info holen und 
@@ -116,13 +118,14 @@ def getandsaveAktdata(db,live):
     
     # first delete ALL old data
     collection.drop()
-    #then create the indexex again
+    # then create the indexex again
     collection.create_index('data.time')
     collection.create_index( [('loc', pymongo.GEOSPHERE )])
     
-#    times = []
     for x in aktData:
         if not checkParticulate(x['sensordatavalues']): # only use particulate matter sensors
+            continue
+        if x['sensor']['sensor_type']['name'] == "PPD42NS":
             continue
         toInsert =  {}                              # Object für den Eintrag in die DB
         # Zunächst die Sensornummer rausholen, prüfen, ob die schon drin ist
@@ -131,13 +134,13 @@ def getandsaveAktdata(db,live):
         toInsert['_id'] = sid
         erg = collection.find_one(toInsert)         # nach der Sensor-ID in der DB suchen
         if erg == None:                             # die Sensor-ID ist noch nicht da
-            lat = x['location']['latitude']         # Geo-Koordinate rausholen
-            if lat != None:
-                lat = float(lat)
-            lon = x['location']['longitude']
-            if lon != None:
-                lon = float(lon)                    # Wenn 'None' drin steht, das lassen
-            toInsert['loc'] = { 'type': 'Point', 'coordinates': [lon,lat]}  # die Koordinten eintragen
+#            print (x)
+            lat = checklatlon(x['location']['latitude'])
+            lon = checklatlon(x['location']['longitude'])
+            if lat == 999.0 or lon == 999.0:
+                toInsert['loc'] = {}
+            else:    
+                toInsert['loc'] = { 'type': 'Point', 'coordinates': [lon,lat]}  # die Koordinten eintragen
             toInsert['data'] = [ getDataValues(x) ]  # Die Werte holen
             collection.insert_one(toInsert)         # und das Alles in die DB rein
 #            print(toInsert)    
