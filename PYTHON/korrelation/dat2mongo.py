@@ -35,10 +35,10 @@ def getandsaveAktdata(db,live):
         else:
             # print(r.headers)
             aktData = r.json()                      # Daten einlesen und JSON parsen 
-            with open('../data/aktdata.json','w') as f:  # und auch zusätzlich auf
+            with open('data/aktdata.json','w') as f:  # und auch zusätzlich auf
                 f.write(r.text);                    # Disk schreiben
     else:
-        with open('../data/aktdata.json') as f:      
+        with open('data/aktdata.json') as f:      
             aktData = json.loads(f.read())    
 
     # Die Daten in aktData nun der Reihe nach in die DB eintragen

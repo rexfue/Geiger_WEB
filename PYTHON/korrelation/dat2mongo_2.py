@@ -107,10 +107,10 @@ def getandsaveAktdata(db,live):
             except:
                 return 'Probleme (json) beim Lesen der Daten'   # Problem: give up
             
-            with open('../data/aktdata.txt','w') as f:  # all OK, write data also to disk 
+            with open('data/aktdata.txt','w') as f:  # all OK, write data also to disk 
                 f.write(r.text);
     else:
-        with open('../data/aktdata.txt') as f:      
+        with open('data/aktdata.txt') as f:      
             aktData = json.loads(f.read())    
 
     # Now enter data into database
