@@ -537,8 +537,8 @@ function movAvgSDSWeek(data) {
             if (d[k].P10 > p1) {
                 p1 = d[k].P10;
             }
-            if (d[k].P2_5 > p1) {
-                p1 = d[k].P2_5;
+            if (d[k].P2_5 > p2) {
+                p2 = d[k].P2_5;
             }
         }
         neu1[j] = {'P10': p1, 'P2_5': p2, 'date': neuData[i].date*1000} ;
