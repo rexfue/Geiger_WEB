@@ -58,10 +58,10 @@ def getandsaveAktdata(db,live):
                     t = 'P2_5'    
                 toInsert[t] = float(val['value'])   # Wert als FLOAT eintragen
                 collStr = 'data_' + str(x['sensor']['id']) + '_' + x['sensor']['sensor_type']['name']  
-                if x['sensor']['id'] == 141:
-                    print ('141: ')
-                    print(toInsert)
-                    print(collStr)
+#                if x['sensor']['id'] == 141:
+#                    print ('141: ')
+#                    print(toInsert)
+#                    print(collStr)
                 collection = db[collStr]            # Daten als 'update' in die DB eintragen
                 collection.update_one({'date':toInsert['date']}, {'$set': toInsert}, upsert=True )
     end = datetime.now()
