@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
-var assert = require('assert');
-var async = require('async');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 

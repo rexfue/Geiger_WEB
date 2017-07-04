@@ -12,6 +12,8 @@ var geocod;
 var w = $('#btnTraf span').width();
 $('#btnTraf').css('width',w+30);
 
+//	localStorage.clear();
+
 // Karte und die Marker erzeugen
 function initMap() {												// Map initialisieren
     var trafficLayer;
@@ -20,6 +22,15 @@ function initMap() {												// Map initialisieren
     // 'globale' Variable
     infowindow = new google.maps.InfoWindow;
     geocod = new google.maps.Geocoder;
+
+
+    // get coordinates from selected sensor (saved in localStorage)
+    var koo = localStorage.getItem('curcoord');
+    if(!((koo == null) || (koo === undefined) || (koo == ""))) {
+        var koord = JSON.parse(koo);
+        myLatLng = {lat: koord.latitude, lng: koord.longitude};
+    }
+
 
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,													// Start-Zoom-Wert
@@ -56,14 +67,15 @@ function initMap() {												// Map initialisieren
             'Error: Your browser doesn\'t support geolocation.');
     }
 
-*/
+
+
 
     var town = localStorage.getItem('defaultmapCenter');
     if ((town == "") || (town == null)) {
         town = 'Stuttgart';
     }
     setCenter(town);
-
+*/
 
     $('#btnBack').click(function() {
         var sensor = localStorage.getItem('currentSensor');

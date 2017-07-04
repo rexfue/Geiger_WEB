@@ -1,13 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/routes/fsdata.js" line="61" mnemonic="7" />
+    <bookmark url="file://$PROJECT_DIR$/routes/fsdata.js" line="77" mnemonic="7" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PYTHON/korrelation/dopython.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PYTHON/korrelation/tstalt.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PYTHON/korrelation/ttlIndex.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.history/26/d06c48c4c24600171b92ff915d24463b" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.history/42/20f8aefac24600171b92ff915d24463b" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.history/44/f01f71a6c64600171b92ff915d24463b" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.history/bd/60176107c34600171b92ff915d24463b" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/10.v1_projectinfodelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/11.v1_projectinfodelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/13.v1_projectinfodelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/14.v1_projectinfodelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/15.v1_projectinfodelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/5.v1_astdelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/6.v1_astdelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/7.v1_astdelta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.fdt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.fdx" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.fnm" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.frq" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.nrm" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.prx" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.tii" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_1.tis" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/segments_2" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/12.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/5.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/.indexes/properties.index" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/.indexes/properties.index" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/http-cache/segments.gen" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/http-cache/segments.gen" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/segments.gen" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/segments.gen" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.log" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/0.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/0.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/1.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/1.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/2.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/2.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/3.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/3.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/4.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/4.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/6.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/6.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/7.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/7.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/8.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/8.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/9.v1_projectinfodelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/9.v1_projectinfodelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/AdditionalProjectInterpreterInfo.pydevinfo" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/com.python.pydev.analysis/AdditionalProjectInterpreterInfo.pydevinfo" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/0.v1_astdelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/0.v1_astdelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/1.v1_astdelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/1.v1_astdelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/2.v1_astdelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/2.v1_astdelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/3.v1_astdelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/3.v1_astdelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/4.v1_astdelta" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/4.v1_astdelta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/v1_astmanager/modulesKeys" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.resources/.projects/korrelation/org.python.pydev/v1_astmanager/modulesKeys" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.debug.ui.prefs" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.debug.ui.prefs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.python.pydev.prefs" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.python.pydev.prefs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.debug.ui/launchConfigurationHistory.xml" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.debug.ui/launchConfigurationHistory.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/server-config.json" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/server-config.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.ui.workbench/dialog_settings.xml" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.eclipse.ui.workbench/dialog_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.python.pydev/pyunit_tests/test_run_pin_info.txt" afterPath="$PROJECT_DIR$/PYTHON/.metadata/.plugins/org.python.pydev/pyunit_tests/test_run_pin_info.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/.metadata/version.ini" afterPath="$PROJECT_DIR$/PYTHON/.metadata/version.ini" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/.settings/org.eclipse.core.resources.prefs" afterPath="$PROJECT_DIR$/PYTHON/korrelation/.settings/org.eclipse.core.resources.prefs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo_2.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo_2.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/korr_apr17.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/korr_apr17.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/style.css" afterPath="$PROJECT_DIR$/public/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/global.js" afterPath="$PROJECT_DIR$/public/js/global.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/mapit.js" afterPath="$PROJECT_DIR$/public/js/mapit.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/data.js" afterPath="$PROJECT_DIR$/routes/data.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/fsdata.js" afterPath="$PROJECT_DIR$/routes/fsdata.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/mapdata.js" afterPath="$PROJECT_DIR$/routes/mapdata.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.pug" afterPath="$PROJECT_DIR$/views/index.pug" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -28,207 +93,153 @@
     <favorites_list name="feinstaub_js" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="helpmap.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/helpmap.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="31" column="47" lean-forward="false" selection-start-line="31" selection-start-column="47" selection-end-line="31" selection-end-column="47" />
-              <folding>
-                <marker date="1496496995000" expanded="true" signature="2046:2490" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/global.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1818">
-              <caret line="655" column="41" lean-forward="true" selection-start-line="655" selection-start-column="41" selection-end-line="655" selection-end-column="41" />
-              <folding>
-                <marker date="1496737578000" expanded="true" signature="24389:24417" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="540" column="18" lean-forward="false" selection-start-line="540" selection-start-column="18" selection-end-line="540" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dat2mongo.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PYTHON/korrelation/dat2mongo.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="56" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.pug" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/index.pug">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="48" lean-forward="false" selection-start-line="9" selection-start-column="48" selection-end-line="9" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/css/style.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2505">
-              <caret line="167" column="13" lean-forward="false" selection-start-line="167" selection-start-column="13" selection-end-line="167" selection-end-column="13" />
-              <folding>
-                <marker date="1496497103000" expanded="true" signature="436:484" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="17" lean-forward="false" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mapdata.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mapit.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="42" lean-forward="false" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
-              <folding>
-                <marker date="1496737578000" expanded="true" signature="2321:2375" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="2321:7187" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="2497:2622" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="2661:3075" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="2836:3069" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="3130:3550" ph="{&quot;title&quot;: 'Info'...}" />
-                <marker date="1496737578000" expanded="true" signature="3280:3392" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="3420:3543" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="3604:4473" ph="{&quot;title&quot;: 'Zentrieren'...}" />
-                <marker date="1496737578000" expanded="true" signature="3705:3892" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="3821:3880" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="3911:4350" ph="[...]" />
-                <marker date="1496737578000" expanded="true" signature="3925:4110" ph="{&quot;text&quot;: &quot;OK&quot;...}" />
-                <marker date="1496737578000" expanded="true" signature="4111:4340" ph="{&quot;text&quot;: &quot;Abbrechen&quot;...}" />
-                <marker date="1496737578000" expanded="true" signature="4183:4252" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="4399:4466" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="4515:4596" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="4546:4590" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="4605:4735" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="4783:5603" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="4893:5069" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5088:5264" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5283:5428" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5354:5424" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5434:5597" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5508:5593" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5655:5727" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5770:6404" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="5839:6015" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6068:6398" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6171:6332" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6220:6318" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6469:6785" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6519:6779" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6816:7070" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="6907:6950" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7140:7182" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7260:7680" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7329:7676" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7385:7590" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7437:7510" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7596:7670" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7731:8009" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7797:8005" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="7852:7999" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8217:8242" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8367:8866" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8438:8862" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8501:8581" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8587:8856" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8612:8741" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8747:8804" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="8938:9036" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="9039:9516" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="9557:10666" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="9706:9874" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="9879:9903" ph="/*...*/" />
-                <marker date="1496737578000" expanded="true" signature="10390:10644" ph="{&quot;path&quot;: pstr...}" />
-                <marker date="1496737578000" expanded="true" signature="10668:10738" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="10767:13854" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="10800:10848" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="10886:13851" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="11042:11194" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="11312:11928" ph="{&quot;sensorid&quot;: item.id...}" />
-                <marker date="1496737578000" expanded="true" signature="11840:11890" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="11970:12167" ph="//..." />
-                <marker date="1496737578000" expanded="true" signature="12238:13782" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="12275:12804" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="12810:13421" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="13469:13573" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="13884:14184" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="13906:14182" ph="{...}" />
-                <marker date="1496737578000" expanded="true" signature="14006:14069" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="765">
+                  <caret line="51" column="26" lean-forward="false" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="data.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/data.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="30">
+                  <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="global.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/public/js/global.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="491">
+                  <caret line="193" column="29" lean-forward="true" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
+                  <folding>
+                    <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
+                    <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
+                    <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
+                    <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
+                    <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
+                    <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.pug" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/index.pug">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="300">
+                  <caret line="20" column="65" lean-forward="false" selection-start-line="20" selection-start-column="65" selection-end-line="20" selection-end-column="65" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/index.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="375">
+                  <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/package.json">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="45">
+                  <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="mapdata.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="705">
+                  <caret line="47" column="43" lean-forward="false" selection-start-line="47" selection-start-column="43" selection-end-line="47" selection-end-column="43" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="tst" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/tst">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="mapit.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="330">
+                  <caret line="22" column="44" lean-forward="false" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="global.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/public/js/global.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="484">
+                  <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
+                  <folding>
+                    <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
+                    <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
+                    <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
+                    <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
+                    <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
+                    <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/css/style.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2475">
+                  <caret line="165" column="0" lean-forward="false" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="481">
+                  <caret line="66" column="30" lean-forward="false" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>fetchLastValue</find>
-      <find>fetchlas</find>
-      <find>first</find>
-      <find>curz</find>
-      <find>geoco</find>
-      <find>setc</find>
-      <find>infowin</find>
-      <find>geocoder</find>
-      <find>setne</find>
-      <find>idle</find>
-      <find>selname</find>
-      <find>calcweek</find>
-      <find>feinstaub</find>
-      <find>korrelation</find>
-      <find>kopf</find>
-      <find>showError</find>
       <find>listen</find>
       <find>infotafel</find>
       <find>minmax</find>
@@ -238,11 +249,27 @@
       <find>map</find>
       <find>back</find>
       <find>btnsse</find>
-      <find>checkSensorNr</find>
       <find>dialognewse</find>
       <find>1050</find>
-      <find>950</find>
       <find>980</find>
+      <find>950</find>
+      <find>subd</find>
+      <find>assert</find>
+      <find>async</find>
+      <find>buildheader</find>
+      <find>findKorrelations</find>
+      <find>data_</find>
+      <find>tooltip</find>
+      <find>zindex</find>
+      <find>toolt</find>
+      <find>PlotItfs</find>
+      <find>startPlot</find>
+      <find>PlotItTHP</find>
+      <find>doplot</find>
+      <find>start</find>
+      <find>dialogNewSensor</find>
+      <find>checkSensorNr</find>
+      <find>one</find>
     </findStrings>
     <replaceStrings>
       <replace>aktsensorid</replace>
@@ -258,6 +285,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="-" />
         <option value="map hegth new value" />
         <option value="ma" />
         <option value="rxf &lt;rexfue@gmail.com&gt;" />
@@ -266,7 +294,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="multisensors" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
   </component>
@@ -281,15 +309,16 @@
         <option value="$PROJECT_DIR$/public/settings.html" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/public/help.html" />
-        <option value="$PROJECT_DIR$/routes/mapdata.js" />
         <option value="$PROJECT_DIR$/views/mapit.pug" />
-        <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/views/index.pug" />
-        <option value="$PROJECT_DIR$/public/css/style.css" />
         <option value="$PROJECT_DIR$/public/js/mapit.js" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/public/js/global.js" />
+        <option value="$PROJECT_DIR$/routes/data.js" />
+        <option value="$PROJECT_DIR$/routes/mapdata.js" />
+        <option value="$PROJECT_DIR$/public/css/style.css" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/views/index.pug" />
         <option value="$PROJECT_DIR$/routes/fsdata.js" />
+        <option value="$PROJECT_DIR$/public/js/global.js" />
       </list>
     </option>
   </component>
@@ -331,7 +360,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -484,6 +512,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -652,6 +681,14 @@
       <workItem from="1496398083520" duration="3062000" />
       <workItem from="1496404906368" duration="2913000" />
       <workItem from="1496557433612" duration="1130000" />
+      <workItem from="1496819714274" duration="1493000" />
+      <workItem from="1497094095428" duration="2506000" />
+      <workItem from="1497413701291" duration="292000" />
+      <workItem from="1497426262246" duration="1008000" />
+      <workItem from="1497942461138" duration="3266000" />
+      <workItem from="1498050494724" duration="3640000" />
+      <workItem from="1498110681607" duration="5473000" />
+      <workItem from="1499168000543" duration="4256000" />
     </task>
     <task id="LOCAL-00001" summary="added map usage&#10;&#10;- infowindow&#10;- säulen&#10;- link zu Grafik&#10;">
       <created>1480856091421</created>
@@ -884,25 +921,32 @@
       <option name="project" value="LOCAL" />
       <updated>1496644541851</updated>
     </task>
-    <task id="LOCAL-00034" summary="P2.5 on week graphics ok again&#10;&#10;routes/fsdata.js&#10;   - reducing datapoints on week data fpr P2.5 now OK">
-      <created>1496737746692</created>
+    <task id="LOCAL-00034" summary="removed unneccesary require statements">
+      <created>1497176090569</created>
       <option name="number" value="00034" />
       <option name="presentableId" value="LOCAL-00034" />
       <option name="project" value="LOCAL" />
-      <updated>1496737746692</updated>
+      <updated>1497176090569</updated>
     </task>
-    <task id="LOCAL-00035" summary="no special log on ID 141&#10;&#10;PYTHON/korrelation/dat2mongo.py&#10;   - logging of ID141 commented out">
-      <created>1496738477029</created>
+    <task id="LOCAL-00035" summary="PYTHON/korrelation/dat2mongo_2.py&#10;   - all comments in english&#10;   - actions from dat2mongo.py and old dat2moingo_2.py merged&#10;  &#10;PYTHON/korrelation/korr_apr17.py&#10;   - all comments in english&#10;   - dont read from 'luftdate.info', read from disk&#10;   - crate TTL-index if new sensor are detected&#10;   &#10;PYTHON/korrelation/dopython.sh, tstalt.pa, ttlindex.py&#10;   - new in git&#10;   &#10;routes/fsdate.js&#10;   - some comments an unused functions deleted">
+      <created>1497437167183</created>
       <option name="number" value="00035" />
       <option name="presentableId" value="LOCAL-00035" />
       <option name="project" value="LOCAL" />
-      <updated>1496738477029</updated>
+      <updated>1497437167183</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="PYTHON/korrelation/dat2mongo_2.py&#10;   - all comments in english&#10;   - actions from dat2mongo.py and old dat2moingo_2.py merged&#10;  &#10;PYTHON/korrelation/korr_apr17.py&#10;   - all comments in english&#10;   - dont read from 'luftdate.info', read from disk&#10;   - crate TTL-index if new sensor are detected&#10;   &#10;PYTHON/korrelation/dopython.sh, tstalt.pa, ttlindex.py&#10;   - new in git&#10;   &#10;routes/fsdate.js&#10;   - some comments an unused functions deleted">
+      <created>1497437524318</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1497437524318</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="381313000" />
+    <option name="totallyTimeSpent" value="402590000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -916,34 +960,24 @@
   <component name="ToolWindowManager">
     <frame x="185" y="23" width="2087" height="1346" extended-state="0" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3199419" sideWeight="0.49675626" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16311714" sideWeight="0.49675626" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2374269" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20494418" sideWeight="0.41868344" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20494418" sideWeight="0.58131653" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24641149" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24931075" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2783094" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2374269" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293461" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13875598" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24641149" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3199419" sideWeight="0.49675626" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24931075" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293461" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15789473" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14114833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1012,9 +1046,9 @@
     <MESSAGE value="Version number now 2.0.3" />
     <MESSAGE value="chande portnumber for MongoDB" />
     <MESSAGE value="y-axis of pressure from 980 to 1030 hPa" />
-    <MESSAGE value="P2.5 on week graphics ok again&#10;&#10;routes/fsdata.js&#10;   - reducing datapoints on week data fpr P2.5 now OK" />
-    <MESSAGE value="no special log on ID 141&#10;&#10;PYTHON/korrelation/dat2mongo.py&#10;   - logging of ID141 commented out" />
-    <option name="LAST_COMMIT_MESSAGE" value="no special log on ID 141&#10;&#10;PYTHON/korrelation/dat2mongo.py&#10;   - logging of ID141 commented out" />
+    <MESSAGE value="removed unneccesary require statements" />
+    <MESSAGE value="PYTHON/korrelation/dat2mongo_2.py&#10;   - all comments in english&#10;   - actions from dat2mongo.py and old dat2moingo_2.py merged&#10;  &#10;PYTHON/korrelation/korr_apr17.py&#10;   - all comments in english&#10;   - dont read from 'luftdate.info', read from disk&#10;   - crate TTL-index if new sensor are detected&#10;   &#10;PYTHON/korrelation/dopython.sh, tstalt.pa, ttlindex.py&#10;   - new in git&#10;   &#10;routes/fsdate.js&#10;   - some comments an unused functions deleted" />
+    <option name="LAST_COMMIT_MESSAGE" value="PYTHON/korrelation/dat2mongo_2.py&#10;   - all comments in english&#10;   - actions from dat2mongo.py and old dat2moingo_2.py merged&#10;  &#10;PYTHON/korrelation/korr_apr17.py&#10;   - all comments in english&#10;   - dont read from 'luftdate.info', read from disk&#10;   - crate TTL-index if new sensor are detected&#10;   &#10;PYTHON/korrelation/dopython.sh, tstalt.pa, ttlindex.py&#10;   - new in git&#10;   &#10;routes/fsdate.js&#10;   - some comments an unused functions deleted" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="406" key="Git.Branch.Popup" />
@@ -1022,25 +1056,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>883</line>
-          <option name="timeStamp" value="275" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="294" />
+      <option name="time" value="303" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2310">
-          <caret line="154" column="17" lean-forward="false" selection-start-line="154" selection-start-column="17" selection-end-line="154" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1095,7 +1115,12 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1496737578000" expanded="true" signature="24389:24417" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
+            <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
+            <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1104,81 +1129,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1620">
           <caret line="108" column="12" lean-forward="false" selection-start-line="108" selection-start-column="12" selection-end-line="108" selection-end-column="12" />
-          <folding>
-            <marker date="1496737578000" expanded="true" signature="2321:2375" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2321:7187" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2497:2622" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2661:3075" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2836:3069" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="3130:3550" ph="{&quot;title&quot;: 'Info'...}" />
-            <marker date="1496737578000" expanded="true" signature="3280:3392" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3420:3543" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3604:4473" ph="{&quot;title&quot;: 'Zentrieren'...}" />
-            <marker date="1496737578000" expanded="true" signature="3705:3892" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3821:3880" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3911:4350" ph="[...]" />
-            <marker date="1496737578000" expanded="true" signature="3925:4110" ph="{&quot;text&quot;: &quot;OK&quot;...}" />
-            <marker date="1496737578000" expanded="true" signature="4111:4340" ph="{&quot;text&quot;: &quot;Abbrechen&quot;...}" />
-            <marker date="1496737578000" expanded="true" signature="4183:4252" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4399:4466" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4515:4596" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4546:4590" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4605:4735" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="4783:5603" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4893:5069" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5088:5264" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5283:5428" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5354:5424" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5434:5597" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5508:5593" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5655:5727" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5770:6404" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5839:6015" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6068:6398" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6171:6332" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6220:6318" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6469:6785" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6519:6779" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6816:7070" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6907:6950" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7140:7182" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7260:7680" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7329:7676" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7385:7590" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7437:7510" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7596:7670" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7731:8009" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7797:8005" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7852:7999" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8217:8242" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8367:8866" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8438:8862" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8501:8581" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8587:8856" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8612:8741" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8747:8804" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8938:9036" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9039:9516" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="9557:10666" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9706:9874" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9879:9903" ph="/*...*/" />
-            <marker date="1496737578000" expanded="true" signature="10390:10644" ph="{&quot;path&quot;: pstr...}" />
-            <marker date="1496737578000" expanded="true" signature="10668:10738" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="10767:13854" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="10800:10848" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="10886:13851" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="11042:11194" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="11312:11928" ph="{&quot;sensorid&quot;: item.id...}" />
-            <marker date="1496737578000" expanded="true" signature="11840:11890" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="11970:12167" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="12238:13782" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="12275:12804" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="12810:13421" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13469:13573" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13884:14184" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13906:14182" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="14006:14069" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1243,7 +1194,12 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1496737578000" expanded="true" signature="24389:24417" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
+            <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
+            <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1252,81 +1208,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1620">
           <caret line="108" column="12" lean-forward="false" selection-start-line="108" selection-start-column="12" selection-end-line="108" selection-end-column="12" />
-          <folding>
-            <marker date="1496737578000" expanded="true" signature="2321:2375" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2321:7187" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2497:2622" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2661:3075" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2836:3069" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="3130:3550" ph="{&quot;title&quot;: 'Info'...}" />
-            <marker date="1496737578000" expanded="true" signature="3280:3392" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3420:3543" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3604:4473" ph="{&quot;title&quot;: 'Zentrieren'...}" />
-            <marker date="1496737578000" expanded="true" signature="3705:3892" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3821:3880" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3911:4350" ph="[...]" />
-            <marker date="1496737578000" expanded="true" signature="3925:4110" ph="{&quot;text&quot;: &quot;OK&quot;...}" />
-            <marker date="1496737578000" expanded="true" signature="4111:4340" ph="{&quot;text&quot;: &quot;Abbrechen&quot;...}" />
-            <marker date="1496737578000" expanded="true" signature="4183:4252" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4399:4466" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4515:4596" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4546:4590" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4605:4735" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="4783:5603" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4893:5069" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5088:5264" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5283:5428" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5354:5424" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5434:5597" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5508:5593" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5655:5727" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5770:6404" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5839:6015" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6068:6398" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6171:6332" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6220:6318" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6469:6785" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6519:6779" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6816:7070" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6907:6950" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7140:7182" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7260:7680" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7329:7676" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7385:7590" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7437:7510" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7596:7670" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7731:8009" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7797:8005" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7852:7999" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8217:8242" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8367:8866" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8438:8862" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8501:8581" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8587:8856" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8612:8741" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8747:8804" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8938:9036" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9039:9516" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="9557:10666" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9706:9874" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9879:9903" ph="/*...*/" />
-            <marker date="1496737578000" expanded="true" signature="10390:10644" ph="{&quot;path&quot;: pstr...}" />
-            <marker date="1496737578000" expanded="true" signature="10668:10738" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="10767:13854" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="10800:10848" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="10886:13851" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="11042:11194" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="11312:11928" ph="{&quot;sensorid&quot;: item.id...}" />
-            <marker date="1496737578000" expanded="true" signature="11840:11890" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="11970:12167" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="12238:13782" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="12275:12804" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="12810:13421" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13469:13573" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13884:14184" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13906:14182" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="14006:14069" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1402,13 +1284,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/jquery-ui/README.md" />
     <entry file="file://$PROJECT_DIR$/feinstaub2mongo_T.js" />
-    <entry file="file://$PROJECT_DIR$/routes/data.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/layout.pug">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
@@ -1420,13 +1295,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="100" lean-forward="false" selection-start-line="4" selection-start-column="100" selection-end-line="4" selection-end-column="100" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1456,9 +1324,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="31" column="47" lean-forward="false" selection-start-line="31" selection-start-column="47" selection-end-line="31" selection-end-column="47" />
-          <folding>
-            <marker date="1496496995000" expanded="true" signature="2046:2490" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1469,153 +1334,105 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/PYTHON/korrelation/dat2mongo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="17" lean-forward="false" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+        <state relative-caret-position="330">
+          <caret line="22" column="56" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
+    <entry file="file://$PROJECT_DIR$/routes/tst">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="48" lean-forward="false" selection-start-line="9" selection-start-column="48" selection-end-line="9" selection-end-column="48" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+        <state relative-caret-position="705">
+          <caret line="47" column="43" lean-forward="false" selection-start-line="47" selection-start-column="43" selection-end-line="47" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="42" lean-forward="false" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
-          <folding>
-            <marker date="1496737578000" expanded="true" signature="2321:2375" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2321:7187" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2497:2622" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2661:3075" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="2836:3069" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="3130:3550" ph="{&quot;title&quot;: 'Info'...}" />
-            <marker date="1496737578000" expanded="true" signature="3280:3392" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3420:3543" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3604:4473" ph="{&quot;title&quot;: 'Zentrieren'...}" />
-            <marker date="1496737578000" expanded="true" signature="3705:3892" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3821:3880" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="3911:4350" ph="[...]" />
-            <marker date="1496737578000" expanded="true" signature="3925:4110" ph="{&quot;text&quot;: &quot;OK&quot;...}" />
-            <marker date="1496737578000" expanded="true" signature="4111:4340" ph="{&quot;text&quot;: &quot;Abbrechen&quot;...}" />
-            <marker date="1496737578000" expanded="true" signature="4183:4252" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4399:4466" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4515:4596" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4546:4590" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4605:4735" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="4783:5603" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="4893:5069" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5088:5264" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5283:5428" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5354:5424" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5434:5597" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5508:5593" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5655:5727" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5770:6404" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="5839:6015" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6068:6398" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6171:6332" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6220:6318" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6469:6785" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6519:6779" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6816:7070" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="6907:6950" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7140:7182" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7260:7680" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7329:7676" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7385:7590" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7437:7510" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7596:7670" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7731:8009" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7797:8005" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="7852:7999" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8217:8242" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8367:8866" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8438:8862" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8501:8581" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8587:8856" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8612:8741" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8747:8804" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="8938:9036" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9039:9516" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="9557:10666" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9706:9874" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="9879:9903" ph="/*...*/" />
-            <marker date="1496737578000" expanded="true" signature="10390:10644" ph="{&quot;path&quot;: pstr...}" />
-            <marker date="1496737578000" expanded="true" signature="10668:10738" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="10767:13854" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="10800:10848" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="10886:13851" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="11042:11194" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="11312:11928" ph="{&quot;sensorid&quot;: item.id...}" />
-            <marker date="1496737578000" expanded="true" signature="11840:11890" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="11970:12167" ph="//..." />
-            <marker date="1496737578000" expanded="true" signature="12238:13782" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="12275:12804" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="12810:13421" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13469:13573" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13884:14184" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="13906:14182" ph="{...}" />
-            <marker date="1496737578000" expanded="true" signature="14006:14069" ph="{...}" />
-          </folding>
+        <state relative-caret-position="330">
+          <caret line="22" column="44" lean-forward="false" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/data.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2505">
-          <caret line="167" column="13" lean-forward="false" selection-start-line="167" selection-start-column="13" selection-end-line="167" selection-end-column="13" />
-          <folding>
-            <marker date="1496497103000" expanded="true" signature="436:484" ph="{...}" />
-          </folding>
+        <state relative-caret-position="2475">
+          <caret line="165" column="0" lean-forward="false" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        <state relative-caret-position="765">
+          <caret line="51" column="26" lean-forward="false" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PYTHON/korrelation/dat2mongo.py">
+    <entry file="file://$PROJECT_DIR$/views/index.pug">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="56" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="56" />
+        <state relative-caret-position="300">
+          <caret line="20" column="65" lean-forward="false" selection-start-line="20" selection-start-column="65" selection-end-line="20" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="66" column="30" lean-forward="false" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/global.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1818">
-          <caret line="655" column="41" lean-forward="true" selection-start-line="655" selection-start-column="41" selection-end-line="655" selection-end-column="41" />
+        <state relative-caret-position="491">
+          <caret line="193" column="29" lean-forward="true" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
           <folding>
-            <marker date="1496737578000" expanded="true" signature="24389:24417" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
+            <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
+            <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
+            <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="540" column="18" lean-forward="false" selection-start-line="540" selection-start-column="18" selection-end-line="540" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>

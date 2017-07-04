@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
-var assert = require('assert');
+var mathe = require('mathjs');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -25,6 +25,8 @@ router.get('/getfs/:week', function (req, res) {
         getLatestValues(db, sensorid, sensorname, samples).then(erg => res.json(erg));
     } else if (week == 'korr') {
         getKorrelation(db, sensorid).then(erg => res.json(erg));
+    } else if (week == "oldest") {
+        getOldestEntry(db,sensorid,sensorname).then(erg  => res.json(erg));
     } else {
         data = {'error': 'MIST VERDAMMTER!!'}; res.json(data);
     }
@@ -51,6 +53,20 @@ function getKorrelation(db,sensorid) {
             resolve(docs)
         });
     });
+    return p;
+}
+
+/* für den übergebenen Sensor das Datum des ältesten Eintrages übergene
+ */
+function getOldestEntry(db,sid,sname) {
+    var p = new Promise(function (resolve,reject) {
+        var colstr = 'data_' + sid + '_' + sname;
+        var collection = db.collection(colstr);
+        collection.findOne({},{sort: {date:1}}, function(err,entry){
+            if (err != null) { reject (err); }
+            resolve(entry.date);
+        });
+    })  ;
     return p;
 }
 
@@ -111,81 +127,43 @@ function getLatestValues(db,sensorid,sensorname,samples) {
      Es müssen also über die Korrelation-Collection die zugehörigen Sensorren dazu gelesen werden.
  ******/
 
-function findKorrelations(db,sensorid,sensorname) {
-    var p = new Promise(function(resolve,reject) {
-        if (sensorname != 'SDS011') {                       // Wenns kein SDS011 ist, nix rückgeben
-            resolve([]);
-        } else {
-            var collKorr = db.collection('korrelations');   // Korrelations-Tabelle
-            collKorr.findOne({'sensors.id': parseInt(sensorid)}, function (err, korr) {
-                if (korr == null) {
-                    resolve(null);
-                } else {
-                    for (var i = 0; i < korr.sensors.length; i++)
-                        if (korr.sensors[i].id == sensorid) {
-                            korr.sensors.splice(i,1);
-                            break;
-                        }
-                       console.log("KORR:",korr) ;
-                    resolve(korr);                         // die zugehörigen Sensoren holen
-                }
-            });
-        }
-    });
-    return p
-}
-
-/*
- var array = [2, 5, 9];
- var index = array.indexOf(5);
- *Note: browser support for indexOf is not supported in Internet Explorer 7 and 8.
-
- Then remove it with splice:
-
- if (index > -1) {
- array.splice(index, 1);
- }
-*/
 
 // Daten für einen Tag aus der Datenbank holen
 function getDayData(db,sensorid,sensorname, st) {
     var p = new Promise(function(resolve,reject) {              // Promise erzeugen
         var start = moment(st);                                 // Zeiten in einen moiment umsetzen
         var end = moment(st);
-//        findKorrelations(db,sensorid,sensorname)
-//        .then((others) => {
-            var colstr = 'data_' + sensorid + '_' + sensorname;
-            var collection = db.collection(colstr);
-            start.subtract(24, 'h');
+        var colstr = 'data_' + sensorid + '_' + sensorname;
+        var collection = db.collection(colstr);
+        start.subtract(24, 'h');
 //            console.log(colstr,start,end);
-            collection.find({
-                date: {
-                    $gte: new Date(start),
-                    $lt: new Date(end)
-                }
-            }, {sort: {date: 1}}).toArray(function (e, docs) {
-                if (e != null) {
-                    reject(e);
-                }
-                console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
-                if (docs.length == 0) {
-                    resolve({'docs': []})
-                };
+        collection.find({
+            date: {
+                $gte: new Date(start),
+                $lt: new Date(end)
+            }
+        }, {sort: {date: 1}}).toArray(function (e, docs) {
+            if (e != null) {
+                reject(e);
+            }
+            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
+            if (docs.length == 0) {
+                resolve({'docs': []})
+            };
 //              console.log("Inhalt 2-2 von 'others':",others);
                 if (sensorname == "SDS011") {
-                    var x = calcCappedMovingAverage(docs, 30);
+                    var x = calcMovingAverage(docs, 30, 'SDS011',3);
 //                    var x = calcMovingMedian(docs, 30, sensorname);
-                    var y = calcMinMaxAvgSDS(docs);
-                    resolve({'docs': x, 'maxima': y }); //, 'others': others.sensors});
-                } else if (sensorname == "DHT22") {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname), 'maxima': calcMinMaxAvgDHT(docs)} );
-                } else if (sensorname == "BMP180") {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
-                } else if (sensorname == "BME280") {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
-                }
-            });
-//        });
+                var y = calcMinMaxAvgSDS(docs);
+                resolve({'docs': x, 'maxima': y }); //, 'others': others.sensors});
+            } else if (sensorname == "DHT22") {
+                resolve({'docs': calcMovingAverage(docs, 10, sensorname), 'maxima': calcMinMaxAvgDHT(docs)} );
+            } else if (sensorname == "BMP180") {
+                resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
+            } else if (sensorname == "BME280") {
+                resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
+            }
+        });
     });
     return p;
 }
@@ -195,39 +173,36 @@ function getWeekData(db,sensorid,sensorname,st) {
     var p = new Promise(function(resolve,reject) {
         var start = moment(st);
         var end = moment(st);
-//        findKorrelations(db,sensorid,sensorname)
-//            .then(others => {
-            var colstr = 'data_' + sensorid + '_' + sensorname;
-            var collection = db.collection(colstr);
-            if (sensorname == "SDS011") {
-                start.subtract(24*8, 'h');
-            } else {
-                start.subtract(24*7, 'h');
+        var colstr = 'data_' + sensorid + '_' + sensorname;
+        var collection = db.collection(colstr);
+        if (sensorname == "SDS011") {
+            start.subtract(24*8, 'h');
+        } else {
+            start.subtract(24*7, 'h');
+        }
+        collection.find({
+            date: {
+                $gte: new Date(start),
+                $lt: new Date(end)
             }
-            collection.find({
-                date: {
-                    $gte: new Date(start),
-                    $lt: new Date(end)
-                }
-            }, {sort: {date: 1}}).toArray(function (e, docs) {
-                if (e != null) {
-                    reject(e);
-                }
-                console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
-                if (docs.length == 0) {
-                    resolve({'docs': []})
-                };
-                if (sensorname == "SDS011") {
-                    var wdata = movAvgSDSWeek(docs);
+        }, {sort: {date: 1}}).toArray(function (e, docs) {
+            if (e != null) {
+                reject(e);
+            }
+            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
+            if (docs.length == 0) {
+                resolve({'docs': []})
+            };
+            if (sensorname == "SDS011") {
+                var wdata = movAvgSDSWeek(docs);
 //                    var y = calcMinMaxAvgSDS(wdata);
-                    resolve( {
-                        'docs': wdata, 'maxima': "MIST"
-                    });
-                } else if((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
-                    resolve( {'docs': calcMovingAverage(docs, 10, sensorname)});
-                }
-            });
- //       });
+                resolve( {
+                    'docs': wdata, 'maxima': "MIST"
+                });
+            } else if((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
+                resolve( {'docs': calcMovingAverage(docs, 10, sensorname)});
+            }
+        });
     });
     return p;
 }
@@ -338,6 +313,7 @@ function getYearData(db,sensorid,sensorname,st,what) {
 	return(sum/arr.length);
 }
 
+/*
 function calcCappedMovingAverage(data, mav) {
     var newData = [];
     var lang = data.length;
@@ -362,7 +338,7 @@ function calcCappedMovingAverage(data, mav) {
         return data;
     }
 }
-
+*/
 
 function calcMovingMedian(data, mav) {
     var newData = [];
@@ -390,24 +366,26 @@ function calcMovingMedian(data, mav) {
 //      data:       array of data
 //      mav:        time in minutes to average
 //      name:       name of sensor
+//      cap:        cap so many max and min values
 //
 // return:
 //      array with averaged values
 // *********************************************
-function calcMovingAverage(data, mav, name) {
-    var newData = [];
+function calcMovingAverage(data, mav, name, cap) {
+    var newDatax = [], newData = [];
     var avgTime = mav*60;           // average time in sec
 
-    if (avgTime === 0) {            // if there's nothing to average, thenr
+    if (avgTime === 0) {            // if there's nothing to average, then
         return data;                // return original data
     }
-    // first convert date to timestam (in secs)
+    // first convert date to timestamp (in secs)
     for (var i=0; i<data.length; i++) {
         data[i].date = ( new Date(data[i].date)) / 1000;       // the math does the convertion
     }
     // now calculate the average
     for (var i = 1, j=0; i < data.length; i++, j++) {
         var sum1 = 0, sum2 = 0, sum3=0, cnt1=0, cnt2=0, cnt3=0;
+        var a1=[], a2=[], a3=[];
         var di = data[i].date;
         if ((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
             for (var k = i; k > 0; k--) {
@@ -416,15 +394,33 @@ function calcMovingAverage(data, mav, name) {
                     break;
                 }
                 if (data[k].P10 !== undefined) {
-                    sum1 += data[k].P10;
-                    cnt1++;
+                    a1.push(data[k].P10);
+//                    sum1 += data[k].P10;
+//                    cnt1++;
                 }
                 if (data[k].P2_5 !== undefined) {
-                    sum2 += data[k].P2_5;
-                    cnt2++;
+                    a2.push(data[k].P2_5)
+//                    sum2 += data[k].P2_5;
+//                    cnt2++;
                 }
             }
-            newData[j] = {'P10_mav': sum1 / cnt1, 'P2_5_mav' : sum2 / cnt2, 'date': data[i].date};
+            if(a1.length < (cap*2)+1) {
+                continue;
+            }
+            a1.sort(function(a,b){return(a-b);});
+            a1 = a1.slice(3,a1.length-3);
+//            for(var m=cap; m<a1.length-cap;m++) {
+//                sum1 += a1[m];
+//            }
+            a2.sort(function(a,b){return(a-b);});
+            a2 = a2.slice(3,a2.length-3);
+//            for(var m=cap; m<a2.length-cap;m++) {
+//                sum2 += a2[m];
+//            }
+//            newData[j] = {'P10_mav': sum1 / (a1.length-(2*cap)), 'P2_5_mav' : sum2 / (a2.length-(2*cap)), 'date': data[i].date*1000,
+              newDatax[j] = {'P10_mav': mathe.mean(a1), 'P2_5_mav' : mathe.mean(a2), 'date': data[i].date*1000,
+                        'P10':data[i].P10, 'P2_5':data[i].P2_5};
+              newData = newDatax.slice(7);
         } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
             for (var k = i; k > 0; k--) {
                 var dk = data[k].date;
@@ -582,58 +578,49 @@ function movAvgSDSWeek_old(data) {
 
 
 function calcMinMaxAvgSDS(data) {
-    var p1=[], p2=[], sum1=0, sum2=0;
+    var p1=[], p2=[];
     for (var i=0; i<data.length; i++) {
-        sum1 += data[i].P10;
-        sum2 += data[i].P2_5;
         p1.push(data[i].P10);
         p2.push(data[i].P2_5);
     }
-    return { 'P10_max': Math.max(...p1), 'P2_5_max': Math.max(...p2),
-        'P10_min': Math.min(...p1), 'P2_5_min': Math.min(...p2),
-        'P10_avg' : sum1/data.length, 'P2_5_avg' : sum2/data.length };
+    return { 'P10_max': mathe.max(p1), 'P2_5_max': mathe.max(p2),
+        'P10_min': mathe.min(p1), 'P2_5_min': mathe.min(p2),
+        'P10_avg' : mathe.mean(p1), 'P2_5_avg' : mathe.mean(p2) };
 }
 
 function calcMinMaxAvgDHT(data) {
-    var t=[], h=[], sumt=0, sumh=0;
+    var t=[], h=[];
     for (var i=0; i<data.length; i++) {
-        sumt += data[i].temperature;
-        sumh += data[i].humidity;
         t.push(data[i].temperature);
         h.push(data[i].humidity);
     }
-    return { 'temp_max': Math.max(...t), 'humi_max': Math.max(...h),
-        'temp_min': Math.min(...t), 'humi_min': Math.min(...h),
-        'temp_avg' : sumt/data.length, 'humi_avg' : sumh/data.length };
+    return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(t),
+        'temp_min': mathe.min(t), 'humi_min': mathe.min(h),
+        'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h) };
 }
 
 
 function calcMinMaxAvgBMP(data) {
-    var t=[], p=[], sumt=0, sump=0;
+    var t=[], p=[];
     for (var i=0; i<data.length; i++) {
-        sumt += data[i].temperature;
-        sump += data[i].pressure;
         t.push(data[i].temperature);
         p.push(data[i].pressure);
     }
-    return { 'temp_max': Math.max(...t), 'press_max': Math.max(...p),
-    'temp_min': Math.min(...t), 'press_min': Math.min(...p),
-    'temp_avg' : sumt/data.length, 'press_avg' : sump/data.length };
+    return { 'temp_max': mathe.max(t), 'press_max': mathe.max(p),
+    'temp_min': mathe.min(t), 'press_min': mathe.min(p),
+    'temp_avg' : mathe.mean(t), 'press_avg' : mathe.mean(p) };
 }
 
 function calcMinMaxAvgBME(data) {
-    var t=[], h=[], p=[], sumt=0, sumh=0, sump=0;
+    var t=[], h=[], p=[], sumt=0;
     for (var i=0; i<data.length; i++) {
-        sumt += data[i].temperature;
-        sumh += data[i].humidity;
-        sump += data[i].pressure;
         t.push(data[i].temperature);
         h.push(data[i].humidity);
         p.push(data[i].pressure);
     }
-    return { 'temp_max': Math.max(...t), 'humi_max': Math.max(...h), 'press_max': Math.max(...p),
-    'temp_min': Math.min(...t), 'humi_min': Math.min(...h), 'press_min': Math.min(...p),
-    'temp_avg' : sumt/data.length, 'humi_avg' : sumh/data.length, 'press_avg' : sump/data.length };
+    return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(h), 'press_max': mathe.max(p),
+    'temp_min': mathe.min(t), 'humi_min': mathe.min(h), 'press_min': mathe.min(p),
+    'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h), 'press_avg' : mathe.mean(p) };
 }
 
 /*

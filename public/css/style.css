@@ -221,3 +221,10 @@ label, input { display: block; }
 	visibility: hidden;
 }
 
+.highcharts-tooltip span {
+	background-color: white;
+	opacity: 1;
+	z-index: 9999 !important;
+}
+
+

@@ -15,14 +15,14 @@ $(document).ready(function() {
 	
 	var MAXBARS = 30;						// max bars to plot on year-plot	
 	var active = 'oneday';					// default: plot 1 day
-	var spinnerVisible = false;
-	var xbreit = 24;						// 24h Breite der  x-Achs 
+	var xbreit = 24;						// 24h Breite der  x-Achs
 	var lastButton = '';
 	var refreshRate = 5;                    // Grafik so oft auffrischen (in Minuten)
 	var habBMP = false;
 	var txtMeldung = false;					// falls keine Daten da sind, Text melden
 	var korrelation = {};
 	var kopf = 'Feinstaub- und Klima-Werte  ';
+	var oldestDate = "01-01-2016";			// oldest date in dbase
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -97,7 +97,7 @@ $(document).ready(function() {
     });
 
 
-	var dialogNewSensor = $('#dialogNewSensor').dialog({
+/*	var dialogNewSensor = $('#dialogNewSensor').dialog({
 		autoOpen: false,
 		width: 300,
 		title:"Neue Sensor-Nr wählen",
@@ -139,7 +139,7 @@ $(document).ready(function() {
 		},
 		modal: true
 	});
-
+*/
 
 	var aktsensorid = selName;
 	console.log('Name='+aktsensorid );
@@ -169,7 +169,7 @@ $(document).ready(function() {
 	$('#h1name').html(kopf);
 
     // Die Plots für die diversen Sensoren ausführen:
-	// dazu vie Korrelation erst mal alle Sensor-Nummern aus der Datenbank
+	// dazu via Korrelation erst mal alle Sensor-Nummern aus der Datenbank holen
 	// Danach dann die Plots der Reihe nach aufrufen
 	$.getJSON('fsdata/getfs/korr', { sensorid: aktsensorid }, function(data,err) {				// AJAX Call
 		if (err != 'success') {
@@ -195,12 +195,18 @@ $(document).ready(function() {
                 });
             }
 			console.log("Korrelation: ",korrelation);
+            getOldestDate(aktsensorid, korrelation.sensors,function(old){
+                oldestDate = old;
+                console.log("Oldest Entry:",oldestDate);
+            });
+
+			// save koordinates etc. in localStorage
+            localStorage.setItem('curcoord',JSON.stringify(korrelation.location));
 
 			buildHeaderline(korrelation.sensors,korrelation.address);
 			doPlot('oneday');						// Start with plotting one day from now on
 			doPlot('oneweek');						// Start with plotting one day from now on
 			doPlot('onemonth');						// Start with plotting one day from now on
-			$('#spinner').hide();
 			switchPlot(active);
 
 		}
@@ -240,9 +246,8 @@ $(document).ready(function() {
 	$('#ssel').keypress(function(event) {
 		if(event.which == 13) {
             var newSens = $('#ssel').val();
-            checkSensorNr(newSens, function (erg) {
+            checkSensorNr(newSens, function (erg,data) {
                 if (erg) {
-                    dialogSet.dialog("close");
                     window.location = '/' + newSens;
                 } else {
                     showError(2, "", newSens);
@@ -268,14 +273,32 @@ $(document).ready(function() {
 
 //	*************  Functions *****************
 
+	// Aus der Datenbank für den Sensor das älteste datum holen und übergeben
+	function getOldestDate(sid, sensors, callback) {
+		var sname = "";
+		for (var i=0; i<sensors.length; i++) {
+			if(sensors[i].id == sid) {
+				sname = sensors[i].name;
+				break;
+			}
+		}
+		$.getJSON('fsdata/getfs/oldest', {sensorid:sid, sensorname:sname}, function(odate,err) {
+			if(err != 'success') {
+                callback("01-01-2016");
+            } else {
+				callback(odate.substring(0,10))
+			}
+		});
+	}
+
 	// Prüfen, ob die übergeben Sensornummer in der Korrelations-Tabelle enthalten ist
 	// Return TRUE, wenn enthalten
 	function checkSensorNr(sid, callBack) {
         $.getJSON('fsdata/getfs/korr', {sensorid: sid}, function (data, err) {				// AJAX Call
             if (err != 'success') {
-                callBack(false);						// if error, show it
+                callBack(false,null);						// if error, show it
             } else {
-                callBack(true);
+                callBack(true,data);
             }
         });
     }
@@ -364,7 +387,7 @@ $(document).ready(function() {
         }
         console.log(addr);
 		adtxt = '';
-		if(addr != {}) {
+		if(!((addr == undefined) || (addr == {}))) {
             if (extAddr) {
                 if (addr.number !== undefined) {
                     adtxt += addr.number + ', ';
@@ -455,19 +478,19 @@ $(document).ready(function() {
     }
 
 
-    function startPlot(what,d1,d2,sensor) {
+    function startPlot(what,d1,d2,sensor,start) {
 		var name = sensor.name;
 		if((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
             if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
                 PlotYearfs(what, d1, sensor);
             } else {
-                PlotItfs(what, d1, sensor);
+                PlotItfs(what, d1, sensor,start);
             }
         } else {
             if((what == 'oneyear') || (what == 'onemonth')) {
                 PlotYearTHP(what,d1,d2,sensor);
             } else {
-                PlotItTHP(what, d1,d2,sensor)
+                PlotItTHP(what, d1,d2,sensor,start)
             }
 		}
     }
@@ -479,12 +502,15 @@ $(document).ready(function() {
 	function doPlot(what,start) {								// if 'start' not defined,
 //		console.log("doPlot");
 		habBMP = false;
+		var st;
 		if (start === undefined) {
-			start = moment();									// then star 'now'
+			st = moment();										// then start 'now'
+		} else {
+            st = moment(start,'YYYY-MM-DD');
 		}
 		var d1, d2=null, d3=null;
 		var url = '/fsdata/getfs/'+what;
-		var count = korrelation.sensors.length;				// Anzahl der Sensoren
+		var count = korrelation.sensors.length;					// Anzahl der Sensoren
 		var korridx = 0;
 		console.log(aktsensorid, korrelation);
 
@@ -497,7 +523,7 @@ $(document).ready(function() {
 
 
         var currentSensor = korrelation.sensors[korridx];
-		var callopts = {start: start.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name};
+		var callopts = {start: st.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
 				alert("Fehler <br />" + err);						// if error, show it
@@ -506,16 +532,21 @@ $(document).ready(function() {
 //			    if (data1.docs.length == 0) {
 //                    showError(1,"No data at " + what, aktsensorid);
 //                }
-				startPlot(what,data1,null,currentSensor);
+				startPlot(what,data1,null,currentSensor,st);
 
                 korridx++;
                 if ((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3)) {
                     return;
                 }
-
+                if (start === undefined) {
+                    st = moment();										// then start 'now'
+                } else {
+                    st = moment(start,'YYYY-MM-DD');
+                }
                 currentSensor = korrelation.sensors[korridx];
 				callopts.sensorname = currentSensor.name;
 				callopts.sensorid = currentSensor.id;
+				callopts.start = st.toJSON();
                 $.getJSON(url,callopts, function(data2,err) {		// AJAX Call
                     if (err != 'success') {
                         alert("Fehler <br />" + err);				// if error, show it
@@ -534,11 +565,11 @@ $(document).ready(function() {
                                     alert("Fehler <br />" + err);				// if error, show it
                                 } else {
                                     d3 = data3;
-                                    startPlot(what,d2,d3,currentSensor);
+                                    startPlot(what,d2,d3,currentSensor,st);
                                 }
                             });
                         } else {
-                        	startPlot(what,d2,null,currentSensor);
+                        	startPlot(what,d2,null,currentSensor,st);
                         }
 	                }
 				});
@@ -583,7 +614,19 @@ function createGlobObtions() {
                 align: 'left',
             },
 			tooltip: {
-				valueDecimals: 2,
+				valueDecimals: 1,
+				backgroundColor: 0,
+				borderWidth: 0,
+				borderRadius: 0,
+				useHTML: true,
+				formatter: function () {
+					return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">'+
+						moment(this.x).format("DD.MMM  HH:mm:ss") + '<br />' +
+						'<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+						this.series.name + ':&nbsp; <b>' +
+						Highcharts.numberFormat(this.y,1) +
+						'</b></div>';
+				}
 			},
 			xAxis: {
 				type: 'datetime',
@@ -607,6 +650,9 @@ function createGlobObtions() {
 					}
 				},
 			},
+//			tooltip: {
+//				backgroundColor: "rgba(255,255,255,1)"
+//			}
 	};
 	return globObject;
 }
@@ -683,7 +729,7 @@ function createGlobObtions() {
 
 
     // Plot Feinstaub
-	var PlotItfs = function(what, datas, sensor) {
+	var PlotItfs = function(what, datas, sensor,start) {
 
         var series1 = [];
 		var series2 = [];
@@ -717,8 +763,8 @@ function createGlobObtions() {
 			} else {
 				series1.push([ dat, this.P10 ]);			// put data and value into series array
 				series2.push([ dat, this.P2_5 ]);
-				series3.push([ dat, this.P10_cav]);
-				series4.push([ dat, this.P2_5_cav]);
+				series3.push([ dat, this.P10_mav]);
+				series4.push([ dat, this.P2_5_mav]);
 				series5.push([ dat, this.P10_med]);
 				series6.push([ dat, this.P2_5_med]);
 			}
@@ -892,7 +938,8 @@ function createGlobObtions() {
 			options.series[3] = series_P2_5;
 //			options.series[4] = series_P10_m;
 //			options.series[5] = series_P2_5_m;
-            var dlt = moment();
+//            var dlt = moment();
+  			var dlt = start;
             options.xAxis.max = dlt.valueOf();
             dlt.subtract(1,'d');
             options.xAxis.min = dlt.valueOf();
@@ -907,7 +954,8 @@ function createGlobObtions() {
 			options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
 //            var dlt = moment(data[data.length-1].date);	// retrieve the date
-			var dlt = moment();
+//			var dlt = moment();
+			var dlt = start;
             options.xAxis.max = dlt.valueOf();
 			dlt.subtract(7,'d');
 			options.xAxis.min = dlt.valueOf();
@@ -919,7 +967,6 @@ function createGlobObtions() {
 
 
 
-        //        spinnerBox.close();
 		if(what == 'oneweek') {
 			$('#placeholderFS_2').css('margin-bottom','');
 //			$('#placeholderFS_2').highcharts(options);
@@ -964,7 +1011,7 @@ function createGlobObtions() {
 
 
 	// Plot Temp/Hum/Press
-	var PlotItTHP = function(what, datas, datasBMP, sensor) {
+	var PlotItTHP = function(what, datas, datasBMP, sensor, start) {
 
 		var series1 = [];
 		var series2 = [];
@@ -1139,12 +1186,14 @@ function createGlobObtions() {
 			options.xAxis.tickInterval = 3600*6*1000;
             options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
-            var dlt = moment();
+//            var dlt = moment();
+            var dlt = start;
             options.xAxis.max = dlt.valueOf();
             dlt.subtract(7,'d');
             options.xAxis.min = dlt.valueOf();
         } else {
-            var dlt = moment();
+//            var dlt = moment();
+            var dlt = start;
             options.xAxis.max = dlt.valueOf();
             dlt.subtract(1,'d');
             options.xAxis.min = dlt.valueOf();
@@ -1309,7 +1358,6 @@ function createGlobObtions() {
         options.chart.zoomType = 'x';
 
 		$.extend(true,options,localOptions);
-//		spinnerBox.close();
 
 		// Do the PLOT
 		var ch = $('#placeholderFS_3').highcharts(options);
@@ -1351,7 +1399,7 @@ function createGlobObtions() {
         var title = habBMP ? "Temperatur min/max  -  Luftdruck (Tagesmittel)" :  "Temperatur min/max" ;
         var dlt = moment();	// retrieve the date
         if (what == 'onemonth') {
-            dlt.subtract(31,'d');
+            dlt.subtract(33,'d');
         } else {
             dlt.subtract(366, 'd');
         }

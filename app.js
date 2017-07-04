@@ -1,4 +1,3 @@
-var subd = require('express-subdomain');
 var express = require('express');
 var app = express();
 //var assert = require('assert');
