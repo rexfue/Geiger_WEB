@@ -791,7 +791,7 @@ function createGlobObtions() {
 		var series_P10 = {
 				name: 'P10',
 				data: series1,
-				color: '#00FFFF',
+				color: '#00CCFF',
 				zIndex:3,
 				marker: {
 					enabled: false,
@@ -803,7 +803,7 @@ function createGlobObtions() {
 		var series_P2_5 ={
 				name: 'P2.5',
 				data: series2,
-				color: '#33FF00',
+				color: '#00CC00',
 				zIndex:3,
 				marker: {
 					enabled: false,

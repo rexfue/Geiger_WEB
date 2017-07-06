@@ -64,15 +64,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/.settings/org.eclipse.core.resources.prefs" afterPath="$PROJECT_DIR$/PYTHON/korrelation/.settings/org.eclipse.core.resources.prefs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo_2.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo_2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/korr_apr17.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/korr_apr17.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/style.css" afterPath="$PROJECT_DIR$/public/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/global.js" afterPath="$PROJECT_DIR$/public/js/global.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/mapit.js" afterPath="$PROJECT_DIR$/public/js/mapit.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/data.js" afterPath="$PROJECT_DIR$/routes/data.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/fsdata.js" afterPath="$PROJECT_DIR$/routes/fsdata.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/mapdata.js" afterPath="$PROJECT_DIR$/routes/mapdata.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.pug" afterPath="$PROJECT_DIR$/views/index.pug" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -119,15 +111,15 @@
           <file leaf-file-name="global.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/js/global.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="491">
-                  <caret line="193" column="29" lean-forward="true" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
+                <state relative-caret-position="-348">
+                  <caret line="793" column="29" lean-forward="false" selection-start-line="793" selection-start-column="29" selection-end-line="793" selection-end-column="29" />
                   <folding>
-                    <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
-                    <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
-                    <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
-                    <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
-                    <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
-                    <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="18829:18886" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="18972:18979" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="19005:19012" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="19012:19018" ph=" " />
+                    <marker date="1499321147000" expanded="true" signature="19056:19062" ph=" " />
+                    <marker date="1499321147000" expanded="true" signature="26046:26074" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -203,12 +195,12 @@
                 <state relative-caret-position="484">
                   <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
                   <folding>
-                    <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
-                    <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
-                    <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
-                    <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
-                    <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
-                    <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="18829:18886" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="18972:18979" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="19005:19012" ph="..." />
+                    <marker date="1499321147000" expanded="true" signature="19012:19018" ph=" " />
+                    <marker date="1499321147000" expanded="true" signature="19056:19062" ph=" " />
+                    <marker date="1499321147000" expanded="true" signature="26046:26074" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -227,7 +219,7 @@
           <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="481">
+                <state relative-caret-position="990">
                   <caret line="66" column="30" lean-forward="false" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
                   <folding />
                 </state>
@@ -688,7 +680,8 @@
       <workItem from="1497942461138" duration="3266000" />
       <workItem from="1498050494724" duration="3640000" />
       <workItem from="1498110681607" duration="5473000" />
-      <workItem from="1499168000543" duration="4256000" />
+      <workItem from="1499168000543" duration="5900000" />
+      <workItem from="1499320919353" duration="269000" />
     </task>
     <task id="LOCAL-00001" summary="added map usage&#10;&#10;- infowindow&#10;- säulen&#10;- link zu Grafik&#10;">
       <created>1480856091421</created>
@@ -942,11 +935,18 @@
       <option name="project" value="LOCAL" />
       <updated>1497437524318</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="public/css/style.css&#10;   - tooltip opacity set to 1&#10;   &#10;public/js/global.js&#10;   - get date of odest entry at start &#10;   - start date can be changed&#10;   - tooltip is no longer transparent&#10;   &#10;public/js/map.js&#10;   - center map on sensor&#10;   &#10;routes/data.js&#10;   - obsolete 'require' deleted&#10;   &#10;routes/fsdata.js&#10;   - get oldest date&#10;   - use start date&#10;   - error in average calculation deleted&#10;   &#10;views/index.pug&#10;   - button for 'start-day'&#10;   &#10;package.json&#10;   - new versionnumber&#10;   - adopted dependencies">
+      <created>1499190502782</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1499190502782</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="402590000" />
+    <option name="totallyTimeSpent" value="404503000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1023,7 +1023,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Synchronisierung auf Uhrzeit&#10;&#10;Überflüssige StopUhr wiedee rausgeworfen&#10;" />
     <MESSAGE value="Anzeige nun statt Minat- eine Jahres-Übersicht" />
     <MESSAGE value="Subtext für Temp in der Jahresübersicht" />
     <MESSAGE value="Ganze Handvoll Änderunegn" />
@@ -1048,7 +1047,8 @@
     <MESSAGE value="y-axis of pressure from 980 to 1030 hPa" />
     <MESSAGE value="removed unneccesary require statements" />
     <MESSAGE value="PYTHON/korrelation/dat2mongo_2.py&#10;   - all comments in english&#10;   - actions from dat2mongo.py and old dat2moingo_2.py merged&#10;  &#10;PYTHON/korrelation/korr_apr17.py&#10;   - all comments in english&#10;   - dont read from 'luftdate.info', read from disk&#10;   - crate TTL-index if new sensor are detected&#10;   &#10;PYTHON/korrelation/dopython.sh, tstalt.pa, ttlindex.py&#10;   - new in git&#10;   &#10;routes/fsdate.js&#10;   - some comments an unused functions deleted" />
-    <option name="LAST_COMMIT_MESSAGE" value="PYTHON/korrelation/dat2mongo_2.py&#10;   - all comments in english&#10;   - actions from dat2mongo.py and old dat2moingo_2.py merged&#10;  &#10;PYTHON/korrelation/korr_apr17.py&#10;   - all comments in english&#10;   - dont read from 'luftdate.info', read from disk&#10;   - crate TTL-index if new sensor are detected&#10;   &#10;PYTHON/korrelation/dopython.sh, tstalt.pa, ttlindex.py&#10;   - new in git&#10;   &#10;routes/fsdate.js&#10;   - some comments an unused functions deleted" />
+    <MESSAGE value="public/css/style.css&#10;   - tooltip opacity set to 1&#10;   &#10;public/js/global.js&#10;   - get date of odest entry at start &#10;   - start date can be changed&#10;   - tooltip is no longer transparent&#10;   &#10;public/js/map.js&#10;   - center map on sensor&#10;   &#10;routes/data.js&#10;   - obsolete 'require' deleted&#10;   &#10;routes/fsdata.js&#10;   - get oldest date&#10;   - use start date&#10;   - error in average calculation deleted&#10;   &#10;views/index.pug&#10;   - button for 'start-day'&#10;   &#10;package.json&#10;   - new versionnumber&#10;   - adopted dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="public/css/style.css&#10;   - tooltip opacity set to 1&#10;   &#10;public/js/global.js&#10;   - get date of odest entry at start &#10;   - start date can be changed&#10;   - tooltip is no longer transparent&#10;   &#10;public/js/map.js&#10;   - center map on sensor&#10;   &#10;routes/data.js&#10;   - obsolete 'require' deleted&#10;   &#10;routes/fsdata.js&#10;   - get oldest date&#10;   - use start date&#10;   - error in average calculation deleted&#10;   &#10;views/index.pug&#10;   - button for 'start-day'&#10;   &#10;package.json&#10;   - new versionnumber&#10;   - adopted dependencies" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="406" key="Git.Branch.Popup" />
@@ -1115,12 +1115,12 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
-            <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
-            <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="18829:18886" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="18972:18979" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="19005:19012" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="19012:19018" ph=" " />
+            <marker date="1499321147000" expanded="true" signature="19056:19062" ph=" " />
+            <marker date="1499321147000" expanded="true" signature="26046:26074" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1194,12 +1194,12 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
-            <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
-            <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="18829:18886" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="18972:18979" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="19005:19012" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="19012:19018" ph=" " />
+            <marker date="1499321147000" expanded="true" signature="19056:19062" ph=" " />
+            <marker date="1499321147000" expanded="true" signature="26046:26074" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1415,7 +1415,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
+        <state relative-caret-position="990">
           <caret line="66" column="30" lean-forward="false" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
           <folding />
         </state>
@@ -1423,15 +1423,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/global.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="193" column="29" lean-forward="true" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
+        <state relative-caret-position="-348">
+          <caret line="793" column="29" lean-forward="false" selection-start-line="793" selection-start-column="29" selection-end-line="793" selection-end-column="29" />
           <folding>
-            <marker date="1499189422000" expanded="true" signature="18829:18886" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="18972:18979" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="19005:19012" ph="..." />
-            <marker date="1499189422000" expanded="true" signature="19012:19018" ph=" " />
-            <marker date="1499189422000" expanded="true" signature="19056:19062" ph=" " />
-            <marker date="1499189422000" expanded="true" signature="26046:26074" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="18829:18886" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="18972:18979" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="19005:19012" ph="..." />
+            <marker date="1499321147000" expanded="true" signature="19012:19018" ph=" " />
+            <marker date="1499321147000" expanded="true" signature="19056:19062" ph=" " />
+            <marker date="1499321147000" expanded="true" signature="26046:26074" ph="..." />
           </folding>
         </state>
       </provider>
