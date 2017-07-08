@@ -97,15 +97,18 @@ $(document).ready(function() {
     });
 
 
-/*	var dialogNewSensor = $('#dialogNewSensor').dialog({
+	var dialogNewDay = $('#dialogNewDay').dialog({
 		autoOpen: false,
 		width: 300,
-		title:"Neue Sensor-Nr wählen",
+		title:"Neuen Start-Tag wählen",
 		position: {my:'center', at: 'top+100px', of:window},
         open: function() {
             $('#page-mask').css('visibility', 'visible');
-            $(this).load('/fsdata/selsensor', function () {
-                $('#selsensor').focus();
+            $(this).load('/fsdata/selnewday', function () {
+                $( "#selnewday" ).datepicker({
+                    minDate: new Date(oldestDate),
+                });
+                $('#selnewday').focus();
             });
         },
 		buttons:  [
@@ -113,22 +116,14 @@ $(document).ready(function() {
                 text: "OK",
 				class: "btnOK",
                 click: function () {
-                    var newSens = $('#selsensor').val();
-                    checkSensorNr($('#selsensor').val(), function (erg) {
-                        if (erg) {
-                            dialogSet.dialog("close");
-                            window.location = '/' + newSens;
-                        } else {
-                            showError(2, "", newSens);
-                        }
-                    });
+                    var newDay = $('#selnewday').val();
                 },
                 width: 100,
             },{
                 text: "Abbrechen",
                 id: "newSensorAbbr",
                 click : function() {
-                    dialogNewSensor.dialog("close");
+                    dialogNewDay.dialog("close");
                 },
                 width: 100,
             }
@@ -139,7 +134,7 @@ $(document).ready(function() {
 		},
 		modal: true
 	});
-*/
+
 
 	var aktsensorid = selName;
 	console.log('Name='+aktsensorid );
@@ -150,6 +145,7 @@ $(document).ready(function() {
 		}
 	});
 
+    $('#selnewday').datepicker( $.datepicker.regional[ "de" ] );
 
 	// change moment, so theat toJSON returns local Time
 	moment.fn.toJSON = function() { return this.format(); };
@@ -225,6 +221,10 @@ $(document).ready(function() {
 
     $('#btnSet').click(function() {
         dialogSet.dialog("open");
+    });
+
+    $('#btnst').click(function() {
+        dialogNewDay.dialog("open");
     });
 
 

@@ -77,6 +77,9 @@ app.get('/fs/fsdata/selsensor', function(req, res, next) {
     res.sendFile(__dirname+'/public/selsensor.html');
 });
 
+app.get('/fs/fsdata/selnewday', function(req, res, next) {
+    res.sendFile(__dirname+'/public/selnewday.html');
+});
 
 
 app.get('/fs/fsdata/erralert', function(req, res, next) {
