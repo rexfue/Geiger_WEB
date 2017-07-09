@@ -150,9 +150,8 @@ function getDayData(db,sensorid,sensorname, st) {
             if (docs.length == 0) {
                 resolve({'docs': []})
             };
-//              console.log("Inhalt 2-2 von 'others':",others);
                 if (sensorname == "SDS011") {
-                    var x = calcMovingAverage(docs, 30, 'SDS011',3);
+                    var x = calcMovingAverage(docs, 30, 'SDS011',1);
 //                    var x = calcMovingMedian(docs, 30, sensorname);
                 var y = calcMinMaxAvgSDS(docs);
                 resolve({'docs': x, 'maxima': y }); //, 'others': others.sensors});
@@ -404,21 +403,26 @@ function calcMovingAverage(data, mav, name, cap) {
 //                    cnt2++;
                 }
             }
-            if(a1.length < (cap*2)+1) {
-                continue;
+            if (cap > 0) {
+
+                a1.sort(function (a, b) {
+                    return (a - b);
+                });
+                a1 = a1.slice(cap, a1.length - cap);
+                a2.sort(function (a, b) {
+                    return (a - b);
+                });
+                a2 = a2.slice(cap, a2.length - cap);
             }
-            a1.sort(function(a,b){return(a-b);});
-            a1 = a1.slice(3,a1.length-3);
-//            for(var m=cap; m<a1.length-cap;m++) {
-//                sum1 += a1[m];
-//            }
-            a2.sort(function(a,b){return(a-b);});
-            a2 = a2.slice(3,a2.length-3);
-//            for(var m=cap; m<a2.length-cap;m++) {
-//                sum2 += a2[m];
-//            }
-//            newData[j] = {'P10_mav': sum1 / (a1.length-(2*cap)), 'P2_5_mav' : sum2 / (a2.length-(2*cap)), 'date': data[i].date*1000,
-              newDatax[j] = {'P10_mav': mathe.mean(a1), 'P2_5_mav' : mathe.mean(a2), 'date': data[i].date*1000,
+            var p10m = data[i].P10;
+            var p25m = data[i].P2_5;
+            if (a1.length>0) {
+                p10m = mathe.mean(a1);
+            }
+            if (a2.length > 0) {
+                p25m = mathe.mean(a2);
+            }
+            newDatax[j] = {'P10_mav': p10m, 'P2_5_mav' : p25m, 'date': data[i].date*1000,
                         'P10':data[i].P10, 'P2_5':data[i].P2_5};
               newData = newDatax.slice(7);
         } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
