@@ -603,6 +603,12 @@ function createGlobObtions() {
 				},
 				type: 'line',
 				borderWidth: '2',
+				resetZoomButton: {
+					position: {
+						align: 'left',
+						verticalAlign: 'bottom',
+					}
+				}
 			},
 			title: {
 				text: 'Feinstaub über 1 Tag',
