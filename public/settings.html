@@ -3,10 +3,15 @@
   <fieldset>
    <label for="mapcenter">Mittelpunkt der Karte (Ort):</label>
    <input class='text ui-widget-content ui-corner-all' name = 'mapcenter' id='mapcenter' type='text' />
-<!--   <br />
-   <label for="sensornr">Default Sensor-Nummer (wird verwendet, wenn beim Aufruf kein Sensor angegeben ist):</label>
-   <input class='text ui-widget-content ui-corner-all' name = 'sensornr' id='sensornr' type='text' placeholder='Sensor-Nummer' />
--->
+   <br />
+   <label for="average">Mittelwertbildung über :</label>
+   <select  name = 'average' id='average'>
+<!--       <option value="15">15 min</option>
+       <option value="30">30 min</option>
+       <option value="60">60 min</option>
+       <option value="120">120 min</option>
+-->   </select>
+
    <input type='submit' tabindex='-1' style="position:absolute; top:-1000px">
   </fieldset>
 </form>

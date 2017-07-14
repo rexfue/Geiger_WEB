@@ -7,7 +7,7 @@ $(document).ready(function() {
 	
 	
 	// Defaults für die Mittelwertbildungen
-	var AVG_DUST = 29,						// 30 minutes moving average for dust particles
+	var AVG_DUST = 59,						// 30 minutes moving average for dust particles
 		AVG_TEMPHUM = 9,					// 10 minutes moving average for temperature and humidity	
 		AVG_PRESS = 9;						// 10 minutes moving average for pressure
 	
@@ -23,6 +23,8 @@ $(document).ready(function() {
 	var korrelation = {};
 	var kopf = 'Feinstaub- und Klima-Werte  ';
 	var oldestDate = "01-01-2016";			// oldest date in dbase
+	var avgTime = 30;						// defaul average time für particulate matter
+	var avgTable = [15,30,60,120];
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -34,6 +36,11 @@ $(document).ready(function() {
 	    extAddr = true;
     }
 
+    var startDay = "";
+	if(!((typeof startday == 'undefined') || (startday == ""))) {
+		startDay = startday;
+	}
+
 //	localStorage.clear();
 
 
@@ -43,21 +50,37 @@ $(document).ready(function() {
         } else {
             localStorage.setItem('defaultmapCenter',$('#mapcenter').val())
 		}
+		var avg = $('#average').val();
+		localStorage.setItem('averageTime', avg);
+		if (avgTime != parseInt(avg)) {
+            avgTime = parseInt(avg);
+            doPlot('oneday', startDay);						// Start with plotting one day from now on
+            doPlot('oneweek', startDay);						// Start with plotting one day from now on
+            doPlot('onemonth', startDay);						// Start with plotting one day from now on
+            switchPlot(active);
+        }
 		dialogSet.dialog('close');
-		console.log(localStorage.defaultmapCenter);
+		console.log('mapCenter:',localStorage.defaultmapCenter);
+        console.log('avgTime:',localStorage.averageTime);
 	}
 
 	// Dialog für das Einstell-Menü
 	var dialogSet = $('#dialogWinSet').dialog({
-		autoOpen: false,
-		width: 800,
-		title: 'Einstellungen',
-		open: function() {
-            $('#page-mask').css('visibility','visible');
-            $(this).load('/fsdata/setting', function() {
-            	$('#mapcenter').focus();
-			});
-		},
+        autoOpen: false,
+        width: 800,
+        title: 'Einstellungen',
+        open:
+            function() {
+                $('#page-mask').css('visibility', 'visible');
+                $(this).load('/fsdata/setting', function () {
+                    $('#average').focus();
+                    buildAverageMenue();
+                });
+            },
+//			function() {
+//                console.log("loaded");
+//            }
+
 		buttons: [
             {
                 text: "Sichern",
@@ -81,6 +104,8 @@ $(document).ready(function() {
 		},
 	});
 
+
+
 	var dialogHelp = $('#dialogWinHelp').dialog({
         autoOpen: false,
         width: 800,
@@ -96,8 +121,24 @@ $(document).ready(function() {
         },
     });
 
+//    $.datepicker.setDefaults( $.datepicker.regional[ "de" ] );
 
-	var dialogNewDay = $('#dialogNewDay').dialog({
+    // Set new Start-Day and show chart
+    function setNewDay() {
+        var newDay = $('#selnewday').val();
+        dialogNewDay.dialog("close");
+        var d = moment();
+        var nd = moment(newDay);
+		if ((d.date() == nd.date()) && (d.year() == nd.year()) && (nd.month() == d.month())) {
+            window.location = '/'+aktsensorid;
+		} else {
+            window.location = '/'+aktsensorid+'?stday='+newDay;
+		}
+    }
+
+
+    // let select a new start day
+    var dialogNewDay = $('#dialogNewDay').dialog({
 		autoOpen: false,
 		width: 300,
 		title:"Neuen Start-Tag wählen",
@@ -107,6 +148,8 @@ $(document).ready(function() {
             $(this).load('/fsdata/selnewday', function () {
                 $( "#selnewday" ).datepicker({
                     minDate: new Date(oldestDate),
+					maxDate: '+1d',
+					dateFormat: 'yy-mm-dd',
                 });
                 $('#selnewday').focus();
             });
@@ -115,9 +158,7 @@ $(document).ready(function() {
             {
                 text: "OK",
 				class: "btnOK",
-                click: function () {
-                    var newDay = $('#selnewday').val();
-                },
+                click: setNewDay,
                 width: 100,
             },{
                 text: "Abbrechen",
@@ -162,6 +203,16 @@ $(document).ready(function() {
     	return;
 	}
 
+	function getLocalStorage() {
+        // fetch the average time
+        var avg = localStorage.getItem('averageTime');
+        if (avg != "null") {
+            avgTime = parseInt(localStorage.getItem('averageTime'));
+        }
+        console.log('avgTime =',avgTime);
+	}
+
+	getLocalStorage();
 	$('#h1name').html(kopf);
 
     // Die Plots für die diversen Sensoren ausführen:
@@ -200,9 +251,9 @@ $(document).ready(function() {
             localStorage.setItem('curcoord',JSON.stringify(korrelation.location));
 
 			buildHeaderline(korrelation.sensors,korrelation.address);
-			doPlot('oneday');						// Start with plotting one day from now on
-			doPlot('oneweek');						// Start with plotting one day from now on
-			doPlot('onemonth');						// Start with plotting one day from now on
+			doPlot('oneday',startDay);						// Start with plotting one day from now on
+			doPlot('oneweek',startDay);						// Start with plotting one day from now on
+			doPlot('onemonth',startDay);						// Start with plotting one day from now on
 			switchPlot(active);
 
 		}
@@ -210,6 +261,17 @@ $(document).ready(function() {
 
 
 
+	function buildAverageMenue() {
+		for (var i=0; i< avgTable.length; i++) {
+			if(avgTime == avgTable[i]) {
+                var str = '<option selected="selected" value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
+			}  else {
+                var str = '<option value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
+            }
+            $('#average').append(str);
+        }
+//        $('#average').selectmenu();
+	}
 
 // ************** Event-Handler **************
 
@@ -320,7 +382,7 @@ $(document).ready(function() {
 			$('#placeholderFS_3').hide();
 			$('#placeholderTHP_3').hide();
 		} else if ((what == 'oneyear') || (what == 'onemonth')) {
-			doPlot(what);
+			doPlot(what,startDay);
 			$('#placeholderFS_1').hide();
 			$('#placeholderTHP_1').hide();
 			$('#placeholderFS_2').hide();
@@ -344,8 +406,8 @@ $(document).ready(function() {
 		if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
 			console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
 			if (aktsensorid != 'map') {					// Wenn nicht die Karte, dann
-				doPlot('oneday');						// Tages- und
-				doPlot('oneweek');						// Wochenplot erneuern
+				doPlot('oneday',startDay);						// Tages- und
+				doPlot('oneweek',startDay);						// Wochenplot erneuern
 			}
 			else {
 				fetchAktualData();
@@ -429,6 +491,13 @@ $(document).ready(function() {
 	//	temp	->	aktuelle Temperatur
 	//  alti	-> Höhe über NN im m
 	//
+	// NEU NEU NEU
+	// Formel aus dem BMP180 Datenblatt
+	//
+	//  p0 = ph / pow(1.0 - (altitude/44330.0), 5.255);
+	//
+	//
+	//
 	//	Rückgabe: normierter Druck auf Sehhhöhe
 	//	
 	function calcSealevelPressure(press,temp) {
@@ -436,12 +505,13 @@ $(document).ready(function() {
 		if (alti == 0) {
 			return(press);
 		}
-		var Th = temp + 273.15;
+		var p0 = press / Math.pow(1.0-(alti/44330.0),5.255);
+/*		var Th = temp + 273.15;
 		var divisor = Th + (0.0065 * alti);
 		var quotient = Th / divisor;
 		var power = Math.pow(quotient, -5.255);
 		var p0 = press * power;
-		return p0
+*/		return p0
 	}
 
 
@@ -503,7 +573,7 @@ $(document).ready(function() {
 //		console.log("doPlot");
 		habBMP = false;
 		var st;
-		if (start === undefined) {
+		if ((start === undefined) || (start == "")) {
 			st = moment();										// then start 'now'
 		} else {
             st = moment(start,'YYYY-MM-DD');
@@ -523,7 +593,7 @@ $(document).ready(function() {
 
 
         var currentSensor = korrelation.sensors[korridx];
-		var callopts = {start: st.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name};
+		var callopts = {start: st.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name, avgTime: avgTime};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
 				alert("Fehler <br />" + err);						// if error, show it
@@ -538,7 +608,7 @@ $(document).ready(function() {
                 if ((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3)) {
                     return;
                 }
-                if (start === undefined) {
+                if ((start === undefined) || (start == "")) {
                     st = moment();										// then start 'now'
                 } else {
                     st = moment(start,'YYYY-MM-DD');
@@ -596,11 +666,27 @@ function createGlobObtions() {
 				spacingTop: 25,
 				backgroundColor: {
 					linearGradient: [0, 400, 0, 0],
-					stops: [
-						[0, '#FE6'],
-						[1, '#EEE']
-						]
-				},
+//					stops: [
+//						[0, '#FE6'],
+//						[1, '#EEE']
+//						]
+//                    stops: [
+//                        [0, '#C4E2FF'],
+//                        [1, '#eee']
+//                    ]
+                    stops: [
+                        [0, '#F2D0B5'],
+                        [1, '#eee']
+                    ]
+/*                    stops: [
+                        [0, '#45BC6A'],
+                        [1, '#91FF83']
+                    ]
+                    stops: [
+                        [0, '#C4E2FF'],
+                        [1, '#94cdff']
+                    ]
+*/				},
 				type: 'line',
 				borderWidth: '2',
 				resetZoomButton: {
@@ -616,7 +702,7 @@ function createGlobObtions() {
 				style: {"fontSize":"25px"},
 			},
             subtitle: {
-			    text: 'Akt.Wert und 30min-gleitender Mittelwert',
+			    text: 'Akt.Wert und '+ avgTime +'min-gleitender Mittelwert',
                 align: 'left',
             },
 			tooltip: {
@@ -819,7 +905,7 @@ function createGlobObtions() {
 		};
 		
 		var series_P10_m = {
-				name: 'P10_m'+(dust_avg+1),
+				name: 'P10_m'+avgTime,
 				data: series3,
 				color: '#0000FF',
 				zIndex:4,
@@ -831,7 +917,7 @@ function createGlobObtions() {
 		};
 		
 		var series_P2_5_m = {
-				name: 'P2.5_m'+(dust_avg+1),
+				name: 'P2.5_m'+avgTime,
 				data: series4,
 				color: '#006400',
 				zIndex:5,
@@ -843,7 +929,7 @@ function createGlobObtions() {
 		};
 
 		var series_P10_ca = {
-				name: 'P10_cav'+(dust_avg+1),
+				name: 'P10_cav'+avgTime,
 				data: series3,
 				color: '#0000FF',
 				zIndex:4,
@@ -855,7 +941,7 @@ function createGlobObtions() {
 		};
 		
 		var series_P2_5_ca = {
-				name: 'P2.5_cav'+(dust_avg+1),
+				name: 'P2.5_cav'+avgTime,
 				data: series4,
 				color: '#006400',
 				zIndex:5,
@@ -867,7 +953,7 @@ function createGlobObtions() {
 		};
 
 		var series_P10_md = {
-				name: 'P2.5_md'+(dust_avg+1),
+				name: 'P2.5_md'+avgTime,
 				data: series5,
 				color: '#0000FF',
 				zIndex:5,
@@ -879,7 +965,7 @@ function createGlobObtions() {
 		};
 
 		var series_P2_5_md = {
-				name: 'P2.5_md'+(dust_avg+1),
+				name: 'P2.5_md'+avgTime,
 				data: series6,
 				color: '#006400',
 				zIndex:4,
@@ -938,8 +1024,8 @@ function createGlobObtions() {
 		options.yAxis[0] = yAxis_dust;
 		options.chart.zoomType = 'x';
 		if (what == 'oneday') {
-			options.series[0] = series_P10_ca;
-			options.series[1] = series_P2_5_ca;
+			options.series[0] = series_P10_m;
+			options.series[1] = series_P2_5_m;
 			options.series[2] = series_P10;
 			options.series[3] = series_P2_5;
 //			options.series[4] = series_P10_m;

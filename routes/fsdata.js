@@ -14,9 +14,10 @@ router.get('/getfs/:week', function (req, res) {
     var st = req.query.start;
     var data = { 'error': 'OK'};
     var samples = req.query.samples;
+    var avg = req.query.avgTime;
 //    console.log(sensorid,sensorname,samples);
     if (week == 'oneday') {
-        getDayData(db, sensorid, sensorname, st).then(erg => res.json(erg));
+        getDayData(db, sensorid, sensorname, st, avg).then(erg => res.json(erg));
     } else if (week == 'oneweek') {
         getWeekData(db, sensorid, sensorname, st).then(erg => res.json(erg));
     } else if ((week == 'oneyear') || (week == 'onemonth')) {
@@ -129,7 +130,7 @@ function getLatestValues(db,sensorid,sensorname,samples) {
 
 
 // Daten für einen Tag aus der Datenbank holen
-function getDayData(db,sensorid,sensorname, st) {
+function getDayData(db,sensorid,sensorname, st, avg) {
     var p = new Promise(function(resolve,reject) {              // Promise erzeugen
         var start = moment(st);                                 // Zeiten in einen moiment umsetzen
         var end = moment(st);
@@ -149,18 +150,19 @@ function getDayData(db,sensorid,sensorname, st) {
             console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
             if (docs.length == 0) {
                 resolve({'docs': []})
-            };
+            } else {
                 if (sensorname == "SDS011") {
-                    var x = calcMovingAverage(docs, 30, 'SDS011',1);
+                    var x = calcMovingAverage(docs, avg  , 'SDS011', 0);
 //                    var x = calcMovingMedian(docs, 30, sensorname);
-                var y = calcMinMaxAvgSDS(docs);
-                resolve({'docs': x, 'maxima': y }); //, 'others': others.sensors});
-            } else if (sensorname == "DHT22") {
-                resolve({'docs': calcMovingAverage(docs, 10, sensorname), 'maxima': calcMinMaxAvgDHT(docs)} );
-            } else if (sensorname == "BMP180") {
-                resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
-            } else if (sensorname == "BME280") {
-                resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
+                    var y = calcMinMaxAvgSDS(docs);
+                    resolve({'docs': x, 'maxima': y}); //, 'others': others.sensors});
+                } else if (sensorname == "DHT22") {
+                    resolve({'docs': calcMovingAverage(docs, 10, sensorname), 'maxima': calcMinMaxAvgDHT(docs)});
+                } else if (sensorname == "BMP180") {
+                    resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
+                } else if (sensorname == "BME280") {
+                    resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
+                }
             }
         });
     });
@@ -191,15 +193,16 @@ function getWeekData(db,sensorid,sensorname,st) {
             console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
             if (docs.length == 0) {
                 resolve({'docs': []})
-            };
-            if (sensorname == "SDS011") {
-                var wdata = movAvgSDSWeek(docs);
-//                    var y = calcMinMaxAvgSDS(wdata);
-                resolve( {
-                    'docs': wdata, 'maxima': "MIST"
-                });
-            } else if((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
-                resolve( {'docs': calcMovingAverage(docs, 10, sensorname)});
+            } else {
+                if (sensorname == "SDS011") {
+                    var wdata = movAvgSDSWeek(docs);
+                    //                    var y = calcMinMaxAvgSDS(wdata);
+                    resolve({
+                        'docs': wdata, 'maxima': "MIST"
+                    });
+                } else if ((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
+                    resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
+                }
             }
         });
     });
@@ -378,13 +381,15 @@ function calcMovingAverage(data, mav, name, cap) {
         return data;                // return original data
     }
     // first convert date to timestamp (in secs)
-    for (var i=0; i<data.length; i++) {
-        data[i].date = ( new Date(data[i].date)) / 1000;       // the math does the convertion
-    }
-    // now calculate the average
+//    for (var i=0; i<data.length; i++) {
+//        data[i].date = ( new Date(data[i].date)) / 1000;       // the math does the conversion
+//   }
+    data[0].date = ( new Date(data[0].date)) / 1000;       // the math does the conversion
+// now calculate the average
     for (var i = 1, j=0; i < data.length; i++, j++) {
         var sum1 = 0, sum2 = 0, sum3=0, cnt1=0, cnt2=0, cnt3=0;
         var a1=[], a2=[], a3=[];
+        data[i].date = ( new Date(data[i].date)) / 1000;       // the math does the conversion
         var di = data[i].date;
         if ((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
             for (var k = i; k > 0; k--) {
@@ -422,9 +427,9 @@ function calcMovingAverage(data, mav, name, cap) {
             if (a2.length > 0) {
                 p25m = mathe.mean(a2);
             }
-            newDatax[j] = {'P10_mav': p10m, 'P2_5_mav' : p25m, 'date': data[i].date*1000,
+            newData[j] = {'P10_mav': p10m, 'P2_5_mav' : p25m, 'date': data[i].date*1000,
                         'P10':data[i].P10, 'P2_5':data[i].P2_5};
-              newData = newDatax.slice(7);
+//              newData = newDatax.slice(7);
         } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
             for (var k = i; k > 0; k--) {
                 var dk = data[k].date;
@@ -459,7 +464,7 @@ function calcMovingAverage(data, mav, name, cap) {
     if ((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
         for (var i = 0, j = 0; i < newData.length; i += step, j++) {
             var d = newData.slice(i, i + step)
-            var p1 = 0, p2 = 0;
+            var p1 = 0, p2 = 0, p1m=0, p2m=0;
             for (var k = 0; k < d.length; k++) {
                 if (d[k].P10 > p1) {
                     p1 = d[k].P10;
@@ -467,8 +472,14 @@ function calcMovingAverage(data, mav, name, cap) {
                 if (d[k].P2_5 > p2) {
                     p2 = d[k].P2_5;
                 }
+                if (d[k].P2_5_mav > p2m) {
+                    p2m = d[k].P2_5_mav;
+                }
+                if (d[k].P10_mav > p1m) {
+                    p1m = d[k].P10_mav;
+                }
             }
-            neu1[j] = {'P10': p1, 'P2_5': p2, 'date': newData[i].date * 1000};
+            neu1[j] = {'P10': p1, 'P2_5': p2, P10_mav:p1m, P2_5_mav: p2m, 'date': newData[i].date};
         }
     } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
         for (var i = 0, j = 0; i < newData.length; i += step, j++) {

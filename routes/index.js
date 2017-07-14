@@ -20,7 +20,8 @@ router.get('/', function(req, res, next) {
         version: pkg.version,
         date: pkg.date,
         name: 'map',
-        param: req.query.addr
+        param: req.query.addr,
+        stday: req.query.stday,
     });
 });
 
@@ -38,14 +39,16 @@ router.get('/:nam', function(req, res, next) {
     		version : pkg.version,
     		date : pkg.date,
             param: req.query.addr,
+            stday: req.query.stday,
     		name: 'map'});
     } else {
     res.render(idx, {
-      title: title+'-'+name,
-      version : pkg.version,
-      date : pkg.date,
+        title: title+'-'+name,
+        version : pkg.version,
+        date : pkg.date,
         param: req.query.addr,
-      name : name});
+        stday: req.query.stday,
+        name : name});
     }
 });
 
