@@ -39,6 +39,8 @@ function initMap() {												// Map initialisieren
         scrollwheel: false,
     });
 
+
+
 /* Autocenter via geoloc  -  geht nur mit https !!
     var infoWindow = new google.maps.InfoWindow({map: map});
     if (navigator.geolocation) {

@@ -666,27 +666,11 @@ function createGlobObtions() {
 				spacingTop: 25,
 				backgroundColor: {
 					linearGradient: [0, 400, 0, 0],
-//					stops: [
-//						[0, '#FE6'],
-//						[1, '#EEE']
-//						]
-//                    stops: [
-//                        [0, '#C4E2FF'],
-//                        [1, '#eee']
-//                    ]
                     stops: [
-                        [0, '#F2D0B5'],
+                        [0, '#eee'],//[0, '#ACD0AA'], //[0, '#A18D99'], // [0, '#886A8B'], // [0, '#F2D0B5'],
                         [1, '#eee']
                     ]
-/*                    stops: [
-                        [0, '#45BC6A'],
-                        [1, '#91FF83']
-                    ]
-                    stops: [
-                        [0, '#C4E2FF'],
-                        [1, '#94cdff']
-                    ]
-*/				},
+				},
 				type: 'line',
 				borderWidth: '2',
 				resetZoomButton: {
@@ -993,7 +977,7 @@ function createGlobObtions() {
 				min: 0,
 				max: maxY,
 //				tickAmount: 9,
-				gridLineColor: 'lightgray',
+				gridLineColor: '#A2A6A4', // 'lightgray',
 				plotLines : [{
 					color: 'red', // Color value
 					value: 50, // Value of where the line will appear

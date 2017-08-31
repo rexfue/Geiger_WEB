@@ -48,7 +48,7 @@ function getKorrelation(db,sensorid) {
         }
         collection.find({'sensors.id' : si}).toArray(function(e,docs) {
             if(e != null) {
-                rejet(e);
+                reject(e);
             }
             console.log(docs.length + " Daten gelesen für " + sensorid + ' bei korrelation')
             resolve(docs)

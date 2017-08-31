@@ -64,12 +64,11 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/.settings/org.eclipse.core.resources.prefs" afterPath="$PROJECT_DIR$/PYTHON/korrelation/.settings/org.eclipse.core.resources.prefs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo_2.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/dat2mongo_2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PYTHON/korrelation/korr_apr17.py" afterPath="$PROJECT_DIR$/PYTHON/korrelation/korr_apr17.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/global.js" afterPath="$PROJECT_DIR$/public/js/global.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/mapit.js" afterPath="$PROJECT_DIR$/public/js/mapit.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/settings.html" afterPath="$PROJECT_DIR$/public/settings.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/fsdata.js" afterPath="$PROJECT_DIR$/routes/fsdata.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.pug" afterPath="$PROJECT_DIR$/views/index.pug" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/layout.pug" afterPath="$PROJECT_DIR$/views/layout.pug" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -90,14 +89,14 @@
     <favorites_list name="feinstaub_js" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5410405">
+    <splitter split-orientation="horizontal" split-proportion="0.4468208">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="45">
-                  <caret line="3" column="9" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="9" />
+                <state relative-caret-position="332">
+                  <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -106,45 +105,20 @@
           <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/routes/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="750">
-                  <caret line="50" column="8" lean-forward="false" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="8" />
+                <state relative-caret-position="435">
+                  <caret line="29" column="21" lean-forward="false" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="selnewday.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/selnewday.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="45">
-                  <caret line="3" column="90" lean-forward="false" selection-start-line="3" selection-start-column="90" selection-end-line="3" selection-end-column="90" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="data.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/routes/data.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="30">
-                  <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="global.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/js/global.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="126">
-                  <caret line="656" column="24" lean-forward="true" selection-start-line="656" selection-start-column="24" selection-end-line="656" selection-end-column="24" />
+                <state relative-caret-position="24240">
+                  <caret line="1616" column="0" lean-forward="false" selection-start-line="1612" selection-start-column="0" selection-end-line="1616" selection-end-column="0" />
                   <folding>
-                    <marker date="1500032667524" expanded="true" signature="21834:21891" ph="..." />
-                    <marker date="1500032667524" expanded="true" signature="21977:21984" ph="..." />
-                    <marker date="1500032667524" expanded="true" signature="22010:22017" ph="..." />
-                    <marker date="1500032667524" expanded="true" signature="22017:22023" ph=" " />
-                    <marker date="1500032667524" expanded="true" signature="22061:22067" ph=" " />
-                    <marker date="1500032667524" expanded="true" signature="29021:29049" ph="..." />
+                    <marker date="1501139623000" expanded="true" signature="28221:28763" ph="{&quot;max&quot;: maxY...}" />
                   </folding>
                 </state>
               </provider>
@@ -153,18 +127,38 @@
           <file leaf-file-name="layout.pug" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/views/layout.pug">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="165">
-                  <caret line="11" column="33" lean-forward="false" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+                <state relative-caret-position="450">
+                  <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.pug" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/views/index.pug">
+          <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/README.md">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="90">
-                  <caret line="6" column="32" lean-forward="false" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="org.eclipse.wst.jsdt.ui.superType.container" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.container">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="org.eclipse.wst.jsdt.ui.superType.name" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.name">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -175,6 +169,82 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="45">
                   <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".jsdtscope" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.settings/.jsdtscope">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.pug" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/index.pug">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="645">
+                  <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/js/global.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="5310">
+                  <caret line="354" column="0" lean-forward="false" selection-start-line="354" selection-start-column="0" selection-end-line="354" selection-end-column="0" />
+                  <folding>
+                    <marker date="1501139623000" expanded="true" signature="28221:28763" ph="{&quot;max&quot;: maxY...}" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/css/style.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="900">
+                  <caret line="60" column="11" lean-forward="false" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="11" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="settings.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/settings.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="90">
+                  <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="558">
+                  <caret line="49" column="11" lean-forward="false" selection-start-line="49" selection-start-column="11" selection-end-line="49" selection-end-column="11" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="selnewday.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/selnewday.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -193,61 +263,11 @@
           <file leaf-file-name="mapit.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="330">
-                  <caret line="22" column="44" lean-forward="false" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/js/global.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="4080">
-                  <caret line="313" column="0" lean-forward="false" selection-start-line="313" selection-start-column="0" selection-end-line="313" selection-end-column="0" />
+                <state relative-caret-position="600">
+                  <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
                   <folding>
-                    <marker date="1500032667524" expanded="true" signature="20682:20734" ph="[...]" />
-                    <marker date="1500032667524" expanded="true" signature="21834:21891" ph="..." />
-                    <marker date="1500032667524" expanded="true" signature="21977:21984" ph="..." />
-                    <marker date="1500032667524" expanded="true" signature="22010:22017" ph="..." />
-                    <marker date="1500032667524" expanded="true" signature="22017:22023" ph=" " />
-                    <marker date="1500032667524" expanded="true" signature="22061:22067" ph=" " />
-                    <marker date="1500032667524" expanded="true" signature="29021:29049" ph="..." />
+                    <marker date="1500971302000" expanded="true" signature="1168:2336" ph="/*...*/" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/css/style.css">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2475">
-                  <caret line="165" column="0" lean-forward="false" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="313">
-                  <caret line="143" column="34" lean-forward="true" selection-start-line="143" selection-start-column="34" selection-end-line="143" selection-end-column="34" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="settings.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/public/settings.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -258,9 +278,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>toolt</find>
-      <find>PlotItfs</find>
-      <find>startPlot</find>
       <find>PlotItTHP</find>
       <find>doplot</find>
       <find>start</find>
@@ -268,7 +285,6 @@
       <find>checkSensorNr</find>
       <find>one</find>
       <find>sel</find>
-      <find>gradient</find>
       <find>calcMovingAverage</find>
       <find>cap</find>
       <find>calcmov</find>
@@ -288,6 +304,10 @@
       <find>buil</find>
       <find>buildAverageMenue</find>
       <find>'gray</find>
+      <find>gradient</find>
+      <find>lightgra</find>
+      <find>sub</find>
+      <find>fsdata</find>
     </findStrings>
     <replaceStrings>
       <replace>aktsensorid</replace>
@@ -325,19 +345,19 @@
         <option value="$PROJECT_DIR$/public/centermap.html" />
         <option value="$PROJECT_DIR$/public/help.html" />
         <option value="$PROJECT_DIR$/views/mapit.pug" />
-        <option value="$PROJECT_DIR$/public/js/mapit.js" />
         <option value="$PROJECT_DIR$/routes/data.js" />
         <option value="$PROJECT_DIR$/routes/mapdata.js" />
         <option value="$PROJECT_DIR$/public/css/style.css" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/public/selnewday.html" />
         <option value="$PROJECT_DIR$/views/layout.pug" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/views/index.pug" />
-        <option value="$PROJECT_DIR$/routes/fsdata.js" />
         <option value="$PROJECT_DIR$/public/settings.html" />
+        <option value="$PROJECT_DIR$/public/js/mapit.js" />
         <option value="$PROJECT_DIR$/public/js/global.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/routes/fsdata.js" />
       </list>
     </option>
   </component>
@@ -350,6 +370,7 @@
     <exe-path />
     <annotation-enable>false</annotation-enable>
     <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
   </component>
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
@@ -359,7 +380,7 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="185" />
+    <option name="x" value="473" />
     <option name="y" value="23" />
     <option name="width" value="2087" />
     <option name="height" value="1346" />
@@ -379,6 +400,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -389,113 +412,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="Feinstaub_WEB" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Feinstaub_WEB" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="feinstaub_js">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="feinstaub_js">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="public">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -680,7 +596,27 @@
       <workItem from="1499526569422" duration="11000" />
       <workItem from="1499630274527" duration="847000" />
       <workItem from="1499941812129" duration="30000" />
-      <workItem from="1500007417245" duration="10245000" />
+      <workItem from="1500007417245" duration="10756000" />
+      <workItem from="1500100316607" duration="302000" />
+      <workItem from="1500127140942" duration="919000" />
+      <workItem from="1500209718973" duration="439000" />
+      <workItem from="1500448588585" duration="107000" />
+      <workItem from="1500469157676" duration="214000" />
+      <workItem from="1500524611233" duration="6000" />
+      <workItem from="1500534768115" duration="159000" />
+      <workItem from="1500703336155" duration="1179000" />
+      <workItem from="1500707608254" duration="1843000" />
+      <workItem from="1500791113761" duration="1254000" />
+      <workItem from="1500914697251" duration="7986000" />
+      <workItem from="1500977955476" duration="1419000" />
+      <workItem from="1501057066818" duration="1254000" />
+      <workItem from="1501138313652" duration="957000" />
+      <workItem from="1501153174459" duration="928000" />
+      <workItem from="1501247096787" duration="3164000" />
+      <workItem from="1501415356406" duration="175000" />
+      <workItem from="1501527598488" duration="9000" />
+      <workItem from="1502607461273" duration="152000" />
+      <workItem from="1504113227198" duration="1627000" />
     </task>
     <task id="LOCAL-00001" summary="added map usage&#10;&#10;- infowindow&#10;- säulen&#10;- link zu Grafik&#10;">
       <created>1480856091421</created>
@@ -955,11 +891,18 @@
       <option name="project" value="LOCAL" />
       <updated>1499603319715</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="public/js/global.js&#10;   - average time can be set frm settings menu, will be stored in local storage &#10;   - start day can be changed (NOT OK TIL NOW)&#10;   - use simplified formula to calulate pressure on sealevel&#10;   - changed background-color of chart&#10;   &#10;routes/fsdata.js&#10;   - average time as parameter to ajax call&#10;   - calculating average corrected&#10;   &#10;routes/index.js   &#10;   - start day as parameter vor html file&#10;   &#10;views/index.pug&#10;   - use startday as parameter&#10;   &#10;views/layout.pug&#10;   - datepicker for german added">
+      <created>1500033199909</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1500033199909</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="437125000" />
+    <option name="totallyTimeSpent" value="461729000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -971,18 +914,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="185" y="23" width="2087" height="1346" extended-state="0" />
+    <frame x="473" y="23" width="2087" height="1346" extended-state="0" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1626331" sideWeight="0.49675626" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2374269" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293461" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13875598" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2200957" sideWeight="0.50580835" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13875598" sideWeight="0.49612778" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24641149" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24620304" sideWeight="0.4787028" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24931075" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293461" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32933652" sideWeight="0.49419168" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22105263" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2200957" sideWeight="0.49419168" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1036,7 +979,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ganze Handvoll Änderunegn" />
     <MESSAGE value="weitere tests" />
     <MESSAGE value="weitere tests - viel rumgebastelt" />
     <MESSAGE value="x-Achsen-Grenzen festgelegt&#10;Meldung, wenn keine Daten da&#10;&#10;Erste Versuche mit neuer Collection für die MAP-Erzeugung" />
@@ -1061,7 +1003,8 @@
     <MESSAGE value="public/css/style.css&#10;   - tooltip opacity set to 1&#10;   &#10;public/js/global.js&#10;   - get date of odest entry at start &#10;   - start date can be changed&#10;   - tooltip is no longer transparent&#10;   &#10;public/js/map.js&#10;   - center map on sensor&#10;   &#10;routes/data.js&#10;   - obsolete 'require' deleted&#10;   &#10;routes/fsdata.js&#10;   - get oldest date&#10;   - use start date&#10;   - error in average calculation deleted&#10;   &#10;views/index.pug&#10;   - button for 'start-day'&#10;   &#10;package.json&#10;   - new versionnumber&#10;   - adopted dependencies" />
     <MESSAGE value="public/js/global.js&#10;   - new colors for P10/P25-lines" />
     <MESSAGE value="routes/fsdata.js&#10;   - moving average at SDS011 cap only 1 value on each end" />
-    <option name="LAST_COMMIT_MESSAGE" value="routes/fsdata.js&#10;   - moving average at SDS011 cap only 1 value on each end" />
+    <MESSAGE value="public/js/global.js&#10;   - average time can be set frm settings menu, will be stored in local storage &#10;   - start day can be changed (NOT OK TIL NOW)&#10;   - use simplified formula to calulate pressure on sealevel&#10;   - changed background-color of chart&#10;   &#10;routes/fsdata.js&#10;   - average time as parameter to ajax call&#10;   - calculating average corrected&#10;   &#10;routes/index.js   &#10;   - start day as parameter vor html file&#10;   &#10;views/index.pug&#10;   - use startday as parameter&#10;   &#10;views/layout.pug&#10;   - datepicker for german added" />
+    <option name="LAST_COMMIT_MESSAGE" value="public/js/global.js&#10;   - average time can be set frm settings menu, will be stored in local storage &#10;   - start day can be changed (NOT OK TIL NOW)&#10;   - use simplified formula to calulate pressure on sealevel&#10;   - changed background-color of chart&#10;   &#10;routes/fsdata.js&#10;   - average time as parameter to ajax call&#10;   - calculating average corrected&#10;   &#10;routes/index.js   &#10;   - start day as parameter vor html file&#10;   &#10;views/index.pug&#10;   - use startday as parameter&#10;   &#10;views/layout.pug&#10;   - datepicker for german added" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="406" key="Git.Branch.Popup" />
@@ -1069,32 +1012,15 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="347" />
+      <option name="time" value="351" />
     </breakpoint-manager>
     <watches-manager />
   </component>
+  <component name="XPathView.XPathProjectComponent">
+    <history />
+    <find-history />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/layer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1320">
-          <caret line="94" column="4" lean-forward="false" selection-start-line="94" selection-start-column="4" selection-end-line="94" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="54" lean-forward="false" selection-start-line="8" selection-start-column="54" selection-end-line="8" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="29" lean-forward="true" selection-start-line="39" selection-start-column="29" selection-end-line="39" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/mapit.pug">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1121,12 +1047,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1500032667524" expanded="true" signature="21834:21891" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="21977:21984" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="22010:22017" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="22017:22023" ph=" " />
-            <marker date="1500032667524" expanded="true" signature="22061:22067" ph=" " />
-            <marker date="1500032667524" expanded="true" signature="29021:29049" ph="..." />
+            <marker date="1501139623000" expanded="true" signature="28221:28763" ph="{&quot;max&quot;: maxY...}" />
           </folding>
         </state>
       </provider>
@@ -1135,7 +1056,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1620">
           <caret line="108" column="12" lean-forward="false" selection-start-line="108" selection-start-column="12" selection-end-line="108" selection-end-column="12" />
-          <folding />
+          <folding>
+            <marker date="1500971302000" expanded="true" signature="1168:2336" ph="/*...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1200,12 +1123,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1500032667524" expanded="true" signature="21834:21891" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="21977:21984" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="22010:22017" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="22017:22023" ph=" " />
-            <marker date="1500032667524" expanded="true" signature="22061:22067" ph=" " />
-            <marker date="1500032667524" expanded="true" signature="29021:29049" ph="..." />
+            <marker date="1501139623000" expanded="true" signature="28221:28763" ph="{&quot;max&quot;: maxY...}" />
           </folding>
         </state>
       </provider>
@@ -1214,7 +1132,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1620">
           <caret line="108" column="12" lean-forward="false" selection-start-line="108" selection-start-column="12" selection-end-line="108" selection-end-column="12" />
-          <folding />
+          <folding>
+            <marker date="1500971302000" expanded="true" signature="1168:2336" ph="/*...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1291,13 +1211,6 @@
     <entry file="file://$PROJECT_DIR$/node_modules/jquery-ui/README.md" />
     <entry file="file://$PROJECT_DIR$/feinstaub2mongo_T.js" />
     <entry file="file://$PROJECT_DIR$/readCSV.js" />
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/centermap.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -1340,10 +1253,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
+    <entry file="file://$PROJECT_DIR$/routes/data.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="47" column="43" lean-forward="false" selection-start-line="47" selection-start-column="43" selection-end-line="47" selection-end-column="43" />
+        <state relative-caret-position="30">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.container">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.name">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.settings/.jsdtscope">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1356,98 +1300,95 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/data.js">
+    <entry file="file://$PROJECT_DIR$/views/index.pug">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state relative-caret-position="645">
+          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2475">
-          <caret line="165" column="0" lean-forward="false" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/selnewday.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="90" lean-forward="false" selection-start-line="3" selection-start-column="90" selection-end-line="3" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/layout.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="33" lean-forward="false" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="9" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="8" lean-forward="false" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="44" lean-forward="false" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="143" column="34" lean-forward="true" selection-start-line="143" selection-start-column="34" selection-end-line="143" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="32" lean-forward="false" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+        <state relative-caret-position="900">
+          <caret line="60" column="11" lean-forward="false" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/settings.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state relative-caret-position="90">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" column="43" lean-forward="false" selection-start-line="47" selection-start-column="43" selection-end-line="47" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding>
+            <marker date="1500971302000" expanded="true" signature="1168:2336" ph="/*...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/layout.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/selnewday.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/global.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="656" column="24" lean-forward="true" selection-start-line="656" selection-start-column="24" selection-end-line="656" selection-end-column="24" />
+        <state relative-caret-position="5310">
+          <caret line="354" column="0" lean-forward="false" selection-start-line="354" selection-start-column="0" selection-end-line="354" selection-end-column="0" />
           <folding>
-            <marker date="1500032667524" expanded="true" signature="21834:21891" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="21977:21984" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="22010:22017" ph="..." />
-            <marker date="1500032667524" expanded="true" signature="22017:22023" ph=" " />
-            <marker date="1500032667524" expanded="true" signature="22061:22067" ph=" " />
-            <marker date="1500032667524" expanded="true" signature="29021:29049" ph="..." />
+            <marker date="1501139623000" expanded="true" signature="28221:28763" ph="{&quot;max&quot;: maxY...}" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="21" lean-forward="false" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="49" column="11" lean-forward="false" selection-start-line="49" selection-start-column="11" selection-end-line="49" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
