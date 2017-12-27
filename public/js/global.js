@@ -209,7 +209,7 @@ $(document).ready(function() {
         if (avg != "null") {
             avgTime = parseInt(localStorage.getItem('averageTime'));
         }
-        console.log('avgTime =',avgTime);
+        console.log('avgTime = ' + avgTime);
 	}
 
 	getLocalStorage();
@@ -573,10 +573,12 @@ $(document).ready(function() {
 //		console.log("doPlot");
 		habBMP = false;
 		var st;
+		let live = true;
 		if ((start === undefined) || (start == "")) {
 			st = moment();										// then start 'now'
 		} else {
             st = moment(start,'YYYY-MM-DD');
+            live = false;
 		}
 		var d1, d2=null, d3=null;
 		var url = '/fsdata/getfs/'+what;
@@ -593,7 +595,13 @@ $(document).ready(function() {
 
 
         var currentSensor = korrelation.sensors[korridx];
-		var callopts = {start: st.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name, avgTime: avgTime};
+		var callopts = {
+			start: st.toJSON(),
+			sensorid: currentSensor.id,
+			sensorname: currentSensor.name,
+			avgTime: avgTime,
+			live:live,
+		};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
 				alert("Fehler <br />" + err);						// if error, show it
@@ -713,9 +721,9 @@ function createGlobObtions() {
 			legend: {
 				enabled: true,
 				layout: 'horizontal',
-				verticalAlign: 'top',
+//				verticalAlign: 'top',
 				borderWidth: 1,
-				align: 'right',
+				align: 'center',
 			},
 			plotOptions: {
 				series: {
@@ -969,7 +977,7 @@ function createGlobObtions() {
         var labelText =  (datas.docs.length==0)? '' : 'Grenzwert 50µg/m<sup>3</sup>';
 
 		var yAxis_dust =  {											// 0
-//				opposite: true,
+				opposite: true,
 				title: {
 					text: 'Feinstaub µg/m<sup>3</sup>',
 					useHTML: true,
@@ -1055,8 +1063,8 @@ function createGlobObtions() {
 				addSensorID2chart(chart,sensor);
                 var text = chart.renderer.label(
                     infoTafel,
-					750,
-					60,'rect',0,0,true)
+					15,
+					78,'rect',0,0,true)
 					.css({
 						fontSize:'10pt',
 						color: 'green'})
@@ -1129,8 +1137,16 @@ function createGlobObtions() {
             if (what == 'oneday') {
                 // Aktuelle Werte speichern
                 aktVal['pressak'] = null;
-                if (data[0].press_mav !== undefined) {
-                    aktVal['pressak'] = calcSealevelPressure(data[data.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
+                let aktp = -.1;
+                for(let i=data.length-1; i>0; i--) {
+                	if(data[i].press_mav !== undefined) {
+                		aktp = data[i].press_mav;
+                		nopress = false;
+                		break;
+					}
+				}
+				if(aktp != -1) {
+                    aktVal['pressak'] = calcSealevelPressure(aktp / 100, data[data.length - 1].temp_mav);
                 } else  if ((dataB !== undefined) && (dataB[0].press_mav !== undefined)) {
                     aktVal['pressak'] = calcSealevelPressure(dataB[dataB.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
                 }
@@ -1205,31 +1221,43 @@ function createGlobObtions() {
 
 		var yAxis_temp = {													// 1
 			title: {
-				text: 'Temperatur °C'
+				text: 'Temperatur °C',
+				style: {
+					color: 'red'
+				}
 			},
 			min: -10,
 			max: 40,
 			opposite: true,
 			tickAmount: 11,
+			useHTML: true,
 		};
 
 		var yAxis_hum = {
 			title: {										// 2
-				text: 'rel. Feuchte %'
+				text: 'rel. Feuchte %',
+				style: {
+                    color: '#946CBD',
+				}
 			},
 			min: 0,
 			max: 100,
 			gridLineColor: 'lightgray',
+            opposite: true,
 			tickAmount: 11,
 		};
 
 		var yAxis_press = {													// 3
 			title: {
-				text: 'Luftdruck hPa'
+				text: 'Luftdruck hPa',
+				style: {
+                    color: '#DA9E24',
+				}
 			},
 			gridLineColor: 'lightgray',
-			min: 980,
-			max: 1030,
+			min: 990,
+			max: 1040,
+            opposite: true,
 			tickAmount: 11,
 		};
 
@@ -1275,7 +1303,12 @@ function createGlobObtions() {
             options.xAxis.min = dlt.valueOf();
 		}
 
-		if(what == 'oneweek') {
+        var noDataTafel = '<div class="errTafel">' +
+            'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
+            '</div>';
+
+
+        if(what == 'oneweek') {
             chr = Highcharts.chart($('#placeholderTHP_2')[0],options,function(chart) {
                 addSensorID2chart(chart, sensor);
             }) ;
@@ -1285,23 +1318,33 @@ function createGlobObtions() {
                 addSensorID2chart(chart, sensor);
                 var text = chart.renderer.label(
                     infoTafel,
-                    730,
-                    60,'rect',0,0,true)
+                    15,
+                    78,'rect',0,0,true)
                     .css({
                         fontSize:'10pt',
                         color: 'green'})
                     .attr({
                         zIndex: 5,
                     }).add();
-            });
             if( txtMeldung == true) {
-                chr.renderer.text('Für heute liegen leider keine Daten vor!<br /><br /> Bitte den Sensor überprüfen!', 200, 185)
+                labeText = "";
+                var errtext = chart.renderer.label(
+                    noDataTafel,
+                    250,
+                    120, 'rect', 0, 0, true)
                     .css({
-//                        color: '#4572A7',
-                        fontSize: '20px'
+                        fontSize: '18pt',
+                        color: 'red'
                     })
-                    .add();
+                    .attr({
+                        zIndex: 1000,
+                        stroke: 'black',
+                        'stroke-width': 2,
+                        fill: 'white',
+                        padding: 10,
+                    }).add();
             }
+            });
 		}
 	}
 

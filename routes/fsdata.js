@@ -15,13 +15,14 @@ router.get('/getfs/:week', function (req, res) {
     var data = { 'error': 'OK'};
     var samples = req.query.samples;
     var avg = req.query.avgTime;
+    var live = req.query.live;
 //    console.log(sensorid,sensorname,samples);
     if (week == 'oneday') {
-        getDayData(db, sensorid, sensorname, st, avg).then(erg => res.json(erg));
+        getDayData(db, sensorid, sensorname, st, avg, live).then(erg => res.json(erg));
     } else if (week == 'oneweek') {
         getWeekData(db, sensorid, sensorname, st).then(erg => res.json(erg));
     } else if ((week == 'oneyear') || (week == 'onemonth')) {
-        data['docs'] = getYearData(db, sensorid, sensorname, st, week).then(erg => res.json(erg));
+        data['docs'] = getYearData(db, sensorid, sensorname, st, week, live).then(erg => res.json(erg));
     } else if (week == 'latest') {
         getLatestValues(db, sensorid, sensorname, samples).then(erg => res.json(erg));
     } else if (week == 'korr') {
@@ -130,14 +131,19 @@ function getLatestValues(db,sensorid,sensorname,samples) {
 
 
 // Daten für einen Tag aus der Datenbank holen
-function getDayData(db,sensorid,sensorname, st, avg) {
+function getDayData(db,sensorid,sensorname, st, avg, live) {
     var p = new Promise(function(resolve,reject) {              // Promise erzeugen
         var start = moment(st);                                 // Zeiten in einen moiment umsetzen
         var end = moment(st);
         var colstr = 'data_' + sensorid + '_' + sensorname;
         var collection = db.collection(colstr);
-        start.subtract(24, 'h');
+        if (live == true) {
+            start.subtract(24, 'h');
+        } else {
+            end.add(24,'h');
+        }
 //            console.log(colstr,start,end);
+        // <--- PROMISES !!!
         collection.find({
             date: {
                 $gte: new Date(start),
@@ -598,9 +604,13 @@ function calcMinMaxAvgSDS(data) {
         p1.push(data[i].P10);
         p2.push(data[i].P2_5);
     }
-    return { 'P10_max': mathe.max(p1), 'P2_5_max': mathe.max(p2),
-        'P10_min': mathe.min(p1), 'P2_5_min': mathe.min(p2),
-        'P10_avg' : mathe.mean(p1), 'P2_5_avg' : mathe.mean(p2) };
+    return {
+        'P10_max': mathe.max(p1),
+        'P2_5_max': mathe.max(p2),
+        'P10_min': mathe.min(p1),
+        'P2_5_min': mathe.min(p2),
+        'P10_avg' : mathe.mean(p1),
+        'P2_5_avg' : mathe.mean(p2) };
 }
 
 function calcMinMaxAvgDHT(data) {
@@ -609,7 +619,7 @@ function calcMinMaxAvgDHT(data) {
         t.push(data[i].temperature);
         h.push(data[i].humidity);
     }
-    return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(t),
+    return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(h),
         'temp_min': mathe.min(t), 'humi_min': mathe.min(h),
         'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h) };
 }

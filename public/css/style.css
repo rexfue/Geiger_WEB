@@ -128,6 +128,7 @@ button {
 	text-align: left;
 	padding: 0 10px;
 	border: 1px solid black;
+	background-color: rgba(238,238,238,0.6) ! important;
 }
 
 .infoTafel th {

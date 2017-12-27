@@ -1,22 +1,21 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 //var assert = require('assert');
-var bodyParser = require("body-parser");
-var MongoClient = require('mongodb').MongoClient;
-var os = require('os');
+const bodyParser = require("body-parser");
+const MongoClient = require('mongodb').MongoClient;
+const os = require('os');
 
 // Consts
 const PORT = 3005;											// Port for server
 
-var mongoPort = 27017;
-var mongoHost = 'castor';
+let MONGOHOST = process.env.MONGOHOST;
+let MONGOPORT = process.env.MONGOPORT;
+if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
+if (MONGOPORT === undefined) { MONGOPORT =  27018; }
 
-// if (os.hostname() != "rexfue.de") {
-// 	mongoPort = 27018;
-// }
 console.log(os.hostname());
 
-const MONGO_URL = 'mongodb://'+mongoHost+':'+mongoPort+'/Feinstaub_AllNew';  	// URL to mongo database
+const MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT+'/Feinstaubi_A';  	// URL to mongo database
 console.log(MONGO_URL);
 
 app.set('views','./views');
@@ -32,7 +31,7 @@ app.get('*', function(req, res, next){
 //    console.log("Host:",req.headers.host);
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
-        (req.headers.host == 'fs.localhost:3005') ||
+        (req.headers.host == 'localhost:3005') ||
         (req.headers.host == 'castor') ||
         (req.headers.host == 'macbig:3005')                 //Port is important if the url has it
         ) {
