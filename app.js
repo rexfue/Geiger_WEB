@@ -94,14 +94,15 @@ app.use('/fs/fsdata',fsdatas);
 var fsdatas = require('./routes/mapdata');
 app.use('/fs/mapdata',fsdatas);
 
-
-MongoClient.connect(MONGO_URL, function(err,db) {
-    if (err) {
-	console.log("Bitte erst den SSH-Tunnel aufbauen: 'ssh -fN -L 27018:localhost:27017 rxf@rexfue.de' !!");
-        process.exit(-1);    
-}	
-    app.set('dbase',db);								    // Übergabe von db
-    app.listen(PORT, function () {
-        console.log("App listens on port " + PORT);
+const connect = MongoClient.connect(MONGO_URL);
+connect
+    .then(db => {
+        app.set('dbase', db);								    // Übergabe von db
+        app.listen(PORT, function () {
+            console.log("App listens on port " + PORT);
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        process.exit(-1);
     });
-});

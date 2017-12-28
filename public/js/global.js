@@ -147,7 +147,8 @@ $(document).ready(function() {
             $('#page-mask').css('visibility', 'visible');
             $(this).load('/fsdata/selnewday', function () {
                 $( "#selnewday" ).datepicker({
-                    minDate: new Date(oldestDate),
+//                    minDate: new Date(oldestDate),
+                    minDate: new Date('2017-12-01'),
 					maxDate: '+1d',
 					dateFormat: 'yy-mm-dd',
                 });
@@ -223,37 +224,25 @@ $(document).ready(function() {
 			alert("Fehler <br />" + err);						// if error, show it
 		} else {
 			if (data.length == 0) {
-				korrelation = {'address':{},'location': {},'espid': "", 'sensors': [{'id': aktsensorid}]};
-//				showError(2,"No data at korrelation ", aktsensorid);
+//				korrelation = {'address':{},'location': {},'espid': "", 'sensors': [{'id': aktsensorid}]};
+				showError(2,"No data at korrelation ", aktsensorid);
 //					return -1;
 			} else {
-                korrelation = data[0];
-            }
-            // sort array of sensor, order is sensor-Nr
-			if (korrelation.sensors.length > 1) {
-                korrelation.sensors.sort(function (a, b) {
-                    if (a.id < b.id) {
-                        return -1;
-                    }
-                    if (a.id > b.id) {
-                        return 1;
-                    }
-                    return 0;
-                });
+                korrelation = data;
             }
 			console.log("Korrelation: ",korrelation);
-            getOldestDate(aktsensorid, korrelation.sensors,function(old){
-                oldestDate = old;
-                console.log("Oldest Entry:",oldestDate);
-            });
+//            getOldestDate(aktsensorid, korrelation.sensors,function(old){
+//                oldestDate = old;
+//                console.log("Oldest Entry:",oldestDate);
+//            });
 
 			// save koordinates etc. in localStorage
             localStorage.setItem('curcoord',JSON.stringify(korrelation.location));
 
-			buildHeaderline(korrelation.sensors,korrelation.address);
+			buildHeaderline(korrelation.othersensors,korrelation.address);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
 			doPlot('oneweek',startDay);						// Start with plotting one day from now on
-			doPlot('onemonth',startDay);						// Start with plotting one day from now on
+//			doPlot('onemonth',startDay);						// Start with plotting one day from now on
 			switchPlot(active);
 
 		}
@@ -475,46 +464,6 @@ $(document).ready(function() {
 	}
 
 
-	// Berechnung des barometrischen Druckes auf Seehöhe
-	//
-	// Formel (lt. WikiPedia):
-	//
-	//  p[0] = p[h] * ((T[h] / (T[h] + 0,0065 * h) ) ^-5.255)
-	//
-	//  mit
-	//		p[0]	Druck auf NN (in hPa)
-	//		p[h]	gemessener Druck auf Höhe h (in m)
-	//		T[h]	gemessene Temperatur auf Höhe h in K (== t+273,15)
-	//		h		Höhe über NN in m
-	//
-	//  press	->	aktuelle Druck am Ort
-	//	temp	->	aktuelle Temperatur
-	//  alti	-> Höhe über NN im m
-	//
-	// NEU NEU NEU
-	// Formel aus dem BMP180 Datenblatt
-	//
-	//  p0 = ph / pow(1.0 - (altitude/44330.0), 5.255);
-	//
-	//
-	//
-	//	Rückgabe: normierter Druck auf Sehhhöhe
-	//	
-	function calcSealevelPressure(press,temp) {
-		var alti = korrelation.location.altitude;
-		if (alti == 0) {
-			return(press);
-		}
-		var p0 = press / Math.pow(1.0-(alti/44330.0),5.255);
-/*		var Th = temp + 273.15;
-		var divisor = Th + (0.0065 * alti);
-		var quotient = Th / divisor;
-		var power = Math.pow(quotient, -5.255);
-		var p0 = press * power;
-*/		return p0
-	}
-
-
 	function showError(err,txt,id) {
 	    console.log("*** Fehler: " + txt + " from id " + id);
 	    var errtxt = "*** Fehler: ";
@@ -582,19 +531,19 @@ $(document).ready(function() {
 		}
 		var d1, d2=null, d3=null;
 		var url = '/fsdata/getfs/'+what;
-		var count = korrelation.sensors.length;					// Anzahl der Sensoren
+		var count = korrelation.othersensors.length;			// Anzahl der Sensoren
 		var korridx = 0;
 		console.log(aktsensorid, korrelation);
 
 		for(korridx=0; korridx<count; korridx++) {
-			if (aktsensorid == korrelation.sensors[korridx].id) {
+			if (aktsensorid == korrelation.othersensors[korridx].id) {
 				break;
             }
 		}
 		// *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
 
 
-        var currentSensor = korrelation.sensors[korridx];
+        var currentSensor = korrelation.othersensors[korridx];
 		var callopts = {
 			start: st.toJSON(),
 			sensorid: currentSensor.id,
@@ -613,7 +562,7 @@ $(document).ready(function() {
 				startPlot(what,data1,null,currentSensor,st);
 
                 korridx++;
-                if ((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3)) {
+                if ((korridx == count) || ((korrelation.othersensors[korridx].id - currentSensor.id) >= 3)) {
                     return;
                 }
                 if ((start === undefined) || (start == "")) {
@@ -621,7 +570,7 @@ $(document).ready(function() {
                 } else {
                     st = moment(start,'YYYY-MM-DD');
                 }
-                currentSensor = korrelation.sensors[korridx];
+                currentSensor = korrelation.othersensors[korridx];
 				callopts.sensorname = currentSensor.name;
 				callopts.sensorid = currentSensor.id;
 				callopts.start = st.toJSON();
@@ -633,8 +582,8 @@ $(document).ready(function() {
                         console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
 
                         korridx++;
-                        if (!((korridx == count) || ((korrelation.sensors[korridx].id - currentSensor.id) >= 3))) {
-	                        currentSensor = korrelation.sensors[korridx];
+                        if (!((korridx == count) || ((korrelation.othersensors[korridx].id - currentSensor.id) >= 3))) {
+	                        currentSensor = korrelation.othersensors[korridx];
 							callopts.sensorname = currentSensor.name;
 							callopts.sensorid = currentSensor.id;
 
@@ -694,7 +643,7 @@ function createGlobObtions() {
 				style: {"fontSize":"25px"},
 			},
             subtitle: {
-			    text: 'Akt.Wert und '+ avgTime +'min-gleitender Mittelwert',
+			    text: 'Akt.Wert und '+ avgTime +'min-gleitende Mittelwerte',
                 align: 'left',
             },
 			tooltip: {
@@ -829,7 +778,7 @@ function createGlobObtions() {
 
 //		console.log("Plotting Feinstaub ...");
 		// Arrays zur Berechnung der Min, Max und Mittewerte über die kompletten 24h
-		var tempa=[],huma=[],presa=[];
+		var tempa=[],huma=[];
 		var p1m24,p2m24,tempm24,hunm24,pewssm24;
 
 		// Put values into the arrays
@@ -1030,8 +979,8 @@ function createGlobObtions() {
 		} else if (what == 'oneweek'){
 			options.series[0] = series_P10_m;
 			options.series[1] = series_P2_5_m;
-			options.title.text = 'Feinstaub - 24h gleitende Mittelwerte über 1 Woche';
-			options.subtitle.text='';
+			options.title.text = 'Feinstaub über 1 Woche';
+			options.subtitle.text='24h - gleitende Mittelwerte';
 			options.series[0].name = 'P10_h24';
 			options.series[1].name = 'P2.5_h24';
 			options.xAxis.tickInterval = 3600*6*1000;
@@ -1107,7 +1056,6 @@ function createGlobObtions() {
 //        console.log("Plotting Temp/Feuchte ...");
 
 		// Arrays for Berechnung der Min, Max und Mittewerte über die kompletten 24h
-		var presa=[];
 		var aktVal = {};
 
 		// Put values into the arrays
@@ -1117,19 +1065,13 @@ function createGlobObtions() {
 			var dat = new Date(this.date).getTime();
 			series1.push([dat,this.temp_mav])
 			series2.push([dat,this.humi_mav]);
-            if (this.press_mav !== undefined) {
-                var pr = calcSealevelPressure(this.press_mav/100,this.temp_mav);
-                presa.push(pr);
-                series3.push([ dat, pr ]);			// put data and value into series array
-            }
+            series3.push([dat,this.press_mav/100]);			// put data and value into series array
  		});
 		if(datasBMP != null) {
 		    var dataB = datasBMP.docs;
     		$.each(dataB, function(i){
 			    var dat = new Date(this.date).getTime();
-			    var pr = calcSealevelPressure(this.press_mav/100,this.temp_mav);
-			    presa.push(pr);
-			    series3.push([ dat, pr ]);			// put data and value into series array
+			    series3.push([ dat, this.press_mav/100 ]);			// put data and value into series array
 		    });
         }
 
@@ -1146,9 +1088,9 @@ function createGlobObtions() {
 					}
 				}
 				if(aktp != -1) {
-                    aktVal['pressak'] = calcSealevelPressure(aktp / 100, data[data.length - 1].temp_mav);
+                    aktVal['pressak'] = aktp / 100;
                 } else  if ((dataB !== undefined) && (dataB[0].press_mav !== undefined)) {
-                    aktVal['pressak'] = calcSealevelPressure(dataB[dataB.length - 1].press_mav / 100, data[data.length - 1].temp_mav);
+                    aktVal['pressak'] = dataB[dataB.length - 1].press_mav / 100;
                 }
                 aktVal['tempak'] = data[data.length - 1].temp_mav
                 aktVal['humak'] = data[data.length - 1].humi_mav;
@@ -1389,7 +1331,7 @@ function createGlobObtions() {
 						},
 						max: maxy,
 //						tickAmount: 9,
-//						opposite: true,
+						opposite: true,
 						gridLineColor: 'lightgray',
 						plotLines : [{
 						    color: 'red', // Color value
@@ -1499,17 +1441,13 @@ function createGlobObtions() {
 			seriesTmx.push([dat, this.tempMX]);
 			seriesTmi.push([dat, this.tempMI]);
 			seriesRan.push([dat, this.tempMI, this.tempMX]);
-			if(this.pressAV!== undefined) {
-                var pr = calcSealevelPressure(this.pressAV/100,this.tempAV);
-                seriesDru.push([dat,pr]);
-			}
+			seriesDru.push([dat,this.pressAV/100]);
 		});
 		if(dat2 != null) {
             var d2 = dat2.docs;
             $.each(d2, function() {
                 var dat = new Date(this._id).getTime();	// retrieve the date
-                var pr = calcSealevelPressure(this.pressAV/100,this.tempAV);
-                seriesDru.push([dat,pr]);
+                seriesDru.push([dat,this.pressAV/100]);
             });
         }
 
@@ -1599,10 +1537,10 @@ function createGlobObtions() {
                     title: {
                         text: 'Temperatur °C'
                     },
-//					min: ((Math.round(tmin/10))*10)-5,
-//                    max: ((Math.round(tmax/10))*10)+5,
-//                    opposite: true,
-//                    tickAmount: 5,
+					min: ((Math.round(tmin/10))*10)-5,
+                    max: ((Math.round(tmax/10))*10)+5,
+                    opposite: true,
+                    tickAmount: 5,
                     gridLineColor: 'lightgray',
                     plotLines : [{
                         color: 'red', // Color value
