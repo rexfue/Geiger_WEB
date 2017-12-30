@@ -444,7 +444,6 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
             }
             newData[j] = {'P10_mav': p10m, 'P2_5_mav' : p25m, 'date': data[i].datetime*1000,
                         'P10':data[i].P1, 'P2_5':data[i].P2};
-//              newData = newDatax.slice(7);
         } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
             for (var k = i; k > 0; k--) {
                 var dk = data[k].date;
@@ -469,62 +468,11 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
             if (sum2 != 0) newData[j]['humi_mav'] = sum2 / cnt2;
             if (sum3 != 0) newData[j]['press_mav'] = sum3 / cnt3;
         }
-    }
-    // finally shrink datasize, so that max. 1000 values will be returned
-    var neu1 = [];
-    var step = Math.round(newData.length / 500);
-    if (step > 1) {
-        if ((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
-            for (var i = 0, j = 0; i < newData.length; i += step, j++) {
-                var d = newData.slice(i, i + step)
-                var p1 = 0, p2 = 0, p1m = 0, p2m = 0;
-                for (var k = 0; k < d.length; k++) {
-                    if (d[k].P10 > p1) {
-                        p1 = d[k].P10;
-                    }
-                    if (d[k].P2_5 > p2) {
-                        p2 = d[k].P2_5;
-                    }
-                    if (d[k].P2_5_mav > p2m) {
-                        p2m = d[k].P2_5_mav;
-                    }
-                    if (d[k].P10_mav > p1m) {
-                        p1m = d[k].P10_mav;
-                    }
-                }
-                neu1[j] = {'P10': p1, 'P2_5': p2, P10_mav: p1m, P2_5_mav: p2m, 'date': newData[i].date};
-            }
-        } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
-            for (var i = 0, j = 0; i < newData.length; i += step, j++) {
-                var d = newData.slice(i, i + step)
-                var p1 = 0, p2 = 0, p3 = 0;
-                for (var k = 0; k < d.length; k++) {
-                    var t = d[k].temp_mav;
-                    var h = d[k].humi_mav;
-                    var p = d[k].press_mav;
-                    if (t !== undefined) {
-                        if (t > p1) p1 = t;
-                    }
-                    if (h !== undefined) {
-                        if (h > p2) p2 = h;
-                    }
-                    if (p !== undefined) {
-                        if (p > p3) p3 = p;
-                    }
-                }
-                neu1[j] = {'date': newData[i].date};
-                if (p1 != 0) neu1[j]['temp_mav'] = p1;
-                if (p2 != 0) neu1[j]['humi_mav'] = p2;
-                if (p3 != 0) neu1[j]['press_mav'] = p3;
-            }
+        if ((name == "BMP180") || (name == "BME280")) {
+            neu1 = calcSealevelPressure(newData,altitude);
         }
-    } else {
-        neu1 = newData;
     }
-    if ((name == "BMP180") || (name == "BME280")) {
-        neu1 = calcSealevelPressure(neu1,altitude);
-    }
-    return neu1;
+    return newData;
 }
 
 // Berechnung des barometrischen Druckes auf Seehöhe
@@ -595,7 +543,8 @@ function movAvgSDSWeek(data) {
     // finally shrink datasize, so that max. 1000 values will be returned
     var neu1 = [];
     var step = Math.round(neuData.length / 500);
-    if (step == 0) step = 1;
+//    if (step == 0) step = 1;
+    step = 1;
     for (var i = 0, j=0; i < neuData.length; i+=step, j++) {
         var d = neuData.slice(i,i+step)
         var p1=0, p2=0;

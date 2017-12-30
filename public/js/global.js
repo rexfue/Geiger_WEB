@@ -239,7 +239,7 @@ $(document).ready(function() {
 			// save koordinates etc. in localStorage
             localStorage.setItem('curcoord',JSON.stringify(korrelation.location));
 
-			buildHeaderline(korrelation.othersensors,korrelation.address);
+			buildHeaderline(korrelation.othersensors,korrelation.location[0].address);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
 			doPlot('oneweek',startDay);						// Start with plotting one day from now on
 //			doPlot('onemonth',startDay);						// Start with plotting one day from now on
@@ -433,7 +433,8 @@ $(document).ready(function() {
             hl = hl.slice(0, -2);
             $('#subtitle').html(hl);
             //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + sensors[0].id);
-*/            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
+*/
+            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
 			$('#ssel').val(aktsensorid);
         }
         console.log(addr);
