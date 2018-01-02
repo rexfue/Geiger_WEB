@@ -41,7 +41,7 @@ $(document).ready(function() {
 		startDay = startday;
 	}
 
-//	localStorage.clear();
+	localStorage.clear();
 
 
 	function saveSettings() {
@@ -207,7 +207,7 @@ $(document).ready(function() {
 	function getLocalStorage() {
         // fetch the average time
         var avg = localStorage.getItem('averageTime');
-        if (avg != "null") {
+        if (avg != null) {
             avgTime = parseInt(localStorage.getItem('averageTime'));
         }
         console.log('avgTime = ' + avgTime);
@@ -219,6 +219,7 @@ $(document).ready(function() {
     // Die Plots für die diversen Sensoren ausführen:
 	// dazu via Korrelation erst mal alle Sensor-Nummern aus der Datenbank holen
 	// Danach dann die Plots der Reihe nach aufrufen
+	let s1 = moment();
 	$.getJSON('fsdata/getfs/korr', { sensorid: aktsensorid }, function(data,err) {				// AJAX Call
 		if (err != 'success') {
 			alert("Fehler <br />" + err);						// if error, show it
@@ -521,6 +522,7 @@ $(document).ready(function() {
 
 	function doPlot(what,start) {								// if 'start' not defined,
 //		console.log("doPlot");
+		let s2=moment();
 		habBMP = false;
 		var st;
 		let live = true;
@@ -537,7 +539,7 @@ $(document).ready(function() {
 		console.log(aktsensorid, korrelation);
 
 		for(korridx=0; korridx<count; korridx++) {
-			if (aktsensorid == korrelation.othersensors[korridx].id) {
+			if (aktsensorid == korrelation.othersensors[korridx].sid) {
 				break;
             }
 		}
@@ -547,7 +549,7 @@ $(document).ready(function() {
         var currentSensor = korrelation.othersensors[korridx];
 		var callopts = {
 			start: st.toJSON(),
-			sensorid: currentSensor.id,
+			sensorid: currentSensor.sid,
 			sensorname: currentSensor.name,
 			avgTime: avgTime,
 			live:live,
@@ -557,13 +559,14 @@ $(document).ready(function() {
 				alert("Fehler <br />" + err);						// if error, show it
 			} else {
                 console.log(moment().format() + " --> " +data1.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
+				console.log("Zeit dafür:",moment()-s2);
 //			    if (data1.docs.length == 0) {
 //                    showError(1,"No data at " + what, aktsensorid);
 //                }
 				startPlot(what,data1,null,currentSensor,st);
 
                 korridx++;
-                if ((korridx == count) || ((korrelation.othersensors[korridx].id - currentSensor.id) >= 3)) {
+                if ((korridx == count) || ((korrelation.othersensors[korridx].sid - currentSensor.sid) >= 3)) {
                     return;
                 }
                 if ((start === undefined) || (start == "")) {
@@ -573,20 +576,21 @@ $(document).ready(function() {
                 }
                 currentSensor = korrelation.othersensors[korridx];
 				callopts.sensorname = currentSensor.name;
-				callopts.sensorid = currentSensor.id;
+				callopts.sensorid = currentSensor.sid;
 				callopts.start = st.toJSON();
+				let s3=moment();
                 $.getJSON(url,callopts, function(data2,err) {		// AJAX Call
                     if (err != 'success') {
                         alert("Fehler <br />" + err);				// if error, show it
                     } else {
                         d2 = data2;
                         console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
-
+						console.log("Zeit dafür:",moment()-s3);
                         korridx++;
-                        if (!((korridx == count) || ((korrelation.othersensors[korridx].id - currentSensor.id) >= 3))) {
+                        if (!((korridx == count) || ((korrelation.othersensors[korridx].sid - currentSensor.sid) >= 3))) {
 	                        currentSensor = korrelation.othersensors[korridx];
 							callopts.sensorname = currentSensor.name;
-							callopts.sensorid = currentSensor.id;
+							callopts.sensorid = currentSensor.sid;
 
 							$.getJSON(url, callopts, function (data3, err) {		// AJAX Call
                                 if (err != 'success') {
@@ -749,7 +753,7 @@ function createGlobObtions() {
 
     function addSensorID2chart(chart, sensor) {
         var sens = chart.renderer.label(
-            'Sensor: ' + sensor.id + ' - ' + sensor.name,
+            'Sensor: ' + sensor.sid + ' - ' + sensor.name,
             400, 55,
             'text', 0, 0, true)
             .css({
@@ -919,8 +923,8 @@ function createGlobObtions() {
 		};
 
 		// Check for maxP10/P2_5
-		var maxY = 80;
-        if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 70)) {
+		var maxY = 50;
+        if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 50)) {
             maxY = datas.maxima.P10_max;
         }
 
@@ -1080,11 +1084,10 @@ function createGlobObtions() {
             if (what == 'oneday') {
                 // Aktuelle Werte speichern
                 aktVal['pressak'] = null;
-                let aktp = -.1;
+                let aktp = -1;
                 for(let i=data.length-1; i>0; i--) {
                 	if(data[i].press_mav !== undefined) {
                 		aktp = data[i].press_mav;
-                		nopress = false;
                 		break;
 					}
 				}
@@ -1101,9 +1104,12 @@ function createGlobObtions() {
                     '<table class="infoTafel"><tr >' +
                     '<th colspan="3">Aktuelle Werte</th>' +
                     '</tr><tr>' +
-                    '<td>Temperatur</td><td>' + (aktVal.tempak).toFixed(1) + '</td><td>°C</td>' +
+                    '<td>Temperatur</td><td>' + (aktVal.tempak).toFixed(1) + '</td><td>°C</td>';
+                if(aktVal.humak != undefined) {
+                	infoTafel +=
                     '</tr><tr>' +
                     '<td>Feuchte</td><td>' + (aktVal.humak).toFixed(0) + '</td><td>%</td>';
+                }
                 if (aktVal['pressak'] != null) {
                     infoTafel +=
                         '</tr><tr>' +

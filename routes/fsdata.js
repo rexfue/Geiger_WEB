@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var moment = require('moment');
 var mathe = require('mathjs');
+var Vector = require('gauss').Vector;
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -14,7 +15,7 @@ router.get('/getfs/:week', function (req, res) {
     var samples = req.query.samples;
     var avg = req.query.avgTime;
     var live = (req.query.live == 'true');
-    getSensorProperties(db,req.query.sensorid)
+    getSensorProperties(db,parseInt(req.query.sensorid))
         .then((props) => {
             if (week == 'oneday') {
                 getDayData(db, props.sid, props.name,
@@ -41,31 +42,46 @@ router.get('/getfs/:week', function (req, res) {
         });
 });
 
-function getSensorProperties(db,sid) {
+// fetch name of given sensor-id
+function getSensorName(db,sid) {
     const p = new Promise((resolve,reject) => {
-        console.log("Get properties for", sid);
         let coll = db.collection('properties');
         coll.findOne({sid: parseInt(sid)})
-            .then((erg) => {
-                if(erg.othersensors.length>1) {
-                    erg.othersensors.sort(function (a, b) {
-                        if (a.id < b.id) {
-                            return -1;
-                        }
-                        if (a.id > b.id) {
-                            return 1;
-                        }
-                        return 0;
-                    });
-                }
-                resolve(erg);
+            .then(erg => {
+                resolve(erg.name);
             })
-            .catch ((err) => {
-                console.log(err);
+            .catch(err => {
+                console.log('getSensorName',err);
                 reject(err);
             });
     });
-    return p;
+    return p
+}
+
+// fetch the properties for the given sensor
+async function getSensorProperties(db,sid) {
+    console.log("Get properties for", sid);
+    let sensorEntries = [{'sid':sid}];
+    let coll = db.collection('properties');
+    let erg = await coll.findOne({sid: sid});
+    sensorEntries[0]['name'] = erg.name;
+    for(let i = 0, j=1; i<erg.othersensors.length; i++) {
+        let e = {sid: erg.othersensors[i]};
+        e.name = await getSensorName(db, erg.othersensors[i]);
+        sensorEntries[j] = e;
+        j++;
+    }
+    sensorEntries.sort(function (a, b) {
+        if (a.sid < b.sid) {
+            return -1;
+        }
+        if (a.aid > b.aid) {
+            return 1;
+        }
+        return 0;
+    });
+    erg.othersensors = sensorEntries;
+    return erg;
 }
 
 
@@ -111,7 +127,7 @@ function getLatestValues(db,sensorid,sensorname,samples) {
             console.log(docs.length + " Daten gelesen für " + sensorname + ' bei latest')
             var y;
             if ((sensorname == "SDS011") || (sensorname == "PMS3003")) {
-                y = calcMinMaxAvgSDS(docs);
+                y = calcMinMaxAvgSDS(docs,false);
                 resolve({'P1':y.P10_avg,'P2':y.P2_5_avg});
             } else if (sensorname == "DHT22") {
                 y = calcMinMaxAvgDHT(docs);
@@ -148,6 +164,7 @@ function getDayData(db,sensorid, sensorname, altitude, st, avg, live) {
         var end = moment(st);
         var colstr = 'data_' + sensorid;
         var collection = db.collection(colstr);
+        // TODO <--------------------- hier noch die Minuten für die Mittlelwertbildung abziehen
         if (live == true) {
             start.subtract(24, 'h');
         } else {
@@ -170,11 +187,10 @@ function getDayData(db,sensorid, sensorname, altitude, st, avg, live) {
                     } else {
                         if (sensorname == "SDS011") {
                             var x = calcMovingAverage(docs, avg  , 'SDS011', 0,0);
-        //                    var x = calcMovingMedian(docs, 30, sensorname);
-                            var y = calcMinMaxAvgSDS(docs);
+                            var y = calcMinMaxAvgSDS(docs,false);
                             resolve({'docs': x, 'maxima': y}); //, 'others': others.sensors});
                         } else if (sensorname == "DHT22") {
-                            resolve({'docs': calcMovingAverage(docs, 10, sensorname,0,0), 'maxima': calcMinMaxAvgDHT(docs)});
+                            resolve({'docs': calcMovingAverage(docs, 10, sensorname,0,0)});
                         } else if (sensorname == "BMP180") {
                             resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude,0)});
                         } else if (sensorname == "BME280") {
@@ -198,6 +214,8 @@ function getWeekData(db, sensorid, sensorname, st) {
         } else {
             start.subtract(24*7, 'h');
         }
+        // TODO <--------------- Mittelwert-Minuten(Tage) reinrechnen
+        // TODO <-------------- Live nocht vergessrn
         collection.find({
             datetime: {
                 $gte: new Date(start),
@@ -213,9 +231,9 @@ function getWeekData(db, sensorid, sensorname, st) {
                     } else {
                         if (sensorname == "SDS011") {
                             var wdata = movAvgSDSWeek(docs);
-                            //                    var y = calcMinMaxAvgSDS(wdata);
+                            var y = calcMinMaxAvgSDS(wdata,true);
                             resolve({
-                                'docs': wdata, 'maxima': "MIST"
+                                'docs': wdata, 'maxima': y
                             });
                         } else if ((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
                             resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
@@ -322,60 +340,6 @@ function getYearData(db,sensorid,sensorname, st,what) {
     return p;
 }
 
-  function average(arr) {
-	var sum = 0;
-	for (var i = 0; i < arr.length; i++) {
-		sum += arr[i];
-	}
-	return(sum/arr.length);
-}
-
-/*
-function calcCappedMovingAverage(data, mav) {
-    var newData = [];
-    var lang = data.length;
-    if ((mav != 0) && (lang >=mav)) {
-        for (var k=0,i = mav; i < lang; i++,k++) {
-        	var p10 = [], p25=[], sum1=0, sum2=0;
-            for (var j = mav - 1; j >= 0; j--) {
-                p10.push(parseFloat(data[i - j].P10));
-                p25.push(parseFloat(data[i - j].P2_5));
-            }
-            p10.sort(function(a,b){return(a-b);});
-            p25.sort(function(a,b){return(a-b);});
-            for(var m = 3; m<p10.length-3; m++) {
-                sum1 += p10[m];
-                sum2 += p25[m];
-            }
-            newData[k] = {'P10_cav': sum1 / (mav-6), 'P2_5_cav': sum2 / (mav-6),
-                'date': data[i].date, 'P10': data[i].P10, 'P2_5': data[i].P2_5}
-        }
-        return newData;
-    } else {
-        return data;
-    }
-}
-*/
-
-function calcMovingMedian(data, mav) {
-    var newData = [];
-    if (mav != 0) {
-        for (var k=0, i = mav; i < data.length; i++, k++) {
-        	var p10 = [], p25=[];
-                for (var j = mav - 1; j >= 0; j--) {
-                    p10.push(parseFloat(data[i - j].P10));
-                    p25.push(parseFloat(data[i - j].P2_5));
-                }
-                p10.sort(function(a,b){return(a-b);});
-                p25.sort(function(a,b){return(a-b);});
-                newData[k] = {'P10_med': p10[Math.floor(mav/2)], 'P2_5_med': p25[Math.floor(mav/2)], 'date': data[i].datetime};
-        }
-        return newData;
-    } else {
-        return data;
-    }
-}
-
 // *********************************************
 // Calculate moving average over the data array.
 //
@@ -387,6 +351,7 @@ function calcMovingMedian(data, mav) {
 //
 // return:
 //      array with averaged values
+// TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
 function calcMovingAverage(data, mav, name, altitude, cap) {
     var newDatax = [], newData = [];
@@ -446,7 +411,7 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
                         'P10':data[i].P1, 'P2_5':data[i].P2};
         } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
             for (var k = i; k > 0; k--) {
-                var dk = data[k].date;
+                var dk = data[k].datetime;
                 if (dk + avgTime <= di) {
                     break;
                 }
@@ -468,9 +433,9 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
             if (sum2 != 0) newData[j]['humi_mav'] = sum2 / cnt2;
             if (sum3 != 0) newData[j]['press_mav'] = sum3 / cnt3;
         }
-        if ((name == "BMP180") || (name == "BME280")) {
-            neu1 = calcSealevelPressure(newData,altitude);
-        }
+    }
+    if ((name == "BMP180") || (name == "BME280")) {
+        newData = calcSealevelPressure(newData,altitude);
     }
     return newData;
 }
@@ -563,44 +528,26 @@ function movAvgSDSWeek(data) {
 
 
 
-
-
-
-function movAvgSDSWeek_old(data) {
-    var neuData = [];
-    for (var i = 1440, j=0; i < data.length; i+=1, j++) {
-        var sum1=0, sum2 = 0, cnt1 = 0, cnt2 = 0;
-        for (var k = 1439; k >= 0; k--) {
-            if(data[i - k].P10 !== undefined) {
-                sum1 += data[i - k].P10;
-                cnt1++;
-            }
-            if(data[i - k].P2_5 !== undefined) {
-                sum2 += data[i - k].P2_5;
-                cnt2++;
-            }
-        }
-        neuData[j] = {'P10': sum1 / cnt1, 'P2_5': sum2 / cnt2, 'date': data[i].date} ;
-    }
-    var neu1 = [];
-    for (var i = 10, j=0; i < neuData.length; i+=10, j++) {
-        var sum1=0, sum2 = 0;
-        for (var k = 10; k > 0; k--) {
-            sum1 += neuData[i - k].P10;
-            sum2 += neuData[i - k].P2_5;
-        }
-        neu1[j] = {'P10': sum1 / 10, 'P2_5': sum2 / 10, 'date': neuData[i].date} ;
-    }
-
-    return neu1;
-}
-
-
-function calcMinMaxAvgSDS(data) {
+function calcMinMaxAvgSDS(data,isp10) {
     var p1=[], p2=[];
-    for (var i=0; i<data.length; i++) {
-        p1.push(data[i].P1);
-        p2.push(data[i].P2);
+    if(isp10) {
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].P10 != undefined) {
+                p1.push(data[i].P10);
+            }
+            if (data[i].P2_5 != undefined) {
+                p2.push(data[i].P2_5);
+            }
+        }
+    } else {
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].P1 != undefined) {
+                p1.push(data[i].P1);
+            }
+            if (data[i].P2 != undefined) {
+                p2.push(data[i].P2);
+            }
+        }
     }
     return {
         'P10_max': mathe.max(p1),
@@ -614,20 +561,32 @@ function calcMinMaxAvgSDS(data) {
 function calcMinMaxAvgDHT(data) {
     var t=[], h=[];
     for (var i=0; i<data.length; i++) {
-        t.push(data[i].temperature);
-        h.push(data[i].humidity);
+        if(data[i].temperature != undefined) {
+            t.push(data[i].temperature);
+        }
+        if(data[i].humidity != undefined) {
+            h.push(data[i].humidity);
+        }
     }
-    return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(h),
-        'temp_min': mathe.min(t), 'humi_min': mathe.min(h),
-        'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h) };
+    return {
+        'temp_max': mathe.max(t),
+        'humi_max': mathe.max(h),
+        'temp_min': mathe.min(t),
+        'humi_min': mathe.min(h),
+        'temp_avg' : mathe.mean(t),
+        'humi_avg' : mathe.mean(h) };
 }
 
 
 function calcMinMaxAvgBMP(data) {
     var t=[], p=[];
     for (var i=0; i<data.length; i++) {
-        t.push(data[i].temperature);
-        p.push(data[i].pressure);
+        if(data[i].temperature != undefined) {
+            t.push(data[i].temperature);
+        }
+        if(data[i].pressure != undefined) {
+            p.push(data[i].pressure);
+        }
     }
     return { 'temp_max': mathe.max(t), 'press_max': mathe.max(p),
     'temp_min': mathe.min(t), 'press_min': mathe.min(p),
@@ -637,40 +596,20 @@ function calcMinMaxAvgBMP(data) {
 function calcMinMaxAvgBME(data) {
     var t=[], h=[], p=[], sumt=0;
     for (var i=0; i<data.length; i++) {
-        t.push(data[i].temperature);
-        h.push(data[i].humidity);
-        p.push(data[i].pressure);
+        if(data[i].temperature != undefined) {
+            t.push(data[i].temperature);
+        }
+        if(data[i].humidity != undefined) {
+            h.push(data[i].humidity);
+        }
+        if(data[i].pressure != undefined) {
+            p.push(data[i].pressure);
+        }
     }
     return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(h), 'press_max': mathe.max(p),
     'temp_min': mathe.min(t), 'humi_min': mathe.min(h), 'press_min': mathe.min(p),
     'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h), 'press_avg' : mathe.mean(p) };
 }
 
-/*
-// Fetch the actual out of the dbase
-router.get('/getaktdata/', function (req, res) {
-	// First get location and espid from korrelation-Table
-    var db = req.app.get('dbase');
-    var cursor = db.collection('korrelation').find();
-    var aktData = [];
-    cursor.each(function(err,item) {
-    	var oneAktData = {};
-    	for (var i=0; i< item.sensors.length; i++) {
-    		if (item.sensors.name == 'SDS011') {				// nur SDS011 verwenden
-    			oneAktData['latitude'] = item.latitude;
-    			oneAktData['longitude'] = item.longitude;
-    			oneAktData['espid'] = item.espid;
-    			break;
-    		}
-    	}
-    	if ( typeof oneAktData.espid != 'undefined') {
-    		aktData.push(oneAktData);
-    	}
-    });
-    console.log(aktData);
-});	
-	
-*/
-	
-	
+
 module.exports = router;
