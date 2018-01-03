@@ -188,13 +188,13 @@ function getDayData(db,sensorid, sensorname, altitude, st, avg, live) {
                         if (sensorname == "SDS011") {
                             var x = calcMovingAverage(docs, avg  , 'SDS011', 0,0);
                             var y = calcMinMaxAvgSDS(docs,false);
-                            resolve({'docs': x, 'maxima': y}); //, 'others': others.sensors});
+                            resolve({'docs': x.PM, 'maxima': y});
                         } else if (sensorname == "DHT22") {
-                            resolve({'docs': calcMovingAverage(docs, 10, sensorname,0,0)});
+                            resolve({'docs': calcMovingAverage(docs, avg, sensorname,0,0).THP});
                         } else if (sensorname == "BMP180") {
-                            resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude,0)});
+                            resolve({'docs': calcMovingAverage(docs, avg, sensorname, altitude,0).THP});
                         } else if (sensorname == "BME280") {
-                            resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude,0)});
+                            resolve({'docs': calcMovingAverage(docs, avg, sensorname, altitude,0).THP});
                         }
                     }
         });
@@ -225,20 +225,18 @@ function getWeekData(db, sensorid, sensorname, st) {
             if (e != null) {
                 reject(e);
             }
-                    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
-                    if (docs.length == 0) {
-                        resolve({'docs': []})
-                    } else {
-                        if (sensorname == "SDS011") {
-                            var wdata = movAvgSDSWeek(docs);
-                            var y = calcMinMaxAvgSDS(wdata,true);
-                            resolve({
-                                'docs': wdata, 'maxima': y
-                            });
-                        } else if ((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
-                            resolve({'docs': calcMovingAverage(docs, 10, sensorname)});
-                        }
-                    }
+            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
+            if (docs.length == 0) {
+                resolve({'docs': []})
+            } else {
+                if (sensorname == "SDS011") {
+                    var wdata = calcMovingAverage(docs, 1440 , 'SDS011', 0,0);
+                    var y = calcMinMaxAvgSDS(wdata.PM,true);
+                    resolve({'docs': wdata.PM, 'maxima': y });
+                } else if ((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
+                    resolve({'docs': calcMovingAverage(docs, 10, sensorname).THP});
+                }
+            }
         });
     });
     return p;
@@ -354,90 +352,74 @@ function getYearData(db,sensorid,sensorname, st,what) {
 // TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
 function calcMovingAverage(data, mav, name, altitude, cap) {
-    var newDatax = [], newData = [];
+    var newDataF = [], newDataT = [];
     var avgTime = mav*60;           // average time in sec
 
-    if (avgTime === 0) {            // if there's nothing to average, then
-        return data;                // return original data
+    if (avgTime === 0) {            // if there's nothing to average, the8n
+        avgTime = 1;
     }
-    // first convert datetime to timestamp (in secs)
-//    for (var i=0; i<data.length; i++) {
-//        data[i].date = ( new Date(data[i].date)) / 1000;       // the math does the conversion
-//   }
-    data[0].datetime = ( new Date(data[0].datetime)) / 1000;       // the math does the conversion
-// now calculate the average
-    for (var i = 1, j=0; i < data.length; i++, j++) {
-        var sum1 = 0, sum2 = 0, sum3=0, cnt1=0, cnt2=0, cnt3=0;
-        var a1=[], a2=[], a3=[];
-        data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the conversion
-        var di = data[i].datetime;
-        if ((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
-            for (var k = i; k > 0; k--) {
-                var dk = data[k].datetime;
-                if (dk + avgTime <= di) {
-                    break;
-                }
-                if (data[k].P1 !== undefined) {
-                    a1.push(data[k].P1);
-//                    sum1 += data[k].P10;
-//                    cnt1++;
-                }
-                if (data[k].P2 !== undefined) {
-                    a2.push(data[k].P2)
-//                    sum2 += data[k].P2_5;
-//                    cnt2++;
-                }
-            }
-            if (cap > 0) {
+    // first convert date to timestam (in secs)
+    for (var i=0; i<data.length; i++) {
+        data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the convertion
+    }
 
-                a1.sort(function (a, b) {
-                    return (a - b);
-                });
-                a1 = a1.slice(cap, a1.length - cap);
-                a2.sort(function (a, b) {
-                    return (a - b);
-                });
-                a2 = a2.slice(cap, a2.length - cap);
-            }
-            var p10m = data[i].P1;
-            var p25m = data[i].P2;
-            if (a1.length>0) {
-                p10m = mathe.mean(a1);
-            }
-            if (a2.length > 0) {
-                p25m = mathe.mean(a2);
-            }
-            newData[j] = {'P10_mav': p10m, 'P2_5_mav' : p25m, 'date': data[i].datetime*1000,
-                        'P10':data[i].P1, 'P2_5':data[i].P2};
-        } else if ((name == "DHT22") || (name == "BMP180") || (name == "BME280")) {
-            for (var k = i; k > 0; k--) {
-                var dk = data[k].datetime;
-                if (dk + avgTime <= di) {
-                    break;
-                }
-                if (data[k].temperature !== undefined) {
-                    sum1 += data[k].temperature;
-                    cnt1++;
-                }
-                if (data[k].humidity !== undefined) {
-                    sum2 += data[k].humidity;
-                    cnt2++;
-                }
-                if (data[k].pressure !== undefined) {
-                    sum3 += data[k].pressure;
-                    cnt3++;
-                }
-            }
-            newData[j] = {'date': data[i].datetime * 1000 };
-            if (sum1 != 0) newData[j]['temp_mav'] = sum1 / cnt1;
-            if (sum2 != 0) newData[j]['humi_mav'] = sum2 / cnt2;
-            if (sum3 != 0) newData[j]['press_mav'] = sum3 / cnt3;
+    let left=0, roll_sum1=0, roll_sum2=0,  roll_sum3=0, roll_sum4=0, roll_sum5=0;
+    for (let right =0; right <  data.length; right++) {
+        if (data[right].P1 != undefined) {
+            roll_sum1 += data[right].P1;
         }
+        if (data[right].P2 != undefined) {
+            roll_sum2 += data[right].P2;
+        }
+
+        if (data[right].temperature != undefined) {
+            roll_sum3 += data[right].temperature;
+        }
+        if (data[right].humidity != undefined) {
+            roll_sum4 += data[right].humidity;
+        }
+        if (data[right].pressure != undefined) {
+            roll_sum5 += data[right].pressure;
+        }
+        if (right == 576)  {
+            console.log(right);
+        }
+        while (data[left].datetime <= data[right].datetime - avgTime) {
+            if (data[left].P1 != undefined) {
+                roll_sum1 -= data[left].P1;
+            }
+            if (data[left].P2 != undefined) {
+                roll_sum2 -= data[left].P2;
+            }
+            if (data[left].temperature != undefined) {
+                roll_sum3 -= data[left].temperature;
+            }
+            if (data[left].humidity != undefined) {
+                roll_sum4 -= data[left].humidity;
+            }
+            if (data[left].pressure != undefined) {
+                roll_sum5 -= data[left].pressure;
+            }
+            left += 1;
+        }
+
+        newDataF[right] = {
+            'P10_mav': roll_sum1 / (right - left + 1),
+            'P2_5_mav': roll_sum2 / (right - left + 1),
+            'date': data[right].datetime * 1000,
+            'P10': data[right].P1,
+            'P2_5': data[right].P2
+        };
+        newDataT[right] = {'date': data[right].datetime * 1000};
+        if (roll_sum3 != 0) newDataT[right]['temp_mav'] = roll_sum3 / (right - left + 1)
+        if (roll_sum4 != 0) newDataT[right]['humi_mav'] = roll_sum4 / (right - left + 1)
+        if (roll_sum5 != 0) newDataT[right]['press_mav'] = roll_sum5 / (right - left + 1)
     }
+
     if ((name == "BMP180") || (name == "BME280")) {
-        newData = calcSealevelPressure(newData,altitude);
+        newData = calcSealevelPressure(newDataT,altitude);
     }
-    return newData;
+    return { 'PM': newDataF, 'THP' : newDataT };
 }
 
 // Berechnung des barometrischen Druckes auf Seehöhe
@@ -484,14 +466,40 @@ function movAvgSDSWeek(data) {
 
     // first convert date to timestam (in secs)
     for (var i=0; i<data.length; i++) {
-        data[i].date = ( new Date(data[i].datetime)) / 1000;       // the math does the convertion
+        data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the convertion
     }
+
     // now calculate the moving average over 24 hours
+    let left=0, roll_sum=0, nd = [];
+    for (let right =0; right <  data.length; right++) {
+//        if(right == 200) {
+//            console.log("right = 200");
+//        }
+
+        if(data[right].P1 != undefined) {
+            roll_sum += data[right].P1;
+        }
+        if(data[right].P10 != undefined) {
+            roll_sum += data[right].P10;
+        }
+
+        while( data[left].datetime <= data[right].datetime - oneDay) {
+            if(data[left].P1 != undefined) {
+                roll_sum -= data[left].P1;
+            }
+            if(data[left].P10 != undefined) {
+                roll_sum -= data[left].P10;
+            }
+            left += 1;
+         }
+         nd[right] = { 'P1024': roll_sum/ (right-left+1)+5};
+    }
+
     for (var i=1, j=0; i< data.length; i++, j++) {
         var sum1=0, sum2 = 0, cnt1 = 0, cnt2 = 0;
-        var di = data[i].date;
+        var di = data[i].datetime;
         for (var k=i; k>=0 ; k--) {
-            if (data[k].date+oneDay < di) {
+            if (data[k].datetime+oneDay < di) {
                 break;
             }
             if (data[k].P1 !== undefined) {
@@ -502,8 +510,16 @@ function movAvgSDSWeek(data) {
                 sum2 += data[k].P2;
                 cnt2++;
             }
+            if (data[k].P10 !== undefined) {
+                sum1 += data[k].P10;
+                cnt1++;
+            }
+            if (data[k].P2_5 !== undefined) {
+                sum2 += data[k].P2_5;
+                cnt2++;
+            }
         }
-        neuData[j] = {'P10': sum1 / cnt1, 'P2_5': sum2 / cnt2, 'date': data[i].date} ;
+        neuData[j] = {'P10': sum1 / cnt1, 'P2_5': sum2 / cnt2, 'date': data[i].datetime} ;
     }
     // finally shrink datasize, so that max. 1000 values will be returned
     var neu1 = [];
@@ -523,30 +539,25 @@ function movAvgSDSWeek(data) {
         }
         neu1[j] = {'P10': p1, 'P2_5': p2, 'date': neuData[i].date*1000} ;
     }
-    return neu1;
+    return { 'ndold': neu1, 'ndnew': nd };
 }
 
 
 
 function calcMinMaxAvgSDS(data,isp10) {
     var p1=[], p2=[];
-    if(isp10) {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].P10 != undefined) {
-                p1.push(data[i].P10);
-            }
-            if (data[i].P2_5 != undefined) {
-                p2.push(data[i].P2_5);
-            }
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].P10 != undefined) {
+            p1.push(data[i].P10);
         }
-    } else {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].P1 != undefined) {
-                p1.push(data[i].P1);
-            }
-            if (data[i].P2 != undefined) {
-                p2.push(data[i].P2);
-            }
+        if (data[i].P2_5 != undefined) {
+            p2.push(data[i].P2_5);
+        }
+        if (data[i].P1 != undefined) {
+            p1.push(data[i].P1);
+        }
+        if (data[i].P2 != undefined) {
+            p2.push(data[i].P2);
         }
     }
     return {

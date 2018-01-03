@@ -578,6 +578,7 @@ $(document).ready(function() {
 				callopts.sensorname = currentSensor.name;
 				callopts.sensorid = currentSensor.sid;
 				callopts.start = st.toJSON();
+				callopts.avgTime = 10;								// 10min Average
 				let s3=moment();
                 $.getJSON(url,callopts, function(data2,err) {		// AJAX Call
                     if (err != 'success') {
@@ -794,17 +795,17 @@ function createGlobObtions() {
 			var dat = moment(this.date).valueOf();	// retrieve the date
 
 			if(what == 'oneweek') {
-//				series3.push([ dat, this.avgP10_h24 ]);			// put data and value into series array
-//				series4.push([ dat, this.avgP2_5_h24 ]);
-                series3.push([ dat, this.P10 ]);			// put data and value into series array
-                series4.push([ dat, this.P2_5 ]);
+                series1.push([ dat, this.P10 ]);			// put data and value into series array
+                series2.push([ dat, this.P2_5 ]);
+                series3.push([ dat, this.P10_mav ]);			// put data and value into series array
+                series4.push([ dat, this.P2_5_mav ]);
 			} else {
 				series1.push([ dat, this.P10 ]);			// put data and value into series array
 				series2.push([ dat, this.P2_5 ]);
 				series3.push([ dat, this.P10_mav]);
 				series4.push([ dat, this.P2_5_mav]);
-				series5.push([ dat, this.P10_med]);
-				series6.push([ dat, this.P2_5_med]);
+//				series5.push([ dat, this.P10_med]);
+//				series6.push([ dat, this.P2_5_med]);
 			}
 		});
 
@@ -922,7 +923,7 @@ function createGlobObtions() {
 				visible: true,
 		};
 
-		// Check for maxP10/P2_5
+        // Check for maxP10/P2_5
 		var maxY = 50;
         if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 50)) {
             maxY = datas.maxima.P10_max;
@@ -937,7 +938,7 @@ function createGlobObtions() {
 					useHTML: true,
 				},
 				min: 0,
-				max: maxY,
+//				max: maxY,
 //				tickAmount: 9,
 				gridLineColor: '#A2A6A4', // 'lightgray',
 				plotLines : [{
@@ -974,16 +975,18 @@ function createGlobObtions() {
 			options.series[1] = series_P2_5_m;
 			options.series[2] = series_P10;
 			options.series[3] = series_P2_5;
-//			options.series[4] = series_P10_m;
-//			options.series[5] = series_P2_5_m;
 //            var dlt = moment();
   			var dlt = start;
             options.xAxis.max = dlt.valueOf();
             dlt.subtract(1,'d');
             options.xAxis.min = dlt.valueOf();
 		} else if (what == 'oneweek'){
-			options.series[0] = series_P10_m;
-			options.series[1] = series_P2_5_m;
+            options.series[0] = series_P10_m;
+            options.series[1] = series_P2_5_m;
+            options.series[2] = series_P10;
+            options.series[3] = series_P2_5;
+//			options.series[0] = series_P10_m;
+//			options.series[1] = series_P2_5_m;
 			options.title.text = 'Feinstaub über 1 Woche';
 			options.subtitle.text='24h - gleitende Mittelwerte';
 			options.series[0].name = 'P10_h24';
@@ -991,6 +994,7 @@ function createGlobObtions() {
 			options.xAxis.tickInterval = 3600*6*1000;
 			options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
+//            options.yAxis[0].max=100;
 //            var dlt = moment(data[data.length-1].date);	// retrieve the date
 //			var dlt = moment();
 			var dlt = start;
