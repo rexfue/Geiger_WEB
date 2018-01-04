@@ -7,7 +7,6 @@
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/public/js/global.js" afterPath="$PROJECT_DIR$/public/js/global.js" />
-      <change beforePath="$PROJECT_DIR$/routes/fsdata.js" afterPath="$PROJECT_DIR$/routes/fsdata.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -53,16 +52,16 @@
           <file leaf-file-name="global.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/js/global.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="394">
-                  <caret line="940" column="2" lean-forward="false" selection-start-line="940" selection-start-column="2" selection-end-line="940" selection-end-column="2" />
+                <state relative-caret-position="717">
+                  <caret line="244" column="29" lean-forward="false" selection-start-line="244" selection-start-column="29" selection-end-line="244" selection-end-column="29" />
                   <folding>
-                    <marker date="1515012907000" expanded="true" signature="20450:20507" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="20593:20600" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="20626:20633" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="20633:20639" ph=" " />
-                    <marker date="1515012907000" expanded="true" signature="20677:20683" ph=" " />
-                    <marker date="1515012907000" expanded="true" signature="27252:27794" ph="{&quot;max&quot;: maxY...}" />
-                    <marker date="1515012907000" expanded="true" signature="27670:27698" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20435:20492" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20578:20585" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20611:20618" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20618:20624" ph=" " />
+                    <marker date="1515094433000" expanded="true" signature="20662:20668" ph=" " />
+                    <marker date="1515094433000" expanded="true" signature="27242:27784" ph="{&quot;max&quot;: maxY...}" />
+                    <marker date="1515094433000" expanded="true" signature="27660:27688" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -116,16 +115,17 @@
             <entry file="file://$PROJECT_DIR$/public/js/global.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="18300">
-                  <caret line="1230" column="45" lean-forward="false" selection-start-line="1230" selection-start-column="45" selection-end-line="1230" selection-end-column="45" />
+                  <caret line="1239" column="45" lean-forward="false" selection-start-line="1239" selection-start-column="45" selection-end-line="1239" selection-end-column="45" />
                   <folding>
-                    <marker date="1515012907000" expanded="true" signature="20450:20507" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="20593:20600" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="20626:20633" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="20633:20639" ph=" " />
-                    <marker date="1515012907000" expanded="true" signature="20677:20683" ph=" " />
-                    <marker date="1515012907000" expanded="true" signature="27252:27794" ph="{&quot;max&quot;: maxY...}" />
-                    <marker date="1515012907000" expanded="true" signature="27670:27698" ph="..." />
-                    <marker date="1515012907000" expanded="true" signature="28080:28113" ph="//..." />
+                    <marker date="1515094433000" expanded="true" signature="4065:4115" ph="{...}" />
+                    <marker date="1515094433000" expanded="true" signature="20435:20492" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20578:20585" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20611:20618" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="20618:20624" ph=" " />
+                    <marker date="1515094433000" expanded="true" signature="20662:20668" ph=" " />
+                    <marker date="1515094433000" expanded="true" signature="27242:27784" ph="{&quot;max&quot;: maxY...}" />
+                    <marker date="1515094433000" expanded="true" signature="27660:27688" ph="..." />
+                    <marker date="1515094433000" expanded="true" signature="28070:28103" ph="//..." />
                   </folding>
                 </state>
               </provider>
@@ -154,8 +154,8 @@
           <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="661">
-                  <caret line="232" column="60" lean-forward="false" selection-start-line="232" selection-start-column="60" selection-end-line="232" selection-end-column="60" />
+                <state relative-caret-position="413">
+                  <caret line="169" column="16" lean-forward="false" selection-start-line="169" selection-start-column="16" selection-end-line="169" selection-end-column="16" />
                   <folding />
                 </state>
               </provider>
@@ -209,10 +209,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>onewee</find>
-      <find>sensorname</find>
-      <find>subtitle</find>
-      <find>über 1 T</find>
       <find>altitude</find>
       <find>datetime</find>
       <find>korr</find>
@@ -239,6 +235,10 @@
       <find>.nd</find>
       <find>,0</find>
       <find>, 0</find>
+      <find>what</find>
+      <find>PlotItfs</find>
+      <find>startPlot</find>
+      <find>doplot</find>
     </findStrings>
     <replaceStrings>
       <replace>aktsensorid</replace>
@@ -582,7 +582,7 @@
       <workItem from="1514372986264" duration="24791000" />
       <workItem from="1514492204713" duration="16719000" />
       <workItem from="1514736545762" duration="3584000" />
-      <workItem from="1514909426478" duration="27349000" />
+      <workItem from="1514909426478" duration="31333000" />
     </task>
     <task id="LOCAL-00001" summary="added map usage&#10;&#10;- infowindow&#10;- säulen&#10;- link zu Grafik&#10;">
       <created>1480856091421</created>
@@ -899,11 +899,18 @@
       <option name="project" value="LOCAL" />
       <updated>1514915586390</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Many changes. Ist works now without MAP">
+      <created>1515013181972</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1515013181972</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="558766000" />
+    <option name="totallyTimeSpent" value="562750000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1002,7 +1009,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Portnumber changed, paackage.json adapted" />
     <MESSAGE value="First commit if Version 2" />
     <MESSAGE value="Spelling mistake corrected (Zentrieren)" />
     <MESSAGE value="Cosmetic changes" />
@@ -1027,7 +1033,8 @@
     <MESSAGE value="allgemeine Anpassungen an die neue DB-Aufteilung" />
     <MESSAGE value="Sealevel wird in fsdata gerechnent&#10;Datenreduzierung wird nicht mehr gemacht" />
     <MESSAGE value="Da hammer jetzt viel angepasst und geändert - noch nicht fertig !!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Da hammer jetzt viel angepasst und geändert - noch nicht fertig !!" />
+    <MESSAGE value="Many changes. Ist works now without MAP" />
+    <option name="LAST_COMMIT_MESSAGE" value="Many changes. Ist works now without MAP" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="406" key="Git.Branch.Popup" />
@@ -1037,7 +1044,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="503" />
+      <option name="time" value="507" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1072,13 +1079,13 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1515012907000" expanded="true" signature="20450:20507" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20593:20600" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20626:20633" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20633:20639" ph=" " />
-            <marker date="1515012907000" expanded="true" signature="20677:20683" ph=" " />
-            <marker date="1515012907000" expanded="true" signature="27252:27794" ph="{&quot;max&quot;: maxY...}" />
-            <marker date="1515012907000" expanded="true" signature="27670:27698" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20435:20492" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20578:20585" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20611:20618" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20618:20624" ph=" " />
+            <marker date="1515094433000" expanded="true" signature="20662:20668" ph=" " />
+            <marker date="1515094433000" expanded="true" signature="27242:27784" ph="{&quot;max&quot;: maxY...}" />
+            <marker date="1515094433000" expanded="true" signature="27660:27688" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1154,13 +1161,13 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1515012907000" expanded="true" signature="20450:20507" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20593:20600" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20626:20633" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20633:20639" ph=" " />
-            <marker date="1515012907000" expanded="true" signature="20677:20683" ph=" " />
-            <marker date="1515012907000" expanded="true" signature="27252:27794" ph="{&quot;max&quot;: maxY...}" />
-            <marker date="1515012907000" expanded="true" signature="27670:27698" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20435:20492" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20578:20585" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20611:20618" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20618:20624" ph=" " />
+            <marker date="1515094433000" expanded="true" signature="20662:20668" ph=" " />
+            <marker date="1515094433000" expanded="true" signature="27242:27784" ph="{&quot;max&quot;: maxY...}" />
+            <marker date="1515094433000" expanded="true" signature="27660:27688" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1411,24 +1418,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="661">
-          <caret line="232" column="60" lean-forward="false" selection-start-line="232" selection-start-column="60" selection-end-line="232" selection-end-column="60" />
+        <state relative-caret-position="413">
+          <caret line="169" column="16" lean-forward="false" selection-start-line="169" selection-start-column="16" selection-end-line="169" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/global.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="940" column="2" lean-forward="false" selection-start-line="940" selection-start-column="2" selection-end-line="940" selection-end-column="2" />
+        <state relative-caret-position="717">
+          <caret line="244" column="29" lean-forward="false" selection-start-line="244" selection-start-column="29" selection-end-line="244" selection-end-column="29" />
           <folding>
-            <marker date="1515012907000" expanded="true" signature="20450:20507" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20593:20600" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20626:20633" ph="..." />
-            <marker date="1515012907000" expanded="true" signature="20633:20639" ph=" " />
-            <marker date="1515012907000" expanded="true" signature="20677:20683" ph=" " />
-            <marker date="1515012907000" expanded="true" signature="27252:27794" ph="{&quot;max&quot;: maxY...}" />
-            <marker date="1515012907000" expanded="true" signature="27670:27698" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20435:20492" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20578:20585" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20611:20618" ph="..." />
+            <marker date="1515094433000" expanded="true" signature="20618:20624" ph=" " />
+            <marker date="1515094433000" expanded="true" signature="20662:20668" ph=" " />
+            <marker date="1515094433000" expanded="true" signature="27242:27784" ph="{&quot;max&quot;: maxY...}" />
+            <marker date="1515094433000" expanded="true" signature="27660:27688" ph="..." />
           </folding>
         </state>
       </provider>

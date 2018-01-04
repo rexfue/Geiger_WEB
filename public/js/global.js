@@ -127,9 +127,9 @@ $(document).ready(function() {
     function setNewDay() {
         var newDay = $('#selnewday').val();
         dialogNewDay.dialog("close");
-        var d = moment();
+        var d = moment().startOf('day');
         var nd = moment(newDay);
-		if ((d.date() == nd.date()) && (d.year() == nd.year()) && (nd.month() == d.month())) {
+		if (d.isSame(nd,'day')) {
             window.location = '/'+aktsensorid;
 		} else {
             window.location = '/'+aktsensorid+'?stday='+newDay;
@@ -149,7 +149,7 @@ $(document).ready(function() {
                 $( "#selnewday" ).datepicker({
 //                    minDate: new Date(oldestDate),
                     minDate: new Date('2017-12-01'),
-					maxDate: '+1d',
+					maxDate: '0',
 					dateFormat: 'yy-mm-dd',
                 });
                 $('#selnewday').focus();
@@ -242,7 +242,7 @@ $(document).ready(function() {
 
 			buildHeaderline(korrelation.othersensors,korrelation.location[0].address);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
-			doPlot('oneweek',startDay);						// Start with plotting one day from now on
+			doPlot('oneweek');						// Start with plotting one day from now on
 //			doPlot('onemonth',startDay);						// Start with plotting one day from now on
 			switchPlot(active);
 
@@ -397,7 +397,7 @@ $(document).ready(function() {
 			console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
 			if (aktsensorid != 'map') {					// Wenn nicht die Karte, dann
 				doPlot('oneday',startDay);						// Tages- und
-				doPlot('oneweek',startDay);						// Wochenplot erneuern
+//				doPlot('oneweek',startDay);						// Wochenplot erneuern
 			}
 			else {
 				fetchAktualData();
@@ -499,19 +499,19 @@ $(document).ready(function() {
     }
 
 
-    function startPlot(what,d1,d2,sensor,start) {
+    function startPlot(what,d1,d2,sensor,start,live) {
 		var name = sensor.name;
 		if((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
             if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
-                PlotYearfs(what, d1, sensor);
+                PlotYearfs(what, d1, sensor,live);
             } else {
-                PlotItfs(what, d1, sensor,start);
+                PlotItfs(what, d1, sensor,start,live);
             }
         } else {
             if((what == 'oneyear') || (what == 'onemonth')) {
-                PlotYearTHP(what,d1,d2,sensor);
+                PlotYearTHP(what,d1,d2,sensor,live);
             } else {
-                PlotItTHP(what, d1,d2,sensor,start)
+                PlotItTHP(what, d1,d2,sensor,start,live)
             }
 		}
     }
@@ -563,7 +563,7 @@ $(document).ready(function() {
 //			    if (data1.docs.length == 0) {
 //                    showError(1,"No data at " + what, aktsensorid);
 //                }
-				startPlot(what,data1,null,currentSensor,st);
+				startPlot(what,data1,null,currentSensor,st,live);
 
                 korridx++;
                 if ((korridx == count) || ((korrelation.othersensors[korridx].sid - currentSensor.sid) >= 3)) {
@@ -598,11 +598,11 @@ $(document).ready(function() {
                                     alert("Fehler <br />" + err);				// if error, show it
                                 } else {
                                     d3 = data3;
-                                    startPlot(what,d2,d3,currentSensor,st);
+                                    startPlot(what,d2,d3,currentSensor,st,live);
                                 }
                             });
                         } else {
-                        	startPlot(what,d2,null,currentSensor,st);
+                        	startPlot(what,d2,null,currentSensor,st,live);
                         }
 	                }
 				});
@@ -768,7 +768,7 @@ function createGlobObtions() {
 
 
     // Plot Feinstaub
-	var PlotItfs = function(what, datas, sensor,start) {
+	var PlotItfs = function(what, datas, sensor,start,live) {
 
         var series1 = [];
 		var series2 = [];
@@ -976,10 +976,16 @@ function createGlobObtions() {
 			options.series[2] = series_P10;
 			options.series[3] = series_P2_5;
 //            var dlt = moment();
-  			var dlt = start;
-            options.xAxis.max = dlt.valueOf();
-            dlt.subtract(1,'d');
-            options.xAxis.min = dlt.valueOf();
+  			var dlt = start.clone();
+  			if(live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(1, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(1, 'd');
+                options.xAxis.max = dlt.valueOf();
+			}
 		} else if (what == 'oneweek'){
             options.series[0] = series_P10_m;
             options.series[1] = series_P2_5_m;
@@ -994,13 +1000,16 @@ function createGlobObtions() {
 			options.xAxis.tickInterval = 3600*6*1000;
 			options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
-//            options.yAxis[0].max=100;
-//            var dlt = moment(data[data.length-1].date);	// retrieve the date
-//			var dlt = moment();
-			var dlt = start;
-            options.xAxis.max = dlt.valueOf();
-			dlt.subtract(7,'d');
-			options.xAxis.min = dlt.valueOf();
+            var dlt = start.clone();
+			if(live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(7, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(7,'d');
+                options.xAxis.max = dlt.valueOf();
+                }
         }
         var errorTafel = '<div class="errTafel">' +
             'Fehler: <br />Sensor unbekannt <br />' +
@@ -1053,7 +1062,7 @@ function createGlobObtions() {
 
 
 	// Plot Temp/Hum/Press
-	var PlotItTHP = function(what, datas, datasBMP, sensor, start) {
+	var PlotItTHP = function(what, datas, datasBMP, sensor, start,live) {
 
 		var series1 = [];
 		var series2 = [];
@@ -1303,7 +1312,7 @@ function createGlobObtions() {
 
 
 	// Plot Year
-	var PlotYearfs = function(what,d1,sensor) {
+	var PlotYearfs = function(what,d1,sensor,live) {
 		var series1 = [];
 		var series2 = [];
 
@@ -1436,7 +1445,7 @@ function createGlobObtions() {
 //        ch.renderer.text("Sensor-Nr 141", 10, 10).add();
 	};
 
-	var PlotYearTHP = function(what,dat1, dat2,sensor) {
+	var PlotYearTHP = function(what,dat1, dat2,sensor,live) {
 		var seriesTmx = [];
 		var seriesTmi = [];
 		var seriesDru = [];
