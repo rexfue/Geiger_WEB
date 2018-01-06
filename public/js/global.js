@@ -121,13 +121,13 @@ $(document).ready(function() {
         },
     });
 
-//    $.datepicker.setDefaults( $.datepicker.regional[ "de" ] );
+//    $.datepicker.setDefaults( $.datetimepicker.regional[ "de" ] );
 
     // Set new Start-Day and show chart
     function setNewDay() {
         var newDay = $('#selnewday').val();
         dialogNewDay.dialog("close");
-        var d = moment().startOf('day');
+        var d = moment();
         var nd = moment(newDay);
 		if (d.isSame(nd,'day')) {
             window.location = '/'+aktsensorid;
@@ -141,16 +141,21 @@ $(document).ready(function() {
     var dialogNewDay = $('#dialogNewDay').dialog({
 		autoOpen: false,
 		width: 300,
-		title:"Neuen Start-Tag wählen",
+		title:"Neuen Start-Tag/Zeit wählen",
 		position: {my:'center', at: 'top+100px', of:window},
         open: function() {
             $('#page-mask').css('visibility', 'visible');
             $(this).load('/fsdata/selnewday', function () {
-                $( "#selnewday" ).datepicker({
+                $( "#selnewday" ).datetimepicker({
 //                    minDate: new Date(oldestDate),
-                    minDate: new Date('2017-12-01'),
+                    minDate: '-1m',
 					maxDate: '0',
 					dateFormat: 'yy-mm-dd',
+                    showMinute: false,
+                    hourText: 'Stunde',
+                    timeText: 'Uhrzeit',
+                    closeText: 'OK',
+                    currentText: 'Jetzt',
                 });
                 $('#selnewday').focus();
             });
@@ -186,6 +191,7 @@ $(document).ready(function() {
 			useUTC: false					// Don't use UTC on the charts
 		}
 	});
+
 
     $('#selnewday').datepicker( $.datepicker.regional[ "de" ] );
 
@@ -237,13 +243,13 @@ $(document).ready(function() {
 //                console.log("Oldest Entry:",oldestDate);
 //            });
 
-			// save koordinates etc. in localStorage
-            localStorage.setItem('curcoord',JSON.stringify(korrelation.location));
+			// save coordinates in localStorage
+            localStorage.setItem('curcoord',JSON.stringify(korrelation.location[korrelation.location.length-1].loc.coordinates));
 
-			buildHeaderline(korrelation.othersensors,korrelation.location[0].address);
+			buildHeaderline(korrelation.othersensors,korrelation.location[korrelation.location.length-1].address);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
-			doPlot('oneweek');						// Start with plotting one day from now on
-//			doPlot('onemonth',startDay);						// Start with plotting one day from now on
+			doPlot('oneweek');								// Start with plotting one day from now on
+			doPlot('onemonth');								// Start with plotting one day from now on
 			switchPlot(active);
 
 		}
@@ -263,6 +269,10 @@ $(document).ready(function() {
 //        $('#average').selectmenu();
 	}
 
+	function buildyMax() {
+		for(let i=0; i< ymaxTable.length; i++ ) {
+        }
+	}
 // ************** Event-Handler **************
 
     $('#btnMap').click(function() {
@@ -372,7 +382,7 @@ $(document).ready(function() {
 			$('#placeholderFS_3').hide();
 			$('#placeholderTHP_3').hide();
 		} else if ((what == 'oneyear') || (what == 'onemonth')) {
-			doPlot(what,startDay);
+			doPlot(what);
 			$('#placeholderFS_1').hide();
 			$('#placeholderTHP_1').hide();
 			$('#placeholderFS_2').hide();
@@ -478,27 +488,6 @@ $(document).ready(function() {
     }
 
 
-    function getDataFromDB(url,start,count)
-    {
-        const promise = new Promise((resolve, reject) => {
-                var currentSensor = korrelation.sensors[count];
-        var callopts = {start: start.toJSON(), sensorid: currentSensor.id, sensorname: currentSensor.name};
-        $.getJSON(url, callopts, function (data1, err) {				// AJAX Call
-            if (err != 'success') {
-                reject(err);
-            }
-            console.log(moment().format() + " --> " + data1.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + url)
-            if (data1.docs.length == 0) {
-                reject("No Data");
-            }
-            resolve(data1);
-        });
-    })
-        ;
-        return promise;
-    }
-
-
     function startPlot(what,d1,d2,sensor,start,live) {
 		var name = sensor.name;
 		if((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
@@ -518,7 +507,7 @@ $(document).ready(function() {
 
 
     //	doPlot
-//	Fetch relevant data from the server and plot it
+	//	Fetch relevant data from the server and plot it
 
 	function doPlot(what,start) {								// if 'start' not defined,
 //		console.log("doPlot");
@@ -529,7 +518,7 @@ $(document).ready(function() {
 		if ((start === undefined) || (start == "")) {
 			st = moment();										// then start 'now'
 		} else {
-            st = moment(start,'YYYY-MM-DD');
+            st = moment(start);
             live = false;
 		}
 		var d1, d2=null, d3=null;
@@ -545,7 +534,7 @@ $(document).ready(function() {
 		}
 		// *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
 
-
+		let location = korrelation.location[korrelation.location.length-1];
         var currentSensor = korrelation.othersensors[korridx];
 		var callopts = {
 			start: st.toJSON(),
@@ -553,6 +542,7 @@ $(document).ready(function() {
 			sensorname: currentSensor.name,
 			avgTime: avgTime,
 			live:live,
+			altitude: location.altitude,
 		};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
@@ -569,15 +559,9 @@ $(document).ready(function() {
                 if ((korridx == count) || ((korrelation.othersensors[korridx].sid - currentSensor.sid) >= 3)) {
                     return;
                 }
-                if ((start === undefined) || (start == "")) {
-                    st = moment();										// then start 'now'
-                } else {
-                    st = moment(start,'YYYY-MM-DD');
-                }
                 currentSensor = korrelation.othersensors[korridx];
 				callopts.sensorname = currentSensor.name;
 				callopts.sensorid = currentSensor.sid;
-				callopts.start = st.toJSON();
 				callopts.avgTime = 10;								// 10min Average
 				let s3=moment();
                 $.getJSON(url,callopts, function(data2,err) {		// AJAX Call
@@ -638,9 +622,12 @@ function createGlobObtions() {
 				borderWidth: '2',
 				resetZoomButton: {
 					position: {
-						align: 'left',
-						verticalAlign: 'bottom',
-					}
+//						align: 'left',
+//						verticalAlign: 'bottom',
+						x: -900,
+						y: 350,
+					},
+					relativeTo: 'chart'
 				}
 			},
 			title: {
@@ -926,7 +913,7 @@ function createGlobObtions() {
         // Check for maxP10/P2_5
 		var maxY = 50;
         if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 50)) {
-            maxY = datas.maxima.P10_max;
+            maxY = null;
         }
 
         var labelText =  (datas.docs.length==0)? '' : 'Grenzwert 50µg/m<sup>3</sup>';
@@ -938,7 +925,7 @@ function createGlobObtions() {
 					useHTML: true,
 				},
 				min: 0,
-//				max: maxY,
+				max: maxY,
 //				tickAmount: 9,
 				gridLineColor: '#A2A6A4', // 'lightgray',
 				plotLines : [{
@@ -1023,9 +1010,16 @@ function createGlobObtions() {
 //			$('#placeholderFS_2').highcharts(options);
             Highcharts.chart($('#placeholderFS_2')[0],options, function(chart) {
             	addSensorID2chart(chart, sensor);
+                chart.yAxis[0].labelGroup.element.childNodes.forEach(function(label)
+                {
+                    label.style.cursor = "pointer";
+                    label.onclick = function(){
+                        alert('You clicked on '+this.textContent);
+                    }
+                });
 			}) ;
 		} else {
-			$('#placeholderFS_1').css('margin-bottom','');
+            $('#placeholderFS_1').css('margin-bottom','');
 			Highcharts.chart($('#placeholderFS_1')[0],options,function(chart) {
 				addSensorID2chart(chart,sensor);
                 var text = chart.renderer.label(
@@ -1252,17 +1246,27 @@ function createGlobObtions() {
 			options.xAxis.tickInterval = 3600*6*1000;
             options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
-//            var dlt = moment();
-            var dlt = start;
-            options.xAxis.max = dlt.valueOf();
-            dlt.subtract(7,'d');
-            options.xAxis.min = dlt.valueOf();
+            var dlt = start.clone();
+            if(live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(7, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(7,'d');
+                options.xAxis.max = dlt.valueOf();
+            }
         } else {
-//            var dlt = moment();
-            var dlt = start;
-            options.xAxis.max = dlt.valueOf();
-            dlt.subtract(1,'d');
-            options.xAxis.min = dlt.valueOf();
+            var dlt = start.clone();
+            if(live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(1, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(1, 'd');
+                options.xAxis.max = dlt.valueOf();
+            }
 		}
 
         var noDataTafel = '<div class="errTafel">' +
@@ -1328,7 +1332,8 @@ function createGlobObtions() {
 			mx.push(this.avgP10);
 		});
 		var maxP10 = Math.max(...mx);
-		var maxy = maxP10>80 ? maxP10+10 : 80;
+		var maxy = 50;
+		if(maxP10>50) maxY = null;
 		var options = createGlobObtions();
         var dlt = moment();	// retrieve the date
 		if (what == 'onemonth') {
@@ -1557,8 +1562,8 @@ function createGlobObtions() {
                     title: {
                         text: 'Temperatur °C'
                     },
-					min: ((Math.round(tmin/10))*10)-5,
-                    max: ((Math.round(tmax/10))*10)+5,
+//					min: ((Math.round(tmin/10))*10)-5,
+//                    max: ((Math.round(tmax/10))*10)+5,
                     opposite: true,
                     tickAmount: 5,
                     gridLineColor: 'lightgray',

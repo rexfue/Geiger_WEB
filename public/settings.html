@@ -2,7 +2,7 @@
 <form onkeypress="return event.keyCode != 13;">
   <fieldset>
    <label for="mapcenter">Mittelpunkt der Karte (Ort):</label>
-   <input class='text ui-widget-content ui-corner-all' name = 'mapcenter' id='mapcenter' type='text' />
+   <input class='text ui-widget-content ui-corner-all' name = 'mapcenter' id='mapcenter' type='text' placeholder='automatisch'/>
    <br />
    <label for="average">Gleitender Mittelwert über:</label>
    <select  name = 'average' id='average'>
@@ -11,7 +11,14 @@
        <option value="60">60 min</option>
        <option value="120">120 min</option>
 -->   </select>
-
-   <input type='submit' tabindex='-1' style="position:absolute; top:-1000px">
+<!--    <br /><br />
+     <p><label for="ymax">Max. Y-Wert bei Feinstaub</label>
+     </p>
+      <label> <input type="radio" id="ymax_def" name="yMax" value="default" checked>defaulti</label>
+      <label><input type="radio" id="ymax_auto" name="yMax" value="automatisch">automatisch</label>
+      <label><input type="radio" id="ymax_wert" name="yMax" value="50"></label>
+        <input type="number" id="ym_wert" value="50">
+-->
+      <input type='submit' tabindex='-1' style="position:absolute; top:-1000px">
   </fieldset>
 </form>

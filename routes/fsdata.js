@@ -1,45 +1,44 @@
-var express = require('express');
-var router = express.Router();
-var moment = require('moment');
-var mathe = require('mathjs');
-var Vector = require('gauss').Vector;
+const express = require('express');
+const router = express.Router();
+const moment = require('moment');
+const mathe = require('mathjs');
+const Vector = require('gauss').Vector;
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
 //Get readings for all data out ot the database
 router.get('/getfs/:week', function (req, res) {
-    var week = req.params.week;
-    var db = req.app.get('dbase');
-    var st = req.query.start;
-    var data = { 'error': 'OK'};
-    var samples = req.query.samples;
-    var avg = req.query.avgTime;
-    var live = (req.query.live == 'true');
-    getSensorProperties(db,parseInt(req.query.sensorid))
-        .then((props) => {
-            if (week == 'oneday') {
-                getDayData(db, props.sid, props.name,
-                    props.location[props.location.length-1].altitude, st, avg, live)
-                    .then(erg => res.json(erg));
-            } else if (week == 'oneweek') {
-                getWeekData(db, props.sid, props.name, st)
-                    .then(erg => res.json(erg));
-            } else if ((week == 'oneyear') || (week == 'onemonth')) {
-                data['docs'] = getYearData(db, props.sid, props.name, st, week, live)
-                    .then(erg => res.json(erg));
-            } else if (week == 'latest') {
-                getLatestValues(db, props.sid, props.name, samples)
-                    .then(erg => res.json(erg));
-            } else if (week == 'korr') {
-                res.json(props);
-            } else if (week == "oldest") {
-                getOldestEntry(db, props.sid)
-                    .then(erg => res.json(erg));
-            } else {
-                data = {'error': 'MIST VERDAMMTER!!'};
-                res.json(data);
-            }
-        });
+    let week = req.params.week;
+    let db = req.app.get('dbase');
+    let st = req.query.start;
+    let sid = parseInt(req.query.sensorid);
+    let sname = req.query.sensorname;
+    let samples = req.query.samples;
+    let avg = req.query.avgTime;
+    let altitude = req.query.altitude;
+    let live = (req.query.live == 'true');
+
+    if (week == 'oneday') {
+        getDayData(db, sid, sname, altitude, st, avg, live)
+            .then(erg => res.json(erg));
+    } else if (week == 'oneweek') {
+        getWeekData(db, sid, sname, altitude, st)
+            .then(erg => res.json(erg));
+    } else if ((week == 'oneyear') || (week == 'onemonth')) {
+        getYearData(db, sid, sname, st, week, live)
+            .then(erg => res.json(erg));
+    } else if (week == 'latest') {
+        getLatestValues(db, sid, sname, samples)
+            .then(erg => res.json(erg));
+    } else if (week == 'korr') {
+        getSensorProperties(db,sid)
+            .then(erg => res.json(erg));
+    } else if (week == "oldest") {
+        getOldestEntry(db, sid)
+            .then(erg => res.json(erg));
+    } else {
+        res.json({'error': 'MIST VERDAMMTER!!'});
+    }
 });
 
 // fetch name of given sensor-id
@@ -60,14 +59,14 @@ function getSensorName(db,sid) {
 
 // fetch the properties for the given sensor
 async function getSensorProperties(db,sid) {
-    console.log("Get properties for", sid);
+    console.log("Get properties for", sid,"from DB");
     let sensorEntries = [{'sid':sid}];
     let coll = db.collection('properties');
-    let erg = await coll.findOne({sid: sid});
-    sensorEntries[0]['name'] = erg.name;
-    for(let i = 0, j=1; i<erg.othersensors.length; i++) {
-        let e = {sid: erg.othersensors[i]};
-        e.name = await getSensorName(db, erg.othersensors[i]);
+    let properties = await coll.findOne({sid: sid});
+    sensorEntries[0]['name'] = properties.name;
+    for(let i = 0, j=1; i<properties.othersensors.length; i++) {
+        let e = {sid: properties.othersensors[i]};
+        e.name = await getSensorName(db, properties.othersensors[i]);
         sensorEntries[j] = e;
         j++;
     }
@@ -80,8 +79,8 @@ async function getSensorProperties(db,sid) {
         }
         return 0;
     });
-    erg.othersensors = sensorEntries;
-    return erg;
+    properties.othersensors = sensorEntries;
+    return properties;
 }
 
 
@@ -203,7 +202,7 @@ function getDayData(db,sensorid, sensorname, altitude, st, avg, live) {
 }
 
 // Daten für eine Woche aus der DB holen
-function getWeekData(db, sensorid, sensorname, st) {
+function getWeekData(db, sensorid, sensorname, altitude , st) {
     var p = new Promise(function(resolve,reject) {
         var start = moment(st);
         var end = moment(st);
@@ -234,7 +233,7 @@ function getWeekData(db, sensorid, sensorname, st) {
                     var y = calcMinMaxAvgSDS(wdata.PM,true);
                     resolve({'docs': wdata.PM, 'maxima': y });
                 } else if ((sensorname == "DHT22") || (sensorname == "BMP180") || (sensorname == "BME280")) {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname).THP});
+                    resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude).THP});
                 }
             }
         });

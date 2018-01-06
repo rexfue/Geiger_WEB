@@ -28,7 +28,7 @@ function initMap() {												// Map initialisieren
     var koo = localStorage.getItem('curcoord');
     if(!((koo == null) || (koo === undefined) || (koo == ""))) {
         var koord = JSON.parse(koo);
-        myLatLng = {lat: koord.latitude, lng: koord.longitude};
+        myLatLng = {lat: koord[1], lng: koord[0]};
     }
 
 
@@ -375,17 +375,17 @@ function buildMarkers(data) {
     for (x in data) {											// alle daten durchgehen
         var offset = 0;											// deault Offset ist 0
         var item = data[x];
-        if (item.loc[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
+        if (item.location[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
             offset = 5;											// enen neuen etwas nach rechts verscheiben
         }
-        lold = item.loc[0];							            // und die Länge merken
+        lold = item.location[0];							            // und die Länge merken
         var oneMarker = new google.maps.Marker({				// Marker-Objekt erzeugen
-            position: new google.maps.LatLng(item.loc[1],item.loc[0]), // mit den Koordinaten aus den daten
+            position: new google.maps.LatLng(item.location[1],item.location[0]), // mit den Koordinaten aus den daten
             icon: getBalken(item.value10,sBreit,offset),			// die Säule dazu
             werte: [item.value10, item.value25],				// auch die Werte mit speichern
             sensorid: item.id,						        	// und auch die Sensor-Nummer
             url: '/'+item.id,		    						// URL zum Aufruf der Grafik
-            latlon:  {lat: parseFloat(item.loc[1]), lng: parseFloat(item.loc[0])}, // und extra nocmla die
+            latlon:  {lat: parseFloat(item.location[1]), lng: parseFloat(item.location[0])}, // und extra nocmla die
             // Koordinaten
             offset: offset,
         });

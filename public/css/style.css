@@ -207,8 +207,12 @@ button {
 	margin-top: 10px;
 }
 
+
 label, input { display: block; }
 
+radio {
+	display: inline-block;
+}
 .ui-dialog-titlebar-close { width: 30px !important; }
 
 
@@ -227,5 +231,4 @@ label, input { display: block; }
 	opacity: 1;
 	z-index: 9999 !important;
 }
-
 

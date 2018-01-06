@@ -12,13 +12,13 @@ router.get('/getaktdata/', function (req, res) {
     var east = parseFloat(req.query.east);
     var west = parseFloat(req.query.west);
     console.log('Box:', south,north,east,west);
-    var collection = db.collection('aktwerte');                         // die 'korrelation' verwenden
+    var collection = db.collection('mapdata');                         // die 'korrelation' verwenden
     var aktData = [];                                                   // hier die daten sammeln
     var now = moment();                                                 // akt. Uhrzeit
     var lastDate = 0;
     console.log("fetching data ");
     collection.find({                                                   // find all data within map borders (box)
-        loc: {
+        location: {
             $geoWithin: {
                 $box : [
                     [west,south],
@@ -31,14 +31,9 @@ router.get('/getaktdata/', function (req, res) {
         for (var i=0; i< docs.length; i++) {
             var item = docs[i];
             var oneAktData = {};
-            oneAktData['loc'] = item.loc.coordinates;
+            oneAktData['location'] = item.location.coordinates;
             oneAktData['id'] = item._id;                                // ID des Sensors holen
-            var dati = 0;
-            for (var k=0; k< item.data.length; k++) {
-                if(item.data[k].time > dati) {
-                    dati = item.data[k].time;
-                }
-            }
+            var dati = item.values.datetime;
             var dt = new Date(dati);
             if((now-dt) >= 7*24*3600*1000) {                            // älter als 1 WOCHE ->
                 oneAktData['value10'] = -2;                             // -2 zurückgeben
@@ -49,13 +44,11 @@ router.get('/getaktdata/', function (req, res) {
             } else {
                 oneAktData['value10'] = -5;
                 oneAktData['value25'] = -5;
-                if (item.average != undefined) {
-                    if (item.average.P10_avg != undefined) {
-                        oneAktData['value10'] = item.average.P10_avg.toFixed(2);    // und merken
-                    }
-                    if (item.average.P2_5_avg != undefined) {
-                        oneAktData['value25'] = item.average.P2_5_avg.toFixed(2);      // und merken
-                    }
+                if (item.values.P1 != undefined) {
+                    oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
+                }
+                if (item.values.P2 != undefined) {
+                    oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
                 }
                 if (dati > lastDate) {
                     lastDate = dati;
