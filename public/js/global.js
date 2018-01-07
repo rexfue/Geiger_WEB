@@ -41,7 +41,7 @@ $(document).ready(function() {
 		startDay = startday;
 	}
 
-	localStorage.clear();
+	localStorage.clear();       // <-- *************************************************************
 
 
 	function saveSettings() {
@@ -192,6 +192,22 @@ $(document).ready(function() {
 		}
 	});
 
+    var dialogError = $('#errorDialog').dialog({
+        autoOpen: false,
+        width: 300,
+        position: {my:'center', at: 'top+100px', of:window},
+        open: function() {
+            $('#page-mask').css('visibility','visible');
+        },
+        close: function() {
+            $('#page-mask').css('visibility','hidden');
+            $('#btnHelp').css('background','#0099cc');
+        },
+        title: "Fehler",
+        modat: true,
+    });
+
+
 
     $('#selnewday').datepicker( $.datepicker.regional[ "de" ] );
 
@@ -230,7 +246,7 @@ $(document).ready(function() {
 		if (err != 'success') {
 			alert("Fehler <br />" + err);						// if error, show it
 		} else {
-			if (data.length == 0) {
+			if ((data==null)||(data.length == 0)) {
 //				korrelation = {'address':{},'location': {},'espid': "", 'sensors': [{'id': aktsensorid}]};
 				showError(2,"No data at korrelation ", aktsensorid);
 //					return -1;
@@ -357,7 +373,7 @@ $(document).ready(function() {
 	// Return TRUE, wenn enthalten
 	function checkSensorNr(sid, callBack) {
         $.getJSON('fsdata/getfs/korr', {sensorid: sid}, function (data, err) {				// AJAX Call
-            if (err != 'success') {
+            if ((err != 'success') || (data==null)) {
                 callBack(false,null);						// if error, show it
             } else {
                 callBack(true,data);
@@ -478,13 +494,14 @@ $(document).ready(function() {
 
 	function showError(err,txt,id) {
 	    console.log("*** Fehler: " + txt + " from id " + id);
-	    var errtxt = "*** Fehler: ";
+	    let errtxt = "";
 	    if (err == 1) {
-	    	errtxt += "Dieser Sensor (" + id + ") liefert keine aktuellen Daten!";
+	    	errtxt = "Dieser Sensor (" + id + ") liefert keine aktuellen Daten!";
 		} else if (err == 2) {
-	    	errtxt += "Sensor Nr. " + id + " existiert nicht in der Datenbank";
+	    	errtxt = "Sensor Nr. " + id + " existiert nicht in der Datenbank";
 		}
-	    alert(errtxt);
+		$('#errorDialog').text(errtxt);
+		dialogError.dialog("open");
     }
 
 

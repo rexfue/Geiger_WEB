@@ -232,3 +232,6 @@ radio {
 	z-index: 9999 !important;
 }
 
+#errorDialog {
+	color: red;
+}
