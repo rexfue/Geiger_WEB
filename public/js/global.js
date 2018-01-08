@@ -25,6 +25,7 @@ $(document).ready(function() {
 	var oldestDate = "01-01-2016";			// oldest date in dbase
 	var avgTime = 30;						// defaul average time für particulate matter
 	var avgTable = [15,30,60,120];
+	var globMaxY = null;						// max Y für Feinstaub
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -43,6 +44,40 @@ $(document).ready(function() {
 
 	localStorage.clear();       // <-- *************************************************************
 
+    var dialogYmax = $('#dialogymax').dialog({
+        autoOpen: false,
+        title: 'yMax anpassen',
+		open: function() {
+        	$(this).load('/fsdata/ymax',function() {
+				let chart = $('#placeholderFS_1').highcharts();
+				let axisMax = chart.yAxis[0].max;
+				$('#newymax').attr('placeholder',axisMax);
+				$('#newymax').focus();
+			})
+		},
+        buttons:  [
+            {
+                text: "OK",
+                class: "btnOK",
+                click: setnewymax,
+                width: 100,
+            }]
+    });
+
+
+	function setnewymax() {
+		let max = $('#newymax').val();
+		if((max != "") && ((max < 50) || (max > 2000))) {
+            $('#newymax').append('<br /><span id="invalid">Ungültiger Wert</span>');
+        } else {
+			if (max == "") max = null;
+			console.log("Neur Wert = ",max)
+			dialogYmax.dialog('close');
+			globMaxY = max;
+			doPlot('oneday',startDay);
+            doPlot('oneweek', startDay);						// Start with plotting one day from now on
+		}
+	}
 
 	function saveSettings() {
 		if($('#mapcenter').val() == "") {
@@ -285,10 +320,7 @@ $(document).ready(function() {
 //        $('#average').selectmenu();
 	}
 
-	function buildyMax() {
-		for(let i=0; i< ymaxTable.length; i++ ) {
-        }
-	}
+
 // ************** Event-Handler **************
 
     $('#btnMap').click(function() {
@@ -928,10 +960,14 @@ function createGlobObtions() {
 		};
 
         // Check for maxP10/P2_5
-		var maxY = 50;
-        if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 50)) {
-            maxY = null;
-        }
+		let maxY=50;
+		if (globMaxY == null) {
+            if ((datas.maxima !== undefined) && (datas.maxima.P10_max > 50)) {
+                maxY = null;
+            }
+		} else {
+			maxY = globMaxY;
+		}
 
         var labelText =  (datas.docs.length==0)? '' : 'Grenzwert 50µg/m<sup>3</sup>';
 
@@ -940,6 +976,11 @@ function createGlobObtions() {
 				title: {
 					text: 'Feinstaub µg/m<sup>3</sup>',
 					useHTML: true,
+                    events: {
+					    click: function() {
+                            dialogYmax.dialog('open');
+					    }
+				    },
 				},
 				min: 0,
 				max: maxY,

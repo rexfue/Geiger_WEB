@@ -76,6 +76,10 @@ app.get('/fs/fsdata/selsensor', function(req, res, next) {
     res.sendFile(__dirname+'/public/selsensor.html');
 });
 
+app.get('/fs/fsdata/ymax', function(req, res, next) {
+    res.sendFile(__dirname+'/public/ymax.html');
+});
+
 app.get('/fs/fsdata/selnewday', function(req, res, next) {
     res.sendFile(__dirname+'/public/selnewday.html');
 });
