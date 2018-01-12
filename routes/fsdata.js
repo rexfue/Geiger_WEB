@@ -45,7 +45,7 @@ router.get('/getfs/:week', function (req, res) {
 function getSensorName(db,sid) {
     const p = new Promise((resolve,reject) => {
         let coll = db.collection('properties');
-        coll.findOne({sid: parseInt(sid)})
+        coll.findOne({_id: parseInt(sid)})
             .then(erg => {
                 resolve(erg.name);
             })
@@ -59,10 +59,11 @@ function getSensorName(db,sid) {
 
 // fetch the properties for the given sensor
 async function getSensorProperties(db,sid) {
+
     console.log("Get properties for", sid,"from DB");
     let sensorEntries = [{'sid':sid}];
     let coll = db.collection('properties');
-    let properties = await coll.findOne({sid: sid});
+    let properties = await coll.findOne({_id: sid});
     if(properties == null) return null;
     sensorEntries[0]['name'] = properties.name;
     for(let i = 0, j=1; i<properties.othersensors.length; i++) {

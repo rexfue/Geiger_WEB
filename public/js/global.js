@@ -39,7 +39,11 @@ $(document).ready(function() {
 
     var startDay = "";
 	if(!((typeof startday == 'undefined') || (startday == ""))) {
-		startDay = startday;
+		if(startday == "Silvester") {
+			startDay = "2017-12-31 12:00"
+		} else {
+            startDay = startday;
+        }
 	}
 
 	localStorage.clear();       // <-- *************************************************************
@@ -140,16 +144,23 @@ $(document).ready(function() {
 	});
 
 
-
+    var fileName = 'Feinstaub-Sensor.png';
 	var dialogHelp = $('#dialogWinHelp').dialog({
         autoOpen: false,
-        width: 800,
+        width: 750,
         title: 'Info',
 		position: {my:'center', at: 'top+100px', of:window},
         open: function() {
-            $('#page-mask').css('visibility','visible');
-            $(this).load('/fsdata/help')
-        },
+//        $('#dialogWinHelp').append('<img src="Feinstaub-Sensor.png" width="300"/><br/>');
+//            $('#page-mask').css('visibility','visible');
+            $(this).load('/fsdata/help');
+//                var object = "<object data=\"{FileName}\" type=\"application/pdf\" width=\"850px\" height=\"2000px\">";
+//                object += "If you are unable to view file, you can download from <a href = \"{FileName}\">here</a>";
+//                object += " or download <a target = \"_blank\" href = \"http://get.adobe.com/reader/\">Adobe PDF Reader</a> to view the file.";
+//                object += "</object>";
+//                object = object.replace(/{FileName}/g,  '../'+ fileName);
+//                $("#dialogWinHelp").html(object);
+            },
         close: function() {
             $('#page-mask').css('visibility','hidden');
             $('#btnHelp').css('background','#0099cc');
@@ -345,6 +356,11 @@ $(document).ready(function() {
     // Clicking one of the buttons
 	$('.btn').click(function() {
 		var button = $(this).val(); 		// fetch the clicked button
+        if(button == 'month') {
+            $('#btnst').hide();
+        } else {
+            $('#btnst').show();
+        }
 		active = 'one'+button;
 		switchPlot(active);								// gewählten Plot aktivieren
 	});
@@ -685,7 +701,7 @@ function createGlobObtions() {
 				style: {"fontSize":"25px"},
 			},
             subtitle: {
-			    text: 'Akt.Wert und '+ avgTime +'min-gleitende Mittelwerte',
+			    text: 'Gemessene Werte und '+ avgTime +'min-gleitende Mittelwerte',
                 align: 'left',
             },
 			tooltip: {
@@ -888,7 +904,7 @@ function createGlobObtions() {
 		};
 		
 		var series_P10_m = {
-				name: 'P10_m'+avgTime,
+				name: 'P10_Mittelwert',
 				data: series3,
 				color: '#0000FF',
 				zIndex:4,
@@ -900,7 +916,7 @@ function createGlobObtions() {
 		};
 		
 		var series_P2_5_m = {
-				name: 'P2.5_m'+avgTime,
+				name: 'P2.5_Mittelwert',
 				data: series4,
 				color: '#006400',
 				zIndex:5,
@@ -912,7 +928,7 @@ function createGlobObtions() {
 		};
 
 		var series_P10_ca = {
-				name: 'P10_cav'+avgTime,
+				name: 'P10_Mittelwert_K',
 				data: series3,
 				color: '#0000FF',
 				zIndex:4,
@@ -924,7 +940,7 @@ function createGlobObtions() {
 		};
 		
 		var series_P2_5_ca = {
-				name: 'P2.5_cav'+avgTime,
+				name: 'P2.5_Mittelwert_K',
 				data: series4,
 				color: '#006400',
 				zIndex:5,
@@ -936,7 +952,7 @@ function createGlobObtions() {
 		};
 
 		var series_P10_md = {
-				name: 'P2.5_md'+avgTime,
+				name: 'P2.5_Median',
 				data: series5,
 				color: '#0000FF',
 				zIndex:5,
@@ -948,7 +964,7 @@ function createGlobObtions() {
 		};
 
 		var series_P2_5_md = {
-				name: 'P2.5_md'+avgTime,
+				name: 'P2.5_Median',
 				data: series6,
 				color: '#006400',
 				zIndex:4,
@@ -1039,7 +1055,7 @@ function createGlobObtions() {
 //			options.series[0] = series_P10_m;
 //			options.series[1] = series_P2_5_m;
 			options.title.text = 'Feinstaub über 1 Woche';
-			options.subtitle.text='24h - gleitende Mittelwerte';
+			options.subtitle.text='Gemessene Werte und 24h-gleitende Mittelwerte';
 			options.series[0].name = 'P10_h24';
 			options.series[1].name = 'P2.5_h24';
 			options.xAxis.tickInterval = 3600*6*1000;
@@ -1194,7 +1210,7 @@ function createGlobObtions() {
 		var options = createGlobObtions();
 
 		var series_temp= {
-			name: 'Temp_m'+(temphum_avg+1),
+			name: 'Temperatur_Mittelwert',
 			data: series1,
 			color: 'red',
 			yAxis: 0,
@@ -1207,7 +1223,7 @@ function createGlobObtions() {
 		};
 
 		var series_feucht = {
-			name: 'Feuchte_m'+(temphum_avg+1),
+			name: 'Feuchte_Mittelwert',
 			data: series2,
 			color: '#946CBD',
 			yAxis: 1,
@@ -1220,7 +1236,7 @@ function createGlobObtions() {
 		};
 
 		var series_druck = {
-			name: 'Luftdruck',
+			name: 'Luftdruck_Mittelwert',
 			data: series3,
 			color: '#DA9E24',
 			yAxis: 2,
@@ -1496,7 +1512,7 @@ function createGlobObtions() {
                 text: "Feinstaub Tagesmittelwerte",
             },
             subtitle:{
-				text: 'Tagesmittelwert jeweils von 0h00 bis 23h59 für P10 und P2.5'
+				text: 'Tagesmittelwert jeweils von 0h00 bis 23h59'
 			},
 		}
         options.chart.zoomType = 'x';
