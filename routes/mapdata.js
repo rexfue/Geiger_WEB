@@ -1,8 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
+const request = require('request');
+let $ = jQuery = require('jquery');
+require('../jquery.csv.js');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
+
+let URL='http://archive.luftdaten.info/';
 
 // Fetch the actual out of the dbase
 router.get('/getaktdata/', function (req, res) {
@@ -11,7 +16,23 @@ router.get('/getaktdata/', function (req, res) {
     var north = parseFloat(req.query.north);
     var east = parseFloat(req.query.east);
     var west = parseFloat(req.query.west);
+    let st = req.query.start;
     console.log('Box:', south,north,east,west);
+
+/* Versuch, über die CSV-Dateien einen beliebigen Zeitpunkt einzulesen.
+    Das funtioniert erstens noch nicht (Fehler, wenn CSV nicht da ist, wird nicht richtig
+    abgefangen.
+    Und es dauert wohl doch einfach viel zu lange.
+    if(st != "") {
+        fetchCSV(db,moment.utc(st),south,north,east,west)
+            .then((erg) => {
+                res.json(erg);
+                return;
+            });
+        return;
+    }
+*/
+
     var collection = db.collection('mapdata');                         // die 'korrelation' verwenden
     var aktData = [];                                                   // hier die daten sammeln
     var now = moment();                                                 // akt. Uhrzeit
@@ -64,5 +85,75 @@ router.get('/getaktdata/', function (req, res) {
     });
 });
 
+
+/*
+
+async function fetchCSV(db,start,south,north,east,west) {
+    let datum = start.format('YYYY-MM-DD');
+    let pcoll = db.collection('properties');
+    let werte = [];
+    let ones = {};
+    try {
+        let docs = await pcoll.find({                                                   // find all data within map borders (box)
+            'location.0.loc': {
+                $geoWithin: {
+                    $box: [
+                        [west, south],
+                        [east, north]
+                    ]
+                }
+            }
+        }).toArray();
+        for (let x in docs) {
+            let sid = docs[x]._id;
+            let name = docs[x].name;
+            ones.location = docs[x].location[0].loc.coordinates;
+            ones.id = sid;
+            let fn = URL + datum + '/' + datum + '_' + name.toLowerCase() + '_sensor_' + sid + '.csv';
+            let erg = await readOneSensorData(fn, moment(start));
+            Object.keys(erg).forEach(key => {
+                ones[key] = erg[key];
+            });
+            werte.push(ones);
+        }
+        return {"avgs": werte, "lastDate": datum};
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+
+// read the CSV-File and parse it int right format for DB
+function readOneSensorData(url, dt) {
+    let cdat = dt.startOf('day');
+    const p = new Promise((resolve, reject) => {
+        request(url, function (error, response, body) {         // request the file
+            if((error) || (response.statusCode != 200)) {
+                console.log("error readOneSensorOneDay:", error, '  Status:',response.statusCode, url);
+                reject("Error", error);                         // if not OK, reject
+            }
+            $.csv.toObjects(body, {separator: ';'}, function (err, data) {  // parse CSV
+//                console.log("Lang: ", data.length);
+                for (let i = 0; i < data.length; i++) {
+                    entry = {};
+                    let date = moment.utc(data[i].timestamp);               // extract date of entry
+                    if (cdat.isAfter(date)) continue;
+                    entry.datetime = date.toDate();					        // make date for Mongo (== ISODate)
+                    if (data[i].P1 !== undefined) {
+                        entry.value10 = parseFloat(data[i].P1);
+                    }
+                    if (data[i].P2 !== undefined) {
+                        entry.value25 = parseFloat(data[i].P2);
+                    }
+                    break;
+                }
+                resolve(entry);                  // return all the data
+            });
+        });
+    });
+    return p;
+}
+*/
 
 module.exports = router;

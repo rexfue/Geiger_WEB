@@ -12,6 +12,15 @@ var geocod;
 var w = $('#btnTraf span').width();
 $('#btnTraf').css('width',w+30);
 
+var startDay = "";
+if(!((typeof startday == 'undefined') || (startday == ""))) {
+    if(startday == "Silvester") {
+        startDay = "2018-01-01 00:10"
+    } else {
+        startDay = startday;
+    }
+}
+
 //	localStorage.clear();
 
 // Karte und die Marker erzeugen
@@ -301,6 +310,7 @@ function removeOneMarker(n) {
 
 // Aktuelle Daten vom Server holen
 function fetchAktualData() {
+    boundBox.start = startDay;
     $.getJSON('/mapdata/getaktdata', boundBox, function (data1, err) {	// JSON-Daten vom Server holen
         if (err != 'success') {
             alert("Fehler <br />" + err);						// ggf. fehler melden

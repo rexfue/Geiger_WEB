@@ -106,7 +106,7 @@ $(document).ready(function() {
 	// Dialog für das Einstell-Menü
 	var dialogSet = $('#dialogWinSet').dialog({
         autoOpen: false,
-        width: 800,
+        width: 400,
         title: 'Einstellungen',
         open:
             function() {
@@ -1421,8 +1421,12 @@ function createGlobObtions() {
                     plotBands: calcWeekends(data,true),
                     plotLines: calcDays(data,true),
 					max: moment().valueOf(),
-        			min: dlt.valueOf()
-				},
+        			min: dlt.valueOf(),
+                    title: {
+                        text: 'Datum',
+                    },
+
+                },
 				yAxis:  {
 						title: {
 							text: 'µg/m<sup>3</sup>',
