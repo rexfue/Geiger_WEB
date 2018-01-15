@@ -11,7 +11,7 @@ const PORT = 3005;											// Port for server
 let MONGOHOST = process.env.MONGOHOST;
 let MONGOPORT = process.env.MONGOPORT;
 if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
-if (MONGOPORT === undefined) { MONGOPORT =  27018; }
+if (MONGOPORT === undefined) { MONGOPORT =  27017; }
 
 console.log(os.hostname());
 

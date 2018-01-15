@@ -68,7 +68,9 @@ async function getSensorProperties(db,sid) {
     sensorEntries[0]['name'] = properties.name;
     for(let i = 0, j=1; i<properties.othersensors.length; i++) {
         let e = {sid: properties.othersensors[i]};
-        e.name = await getSensorName(db, properties.othersensors[i]);
+        if (e.sid != null) {
+           e.name = await getSensorName(db, properties.othersensors[i]);
+        }
         sensorEntries[j] = e;
         j++;
     }
