@@ -17,12 +17,13 @@ router.get('/getfs/:week', function (req, res) {
     let avg = req.query.avgTime;
     let altitude = req.query.altitude;
     let live = (req.query.live == 'true');
+    let special = req.query.special;
 
     if (week == 'oneday') {
-        getDayData(db, sid, sname, altitude, st, avg, live)
+        getDayData(db, sid, sname, altitude, st, avg, live,special)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
-        getWeekData(db, sid, sname, altitude, st)
+        getWeekData(db, sid, sname, altitude, st, live)
             .then(erg => res.json(erg));
     } else if ((week == 'oneyear') || (week == 'onemonth')) {
         getYearData(db, sid, sname, st, week, live)
@@ -161,64 +162,71 @@ function getLatestValues(db,sensorid,sensorname,samples) {
 
 
 // Daten für einen Tag aus der Datenbank holen
-function getDayData(db,sensorid, sensorname, altitude, st, avg, live) {
-    var p = new Promise(function(resolve,reject) {              // Promise erzeugen
-        var start = moment(st);                                 // Zeiten in einen moiment umsetzen
-        var end = moment(st);
-        var colstr = 'data_' + sensorid;
-        var collection = db.collection(colstr);
-        // TODO <--------------------- hier noch die Minuten für die Mittlelwertbildung abziehen
-        if (live == true) {
-            start.subtract(24, 'h');
-        } else {
-            end.add(24,'h');
-        }
-//            console.log(colstr,start,end);
-        // <--- PROMISES !!!
-        collection.find({
-            datetime: {
-                $gte: new Date(start),
-                $lt: new Date(end)
-            }
-        }, {sort: {datetime: 1}}).toArray(function (e, docs) {
-            if (e != null) {
-                reject(e);
-            }
-                    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
-                    if (docs.length == 0) {
-                        resolve({'docs': []})
-                    } else {
-                        if (sensorname == "SDS011") {
-                            var x = calcMovingAverage(docs, avg  , 'SDS011', 0,0);
-                            var y = calcMinMaxAvgSDS(docs,false);
-                            resolve({'docs': x.PM, 'maxima': y});
-                        } else if (sensorname == "DHT22") {
-                            resolve({'docs': calcMovingAverage(docs, avg, sensorname,0,0).THP});
-                        } else if (sensorname == "BMP180") {
-                            resolve({'docs': calcMovingAverage(docs, avg, sensorname, altitude,0).THP});
-                        } else if (sensorname == "BME280") {
-                            resolve({'docs': calcMovingAverage(docs, avg, sensorname, altitude,0).THP});
-                        }
+async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, special) {
+        let docs = [];
+        try {
+            if (special == 'silvester17') {
+                let coll = db.collection('silvester');
+                let silv  = await coll.findOne({_id:sensorid},{_id:0, data:1});
+                docs = silv.data;
+            } else {
+                var start = moment(st);                                 // Zeiten in einen moiment umsetzen
+                var end = moment(st);
+                var colstr = 'data_' + sensorid;
+                var collection = db.collection(colstr);
+                if (live == true) {
+                    start.subtract(24, 'h');
+                    start.subtract(avg,'m');
+                } else {
+                    start.subtract(avg,'m');
+                    end.add(24, 'h');
+                }
+                docs = await collection.find({
+                    datetime: {
+                        $gte: new Date(start),
+                        $lt: new Date(end)
                     }
-        });
-    });
-    return p;
+                }, {sort: {datetime: 1}}).toArray();
+            }
+            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
+            if (docs.length == 0) {
+                return {'docs': []};
+            } else {
+                if (sensorname == "SDS011") {
+                    var x = calcMovingAverage(docs, avg, 'SDS011', 0, 0);
+                    var y = calcMinMaxAvgSDS(docs, false);
+                    return {'docs': x.PM, 'maxima': y};
+                } else if (sensorname == "DHT22") {
+                    return {'docs': calcMovingAverage(docs, avg, sensorname, 0, 0).THP};
+                } else if (sensorname == "BMP180") {
+                    return {'docs': calcMovingAverage(docs, avg, sensorname, altitude, 0).THP};
+                } else if (sensorname == "BME280") {
+                    return {'docs': calcMovingAverage(docs, avg, sensorname, altitude, 0).THP};
+                }
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
 }
 
 // Daten für eine Woche aus der DB holen
-function getWeekData(db, sensorid, sensorname, altitude , st) {
+function getWeekData(db, sensorid, sensorname, altitude , st, live) {
     var p = new Promise(function(resolve,reject) {
         var start = moment(st);
         var end = moment(st);
         var colstr = 'data_' + sensorid;
         var collection = db.collection(colstr);
-        if (sensorname == "SDS011") {
-            start.subtract(24*8, 'h');
+        if (live == true) {
+            if (sensorname == "SDS011") {
+                start.subtract(24 * 8, 'h');
+            } else {
+                start.subtract(24 * 7, 'h');
+            }
         } else {
-            start.subtract(24*7, 'h');
+            start.subtract(24,'h');
+            end.add(24*7,'h');
         }
-        // TODO <--------------- Mittelwert-Minuten(Tage) reinrechnen
-        // TODO <-------------- Live nocht vergessrn
         collection.find({
             datetime: {
                 $gte: new Date(start),

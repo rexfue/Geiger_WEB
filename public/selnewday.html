@@ -1,7 +1,19 @@
 <br />
 <form onkeypress="return event.keyCode != 13;">
    <fieldset>
-      <input class='text ui-widget-content ui-corner-all' name = 'selnewday' id='selnewday' type='text'  />
+      <label>
+         <input name = 'selDates' id='selfrei' type='radio' value='frei' />
+         <input class='text ui-widget-content ui-corner-all' name = 'selnewday'
+                id='selnewday' type='text' placeholder='Datum wählen'  />
+      </label>
+      <label>
+         <input name = 'selDates' id='selSilvester' type='radio' value='silvester17' />
+         Silvester 2017
+      </label>
+      <label>
+         <input name = 'selDates' id='selheute' type='radio' value='today' />
+         zurück zu 'heute' (live) <br />
+      </label>
    </fieldset>
 </form>
 

@@ -25,7 +25,9 @@ $(document).ready(function() {
 	var oldestDate = "01-01-2016";			// oldest date in dbase
 	var avgTime = 30;						// defaul average time für particulate matter
 	var avgTable = [15,30,60,120];
-	var globMaxY = null;						// max Y für Feinstaub
+	var globMaxY = null;					// max Y für Feinstaub
+	var specialDate = "";					// extra for 'Silvester'
+	var doUpdate = true;					// update every 5 min
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -40,7 +42,7 @@ $(document).ready(function() {
     var startDay = "";
 	if(!((typeof startday == 'undefined') || (startday == ""))) {
 		if(startday == "Silvester") {
-			startDay = "2017-12-31 12:00"
+			specialDate = "silvester17";
 		} else {
             startDay = startday;
         }
@@ -144,23 +146,14 @@ $(document).ready(function() {
 	});
 
 
-    var fileName = 'Feinstaub-Sensor.png';
 	var dialogHelp = $('#dialogWinHelp').dialog({
         autoOpen: false,
         width: 750,
         title: 'Info',
 		position: {my:'center', at: 'top+100px', of:window},
         open: function() {
-//        $('#dialogWinHelp').append('<img src="Feinstaub-Sensor.png" width="300"/><br/>');
-//            $('#page-mask').css('visibility','visible');
             $(this).load('/fsdata/help');
-//                var object = "<object data=\"{FileName}\" type=\"application/pdf\" width=\"850px\" height=\"2000px\">";
-//                object += "If you are unable to view file, you can download from <a href = \"{FileName}\">here</a>";
-//                object += " or download <a target = \"_blank\" href = \"http://get.adobe.com/reader/\">Adobe PDF Reader</a> to view the file.";
-//                object += "</object>";
-//                object = object.replace(/{FileName}/g,  '../'+ fileName);
-//                $("#dialogWinHelp").html(object);
-            },
+        },
         close: function() {
             $('#page-mask').css('visibility','hidden');
             $('#btnHelp').css('background','#0099cc');
@@ -171,14 +164,18 @@ $(document).ready(function() {
 
     // Set new Start-Day and show chart
     function setNewDay() {
-        var newDay = $('#selnewday').val();
+        let val = $('input:radio[name=selDates]:checked').val();
         dialogNewDay.dialog("close");
-        var d = moment();
-        var nd = moment(newDay);
-		if (d.isSame(nd,'day')) {
-            window.location = '/'+aktsensorid;
+		if(val == 'today') {
+			doUpdate= true;
+            window.location = '/' + aktsensorid;
+		} else if (val == 'silvester17') {
+            doUpdate= false;
+            window.location = '/'+aktsensorid+'?stday=Silvester';
 		} else {
-            window.location = '/'+aktsensorid+'?stday='+newDay;
+            doUpdate= false;
+            const newDay = $('#selnewday').val();
+            window.location = '/' + aktsensorid + '?stday=' + newDay;
 		}
     }
 
@@ -195,15 +192,22 @@ $(document).ready(function() {
                 $( "#selnewday" ).datetimepicker({
 //                    minDate: new Date(oldestDate),
                     minDate: '-1m',
-					maxDate: '0',
-					dateFormat: 'yy-mm-dd',
+                    maxDate: '0',
+                    dateFormat: 'yy-mm-dd',
                     showMinute: false,
                     hourText: 'Stunde',
                     timeText: 'Uhrzeit',
                     closeText: 'OK',
                     currentText: 'Jetzt',
                 });
-                $('#selnewday').focus();
+                $('input:radio[name=selDates]').change(function() {
+                    if (this.value == 'frei') {
+                		$('#selnewday').focus();
+                    }
+                });
+                $('#selnewday').focus( function() {
+                    $('input:radio[name=selDates][id=selfrei]').prop('checked',true);
+				});
             });
         },
 		buttons:  [
@@ -310,8 +314,8 @@ $(document).ready(function() {
 
 			buildHeaderline(korrelation.othersensors,korrelation.location[korrelation.location.length-1].address);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
-			doPlot('oneweek');								// Start with plotting one day from now on
-			doPlot('onemonth');								// Start with plotting one day from now on
+			doPlot('oneweek',startDay);								// Start with plotting one week from now on
+			doPlot('onemonth');								// Start with plotting one month from now on
 			switchPlot(active);
 
 		}
@@ -388,7 +392,6 @@ $(document).ready(function() {
             $('.btnOK').focus();
 		}
 	});
-
 
 // Einstellungen - Eingaben
     $('#in_mapcenter').click(function(){
@@ -469,9 +472,9 @@ $(document).ready(function() {
         }
 		if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
 			console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
-			if (aktsensorid != 'map') {					// Wenn nicht die Karte, dann
+			if ((aktsensorid != 'map') && (doUpdate == true)) {	// Wenn nicht die Karte, dann
 				doPlot('oneday',startDay);						// Tages- und
-//				doPlot('oneweek',startDay);						// Wochenplot erneuern
+				doPlot('oneweek',startDay);						// Wochenplot erneuern
 			}
 			else {
 				fetchAktualData();
@@ -586,6 +589,9 @@ $(document).ready(function() {
             st = moment(start);
             live = false;
 		}
+		if (specialDate != "") {
+			live = false;
+		}
 		var d1, d2=null, d3=null;
 		var url = '/fsdata/getfs/'+what;
 		var count = korrelation.othersensors.length;			// Anzahl der Sensoren
@@ -608,6 +614,7 @@ $(document).ready(function() {
 			avgTime: avgTime,
 			live:live,
 			altitude: location.altitude,
+			special: specialDate,
 		};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
@@ -693,8 +700,17 @@ function createGlobObtions() {
 						y: 350,
 					},
 					relativeTo: 'chart'
-				}
-			},
+				},
+                events: {
+                    selection: function (event) {
+                        if (event.xAxis) {
+                            doUpdate = false;
+                        } else {
+                            doUpdate = true;
+                        }
+                    }
+                }
+            },
 			title: {
 				text: 'Feinstaub über 1 Tag',
 				align: 'left',
@@ -1043,6 +1059,9 @@ function createGlobObtions() {
                 dlt.subtract(1, 'd');
                 options.xAxis.min = dlt.valueOf();
             } else {
+  				if(specialDate == 'silvester17') {
+  					dlt = moment("2017-12-31T11:00:00Z");
+				}
                 options.xAxis.min = dlt.valueOf();
                 dlt.add(1, 'd');
                 options.xAxis.max = dlt.valueOf();
@@ -1337,6 +1356,9 @@ function createGlobObtions() {
                 dlt.subtract(1, 'd');
                 options.xAxis.min = dlt.valueOf();
             } else {
+            	if(specialDate == 'silvester17') {
+            		dlt = moment("2017-12-31T11:00:00Z");
+				}
                 options.xAxis.min = dlt.valueOf();
                 dlt.add(1, 'd');
                 options.xAxis.max = dlt.valueOf();

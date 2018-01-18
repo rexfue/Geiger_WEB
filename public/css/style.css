@@ -212,11 +212,17 @@ button {
 }
 
 
-label, input { display: block; }
+/*label, input { display: block; }
+*/
 
 radio {
 	display: inline-block;
+	margin-bottom: 10px;
+	mrgin-right: 10px;
+	disaplay: inline;
 }
+
+
 .ui-dialog-titlebar-close { width: 30px !important; }
 
 
