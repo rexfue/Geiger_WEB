@@ -22,7 +22,6 @@ router.get('/', function(req, res, next) {
         name: 'map',
         param: req.query.addr,
         stday: req.query.stday,
-        alarm: req.query.alarm,
     });
 });
 
@@ -41,7 +40,6 @@ router.get('/:nam', function(req, res, next) {
     		date : pkg.date,
             param: req.query.addr,
             stday: req.query.stday,
-            alarm: req.query.alarm,
     		name: 'map'});
     } else {
     res.render(idx, {
@@ -50,7 +48,6 @@ router.get('/:nam', function(req, res, next) {
         date : pkg.date,
         param: req.query.addr,
         stday: req.query.stday,
-        alarm: req.query.alarm,
         name : name});
     }
 });
