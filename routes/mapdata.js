@@ -4,6 +4,7 @@ var moment = require('moment');
 const request = require('request');
 let $ = jQuery = require('jquery');
 require('../jquery.csv.js');
+var fs = require('fs');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -85,6 +86,11 @@ router.get('/getaktdata/', function (req, res) {
     });
 });
 
+router.get('/getStuttgart/', function (req, res) {
+    fs.readFile('public/Stuttgart.gpx',function(err,data) {
+        res.send(data);
+    })
+});
 
 /*
 

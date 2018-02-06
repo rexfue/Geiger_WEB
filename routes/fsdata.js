@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const mathe = require('mathjs');
-const Vector = require('gauss').Vector;
+// const Vector = require('gauss').Vector;
+const request = require('request-promise');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -66,6 +67,12 @@ async function getSensorProperties(db,sid) {
     let coll = db.collection('properties');
     let properties = await coll.findOne({_id: sid});
     if(properties == null) return null;
+    let alarm = false;
+    if(properties.location[properties.location.length-1].address.city == 'Stuttgart') {
+        alarm = await checkFeinstaubAlarm();
+        console.log('ALARM:', alarm);
+    }
+    properties.alarm = alarm;
     sensorEntries[0]['name'] = properties.name;
     for(let i = 0, j=1; i<properties.othersensors.length; i++) {
         let e = {sid: properties.othersensors[i]};
@@ -88,6 +95,25 @@ async function getSensorProperties(db,sid) {
     return properties;
 }
 
+// Feinstaubalarm in Stuttgart cjecken
+function checkFeinstaubAlarm() {
+    var p = new Promise(function (resolve,reject) {
+        request('http://www.stuttgart.de/feinstaubalarm/widget/xtrasmall')
+            .then(function (html) {
+                console.log(html);
+                if (html.indexOf('widget alarm-on')) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+                reject(err);
+            });
+    });
+    return p;
+}
 
 /* für den übergebenen Sensor das Datum des ältesten Eintrages übergeben
  */

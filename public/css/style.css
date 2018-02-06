@@ -262,3 +262,7 @@ radio {
 #underymax {
 	font-size: 75%;
 }
+
+#alarm {
+	display: none;
+}

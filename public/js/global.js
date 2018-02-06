@@ -28,6 +28,7 @@ $(document).ready(function() {
 	var globMaxY = null;					// max Y für Feinstaub
 	var specialDate = "";					// extra for 'Silvester'
 	var doUpdate = true;					// update every 5 min
+    var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -302,6 +303,7 @@ $(document).ready(function() {
 //					return -1;
 			} else {
                 korrelation = data;
+                fstAlarm = data.alarm;
             }
 			console.log("Korrelation: ",korrelation);
 //            getOldestDate(aktsensorid, korrelation.sensors,function(old){
@@ -378,7 +380,7 @@ $(document).ready(function() {
             var newSens = $('#ssel').val();
             checkSensorNr(newSens, function (erg,data) {
                 if (erg) {
-                    window.location = '/' + newSens;
+                	window.location = '/' + newSens;
                 } else {
                     showError(2, "", newSens);
                 }
@@ -456,6 +458,9 @@ $(document).ready(function() {
 			$('#placeholderTHP_2').hide();
 			$('#placeholderFS_3').show();
 			$('#placeholderTHP_3').show();
+		}
+		if(fstAlarm) {
+			$('#alarm').css('display', 'inline');
 		}
 	}
 	
@@ -628,7 +633,7 @@ $(document).ready(function() {
 				startPlot(what,data1,null,currentSensor,st,live);
 
                 korridx++;
-                if ((korridx == count) || ((korrelation.othersensors[korridx].sid - currentSensor.sid) >= 3)) {
+                if ((korridx == count) || (count >= 3)) {
                     return;
                 }
                 currentSensor = korrelation.othersensors[korridx];
@@ -644,7 +649,7 @@ $(document).ready(function() {
                         console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
 						console.log("Zeit dafür:",moment()-s3);
                         korridx++;
-                        if (!((korridx == count) || ((korrelation.othersensors[korridx].sid - currentSensor.sid) >= 3))) {
+                        if (!((korridx == count) || (count >= 3))) {
 	                        currentSensor = korrelation.othersensors[korridx];
 							callopts.sensorname = currentSensor.name;
 							callopts.sensorid = currentSensor.sid;
