@@ -1,11 +1,12 @@
 {
   "name": "feinstaub",
-  "version": "2.3.4",
-  "date": "2018-02-06",
+  "version": "2.3.5",
+  "date": "2018-02-07",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js >>/var/log/fstst-web.log 2>&1"
   },
   "author": "rxf@gmail.com",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "moment": "^2.20.1",
     "mongodb": "^2.2.33",
     "pug": "^2.0.0-rc.4",
+    "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
 }
