@@ -1,3 +1,5 @@
+"use strict";
+
 var map;
 var colorTable = [100, 'purple',50,'red',30,'orange',0,'green',-1,'black'];	// default Fabraufteilung der Werte
 var marker = [];
@@ -5,7 +7,7 @@ var sBreit = 30;
 var infowindow;
 var first = true;
 var boundBox;
-var newBound = false;
+var newBounds = false;
 var geocod;
 
 
@@ -416,7 +418,7 @@ function buildMarkers(data) {
     var lold = 0.0;												// Merke für den Längengrad
 //    clearMarker();
     marker = [];
-    for (x in data) {											// alle daten durchgehen
+    for (var x in data) {											// alle daten durchgehen
         var offset = 0;											// deault Offset ist 0
         var item = data[x];
         if (item.location[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann

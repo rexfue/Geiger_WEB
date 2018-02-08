@@ -1,8 +1,10 @@
+"use strict";
+
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
 const request = require('request');
-let $ = jQuery = require('jquery');
+let $ = require('jquery');
 require('../jquery.csv.js');
 var fs = require('fs');
 
@@ -77,7 +79,7 @@ router.get('/getaktdata/', function (req, res) {
                 }
             }
             aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
-            console.log('lastDate:',lastDate);
+ //           console.log('lastDate:',lastDate);
  //           console.log("Daten für "+ oneAktData.id + " geholt");
         }
         console.log("Komm direkt vor res.json in route.get(/getaktdata und lastDate ist:", lastDate);

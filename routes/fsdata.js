@@ -1,3 +1,4 @@
+"use strict";
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
@@ -100,7 +101,7 @@ function checkFeinstaubAlarm() {
     var p = new Promise(function (resolve,reject) {
         request('http://www.stuttgart.de/feinstaubalarm/widget/xtrasmall')
             .then(function (html) {
-                console.log(html);
+//                console.log(html);
                 if (html.indexOf('widget alarm-on')) {
                     resolve(true);
                 } else {
@@ -453,7 +454,7 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
     }
 
     if ((name == "BMP180") || (name == "BME280")) {
-        newData = calcSealevelPressure(newDataT,altitude);
+        newDataT = calcSealevelPressure(newDataT,altitude);
     }
     return { 'PM': newDataF, 'THP' : newDataT };
 }

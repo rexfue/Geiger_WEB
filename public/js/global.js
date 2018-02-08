@@ -1,7 +1,9 @@
 //DOM is ready
+"use strict";
+
 $(document).ready(function() {
 	
-	var TOPIC_SDS = "SDS011";
+	var TOPIC_SDS = "SDS011",
 		TOPIC_DHT = "DHT22",
 		TOPIC_BMP = "BMP180";
 	
@@ -330,7 +332,7 @@ $(document).ready(function() {
 			if(avgTime == avgTable[i]) {
                 var str = '<option selected="selected" value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
 			}  else {
-                var str = '<option value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
+                str = '<option value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
             }
             $('#average').append(str);
         }
@@ -522,7 +524,7 @@ $(document).ready(function() {
 			$('#ssel').val(aktsensorid);
         }
         console.log(addr);
-		adtxt = '';
+		var adtxt = '';
 		if(!((addr == undefined) || (addr == {}))) {
             if (extAddr) {
                 if (addr.number !== undefined) {
@@ -1086,7 +1088,7 @@ function createGlobObtions() {
 			options.xAxis.tickInterval = 3600*6*1000;
 			options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
-            var dlt = start.clone();
+            dlt = start.clone();
 			if(live) {
                 options.xAxis.max = dlt.valueOf();
                 dlt.subtract(7, 'd');
@@ -1109,13 +1111,13 @@ function createGlobObtions() {
 //			$('#placeholderFS_2').highcharts(options);
             Highcharts.chart($('#placeholderFS_2')[0],options, function(chart) {
             	addSensorID2chart(chart, sensor);
-                chart.yAxis[0].labelGroup.element.childNodes.forEach(function(label)
-                {
-                    label.style.cursor = "pointer";
-                    label.onclick = function(){
-                        alert('You clicked on '+this.textContent);
-                    }
-                });
+//                chart.yAxis[0].labelGroup.element.childNodes.forEach(function(label)
+//                {
+//                    label.style.cursor = "pointer";
+//                    label.onclick = function(){
+//                        alert('You clicked on '+this.textContent);
+//                    }
+//                });
 			}) ;
 		} else {
             $('#placeholderFS_1').css('margin-bottom','');
@@ -1356,7 +1358,7 @@ function createGlobObtions() {
                 options.xAxis.max = dlt.valueOf();
             }
         } else {
-            var dlt = start.clone();
+            dlt = start.clone();
             if(live) {
                 options.xAxis.max = dlt.valueOf();
                 dlt.subtract(1, 'd');
@@ -1377,7 +1379,7 @@ function createGlobObtions() {
 
 
         if(what == 'oneweek') {
-            chr = Highcharts.chart($('#placeholderTHP_2')[0],options,function(chart) {
+            var chr = Highcharts.chart($('#placeholderTHP_2')[0],options,function(chart) {
                 addSensorID2chart(chart, sensor);
             }) ;
 //			$('#placeholderTHP_2').highcharts(options);
@@ -1395,7 +1397,7 @@ function createGlobObtions() {
                         zIndex: 5,
                     }).add();
             if( txtMeldung == true) {
-                labeText = "";
+                var labeText = "";
                 var errtext = chart.renderer.label(
                     noDataTafel,
                     250,
@@ -1433,9 +1435,10 @@ function createGlobObtions() {
 			series2.push([dat,this.avgP2_5]);
 			mx.push(this.avgP10);
 		});
-		var maxP10 = Math.max(...mx);
-		var maxy = 50;
-		if(maxP10>50) maxY = null;
+//		var maxP10 = Math.max(...mx);
+        var maxP10 = Math.max.apply(null,mx);
+        var maxy = 50;
+		if(maxP10>50) maxy = null;
 		var options = createGlobObtions();
         var dlt = moment();	// retrieve the date
 		if (what == 'onemonth') {
