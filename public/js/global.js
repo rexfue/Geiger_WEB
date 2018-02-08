@@ -473,7 +473,8 @@ $(document).ready(function() {
 	function showUhrzeit(sofort) {
         var d = moment()								// akt. Zeit holen
 		if (sofort || (d.second() == 0)) {				// Wenn Minute grade um
-            $('#h1uhr').text(d.format('HH:mm'));		// dann zeit anzeigen
+            $('#h1uhr').html(d.format('HH:mm'));
+            $('#subtitle').html(d.format('YYYY-MM-DD'));		// dann zeit anzeigen
         }
 		if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
 			console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
@@ -1443,15 +1444,26 @@ function createGlobObtions() {
             dlt.subtract(366, 'd');
         }
 		var localOptions = {
+				tooltip: {
+                    formatter: function () {
+                        return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">'+
+                            '&nbsp;&nbsp;'+moment(this.x).format("DD.MMM") + '<br />' +
+                            '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+                            this.series.name + ':&nbsp; <b>' +
+                            Highcharts.numberFormat(this.y,1) +
+                            '</b></div>';
+                    }
+                },
 				xAxis: {
 //					tickInterval: 24*3600*1000,
                     plotBands: calcWeekends(data,true),
                     plotLines: calcDays(data,true),
-					max: moment().valueOf(),
+					max: moment().startOf('day').subtract(1,'d').valueOf(),
         			min: dlt.valueOf(),
                     title: {
                         text: 'Datum',
                     },
+                    minTickInterval: moment.duration(1, 'day').asMilliseconds(),
 
                 },
 				yAxis:  {
@@ -1624,6 +1636,16 @@ function createGlobObtions() {
         var options = createGlobObtions();
 
 		var opts = {
+            tooltip: {
+                formatter: function () {
+                    return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">'+
+                        '&nbsp;&nbsp;'+moment(this.x).format("DD.MMM") + '<br />' +
+                        '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+                        this.series.name + ':&nbsp; <b>' +
+                        Highcharts.numberFormat(this.y,1) +
+                        '</b></div>';
+                }
+            },
 				series:[
 				        {
 				        	name: 'max Temp',

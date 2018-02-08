@@ -292,10 +292,9 @@ function getYearData(db,sensorid,sensorname, st,what) {
         if(what == 'oneyear') {
             start.subtract(366, 'd');
         } else {
-            start.subtract(32, 'd');
+            start.subtract(33, 'd');
         }
-        start.add(1,'h');                           // UTC-Anpassung !!!!!!! Sommerzeit !!!!!!!
-        end.add(1,'h');
+        start.subtract(1,'d');          // plot until 'yesterday'
         var datRange = {datetime: {$gte: new Date(start), $lt: new Date(end)}};
 //            console.log('datrange:', datRange);
         var sorting = {datetime: 1};
