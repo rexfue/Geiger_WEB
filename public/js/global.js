@@ -1104,9 +1104,14 @@ function createGlobObtions() {
 				'<span class="errTafelsmall">Bitte einen anderen Sensor wählen</span>' +
             '</div>';
 
+        var errorTafel_0 = '<div class="errTafel">' +
+            'Fehler: <br />Der Sensor liefert keine Daten <br />' +
+//            '<span class="errTafelsmall">Bitte einen anderen Sensor wählen</span>' +
+            '</div>';
 
 
-		if(what == 'oneweek') {
+
+        if(what == 'oneweek') {
 			$('#placeholderFS_2').css('margin-bottom','');
 //			$('#placeholderFS_2').highcharts(options);
             Highcharts.chart($('#placeholderFS_2')[0],options, function(chart) {
@@ -1133,10 +1138,10 @@ function createGlobObtions() {
 					.attr({
 						zIndex: 5,
 					}).add();
-                if(datas.docs.length == 0) {
-                	labeText = "";
+/*                if(datas.docs.length == 0) {
+                	var labeText = "";
                     var errtext = chart.renderer.label(
-                        errorTafel,
+                        errorTafel_0,
                         350,
                         120, 'rect', 0, 0, true)
                         .css({
@@ -1151,7 +1156,7 @@ function createGlobObtions() {
 							padding: 10,
                         }).add();
                 }
-            });
+*/            });
 		}
 	};
 
