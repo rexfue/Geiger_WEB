@@ -606,11 +606,11 @@ $(document).ready(function() {
 		var korridx = 0;
 		console.log(aktsensorid, korrelation);
 
-		for(korridx=0; korridx<count; korridx++) {
-			if (aktsensorid == korrelation.othersensors[korridx].sid) {
-				break;
-            }
-		}
+//		for(korridx=0; korridx<count; korridx++) {
+//			if (aktsensorid == korrelation.othersensors[korridx].sid) {
+//				break;
+//           }
+//		}
 		// *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
 
 		let location = korrelation.location[korrelation.location.length-1];
@@ -1280,6 +1280,19 @@ function createGlobObtions() {
 			visible: true,
 		};
 
+		// Check min/max of temp to arrange y-axis
+		let tmi = datas.minmax.temp_min;
+		let tma = datas.minmax.temp_max;
+		let loy=0, hiy=0;
+
+		if (tmi < 0) {
+			loy = (Math.ceil((tmi-5)/5))*5;
+			hiy = loy + 50;
+		} else {
+			hiy = (Math.floor((tma+5)/5))*5;
+			loy = hiy-50;
+		}
+		let lowy = tmi/5
 
 		var yAxis_temp = {													// 1
 			title: {
@@ -1288,8 +1301,8 @@ function createGlobObtions() {
 					color: 'red'
 				}
 			},
-			min: -10,
-			max: 40,
+			min: loy,
+			max: hiy,
 			opposite: true,
 			tickAmount: 11,
 			useHTML: true,
