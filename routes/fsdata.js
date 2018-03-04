@@ -112,7 +112,7 @@ function checkFeinstaubAlarm() {
         request('http://www.stuttgart.de/feinstaubalarm/widget/xtrasmall')
             .then(function (html) {
 //                console.log(html);
-                if (html.indexOf('widget alarm-on')) {
+                if (html.indexOf('widget alarm-on') > 0) {
                     resolve(true);
                 } else {
                     resolve(false);

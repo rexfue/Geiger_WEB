@@ -16,7 +16,7 @@
     "bootstrap": "^3.3.7",
     "express": "^4.16.2",
     "gauss": "^0.2.12",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
     "math": "0.0.3",
     "mathjs": "^3.18.0",

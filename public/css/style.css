@@ -266,3 +266,9 @@ radio {
 #alarm {
 	display: none;
 }
+
+#datumtxt {
+	font-size: 130%;
+	font-weight: bold;
+}
+

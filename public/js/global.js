@@ -51,7 +51,14 @@ $(document).ready(function() {
         }
 	}
 
-	localStorage.clear();       // <-- *************************************************************
+//	moment.locale('de', {
+//        months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
+//	});
+//	let datumtxt = 'Anzeige für: ' + (startDay == "" ? 'heute' : moment(startDay).format("D.MMMM YYYY"));
+//
+//    $('#datumtxt').text(datumtxt);
+
+//	localStorage.clear();       // <-- *************************************************************
 
     var dialogYmax = $('#dialogymax').dialog({
         autoOpen: false,
@@ -194,7 +201,7 @@ $(document).ready(function() {
             $(this).load('/fsdata/selnewday', function () {
                 $( "#selnewday" ).datetimepicker({
 //                    minDate: new Date(oldestDate),
-                    minDate: '-1m',
+                    minDate: '-2m',
                     maxDate: '0',
                     dateFormat: 'yy-mm-dd',
                     showMinute: false,
@@ -463,6 +470,8 @@ $(document).ready(function() {
 		}
 		if(fstAlarm) {
 			$('#alarm').css('display', 'inline');
+		} else {
+            $('#alarm').css('display', 'none');
 		}
 	}
 	
@@ -723,6 +732,7 @@ function createGlobObtions() {
 				text: 'Feinstaub über 1 Tag',
 				align: 'left',
 				style: {"fontSize":"25px"},
+				useHTML: true,
 			},
             subtitle: {
 			    text: 'Gemessene Werte und '+ avgTime +'min-gleitende Mittelwerte',
