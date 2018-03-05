@@ -167,7 +167,7 @@ function getLatestValues(db,sensorid,sensorname,samples) {
             }
             console.log(docs.length + " Daten gelesen für " + sensorname + ' bei latest')
             var y;
-            if ((sensorname == "SDS011") || (sensorname == "PMS3003")) {
+            if (isPM(sensorname)) {
                 y = calcMinMaxAvgSDS(docs,false);
                 resolve({'P1':y.P10_avg,'P2':y.P2_5_avg});
             } else if (sensorname == "DHT22") {
@@ -229,7 +229,7 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
             if (docs.length == 0) {
                 return {'docs': []};
             } else {
-                if (sensorname == "SDS011") {
+                if (isPM(sensorname)) {
                     var x = calcMovingAverage(docs, avg, 'SDS011', 0, 0);
                     var y = calcMinMaxAvgSDS(docs, false);
                     return {'docs': x.PM, 'maxima': y};
@@ -258,7 +258,7 @@ function getWeekData(db, sensorid, sensorname, altitude , st, live) {
         var colstr = 'data_' + sensorid;
         var collection = db.collection(colstr);
         if (live == true) {
-            if (sensorname == "SDS011") {
+            if (isPM(sensorname)) {
                 start.subtract(24 * 8, 'h');
             } else {
                 start.subtract(24 * 7, 'h');
@@ -280,7 +280,7 @@ function getWeekData(db, sensorid, sensorname, altitude , st, live) {
             if (docs.length == 0) {
                 resolve({'docs': []})
             } else {
-                if (sensorname == "SDS011") {
+                if (isPM(sensorname)) {
                     var wdata = calcMovingAverage(docs, 1440 , 'SDS011', 0,0);
                     var y = calcMinMaxAvgSDS(wdata.PM,true);
                     resolve({'docs': wdata.PM, 'maxima': y });
@@ -324,7 +324,7 @@ function getYearData(db,sensorid,sensorname, st,what) {
         var stt = new Date();
 
 
-                if (sensorname == 'SDS011') {
+                if (isPM(sensorname)) {
                     cursor = collection.aggregate([
                         {$sort: sorting},
                         {$match: datRange},
@@ -679,5 +679,11 @@ function calcMinMaxAvgBME(data) {
     'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h), 'press_avg' : mathe.mean(p) };
 }
 
+function isPM(name) {
+    if ((name == "SDS011") || (name.startsWith("PPD")) || (name.startsWith("PMS"))) {
+        return true;
+    }
+    return false;
+}
 
 module.exports = router;

@@ -575,7 +575,7 @@ $(document).ready(function() {
 
     function startPlot(what,d1,d2,sensor,start,live) {
 		var name = sensor.name;
-		if((name == 'SDS011') || (name == 'SDS021') || (name == 'PMS3003')) {
+		if((name.startsWith("SDS")) || (name.startsWith("PMS")) || (name.startsWith("PPD"))) {
             if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
                 PlotYearfs(what, d1, sensor,live);
             } else {
@@ -612,17 +612,22 @@ $(document).ready(function() {
 		var d1, d2=null, d3=null;
 		var url = '/fsdata/getfs/'+what;
 		var count = korrelation.othersensors.length;			// Anzahl der Sensoren
-		var korridx = 0;
+//		var korridx = 0;
 		console.log(aktsensorid, korrelation);
+
+		// find aktsensor in korrelation.othersensors
+        let korridx = korrelation.othersensors.findIndex( function(x) {
+        	return x.sid == aktsensorid;
+        });
+        korridx &= 0xFFFE;
 
 //		for(korridx=0; korridx<count; korridx++) {
 //			if (aktsensorid == korrelation.othersensors[korridx].sid) {
 //				break;
 //           }
 //		}
-		// *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
+                // *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
 
-		let location = korrelation.location[korrelation.location.length-1];
         var currentSensor = korrelation.othersensors[korridx];
 		var callopts = {
 			start: st.toJSON(),
@@ -645,7 +650,7 @@ $(document).ready(function() {
 				startPlot(what,data1,null,currentSensor,st,live);
 
                 korridx++;
-                if ((korridx == count) || (count >= 3)) {
+                if (korrelation.othersensors[korridx] == undefined) {
                     return;
                 }
                 currentSensor = korrelation.othersensors[korridx];
@@ -660,7 +665,7 @@ $(document).ready(function() {
                         d2 = data2;
                         console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
 						console.log("Zeit dafür:",moment()-s3);
-                        korridx++;
+/*                        korridx++;
                         if (!((korridx == count) || (count >= 3))) {
 	                        currentSensor = korrelation.othersensors[korridx];
 							callopts.sensorname = currentSensor.name;
@@ -675,8 +680,8 @@ $(document).ready(function() {
                                 }
                             });
                         } else {
-                        	startPlot(what,d2,null,currentSensor,st,live);
-                        }
+*/                        	startPlot(what,d2,null,currentSensor,st,live);
+//                        }
 	                }
 				});
 			}
@@ -1302,7 +1307,7 @@ function createGlobObtions() {
 			hiy = (Math.floor((tma+5)/5))*5;
 			loy = hiy-50;
 		}
-		let lowy = tmi/5
+//		let lowy = tmi/5
 
 		var yAxis_temp = {													// 1
 			title: {
@@ -1332,7 +1337,20 @@ function createGlobObtions() {
 			tickAmount: 11,
 		};
 
-		var yAxis_press = {													// 3
+        // Check min/max of press to arrange y-axis
+        let pmi = datas.minmax.press_min/100;
+        let pma = datas.minmax.press_max/100;
+        let lopy=0, hipy=0;
+        if (pmi < 990) {
+            lopy = (Math.ceil((pmi-5)/5))*5;
+            hipy = lopy + 50;
+        } else {
+            hipy = (Math.floor((pma+5)/5))*5;
+            lopy = hipy-50;
+        }
+//        let lopy = tmi/5
+
+        var yAxis_press = {													// 3
 			title: {
 				text: 'Luftdruck hPa',
 				style: {
@@ -1340,8 +1358,8 @@ function createGlobObtions() {
 				}
 			},
 			gridLineColor: 'lightgray',
-			min: 990,
-			max: 1040,
+			min: lopy,
+			max: hipy,
             opposite: true,
 			tickAmount: 11,
 		};
