@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" afterPath="$PROJECT_DIR$/public/js/global.js" />
-      <change beforePath="$PROJECT_DIR$/routes/fsdata.js" afterPath="$PROJECT_DIR$/routes/fsdata.js" />
+      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -47,7 +46,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="global.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/js/global.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="271">
@@ -88,7 +87,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+          <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/package.json">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="45">
@@ -121,7 +120,7 @@
           <file leaf-file-name="mapit.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="299">
+                <state relative-caret-position="6300">
                   <caret line="420" column="13" lean-forward="false" selection-start-line="420" selection-start-column="13" selection-end-line="420" selection-end-column="13" />
                   <folding />
                 </state>
@@ -175,7 +174,7 @@
           <file leaf-file-name="fsdata.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="619">
+                <state relative-caret-position="648">
                   <caret line="682" column="59" lean-forward="false" selection-start-line="682" selection-start-column="59" selection-end-line="682" selection-end-column="59" />
                   <folding />
                 </state>
@@ -313,9 +312,9 @@
         <option value="$PROJECT_DIR$/routes/mapdata.js" />
         <option value="$PROJECT_DIR$/views/index.pug" />
         <option value="$PROJECT_DIR$/public/css/style.css" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/routes/fsdata.js" />
         <option value="$PROJECT_DIR$/public/js/global.js" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -635,13 +634,7 @@
       <workItem from="1518074974776" duration="5088000" />
       <workItem from="1518113937410" duration="2181000" />
       <workItem from="1518422929064" duration="1446000" />
-    </task>
-    <task id="LOCAL-00015" summary="weitere tests - viel rumgebastelt">
-      <created>1488123289678</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1488123289678</updated>
+      <workItem from="1520322207273" duration="48000" />
     </task>
     <task id="LOCAL-00016" summary="weitere tests - viel rumgebastelt">
       <created>1488474100662</created>
@@ -979,11 +972,18 @@
       <option name="project" value="LOCAL" />
       <updated>1520175077372</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="&#10;public/js/global.js&#10;   - außer SDS aud PPS.. und PMS.. Sensoren zulassen&#10;   - Auswahl zu Anzeiuge immer zwei Sensoren, unabh. davon, wieviele am Ort vorhanden sind&#10;   - y-Scalierung bei Druck automatisch anpassen&#10;   &#10;   &#10;routes/fsdata.js&#10;   - alle PM-Sensoren zulassen (function isPM())">
+      <created>1520275472144</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1520275472144</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="703118000" />
+    <option name="totallyTimeSpent" value="703371000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1000,33 +1000,22 @@
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14887019" sideWeight="0.49322033" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2374269" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24322034" sideWeight="0.5449712" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24322034" sideWeight="0.54319894" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24557166" sideWeight="0.4647303" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19067797" sideWeight="0.49612778" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24906367" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3279661" sideWeight="0.47510374" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24322034" sideWeight="0.4550288" order="3" side_tool="false" content_ui="tabs" x="41" y="748" width="1145" height="612" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24322034" sideWeight="0.45680106" order="3" side_tool="false" content_ui="tabs" x="41" y="748" width="1145" height="612" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15984777" sideWeight="0.5067797" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2374269" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32881355" sideWeight="0.47895437" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24322034" sideWeight="0.54319894" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24557166" sideWeight="0.4647303" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19067797" sideWeight="0.49612778" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26076695" sideWeight="0.50324374" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3279661" sideWeight="0.47510374" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14887019" sideWeight="0.49322033" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24906367" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24322034" sideWeight="0.45680106" order="3" side_tool="false" content_ui="tabs" x="41" y="748" width="1145" height="612" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15984777" sideWeight="0.5067797" order="3" side_tool="true" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1072,7 +1061,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="public/js/global.js&#10;   - average time can be set frm settings menu, will be stored in local storage &#10;   - start day can be changed (NOT OK TIL NOW)&#10;   - use simplified formula to calulate pressure on sealevel&#10;   - changed background-color of chart&#10;   &#10;routes/fsdata.js&#10;   - average time as parameter to ajax call&#10;   - calculating average corrected&#10;   &#10;routes/index.js   &#10;   - start day as parameter vor html file&#10;   &#10;views/index.pug&#10;   - use startday as parameter&#10;   &#10;views/layout.pug&#10;   - datepicker for german added" />
     <MESSAGE value="public/js/global.js&#10;   - new colors for background&#10;   &#10;public/setting.htm&#10;   - some new text&#10;   &#10;routes/fsdata.js&#10;   - misspellings corrected&#10;   &#10;app.js&#10;   - mongohost now 'castor'" />
     <MESSAGE value="public/css/style.css&#10;   - backgroundcolor for info table with tranparancy&#10;   &#10;public/js/global.js&#10;   - all yaxis on left side&#10;   - new flag 'live' for live plot or sected day plot&#10;   - position of infotable at left side&#10;   - yaxis labels same color as lines&#10;   - new message, if there are no datas for today  &#10;   &#10;routes/fsdata.js&#10;   - use new 'live' flag&#10;   &#10;app.js&#10;   - mostly ECMA6-style" />
     <MESSAGE value="allgemeine Anpassungen an die neue DB-Aufteilung" />
@@ -1097,7 +1085,8 @@
     <MESSAGE value="public/js/global.js&#10;   - immer beide Sensoren immer inder Reihefolge SDS - DHT anzeigen&#10;   - y-Achste für Temperatur etwas Automatik verpasst&#10;&#10;routes/fsdata.js&#10;   - min/max für temp etc immer mitsenden&#10;   - othersensors - Auswertung an dias neue Layout angepasst" />
     <MESSAGE value="routes/fsdata.,js&#10;   - jquery mit reingepackt&#10;   - Abfrage wg. Feinstaubalarem berichtigt&#10;   - Date älter 1 Monat via CSV holen" />
     <MESSAGE value="pulic/css/style.css&#10;   - format für datumtxt  (wird aber nicht verwendet)&#10;   &#10;public/js/global.js&#10;   - löschgen von local storage nicht mehr&#10;   &#10;routes/fsdata.js&#10;   - Alarmauswertung nun OK" />
-    <option name="LAST_COMMIT_MESSAGE" value="pulic/css/style.css&#10;   - format für datumtxt  (wird aber nicht verwendet)&#10;   &#10;public/js/global.js&#10;   - löschgen von local storage nicht mehr&#10;   &#10;routes/fsdata.js&#10;   - Alarmauswertung nun OK" />
+    <MESSAGE value="&#10;public/js/global.js&#10;   - außer SDS aud PPS.. und PMS.. Sensoren zulassen&#10;   - Auswahl zu Anzeiuge immer zwei Sensoren, unabh. davon, wieviele am Ort vorhanden sind&#10;   - y-Scalierung bei Druck automatisch anpassen&#10;   &#10;   &#10;routes/fsdata.js&#10;   - alle PM-Sensoren zulassen (function isPM())" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;public/js/global.js&#10;   - außer SDS aud PPS.. und PMS.. Sensoren zulassen&#10;   - Auswahl zu Anzeiuge immer zwei Sensoren, unabh. davon, wieviele am Ort vorhanden sind&#10;   - y-Scalierung bei Druck automatisch anpassen&#10;   &#10;   &#10;routes/fsdata.js&#10;   - alle PM-Sensoren zulassen (function isPM())" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="406" key="Git.Branch.Popup" />
@@ -1384,14 +1373,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.settings/.jsdtscope">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1418,7 +1399,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
+        <state relative-caret-position="6300">
           <caret line="420" column="13" lean-forward="false" selection-start-line="420" selection-start-column="13" selection-end-line="420" selection-end-column="13" />
           <folding />
         </state>
@@ -1476,7 +1457,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="619">
+        <state relative-caret-position="648">
           <caret line="682" column="59" lean-forward="false" selection-start-line="682" selection-start-column="59" selection-end-line="682" selection-end-column="59" />
           <folding />
         </state>
@@ -1508,6 +1489,14 @@
             <marker date="1520255726000" expanded="true" signature="50192:50198" ph=" " />
             <marker date="1520255726000" expanded="true" signature="50254:50260" ph=" " />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
