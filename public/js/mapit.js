@@ -478,10 +478,11 @@ function buildMarkers(data) {
 }
 
 function updateValues(data) {
-    for (x in data) {
+    for (let x in data) {
 //        marker[x].setMap(null);
         var item = data[x];
-        if(marker[x] ==  undefined) {
+        let mark = marker[x];
+        if(mark ==  undefined) {
             console.log("Marker["+x+"] undefined");
         }
         marker[x].icon = getBalken(item.value10, sBreit, marker[x].offset);
