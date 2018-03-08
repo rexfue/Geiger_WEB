@@ -221,7 +221,7 @@ function initMap() {												// Map initialisieren
     map.addListener('idle',function() {
         var info = infowindow.getContent();
         if (newBounds) {
-            newBounds == false;
+            newBounds = false;
             boundBox = map.getBounds().toJSON();
             first = true;
             clearMarker();

@@ -628,6 +628,7 @@ $(document).ready(function() {
 //		}
                 // *********************  Chekc aktsensorid, ob die in korrelations ist, wenn ja, mit diesem Index anfangen
 
+		let location = korrelation.location[korrelation.location.length-1];
         var currentSensor = korrelation.othersensors[korridx];
 		var callopts = {
 			start: st.toJSON(),
