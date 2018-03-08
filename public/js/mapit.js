@@ -9,6 +9,7 @@ var first = true;
 var boundBox;
 var newBounds = false;
 var geocod;
+var trafficLayer;
 
 
 var w = $('#btnTraf span').width();
@@ -50,6 +51,7 @@ function initMap() {												// Map initialisieren
         scrollwheel: false,
     });
 
+    trafficLayer = new google.maps.TrafficLayer();
 
 
 /* Autocenter via geoloc  -  geht nur mit https !!
@@ -114,15 +116,14 @@ function initMap() {												// Map initialisieren
     });
 
     $('#btnTraf').click(function() {
-        trafficLayer = new google.maps.TrafficLayer();
         var t = $('#btnTraf').text();
-//        if(t == "Verkehr einblenden") {
+        if(t == "Verkehr einblenden") {
             trafficLayer.setMap(map);
-//            $('#btnTraf').text('Verkehr ausblenden');
-//        } else {
-//            trafficLayer.setMap(null);                    // <<<<< that doesn't work !!!
-//            $('#btnTraf').text('Verkehr einblenden');
-//        }
+            $('#btnTraf').text('Verkehr ausblenden');
+        } else {
+            trafficLayer.setMap(null);                    // <<<<< that doesn't work !!!
+            $('#btnTraf').text('Verkehr einblenden');
+        }
     });
 
 
