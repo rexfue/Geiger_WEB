@@ -1305,7 +1305,7 @@ function createGlobObtions() {
 			loy = (Math.ceil((tmi-5)/5))*5;
 			hiy = loy + 50;
 		} else {
-			hiy = (Math.floor((tma+5)/5))*5;
+			hiy = (Math.round((tma+5)/5))*5;
 			loy = hiy-50;
 		}
 //		let lowy = tmi/5

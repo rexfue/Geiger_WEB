@@ -238,10 +238,10 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                     'minmax': calcMinMaxAvgDHT(docs)};
                 } else if (sensorname == "BMP180") {
                     return {'docs': calcMovingAverage(docs, avg, sensorname, altitude, 0).THP,
-                    'minmax': calcMinMaxAvgBMP(docs)};
+                    'minmax': calcMinMaxAvgBMP(docs,altitude)};
                 } else if (sensorname == "BME280") {
                     return {'docs': calcMovingAverage(docs, avg, sensorname, altitude, 0).THP,
-                    'minmax':calcMinMaxAvgBME(docs)};
+                    'minmax':calcMinMaxAvgBME(docs,altitude)};
                 }
             }
         }
@@ -289,10 +289,10 @@ function getWeekData(db, sensorid, sensorname, altitude , st, live) {
                         'minmax': calcMinMaxAvgDHT(docs)});
                 } else if (sensorname == "BMP180") {
                     resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude).THP,
-                        'minmax': calcMinMaxAvgBMP(docs)});
+                        'minmax': calcMinMaxAvgBMP(docs,altitude)});
                 } else if (sensorname == "BME280") {
                     resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude).THP,
-                        'minmax':calcMinMaxAvgBME(docs)});
+                        'minmax':calcMinMaxAvgBME(docs,altitude)});
                 }
             }
         });
@@ -474,7 +474,7 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
     }
 
     if ((name == "BMP180") || (name == "BME280")) {
-        newDataT = calcSealevelPressure(newDataT,altitude);
+        newDataT = calcSealevelPressure(newDataT,'press_mav',altitude);
     }
     return { 'PM': newDataF, 'THP' : newDataT };
 }
@@ -504,10 +504,14 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
 //
 //	Rückgabe: normierter Druck auf Sehhhöhe
 //
-function calcSealevelPressure(data, alti) {
+function calcSealevelPressure(data, p, alti) {
     if (!((alti == 0) || (alti == undefined))) {
         for (let i = 0; i < data.length; i++) {
-            data[i].press_mav = data[i].press_mav / Math.pow(1.0 - (alti / 44330.0), 5.255);
+            if (p=='') {
+                data[i] = data[i] / Math.pow(1.0 - (alti / 44330.0), 5.255);
+            } else {
+                data[i][p] = data[i][p] / Math.pow(1.0 - (alti / 44330.0), 5.255);
+            }
         }
     }
     return data
@@ -646,7 +650,7 @@ function calcMinMaxAvgDHT(data) {
 }
 
 
-function calcMinMaxAvgBMP(data) {
+function calcMinMaxAvgBMP(data,altitude) {
     var t=[], p=[];
     for (var i=0; i<data.length; i++) {
         if(data[i].temperature != undefined) {
@@ -656,12 +660,13 @@ function calcMinMaxAvgBMP(data) {
             p.push(data[i].pressure);
         }
     }
+    p = calcSealevelPressure(p,'',altitude);
     return { 'temp_max': mathe.max(t), 'press_max': mathe.max(p),
     'temp_min': mathe.min(t), 'press_min': mathe.min(p),
     'temp_avg' : mathe.mean(t), 'press_avg' : mathe.mean(p) };
 }
 
-function calcMinMaxAvgBME(data) {
+function calcMinMaxAvgBME(data,altitude) {
     var t=[], h=[], p=[], sumt=0;
     for (var i=0; i<data.length; i++) {
         if(data[i].temperature != undefined) {
@@ -674,6 +679,7 @@ function calcMinMaxAvgBME(data) {
             p.push(data[i].pressure);
         }
     }
+    p = calcSealevelPressure(p,'',altitude);
     return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(h), 'press_max': mathe.max(p),
     'temp_min': mathe.min(t), 'humi_min': mathe.min(h), 'press_min': mathe.min(p),
     'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h), 'press_avg' : mathe.mean(p) };
