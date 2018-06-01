@@ -15,7 +15,8 @@ if (MONGOPORT === undefined) { MONGOPORT =  27017; }
 
 console.log(os.hostname());
 
-const MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT+'/Feinstaubi_A';  	// URL to mongo database
+//const MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT+'/Feinstaubi_A';  	// URL to mongo database
+const MONGO_URL = 'mongodb://rxf:5C5dB|m@' + MONGOHOST +':'+MONGOPORT+'/Feinstaubi_A';          // URL to mongo database
 console.log(MONGO_URL);
 
 app.set('views','./views');

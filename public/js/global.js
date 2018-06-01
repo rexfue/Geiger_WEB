@@ -919,31 +919,59 @@ function createGlobObtions() {
 
 		// Plot-Options
 		var options = createGlobObtions();
-		var series_P10 = {
+		var series_P10_sc = {
 				name: 'P10',
 				data: series1,
 				color: '#00CCFF',
 				zIndex:3,
 				marker: {
-					enabled: false,
-					symbol: 'square',
+					enabled: true,
+					radius: 2,
+//					symbol: 'square',
 				},
 				visible: true,
+				type: 'scatter',
 		};
 
-		var series_P2_5 ={
+		var series_P2_5_sc ={
 				name: 'P2.5',
 				data: series2,
 				color: '#00CC00',
 				zIndex:3,
-				marker: {
-					enabled: false,
-					symbol: 'square',
+            marker: {
+                enabled: true,
+                radius: 2,
+//					symbol: 'square',
 				},
 				visible: true,
+            type: 'scatter',
 		};
-		
-		var series_P10_m = {
+
+        var series_P10 = {
+            name: 'P10',
+            data: series1,
+            color: '#00CCFF',
+            zIndex:3,
+            marker: {
+                enabled: false,
+				symbol: 'square',
+            },
+            visible: true,
+        };
+
+        var series_P2_5 ={
+            name: 'P2.5',
+            data: series2,
+            color: '#00CC00',
+            zIndex:3,
+            marker: {
+                enabled: false,
+				symbol: 'square',
+            },
+            visible: true,
+        };
+
+        var series_P10_m = {
 				name: 'P10_Mittelwert',
 				data: series3,
 				color: '#0000FF',
@@ -1093,8 +1121,8 @@ function createGlobObtions() {
 		} else if (what == 'oneweek'){
             options.series[0] = series_P10_m;
             options.series[1] = series_P2_5_m;
-            options.series[2] = series_P10;
-            options.series[3] = series_P2_5;
+            options.series[2] = series_P10_sc;
+            options.series[3] = series_P2_5_sc;
 //			options.series[0] = series_P10_m;
 //			options.series[1] = series_P2_5_m;
 			options.title.text = 'Feinstaub über 1 Woche';
