@@ -94,11 +94,15 @@ app.get('/fs/fsdata/erralert', function(req, res, next) {
 var indexs = require('./routes/index');
 app.use('/fs/',indexs);
 
-var fsdatas = require('./routes/fsdata');
-app.use('/fs/fsdata',fsdatas);
+var fsdatas1 = require('./routes/fsdata');
+app.use('/fs/fsdata',fsdatas1);
 
-var fsdatas = require('./routes/mapdata');
-app.use('/fs/mapdata',fsdatas);
+var fsdatas2 = require('./routes/mapdata');
+app.use('/fs/mapdata',fsdatas2);
+
+var fsdatas3 = require('./routes/fsdata');
+app.use('/fs/api',fsdatas3);
+
 
 const connect = MongoClient.connect(MONGO_URL);
 connect

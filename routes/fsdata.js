@@ -8,6 +8,24 @@ const request = require('request-promise');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
+//API to read all datas from the database
+router.get('/getdata', function (req, res) {
+    let db = req.app.get('dbase');
+    let sid = parseInt(req.query.sensorid);
+    let avg = req.query.avg;
+    let span = req.query.span;
+    let dt = req.query.datetime;
+
+    if(req.query.sensorid == "all") {
+        getAPIalldata(db, dt)
+            .then(erg => res.json(erg));
+    } else {
+        getAPIdata(db, sid, avg, span)
+            .then(erg => res.json(erg));
+    }
+});
+
+
 //Get readings for all data out ot the database
 router.get('/getfs/:week', function (req, res) {
     let week = req.params.week;
@@ -396,6 +414,148 @@ function getYearData(db,sensorid,sensorname, st,what) {
 }
 
 // *********************************************
+// Get data direct via API for one sensor
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api?sid=1234&avg=5m&span=24h
+//
+//      mit:
+//          sid:  Sensornummer
+//          avg:  Mittelwert-Bildung über xxx Minuten
+//          span: Zeitraum für die Mittelwertbildung in Stunden
+//
+// return:
+//      JSON Dokument mit den angefragten werten
+// *********************************************
+async function getAPIdata(db,sid,avg,span) {
+    let values = [];
+    let start = moment();
+    let end = moment();
+    let mavg = 1;
+    if (avg !== undefined) {
+        mavg = parseInt(avg);
+    }
+    let dauer = 24;
+    if(span !== undefined) {
+        dauer = parseInt(span);
+    }
+    let retur = {sid: sid, avg: mavg, span: dauer};
+    start = start.subtract((dauer*60)+mavg,'m');
+    let collection = db.collection('data_'+sid);
+    try {
+        values = await collection.find({
+                datetime: {
+                    $gte: new Date(start),
+                    $lt: new Date(end)
+                }},{ _id: 0 },
+            {
+                sort: {datetime:1}
+            }
+        ).toArray()
+    }
+    catch(e) {
+        console.log(e);
+    }
+    if(values.length == 0) {
+        retur.count = 0;
+        retur['values'] = [];
+    } else {
+        if((mavg===undefined) || (mavg == 1)) {
+            retur.count = values.length;
+            retur['values'] = values;
+        }
+        let x = calcMovingAverage(values, mavg, 'SDS011', 0, 0, true);
+        end.subtract(dauer,'h');
+        let i = 0;
+        for(i=0; i< x.length; i++) {
+            if (moment(x[i].date) >= end) {
+                break;
+            }
+        }
+        let y = x.slice(i);
+        retur.count = y.length;
+        retur.values = y;
+    }
+    return retur;
+}
+
+// *********************************************
+// Get data direct via API for ALL sensor
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api?sid=all&datetime="2018-ß6-02T12:00Z"
+//
+//      mit:
+//          dt:     Zeitpunkt, für den die Daten geholt werden
+//                  Es werden Daten <= dem Zeitpunkt geholt
+//
+// return:
+//      JSON Dokument mit den angefragten Werten
+// *********************************************
+async function getAPIalldata(db,dt) {
+    let values = [];
+    let properties = [];
+    let start = moment(dt);
+    let retur = {sid: "all", datetime: dt};
+    let clist = [];
+    // read all collection-names
+    try {
+        clist = await db.listCollections().toArray();
+    }
+    catch(e) {
+        console.log("Problem to get collection list")
+        retur['values'] = [];
+    }
+    // read properties
+    let pcoll = db.collection("properties");
+    properties = await pcoll.find().toArray();
+
+    for(let i = 0; i< clist.length; i++) {
+        let entry = {};
+        let name = clist[i].name;
+        if (! name.startsWith("data")) {
+            continue;
+        }
+        let prop = properties.find(obj => {
+            return( obj._id == name.substring(5));
+        });
+        if(prop === undefined) {
+            continue;
+        }
+//        console.log(name);
+        if(!isPM(prop.name)){
+            continue;
+        }
+        let collection = db.collection(name);
+        try {
+            let val = await collection.findOne({datetime: {$gte: new Date(start)}}, {_id: 0});
+//            if ((val == null) || (val.P1 === undefined)) {
+            if (val == null) {
+                continue;
+            }
+            entry.P1 = val.P1;
+            entry.P2 = val.P2;
+            entry.datetime = val.datetime;
+            entry.sid = name.substring(5);
+            values.push(entry);
+        }
+        catch(e){
+            console.log("Error on reading collection");
+            values = [];
+        }
+    }
+    if(values.length == 0) {
+        retur.count = 0;
+        retur['values'] = [];
+    } else {
+        retur.count = values.length;
+        retur['values'] = values;
+    }
+    return retur;
+}
+
+
+// *********************************************
 // Calculate moving average over the data array.
 //
 //  params:
@@ -403,16 +563,17 @@ function getYearData(db,sensorid,sensorname, st,what) {
 //      mav:        time in minutes to average
 //      name:       name of sensor
 //      cap:        cap so many max and min values
+//      api:        default=false,  true = API -> no akt. values
 //
 // return:
 //      array with averaged values
 // TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
-function calcMovingAverage(data, mav, name, altitude, cap) {
+function calcMovingAverage(data, mav, name, altitude, cap, api) {
     var newDataF = [], newDataT = [];
     var avgTime = mav*60;           // average time in sec
 
-    if (avgTime === 0) {            // if there's nothing to average, the8n
+    if (avgTime === 0) {            // if there's nothing to average, then
         avgTime = 1;
     }
     // first convert date to timestam (in secs)
@@ -459,14 +620,21 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
             }
             left += 1;
         }
-
-        newDataF[right] = {
-            'P10_mav': roll_sum1 / (right - left + 1),
-            'P2_5_mav': roll_sum2 / (right - left + 1),
-            'date': data[right].datetime * 1000,
-            'P10': data[right].P1,
-            'P2_5': data[right].P2
-        };
+        if(api == true) {
+            newDataF[right] = {
+                'P1': (roll_sum1 / (right - left + 1)).toFixed(2),
+                'P2': (roll_sum2 / (right - left + 1)).toFixed(2),
+                'datetime': moment.unix(data[right].datetime),
+            };
+        } else {
+            newDataF[right] = {
+                'P10_mav': roll_sum1 / (right - left + 1),
+                'P2_5_mav': roll_sum2 / (right - left + 1),
+                'date': data[right].datetime * 1000,
+                'P10': data[right].P1,
+                'P2_5': data[right].P2
+            };
+        }
         newDataT[right] = {'date': data[right].datetime * 1000};
         if (roll_sum3 != 0) newDataT[right]['temp_mav'] = roll_sum3 / (right - left + 1)
         if (roll_sum4 != 0) newDataT[right]['humi_mav'] = roll_sum4 / (right - left + 1)
@@ -474,7 +642,10 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
     }
 
     if ((name == "BMP180") || (name == "BME280")) {
-        newDataT = calcSealevelPressure(newDataT,'press_mav',altitude);
+        newDataT = calcSealevelPressure(newDataT,altitude);
+    }
+    if (api == true) {
+        return (newDataF);
     }
     return { 'PM': newDataF, 'THP' : newDataT };
 }
