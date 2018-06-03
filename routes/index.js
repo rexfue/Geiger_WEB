@@ -6,16 +6,18 @@ var pkg = require('../package.json');
 
 var MAINT = false;
 var idx = 'index';
+var mapit = 'mapit';
 var title = 'Feinstaub';
 
 
 if (MAINT==true) {
     idx = 'maintenance';
+    mapit = 'maintenance';
 }
 
 // GET home page.
 router.get('/', function(req, res, next) {
-    res.render('mapit', {
+    res.render(mapit, {
         title: 'Feinstaub-Map',
         version: pkg.version,
         date: pkg.date,
@@ -34,7 +36,7 @@ router.get('/:nam', function(req, res, next) {
         title += '_I';
     }
     if (name == 'map') {
-    	res.render('mapit', {
+    	res.render(mapit, {
     		title: 'Feinstaub-Map',
     		version : pkg.version,
     		date : pkg.date,
