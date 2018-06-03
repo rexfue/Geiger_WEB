@@ -16,13 +16,13 @@ router.get('/getdata', function (req, res) {
     let span = req.query.span;
     let dt = req.query.datetime;
 
-    if(req.query.sensorid == "all") {
-        getAPIalldata(db, dt)
-            .then(erg => res.json(erg));
-    } else {
+//    if(req.query.sensorid == "all") {
+//        getAPIalldata(db, dt)
+//            .then(erg => res.json(erg));
+//    } else {
         getAPIdata(db, sid, avg, span)
             .then(erg => res.json(erg));
-    }
+//    }
 });
 
 

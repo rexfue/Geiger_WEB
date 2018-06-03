@@ -1,7 +1,7 @@
 {
   "name": "feinstaub",
-  "version": "2.3.11",
-  "date": "2018-03-12",
+  "version": "2.4.1",
+  "date": "2018-06-03",
   "description": "",
   "main": "app.js",
   "scripts": {
