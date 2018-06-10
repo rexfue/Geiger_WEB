@@ -1,0 +1,19 @@
+FROM node:9-alpine
+
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
+
+ENV MONGOHOST fstst-mongo
+
+WORKDIR /opt/app
+ADD . /opt/app
+
+
+RUN touch cmds.sh \
+	&& echo 'npm start' >>cmds.sh
+
+EXPOSE 3005
+
+CMD sh ./cmds.sh
+
