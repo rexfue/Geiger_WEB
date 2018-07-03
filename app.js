@@ -10,14 +10,19 @@ const PORT = 3005;											// Port for server
 
 let MONGOHOST = process.env.MONGOHOST;
 let MONGOPORT = process.env.MONGOPORT;
+let MONGOAUTH = process.env.MONGOAUTH;
+let MONGOUSRP = process.env.MONGOUSRP;
+
 if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
 if (MONGOPORT === undefined) { MONGOPORT =  27017; }
+if (MONGOAUTH === undefined) { MONGOAUTH =  'false'; }
+
+let MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT+'/Feinstaubi_A';  	// URL to mongo database
+if (MONGOAUTH == 'true') {
+    MONGO_URL = 'mongodb://'+MONGOUSRP+'@' + MONGOHOST + ':' + MONGOPORT + '/Feinstaubi_A';          // URL to mongo database
+}
 
 console.log(os.hostname());
-
-const MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT+'/Feinstaubi_A';  	// URL to mongo database
-//const MONGO_URL = 'mongodb://rxf:5C5dB|m@' + MONGOHOST +':'+MONGOPORT+'/Feinstaubi_A';          // URL to mongo database
-console.log(MONGO_URL);
 
 app.set('views','./views');
 app.set('view engine','pug');
@@ -94,11 +99,15 @@ app.get('/fs/fsdata/erralert', function(req, res, next) {
 var indexs = require('./routes/index');
 app.use('/fs/',indexs);
 
-var fsdatas = require('./routes/fsdata');
-app.use('/fs/fsdata',fsdatas);
+var fsdatas1 = require('./routes/fsdata');
+app.use('/fs/fsdata',fsdatas1);
 
-var fsdatas = require('./routes/mapdata');
-app.use('/fs/mapdata',fsdatas);
+var fsdatas2 = require('./routes/mapdata');
+app.use('/fs/mapdata',fsdatas2);
+
+var fsdatas3 = require('./routes/fsdata');
+app.use('/fs/api',fsdatas3);
+
 
 const connect = MongoClient.connect(MONGO_URL);
 connect

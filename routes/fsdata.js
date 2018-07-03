@@ -8,6 +8,40 @@ const request = require('request-promise');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
+//API to read all datas from the database
+router.get('/getdata', function (req, res) {
+    let db = req.app.get('dbase');
+    let sid=1;
+    if (!((req.query.sensorid == undefined) || (req.query.sensorid == ""))) {
+        sid = parseInt(req.query.sensorid);
+    }
+    let avg = req.query.avg;
+    let span = req.query.span;
+    let dt = req.query.datetime;
+
+//    if(req.query.sensorid == "all") {
+//        getAPIalldata(db, dt)
+//            .then(erg => res.json(erg));
+//    } else {
+        getAPIdata(db, sid, avg, span, dt)
+            .then(erg => res.json(erg));
+//    }
+});
+
+router.get('/getprops', function (req, res) {
+    let db = req.app.get('dbase');
+    let sid=0;
+    if (!((req.query.sensorid == undefined) || (req.query.sensorid == ""))) {
+        sid = parseInt(req.query.sensorid);
+    }
+    let dt = "1900-01-01:00:00:00";
+    if(!((req.query.since === undefined)  || (req.query.since ==""))) {
+        dt = req.query.since;
+    }
+    getAPIprops(db, sid, dt)
+        .then(erg => res.json(erg));
+});
+
 //Get readings for all data out ot the database
 router.get('/getfs/:week', function (req, res) {
     let week = req.params.week;
@@ -70,8 +104,14 @@ async function getSensorProperties(db,sid) {
     if(properties == null) return null;
     let alarm = false;
     if(properties.location[properties.location.length-1].address.city == 'Stuttgart') {
-        alarm = await checkFeinstaubAlarm();
-        console.log('ALARM:', alarm);
+        try {
+            alarm = await checkFeinstaubAlarm();
+            console.log('ALARM:', alarm);
+        }
+        catch(e) {
+            alarm = false;
+            console.log("Problems with  'CheckFeinstaubAlarm()'");
+        }
     }
     properties.alarm = alarm;
     sensorEntries[0]['name'] = properties.name;
@@ -205,7 +245,9 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
             if (special == 'silvester17') {
                 let coll = db.collection('silvester');
                 let silv  = await coll.findOne({_id:sensorid},{_id:0, data:1});
-                docs = silv.data;
+                if (silv != null) {
+                    docs = silv.data;
+                }
             } else {
                 var start = moment(st);                                 // Zeiten in einen moment umsetzen
                 var end = moment(st);
@@ -230,17 +272,17 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                 return {'docs': []};
             } else {
                 if (isPM(sensorname)) {
-                    var x = calcMovingAverage(docs, avg, 'SDS011', 0, 0);
+                    var x = calcMovingAverage(docs, avg,  0, 0);
                     var y = calcMinMaxAvgSDS(docs, false);
                     return {'docs': x.PM, 'maxima': y};
                 } else if (sensorname == "DHT22") {
-                    return {'docs': calcMovingAverage(docs, avg, sensorname, 0, 0).THP,
+                    return {'docs': calcMovingAverage(docs, avg,  0, 0).THP,
                     'minmax': calcMinMaxAvgDHT(docs)};
                 } else if (sensorname == "BMP180") {
-                    return {'docs': calcMovingAverage(docs, avg, sensorname, altitude, 0).THP,
+                    return {'docs': calcMovingAverage(docs, avg,  altitude, 0).THP,
                     'minmax': calcMinMaxAvgBMP(docs,altitude)};
                 } else if (sensorname == "BME280") {
-                    return {'docs': calcMovingAverage(docs, avg, sensorname, altitude, 0).THP,
+                    return {'docs': calcMovingAverage(docs, avg, altitude, 0).THP,
                     'minmax':calcMinMaxAvgBME(docs,altitude)};
                 }
             }
@@ -281,17 +323,17 @@ function getWeekData(db, sensorid, sensorname, altitude , st, live) {
                 resolve({'docs': []})
             } else {
                 if (isPM(sensorname)) {
-                    var wdata = calcMovingAverage(docs, 1440 , 'SDS011', 0,0);
+                    var wdata = calcMovingAverage(docs, 1440 ,  0,0);
                     var y = calcMinMaxAvgSDS(wdata.PM,true);
                     resolve({'docs': wdata.PM, 'maxima': y });
                 } else if (sensorname == "DHT22") {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude).THP,
+                    resolve({'docs': calcMovingAverage(docs, 10,  altitude).THP,
                         'minmax': calcMinMaxAvgDHT(docs)});
                 } else if (sensorname == "BMP180") {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude).THP,
+                    resolve({'docs': calcMovingAverage(docs, 10,  altitude).THP,
                         'minmax': calcMinMaxAvgBMP(docs,altitude)});
                 } else if (sensorname == "BME280") {
-                    resolve({'docs': calcMovingAverage(docs, 10, sensorname, altitude).THP,
+                    resolve({'docs': calcMovingAverage(docs, 10,  altitude).THP,
                         'minmax':calcMinMaxAvgBME(docs,altitude)});
                 }
             }
@@ -396,6 +438,198 @@ function getYearData(db,sensorid,sensorname, st,what) {
 }
 
 // *********************************************
+// Get data direct via API for one sensor
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api?sid=1234&avg=5m&span=24h
+//
+//      mit:
+//          sid:  Sensornummer
+//          avg:  Mittelwert-Bildung über xxx Minuten
+//          span: Zeitraum für die Mittelwertbildung in Stunden
+//
+// return:
+//      JSON Dokument mit den angefragten werten
+// *********************************************
+async function getAPIdata(db,sid,avg,span,dt) {
+    let values = [];
+    let mavg = 1;
+    if (avg !== undefined) {
+        mavg = parseInt(avg);
+    }
+    if (mavg > 1440) { mavg = 1440;}
+    let dauer = 24;
+    if(span !== undefined) {
+        dauer = parseInt(span);
+    }
+    if (dauer > 720) { dauer = 720;}
+    let start = moment();
+    let end = moment();
+    if(dt != undefined) {
+        start = moment(dt);
+        end = moment(dt);
+        end.add(dauer,'h');
+    } else {
+        start = start.subtract((dauer * 60) + mavg, 'm');
+    }
+    let retur = {sid: sid, avg: mavg, span: dauer, start: start};
+    let collection = db.collection('data_'+sid);
+    try {
+        values = await collection.find({
+                datetime: {
+                    $gte: new Date(start),
+                    $lt: new Date(end)
+                }},{ _id: 0 },
+            {
+                sort: {datetime:1}
+            }
+        ).toArray()
+    }
+    catch(e) {
+        console.log(e);
+    }
+    if(values.length == 0) {
+        retur.count = 0;
+        retur['values'] = [];
+    } else {
+        if((mavg===undefined) || (mavg == 1)) {
+            retur.count = values.length;
+            retur['values'] = values;
+        }
+        let x = calcMovingAverage(values, mavg, await getAltitude(db,sid), 0, true);
+        end.subtract(dauer,'h');
+        let i = 0;
+        for(i=0; i< x.length; i++) {
+            if (moment(x[i].date) >= end) {
+                break;
+            }
+        }
+        let y = x.slice(i);
+        retur.count = y.length;
+        retur.values = y;
+    }
+    return retur;
+}
+
+// *********************************************
+// Get data direct via API for ALL sensor
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api?sid=all&datetime="2018-ß6-02T12:00Z"
+//
+//      mit:
+//          dt:     Zeitpunkt, für den die Daten geholt werden
+//                  Es werden Daten <= dem Zeitpunkt geholt
+//
+// return:
+//      JSON Dokument mit den angefragten Werten
+// *********************************************
+async function getAPIalldata(db,dt) {
+    let values = [];
+    let properties = [];
+    let start = moment(dt);
+    let retur = {sid: "all", datetime: dt};
+    let clist = [];
+    // read all collection-names
+    try {
+        clist = await db.listCollections().toArray();
+    }
+    catch(e) {
+        console.log("Problem to get collection list")
+        retur['values'] = [];
+    }
+    // read properties
+    let pcoll = db.collection("properties");
+    properties = await pcoll.find().toArray();
+
+    for(let i = 0; i< clist.length; i++) {
+        let entry = {};
+        let name = clist[i].name;
+        if (! name.startsWith("data")) {
+            continue;
+        }
+        let prop = properties.find(obj => {
+            return( obj._id == name.substring(5));
+        });
+        if(prop === undefined) {
+            continue;
+        }
+//        console.log(name);
+        if(!isPM(prop.name)){
+            continue;
+        }
+        let collection = db.collection(name);
+        try {
+            let val = await collection.findOne({datetime: {$gte: new Date(start)}}, {_id: 0});
+//            if ((val == null) || (val.P1 === undefined)) {
+            if (val == null) {
+                continue;
+            }
+            entry.P1 = val.P1;
+            entry.P2 = val.P2;
+            entry.datetime = val.datetime;
+            entry.sid = name.substring(5);
+            values.push(entry);
+        }
+        catch(e){
+            console.log("Error on reading collection");
+            values = [];
+        }
+    }
+    if(values.length == 0) {
+        retur.count = 0;
+        retur['values'] = [];
+    } else {
+        retur.count = values.length;
+        retur['values'] = values;
+    }
+    return retur;
+}
+
+// *********************************************
+// Get properties for all sensors
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api/getprops?sensorid=1234&since=2810-03-23
+//
+//      mit:
+//          sid:  Sensornummer (all -> alle Sensoren)
+//          since: seit dem Datum (incl)
+//
+// return:
+//      JSON Dokument mit den angefragten werten
+// *********************************************
+async function getAPIprops(db,sid,dt) {
+    let properties = [];
+    let erg = [];
+    let entry = {};
+    let pcoll = db.collection("properties");
+    if (sid == 0) {
+        properties = await pcoll.find({date_since: {$gte: new Date(dt)}}).sort({_id: 1}).toArray();
+        for (let i = 0; i < properties.length; i++) {
+            erg.push({
+                sid:properties[i]._id,
+                name: properties[i].name,
+                lat: properties[i].location[0].loc.coordinates[1],
+                lon: properties[i].location[0].loc.coordinates[0],
+                alt: properties[i].location[0].altitude,
+            });
+        }
+    } else {
+        let p = await pcoll.findOne({_id: sid});
+        entry.sid = p._id;
+        entry.name = p.name;
+        entry.lat = p.location[0].loc.coordinates[1];
+        entry.lon = p.location[0].loc.coordinates[0];
+        entry.alt =  p.location[0].altitude,
+        erg.push(entry);
+    }
+    return erg;
+}
+
+
+
+// *********************************************
 // Calculate moving average over the data array.
 //
 //  params:
@@ -403,16 +637,20 @@ function getYearData(db,sensorid,sensorname, st,what) {
 //      mav:        time in minutes to average
 //      name:       name of sensor
 //      cap:        cap so many max and min values
+//      api:        default=false,  true = API -> no akt. values
 //
 // return:
 //      array with averaged values
 // TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
-function calcMovingAverage(data, mav, name, altitude, cap) {
+function calcMovingAverage(data, mav, altitude, cap, api) {
     var newDataF = [], newDataT = [];
     var avgTime = mav*60;           // average time in sec
 
-    if (avgTime === 0) {            // if there's nothing to average, the8n
+    let havepressure = false;       // true: we have pressure
+    let iamPM = false;               // true: we are PM values
+
+    if (avgTime === 0) {            // if there's nothing to average, then
         avgTime = 1;
     }
     // first convert date to timestam (in secs)
@@ -421,6 +659,12 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
     }
 
     let left=0, roll_sum1=0, roll_sum2=0,  roll_sum3=0, roll_sum4=0, roll_sum5=0;
+    if(data[0].P1 != undefined) {
+        iamPM = true;
+    }
+    if(data[0].pressure != undefined) {
+        havepressure = true;
+    }
     for (let right =0; right <  data.length; right++) {
         if (data[right].P1 != undefined) {
             roll_sum1 += data[right].P1;
@@ -437,9 +681,6 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
         }
         if (data[right].pressure != undefined) {
             roll_sum5 += data[right].pressure;
-        }
-        if (right == 576)  {
-            console.log(right);
         }
         while (data[left].datetime <= data[right].datetime - avgTime) {
             if (data[left].P1 != undefined) {
@@ -459,22 +700,42 @@ function calcMovingAverage(data, mav, name, altitude, cap) {
             }
             left += 1;
         }
-
-        newDataF[right] = {
-            'P10_mav': roll_sum1 / (right - left + 1),
-            'P2_5_mav': roll_sum2 / (right - left + 1),
-            'date': data[right].datetime * 1000,
-            'P10': data[right].P1,
-            'P2_5': data[right].P2
-        };
-        newDataT[right] = {'date': data[right].datetime * 1000};
-        if (roll_sum3 != 0) newDataT[right]['temp_mav'] = roll_sum3 / (right - left + 1)
-        if (roll_sum4 != 0) newDataT[right]['humi_mav'] = roll_sum4 / (right - left + 1)
-        if (roll_sum5 != 0) newDataT[right]['press_mav'] = roll_sum5 / (right - left + 1)
+        if (api == true) {
+            newDataF[right] = {
+                'P1': (roll_sum1 / (right - left + 1)).toFixed(2),
+                'P2': (roll_sum2 / (right - left + 1)).toFixed(2),
+                'dt': moment.unix(data[right].datetime),
+            };
+            newDataT[right] = {'dt': moment.unix(data[right].datetime)};
+            if (roll_sum3 != 0) newDataT[right]['T'] = (roll_sum3 / (right - left + 1)).toFixed(1);
+            if (roll_sum4 != 0) newDataT[right]['H'] = (roll_sum4 / (right - left + 1)).toFixed(0);
+            if (roll_sum5 != 0) newDataT[right]['P'] = (roll_sum5 / (right - left + 1)).toFixed(2);
+        } else {
+            newDataF[right] = {
+                'P10_mav': roll_sum1 / (right - left + 1),
+                'P2_5_mav': roll_sum2 / (right - left + 1),
+                'date': data[right].datetime * 1000,
+                'P10': data[right].P1,
+                'P2_5': data[right].P2
+            };
+            newDataT[right] = {'date': data[right].datetime * 1000};
+            if (roll_sum3 != 0) newDataT[right]['temp_mav'] = roll_sum3 / (right - left + 1);
+            if (roll_sum4 != 0) newDataT[right]['humi_mav'] = roll_sum4 / (right - left + 1);
+            if (roll_sum5 != 0) newDataT[right]['press_mav'] = roll_sum5 / (right - left + 1);
+        }
     }
-
-    if ((name == "BMP180") || (name == "BME280")) {
-        newDataT = calcSealevelPressure(newDataT,'press_mav',altitude);
+    if (havepressure == true) {
+        if (api==true) {
+            newDataT = calcSealevelPressure(newDataT,'P',altitude);
+            for (let i=0; i< newDataT.length; i++) {
+                newDataT[i].P = (newDataT[i].P / 100).toFixed(0);
+            }
+        } else {
+            newDataT = calcSealevelPressure(newDataT,'press_mav',altitude);
+        }
+    }
+    if (api == true) {
+        return (iamPM == true ? newDataF : newDataT);
     }
     return { 'PM': newDataF, 'THP' : newDataT };
 }
@@ -690,6 +951,21 @@ function isPM(name) {
         return true;
     }
     return false;
+}
+
+
+// Aus der 'prperties'-collection die altitude für die
+// übergeben sid rausholen
+async function getAltitude(db,sid) {
+    let collection = db.collection('properties');
+    try {
+        let values = await collection.findOne({"_id":sid});
+        return values.location[values.location.length-1].altitude;
+        }
+    catch(e) {
+        console.log("GteAltitude Error",e);
+        return 0
+    }
 }
 
 module.exports = router;
