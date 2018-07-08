@@ -34,11 +34,15 @@ router.get('/getprops', function (req, res) {
     if (!((req.query.sensorid == undefined) || (req.query.sensorid == ""))) {
         sid = parseInt(req.query.sensorid);
     }
-    let dt = "1900-01-01:00:00:00";
+    let dt = "1900-01-01T00:00:00";
     if(!((req.query.since === undefined)  || (req.query.since ==""))) {
         dt = req.query.since;
     }
-    getAPIprops(db, sid, dt)
+    let name = ""
+    if(!((req.query.sensortyp === undefined)  || (req.query.sensortyp ==""))) {
+        name = req.query.sensortyp;
+    }
+    getAPIprops(db, sid, name, dt)
         .then(erg => res.json(erg));
 });
 
@@ -599,32 +603,39 @@ async function getAPIalldata(db,dt) {
 // return:
 //      JSON Dokument mit den angefragten werten
 // *********************************************
-async function getAPIprops(db,sid,dt) {
+async function getAPIprops(db,sid,typ,dt) {
     let properties = [];
     let erg = [];
     let entry = {};
     let pcoll = db.collection("properties");
-    if (sid == 0) {
-        properties = await pcoll.find({date_since: {$gte: new Date(dt)}}).sort({_id: 1}).toArray();
-        for (let i = 0; i < properties.length; i++) {
-            erg.push({
-                sid:properties[i]._id,
-                name: properties[i].name,
-                lat: properties[i].location[0].loc.coordinates[1],
-                lon: properties[i].location[0].loc.coordinates[0],
-                alt: properties[i].location[0].altitude,
-            });
+    let query = {};
+    if(sid == 0) {
+        if(typ == "") {
+            query = {date_since: {$gte: new Date(dt)}};
+        } else {
+            query = {date_since: {$gte: new Date(dt)}, name: typ};
         }
     } else {
-        let p = await pcoll.findOne({_id: sid});
-        entry.sid = p._id;
-        entry.name = p.name;
-        entry.lat = p.location[0].loc.coordinates[1];
-        entry.lon = p.location[0].loc.coordinates[0];
-        entry.alt =  p.location[0].altitude,
-        erg.push(entry);
+        query = { _id:sid };
     }
-    return erg;
+    properties = await pcoll.find(query).sort({_id: 1}).toArray();
+    console.log("Anzahl gekommen: ",properties.length);
+    console.log("First:", properties[0]);
+    for (let i = 0; i < properties.length; i++) {
+        erg.push({
+            sid:properties[i]._id,
+            typ: properties[i].name,
+            since: moment(properties[i].date_since).format(),
+            lat: properties[i].location[0].loc.coordinates[1],
+            lon: properties[i].location[0].loc.coordinates[0],
+            alt: properties[i].location[0].altitude,
+        });
+    }
+    entry.sensortyp = typ =="" ? "all" : typ;
+    entry.count = erg.length;
+    entry.since = dt;
+    entry.werte = erg;
+    return entry;
 }
 
 

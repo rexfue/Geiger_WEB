@@ -23,6 +23,7 @@ if (MONGOAUTH == 'true') {
 }
 
 console.log(os.hostname());
+// console.log(MONGO_URL);
 
 app.set('views','./views');
 app.set('view engine','pug');
