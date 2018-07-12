@@ -42,6 +42,7 @@ router.get('/getprops', function (req, res) {
     if(!((req.query.sensortyp === undefined)  || (req.query.sensortyp ==""))) {
         name = req.query.sensortyp;
     }
+
     getAPIprops(db, sid, name, dt)
         .then(erg => res.json(erg));
 });

@@ -267,8 +267,13 @@ radio {
 	display: none;
 }
 
+
 #datumtxt {
-	font-size: 130%;
+	font-size: 120%;
 	font-weight: bold;
+	position: absolute;
+	top: 170px;
+	right: 25px;
+	z-index: 99;
 }
 

@@ -46,6 +46,7 @@ $(document).ready(function() {
 	if(!((typeof startday == 'undefined') || (startday == ""))) {
 		if(startday == "Silvester") {
 			specialDate = "silvester17";
+			startDay = "2017-12-31T11:00:00Z";
 		} else {
             startDay = startday;
         }
@@ -572,12 +573,24 @@ $(document).ready(function() {
 		dialogError.dialog("open");
     }
 
+    function showNewDate() {
+        moment.locale('de', {
+            months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
+        });
+        if(startDay != '') {
+            let datumtxt = '<span style="color:blue">Anzeige für: ' +  moment(startDay).format("D.MMMM YYYY")+'</span>';
+            $('#datumtxt').html(datumtxt);
+        }
+    }
+
+
 
     function startPlot(what,d1,d2,sensor,start,live) {
 		var name = sensor.name;
 		if((name.startsWith("SDS")) || (name.startsWith("PMS")) || (name.startsWith("PPD"))) {
             if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
                 PlotYearfs(what, d1, sensor,live);
+				showNewDate();
             } else {
                 PlotItfs(what, d1, sensor,start,live);
             }
