@@ -5,6 +5,9 @@ const moment = require('moment');
 const mathe = require('mathjs');
 // const Vector = require('gauss').Vector;
 const request = require('request-promise');
+const fs = require('fs');
+const $ = require('jquery');
+const MongoClient1 = require('mongodb').MongoClient;
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -18,14 +21,17 @@ router.get('/getdata', function (req, res) {
     let avg = req.query.avg;
     let span = req.query.span;
     let dt = req.query.datetime;
+    if(isNaN(sid)) {
+        getAPIdataTown(db, req.query.sensorid, avg, span, dt, res);
+//            .then(erg => res.json(erg));
+    } else {
+        getAPIdata(db, sid, avg, span, dt)
+            .then(erg => res.json(erg));
+    }
 
 //    if(req.query.sensorid == "all") {
 //        getAPIalldata(db, dt)
 //            .then(erg => res.json(erg));
-//    } else {
-        getAPIdata(db, sid, avg, span, dt)
-            .then(erg => res.json(erg));
-//    }
 });
 
 router.get('/getprops', function (req, res) {
@@ -442,11 +448,199 @@ function getYearData(db,sensorid,sensorname, st,what) {
     return p;
 }
 
+// ***********************************************************
+// getAPIdataNew  -  Get data direct via API for one sensor
+//
+//  Parameter:
+//      db:     Mongo-Database
+//      sid:    sensor ID
+//      mavg:   time over that to build the average [minutes]
+//      dauer:  duration for the data [hours]
+//      start:  starting point of 'dauer'
+//      end:    end of 'dauer'
+//
+// return:
+//      JSON Dokument mit den angefragten Werten
+// ***********************************************************
+
+async function getAPIdataNew(db,sid,mavg,dauer,start,end) {
+    let st = moment(start).startOf('day');               // clone start/end ..
+    let en = moment(end).startOf('day');                 // .. and set to start of day
+
+    let retur = {sid: sid, avg: mavg, span: dauer, start: start};
+    let collection = db.collection('values');
+    let ergArr = [];
+    let values;
+    for (; st <= en; st.add(1, 'd')) {
+        let id = sid + '_' + st.format('YYYYMMDD');
+        try {
+            values = await collection.findOne({
+                _id: id
+            });
+        }
+        catch (e) {
+            console.log(e);
+        }
+        if(values && (values.values.length != 0)) {
+            ergArr.push(...values.values);
+        }
+    }
+    if (ergArr.length == 0) {
+        retur.count = 0;
+        retur['values'] = [];
+    } else {
+        // Bereich einschränken
+        let v = [];
+        let startm = moment(start);
+        if(mavg != 1) {
+            startm.subtract(mavg,'m');
+        }
+        let fnd = ergArr.findIndex(x => x.datetime >= startm);
+        if (fnd != -1) {
+            v = ergArr.slice(fnd);
+            ergArr = v;
+        }
+        fnd = ergArr.findIndex(x => x.dateTime > end);
+        if (fnd != -1) {
+            v = ergArr.slice(-fnd);
+            erg.Arr = v;
+        }
+        if ((mavg === undefined) || (mavg == 1)) {
+            retur.count = ergArr.length;
+            retur['values'] = ergArr;
+        }
+        // Mittelwert berechnen
+        let x = calcMovingAverage(ergArr, mavg, 0, 0, true);
+        fnd = x.findIndex(u => u.dt >= start);
+        if (fnd != -1) {
+            let y = x.slice(fnd);
+            x=y;
+        }
+        retur.count = x.length;
+        retur.values = x;
+    }
+    return retur;
+}
+
+
+// ******************************************************************
+// getAPIdataTown  -  Get data direct via API for all sensors in a town
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api/getdata/?sensorid=stuttgart&avg=5&span=12
+//
+//      mit:
+//          sensorid:  Name der Stadt
+//          avg:  Mittelwert-Bildung über xxx Minuten
+//          span: Zeitraum für die Mittelwertbildung in Stunden
+//          dt:   Startzeitpunkt
+//
+//  Parameter:
+//      db:     Mongo-Database
+//      town:   name of town
+//      avg:    time over that to build the average [minutes]
+//      span:   duration for the data [hours]
+//      dt:     starting point of 'span'
+//      res:    http-object to send result
+//
+// return:
+//      nothing; JSON document will be sent back
+//
+//
+// For every town, there has to be an JSON-file with the
+// sensornumbers of ervery sensor living in that town.
+//
+// ***** Neue DB-Struktur - Versuch
+//
+// ********************************************************************
+async function  getAPIdataTown(db, town, avg, span, dt, res) {
+    // get sensors for the town as array of ids
+    let mavg = 1;                               // default average
+    if (avg !== undefined) {                    // if acg defined ..
+        mavg = parseInt(avg);                   // .. use it
+    }
+    if (mavg > 1440) { mavg = 1440;}            // avgmax = 1 day
+    let dauer = 24;                             // span default 1 day
+    if(span !== undefined) {                    // if defined ..
+        dauer = parseInt(span);                 // .. use it
+    }
+    if (dauer > 720) { dauer = 720;}            // spanmax = 30 days
+    let start = moment();                       // default start -> now
+    let end = moment();                         // define end
+    if(dt != undefined) {                       // if defined ..
+        start = moment(dt);                     // .. use it ..
+        end = moment(dt);
+        end.add(dauer,'h');                     // .. and calculate new end
+    } else {                                    // if not defined, calc start ..
+        start.subtract((dauer * 60), 'm');      // .. from span (= dauer)
+    }
+
+    // get sensor numbers from town-sensor-file
+    let sensors = [];
+    let tw = town.toLowerCase();
+    let data = fs.readFileSync(tw+'.txt');
+    sensors = JSON.parse(data);
+
+    // now fetch data fpr all this sensors
+    const connect = MongoClient1.connect( 'mongodb://nuccy:27017/Feinstaub');
+    connect                                     // connect to database
+        .then(dbase => {                        // and get all data
+            return getAPITN(dbase,sensors,mavg,dauer,start,end,town)
+                .then (erg => res.json(erg))    // send data back
+                .then (() => dbase.close())     // and close database
+        });
+}
+
+
+// ******************************************************************
+// getAPITN  -  Get data direct via API for all sensors in a town
+//
+//  Parameter:
+//      dbase:      Mongo-Database
+//      sensors:    array of sensors
+//      mavg:       time over that to build the average [minutes]
+//      dauer:      duration for the data [hours]
+//      start:      starting point of 'dauer'
+//      end:        end of 'dauer'
+//      town:       name of town
+//
+// return:
+//      JSON document with data for ALL sensors in town
+//
+// ***** Neue DB-Struktur - Versuch
+//
+// ********************************************************************
+async function getAPITN (dbase,sensors,mavg,dauer,start,end,town) {
+    // Fetch for all this sensors
+    let los = moment();                         // debug, to time it
+    let erg = {sid:town, avg: mavg, span: dauer, start: start, count: 0, sensordata: []};  // prepare object
+    let val;
+    for(let j=0; j<sensors.length; j++) {       // loop thru array of sensors
+        try {
+            val = await getAPIdataNew(dbase,sensors[j],mavg,dauer,start,end);   // get data for obe sensor
+            if(val.count != 0) {                // if there is data
+                delete val.avg;                 // delete unnecessary elements
+                delete val.span;
+                delete val.start;
+                erg.sensordata.push(val);       // and push data to result array
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+    }
+    console.log("Zeit in getAPIdataTown:",(moment()-los)/1000,'[sec]'); // time it
+    console.log('Daten für',erg.sensordata.length,' Sensoren gelesen');
+    erg.count = erg.sensordata.length;          // save count
+    return erg;                                 // and return all data
+}
+
+
 // *********************************************
 // Get data direct via API for one sensor
 //
 //  Call:
-//      http://feinstaub.rexfue.de/api?sid=1234&avg=5m&span=24h
+//      http://feinstaub.rexfue.de/api?sid=1234&avg=5&span=24
 //
 //      mit:
 //          sid:  Sensornummer
@@ -454,9 +648,10 @@ function getYearData(db,sensorid,sensorname, st,what) {
 //          span: Zeitraum für die Mittelwertbildung in Stunden
 //
 // return:
-//      JSON Dokument mit den angefragten werten
+//      JSON Dokument mit den angefragten Werten
 // *********************************************
 async function getAPIdata(db,sid,avg,span,dt) {
+    let los=moment();
     let values = [];
     let mavg = 1;
     if (avg !== undefined) {
@@ -513,6 +708,7 @@ async function getAPIdata(db,sid,avg,span,dt) {
         retur.count = y.length;
         retur.values = y;
     }
+//    console.log("Zeit in getAPIdata",(moment()-los)/1000,'[sec]')
     return retur;
 }
 
@@ -520,7 +716,7 @@ async function getAPIdata(db,sid,avg,span,dt) {
 // Get data direct via API for ALL sensor
 //
 //  Call:
-//      http://feinstaub.rexfue.de/api?sid=all&datetime="2018-ß6-02T12:00Z"
+//      http://feinstaub.rexfue.de/api?sid=all&datetime="2018-06-02T12:00Z"
 //
 //      mit:
 //          dt:     Zeitpunkt, für den die Daten geholt werden
@@ -966,8 +1162,8 @@ function isPM(name) {
 }
 
 
-// Aus der 'prperties'-collection die altitude für die
-// übergeben sid rausholen
+// Aus der 'properties'-collection die altitude für die
+// übergebene sid rausholen
 async function getAltitude(db,sid) {
     let collection = db.collection('properties');
     try {
@@ -975,9 +1171,11 @@ async function getAltitude(db,sid) {
         return values.location[values.location.length-1].altitude;
         }
     catch(e) {
-        console.log("GteAltitude Error",e);
+        console.log("GetAltitude Error",e);
         return 0
     }
 }
+
+
 
 module.exports = router;
