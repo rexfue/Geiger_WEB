@@ -9,6 +9,8 @@ const fs = require('fs');
 const $ = require('jquery');
 const MongoClient1 = require('mongodb').MongoClient;
 
+const fsdata = require('./fsdata');
+
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
 //API to read all datas from the database
@@ -115,7 +117,7 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end) {
             retur['values'] = ergArr;
         }
         // Mittelwert berechnen
-        let x = calcMovingAverage(ergArr, mavg, 0, 0, true);
+        let x = fsdata.calcMovingAverage(ergArr, mavg, 0, 0, true);
         fnd = x.findIndex(u => u.dt >= start);
         if (fnd != -1) {
             let y = x.slice(fnd);
@@ -202,7 +204,7 @@ async function getAPITN (dbase,sensors,mavg,dauer,start,end,town) {
 // ***** Neue DB-Struktur - Versuch
 //
 // ********************************************************************
-async function  getAPIdataTown(db, sid, avg, span, dt, res) {
+async function  getAPIdataTown(db, town, avg, span, dt, res) {
     // get sensors for the town as array of ids
     let mavg = 1;                               // default average
     if (avg !== undefined) {                    // if acg defined ..
@@ -223,6 +225,11 @@ async function  getAPIdataTown(db, sid, avg, span, dt, res) {
     } else {                                    // if not defined, calc start ..
         start.subtract((dauer * 60), 'm');      // .. from span (= dauer)
     }
+    // get sensor numbers from town-sensor-file
+    let sensors = [];
+    let tw = town.toLowerCase();
+    let data = fs.readFileSync(tw+'.txt');
+    sensors = JSON.parse(data);
 
     // now fetch data fpr all this sensors
     const connect = MongoClient1.connect( 'mongodb://nuccy:27017/Feinstaub');
@@ -288,7 +295,7 @@ async function  getAPIdataSensor(db, sid, avg, span, dt, res) {
     const connect = MongoClient1.connect( 'mongodb://nuccy:27017/Feinstaub');
     connect                                     // connect to database
         .then(dbase => {                        // and get all data
-            return getAPIdataNew(db,sid,mavg,dauer,start,end)
+            return getAPIdataNew(dbase,sid,mavg,dauer,start,end)
                 .then (erg => res.json(erg))    // send data back
                 .then (() => dbase.close())     // and close database
         });

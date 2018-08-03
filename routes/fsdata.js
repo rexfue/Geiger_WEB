@@ -748,3 +748,4 @@ async function getAltitude(db,sid) {
 
 
 module.exports = router;
+module.exports.calcMovingAverage = calcMovingAverage;
