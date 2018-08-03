@@ -20,6 +20,7 @@ router.get('/getaktdata/', function (req, res) {
     var east = parseFloat(req.query.east);
     var west = parseFloat(req.query.west);
     let st = req.query.start;
+    let poly = JSON.parse(req.query.poly);
     console.log('Box:', south,north,east,west);
 
 /* Versuch, über die CSV-Dateien einen beliebigen Zeitpunkt einzulesen.
@@ -40,17 +41,34 @@ router.get('/getaktdata/', function (req, res) {
     var aktData = [];                                                   // hier die daten sammeln
     var now = moment();                                                 // akt. Uhrzeit
     var lastDate = 0;
+    let loc;
     console.log("fetching data ");
-    collection.find({                                                   // find all data within map borders (box)
-        location: {
-            $geoWithin: {
-                $box : [
-                    [west,south],
-                    [east,north]
-                ]
+    if(poly != undefined) {
+        loc = {
+            location: {
+                $geoWithin: {
+                    $geometry: {
+                        type: "Polygon",
+                        coordinates: [poly],
+                    }
+                }
+
             }
         }
-    }).toArray(function (err, docs) {
+        } else {
+        loc = {
+            location: {
+                $geoWithin: {
+                    $box: [
+                        [west, south],
+                        [east, north]
+                    ]
+                }
+            }
+        }
+    }
+    collection.find( loc )                                                 // find all data within map borders (box)
+        .toArray(function (err, docs) {
  //       console.log(docs);
         for (var i=0; i< docs.length; i++) {
             var item = docs[i];
@@ -82,7 +100,7 @@ router.get('/getaktdata/', function (req, res) {
  //           console.log('lastDate:',lastDate);
  //           console.log("Daten für "+ oneAktData.id + " geholt");
         }
-        console.log("Komm direkt vor res.json in route.get(/getaktdata und lastDate ist:", lastDate);
+        console.log("Komm direkt vor res.json in route.get(/getaktdata) und lastDate ist:", lastDate);
         res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
         console.log("Array-Länge:",aktData.length);
     });
@@ -163,5 +181,52 @@ function readOneSensorData(url, dt) {
     return p;
 }
 */
+
+router.get('/regionSensors/', function (req, res) {
+    var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
+    var spoints = JSON.parse(req.query.points);
+    getRegionSensors(db,spoints)
+        .then(erg => res.json(erg));
+});
+
+async function getRegionSensors(db,p) {
+    let properties = [];
+    let pcoll = db.collection("properties");
+//    let pcoll = db.collection("mapdata");
+    properties = await pcoll.find({
+            'location.0.loc': {
+                $geoWithin: {
+                    $geometry: {
+                        type: "Polygon",
+                        coordinates: [ p ],
+                    }
+                }
+        }
+    },{name:1}
+    ).toArray();
+    let sids = [];
+    properties.forEach(x => {
+        if(isPM(x.name)) {
+            sids.push(x._id);
+        }
+    });
+    console.log('Anzahl gefundene Sensoren:',sids.length);
+    return sids;
+}
+
+router.get('/storeSensors/', function (req, res) {
+    let data = req.query.sensors;
+    fs.writeFile('stuttgart.txt',data,(err) => {
+        if (err) throw(err);
+        console.log("Sensoren gespeichert");
+    });
+});
+
+function isPM(name) {
+    if ((name == "SDS011") || (name.startsWith("PPD")) || (name.startsWith("PMS"))) {
+        return true;
+    }
+    return false;
+}
 
 module.exports = router;

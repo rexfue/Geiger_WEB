@@ -54,7 +54,7 @@ app.get('*', function(req, res, next){
 });
 
 //app.use(bodyParser.json());
-//
+
 //app.post('/sensors', function(res,req,next){
 //    var body = res.body;
 //    var espid = res.headers['x-sensor'];
@@ -106,8 +106,8 @@ app.use('/fs/fsdata',fsdatas1);
 var fsdatas2 = require('./routes/mapdata');
 app.use('/fs/mapdata',fsdatas2);
 
-var fsdatas3 = require('./routes/fsdata');
-app.use('/fs/api',fsdatas3);
+var apidatas = require('./routes/apidata');
+app.use('/fs/api',apidatas);
 
 
 const connect = MongoClient.connect(MONGO_URL);

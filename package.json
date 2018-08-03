@@ -16,6 +16,7 @@
     "bootstrap": "^3.3.7",
     "express": "^4.16.2",
     "gauss": "^0.2.12",
+    "gpx-parse": "^0.10.4",
     "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
     "math": "0.0.3",
@@ -24,6 +25,7 @@
     "mongodb": "^2.2.33",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "xml-js": "^1.6.7"
   }
 }
