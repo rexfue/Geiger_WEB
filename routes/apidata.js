@@ -10,6 +10,7 @@ const $ = require('jquery');
 const MongoClient1 = require('mongodb').MongoClient;
 
 const fsdata = require('./fsdata');
+const util = require('./utilities');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -24,11 +25,11 @@ router.get('/getdata', function (req, res) {
     let span = req.query.span;
     let dt = req.query.datetime;
     if(isNaN(sid)) {
-        getAPIdataTown(db, req.query.sensorid, avg, span, dt, res);
-//            .then(erg => res.json(erg));
+        getAPIdataTown(db, req.query.sensorid, avg, span, dt, res)
+            .then(erg => res.json(erg));
     } else {
-        getAPIdataSensor(db, sid, avg, span, dt,res);
-//            .then(erg => res.json(erg));
+        getAPIdataSensor(db, sid, avg, span, dt,res)
+           .then(erg => res.json(erg));
     }
 
 //    if(req.query.sensorid == "all") {
@@ -113,7 +114,7 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
             retur['values'] = ergArr;
         }
         // Mittelwert berechnen
-        let x = fsdata.calcMovingAverage(ergArr, mavg, 0, 0, true);
+        let x = util.calcMovingAverage(ergArr, mavg, 0, 0, true);
         fnd = x.findIndex(u => u.dt >= gstart);
         if((fnd == -1) && (dauer == 0)) {
             let y = x.slice(-1);
@@ -149,14 +150,14 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
 // ***** Neue DB-Struktur - Versuch
 //
 // ********************************************************************
-async function getAPITN (dbase,sensors,mavg,dauer,start,end,town) {
+async function getAPITN (dbase,sensors,mavg,dauer,start,end,gstart,town) {
     // Fetch for all this sensors
     let los = moment();                         // debug, to time it
     let erg = {sid:town, avg: mavg, span: dauer, start: start, count: 0, sensordata: []};  // prepare object
     let val;
     for(let j=0; j<sensors.length; j++) {       // loop thru array of sensors
         try {
-            val = await getAPIdataNew(dbase,sensors[j],mavg,dauer,start,end);   // get data for obe sensor
+            val = await getAPIdata(dbase,sensors[j],mavg,dauer,start,end,gstart);   // get data for obe sensor
             if(val.count != 0) {                // if there is data
                 delete val.avg;                 // delete unnecessary elements
                 delete val.span;
@@ -207,41 +208,15 @@ async function getAPITN (dbase,sensors,mavg,dauer,start,end,town) {
 // ********************************************************************
 async function  getAPIdataTown(db, town, avg, span, dt, res) {
     // get sensors for the town as array of ids
-    let mavg = 1;                               // default average
-    if (avg !== undefined) {                    // if acg defined ..
-        mavg = parseInt(avg);                   // .. use it
-    }
-    if (mavg > 1440) { mavg = 1440;}            // avgmax = 1 day
-    let dauer = 24;                             // span default 1 day
-    if(span !== undefined) {                    // if defined ..
-        dauer = parseInt(span);                 // .. use it
-    }
-    if (dauer > 720) { dauer = 720;}            // spanmax = 30 days
-    let start = moment();                       // default start -> now
-    let end = moment();                         // define end
-    if(dt != undefined) {                       // if defined ..
-        start = moment(dt);                     // .. use it ..
-        end = moment(dt);
-        end.add(dauer,'h');                     // .. and calculate new end
-    } else {                                    // if not defined, calc start ..
-        start.subtract(dauer, 'h');             // .. from span (= dauer)
-    }
+    let p = parseParams(avg, span, dt);
     // get sensor numbers from town-sensor-file
     let sensors = [];
     let tw = town.toLowerCase();
     let data = fs.readFileSync(tw+'.txt');
     sensors = JSON.parse(data);
 
-    // now fetch data fpr all this sensors
-    const connect = MongoClient1.connect( 'mongodb://nuccy:27017/Feinstaub');
-    connect                                     // connect to database
-        .then(dbase => {                        // and get all data
-            return getAPITN (dbase,sensors,mavg,dauer,start,end,town)
-                .then (erg => res.json(erg))    // send data back
-                .then (() => dbase.close())     // and close database
-        });
+    return getAPITN (db,sensors,p.mavg,p.dauer,p.start,p.end,p.gstart, town);
 }
-
 
 
 // ******************************************************************
@@ -273,15 +248,7 @@ async function  getAPIdataTown(db, town, avg, span, dt, res) {
 // ********************************************************************
 async function  getAPIdataSensor(db, sid, avg, span, dt, res) {
     let p = parseParams(avg, span, dt);
-
-    // now fetch data fpr all this sensors
-    const connect = MongoClient1.connect( 'mongodb://nuccy:27017/Feinstaub');
-    connect                                     // connect to database
-        .then(dbase => {                        // and get all data
-            return getAPIdataNew(dbase,sid,p.mavg,p.dauer,p.start,p.end,p.gstart)
-                .then (erg => res.json(erg))    // send data back
-                .then (() => dbase.close())     // and close database
-        });
+    return getAPIdata(db,sid,p.mavg,p.dauer,p.start,p.end,p.gstart)
 }
 
 
@@ -299,29 +266,9 @@ async function  getAPIdataSensor(db, sid, avg, span, dt, res) {
 // return:
 //      JSON Dokument mit den angefragten Werten
 // *********************************************
-async function getAPIdata(db,sid,avg,span,dt) {
-    let los=moment();
-    let values = [];
-    let mavg = 1;
-    if (avg !== undefined) {
-        mavg = parseInt(avg);
-    }
-    if (mavg > 1440) { mavg = 1440;}
-    let dauer = 24;
-    if(span !== undefined) {
-        dauer = parseInt(span);
-    }
-    if (dauer > 720) { dauer = 720;}
-    let start = moment();
-    let end = moment();
-    if(dt != undefined) {
-        start = moment(dt);
-        end = moment(dt);
-        end.add(dauer,'h');
-    } else {
-        start = start.subtract((dauer * 60) + mavg, 'm');
-    }
-    let retur = {sid: sid, avg: mavg, span: dauer, start: start};
+async function getAPIdata(db,sid,mavg,dauer,start,end, gstart) {
+    let values=[];
+    let retur = {sid: sid, avg: mavg, span: dauer, start: gstart};
     let collection = db.collection('data_'+sid);
     try {
         values = await collection.find({
@@ -345,19 +292,20 @@ async function getAPIdata(db,sid,avg,span,dt) {
             retur.count = values.length;
             retur['values'] = values;
         }
-        let x = calcMovingAverage(values, mavg, await getAltitude(db,sid), 0, true);
-        end.subtract(dauer,'h');
-        let i = 0;
-        for(i=0; i< x.length; i++) {
-            if (moment(x[i].date) >= end) {
-                break;
+        let x = util.calcMovingAverage(sid, values, mavg, true);
+        let fnd = x.findIndex(u => u.dt >= gstart);
+        if((fnd == -1) && (dauer == 0)) {
+            let y = x.slice(-1);
+            x = y;
+        } else {
+            if (fnd != -1) {
+                let y = x.slice(fnd);
+                x = y;
             }
         }
-        let y = x.slice(i);
-        retur.count = y.length;
-        retur.values = y;
+        retur.count = x.length;
+        retur.values = x;
     }
-//    console.log("Zeit in getAPIdata",(moment()-los)/1000,'[sec]')
     return retur;
 }
 
