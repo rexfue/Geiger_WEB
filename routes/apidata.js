@@ -70,11 +70,11 @@ router.get('/getprops', function (req, res) {
 //      JSON Dokument mit den angefragten Werten
 // ***********************************************************
 
-async function getAPIdataNew(db,sid,mavg,dauer,start,end) {
+async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
     let st = moment(start).startOf('day');               // clone start/end ..
     let en = moment(end).startOf('day');                 // .. and set to start of day
 
-    let retur = {sid: sid, avg: mavg, span: dauer, start: start};
+    let retur = {sid: sid, avg: mavg, span: dauer, start: gstart};
     let collection = db.collection('values');
     let ergArr = [];
     let values;
@@ -98,11 +98,7 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end) {
     } else {
         // Bereich einschränken
         let v = [];
-        let startm = moment(start);
-        if(mavg != 1) {
-            startm.subtract(mavg,'m');
-        }
-        let fnd = ergArr.findIndex(x => x.datetime >= startm);
+        let fnd = ergArr.findIndex(x => x.datetime >= start);
         if (fnd != -1) {
             v = ergArr.slice(fnd);
             ergArr = v;
@@ -118,10 +114,15 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end) {
         }
         // Mittelwert berechnen
         let x = fsdata.calcMovingAverage(ergArr, mavg, 0, 0, true);
-        fnd = x.findIndex(u => u.dt >= start);
-        if (fnd != -1) {
-            let y = x.slice(fnd);
-            x=y;
+        fnd = x.findIndex(u => u.dt >= gstart);
+        if((fnd == -1) && (dauer == 0)) {
+            let y = x.slice(-1);
+            x = y;
+        } else {
+            if (fnd != -1) {
+                let y = x.slice(fnd);
+                x = y;
+            }
         }
         retur.count = x.length;
         retur.values = x;
@@ -223,7 +224,7 @@ async function  getAPIdataTown(db, town, avg, span, dt, res) {
         end = moment(dt);
         end.add(dauer,'h');                     // .. and calculate new end
     } else {                                    // if not defined, calc start ..
-        start.subtract((dauer * 60), 'm');      // .. from span (= dauer)
+        start.subtract(dauer, 'h');             // .. from span (= dauer)
     }
     // get sensor numbers from town-sensor-file
     let sensors = [];
@@ -271,31 +272,13 @@ async function  getAPIdataTown(db, town, avg, span, dt, res) {
 //
 // ********************************************************************
 async function  getAPIdataSensor(db, sid, avg, span, dt, res) {
-    let mavg = 1;                               // default average
-    if (avg !== undefined) {                    // if acg defined ..
-        mavg = parseInt(avg);                   // .. use it
-    }
-    if (mavg > 1440) { mavg = 1440;}            // avgmax = 1 day
-    let dauer = 24;                             // span default 1 day
-    if(span !== undefined) {                    // if defined ..
-        dauer = parseInt(span);                 // .. use it
-    }
-    if (dauer > 720) { dauer = 720;}            // spanmax = 30 days
-    let start = moment();                       // default start -> now
-    let end = moment();                         // define end
-    if(dt != undefined) {                       // if defined ..
-        start = moment(dt);                     // .. use it ..
-        end = moment(dt);
-        end.add(dauer,'h');                     // .. and calculate new end
-    } else {                                    // if not defined, calc start ..
-        start.subtract((dauer * 60), 'm');      // .. from span (= dauer)
-    }
+    let p = parseParams(avg, span, dt);
 
     // now fetch data fpr all this sensors
     const connect = MongoClient1.connect( 'mongodb://nuccy:27017/Feinstaub');
     connect                                     // connect to database
         .then(dbase => {                        // and get all data
-            return getAPIdataNew(dbase,sid,mavg,dauer,start,end)
+            return getAPIdataNew(dbase,sid,p.mavg,p.dauer,p.start,p.end,p.gstart)
                 .then (erg => res.json(erg))    // send data back
                 .then (() => dbase.close())     // and close database
         });
@@ -499,6 +482,33 @@ async function getAPIprops(db,sid,typ,dt) {
     entry.since = dt;
     entry.werte = erg;
     return entry;
+}
+
+
+function parseParams(avg, span, dt) {
+    let params = {};
+    params.mavg = 1;                                     // default average
+    if (avg !== undefined) {                             // if acg defined ..
+        params.mavg = parseInt(avg);                     // .. use it
+    }
+    if (params.mavg > 1440) { params.mavg = 1440;}       // avgmax = 1 day
+    params.dauer = 24;                                   // span default 1 day
+    if(span !== undefined) {                             // if defined ..
+        params.dauer = parseInt(span);                   // .. use it
+    }
+    if (params.dauer > 720) { params.dauer = 720;}       // spanmax = 30 days
+    params.start = moment();                             // default start -> now
+    params.end = moment();                               // define end
+    if(dt != undefined) {                                // if defined ..
+        params.start = moment(dt);                       // .. use it ..
+        params.end = moment(dt).add(params.dauer,'h');          // .. and calculate new end
+    } else {                                             // if not defined, calc start ..
+        params.start.subtract(params.dauer, 'h');               // .. from span (= dauer)
+    }
+    params.gstart = moment(params.start);
+    params.start.subtract(params.mavg,'m');                     // start earlier to calc right average
+
+    return params;
 }
 
 module.exports = router;
