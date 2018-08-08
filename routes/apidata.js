@@ -114,7 +114,7 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
             retur['values'] = ergArr;
         }
         // Mittelwert berechnen
-        let x = util.calcMovingAverage(ergArr, mavg, 0, 0, true);
+        let x = util.calcMovingAverage(db, ergArr, mavg, 0, 0, true);
         fnd = x.findIndex(u => u.dt >= gstart);
         if((fnd == -1) && (dauer == 0)) {
             let y = x.slice(-1);
@@ -153,7 +153,7 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
 async function getAPITN (dbase,sensors,mavg,dauer,start,end,gstart,town) {
     // Fetch for all this sensors
     let los = moment();                         // debug, to time it
-    let erg = {sid:town, avg: mavg, span: dauer, start: start, count: 0, sensordata: []};  // prepare object
+    let erg = {sid:town, avg: mavg, span: dauer, start: gstart, count: 0, sensordata: []};  // prepare object
     let val;
     for(let j=0; j<sensors.length; j++) {       // loop thru array of sensors
         try {
@@ -292,7 +292,7 @@ async function getAPIdata(db,sid,mavg,dauer,start,end, gstart) {
             retur.count = values.length;
             retur['values'] = values;
         }
-        let x = util.calcMovingAverage(sid, values, mavg, true);
+        let x = await util.calcMovingAverage(db, sid, values, mavg, true);
         let fnd = x.findIndex(u => u.dt >= gstart);
         if((fnd == -1) && (dauer == 0)) {
             let y = x.slice(-1);
@@ -433,6 +433,23 @@ async function getAPIprops(db,sid,typ,dt) {
 }
 
 
+// *******************************************************************
+// parseParams  -  parse the given paramaters
+//
+//  params:
+//      avg:        averegae time in min
+//      span:       data range in hours
+//      dt:         start date of data range
+//
+//  return:
+//      object with:
+//          mavg:   average time in min (default 1min, max; 1440min))
+//          dauer:  data range in hoiurs (default 24h, max: 720h)
+//          start:  start date/time to calculate average
+//          end:    end of data range
+//          gstart: start on datarange (without avg-time)
+//
+// **********************************************************************
 function parseParams(avg, span, dt) {
     let params = {};
     params.mavg = 1;                                     // default average
@@ -448,10 +465,10 @@ function parseParams(avg, span, dt) {
     params.start = moment();                             // default start -> now
     params.end = moment();                               // define end
     if(dt != undefined) {                                // if defined ..
-        params.start = moment(dt);                       // .. use it ..
-        params.end = moment(dt).add(params.dauer,'h');          // .. and calculate new end
+        params.start = moment(dt);                   // .. use it ..
+        params.end = moment(dt).add(params.dauer,'h');   // .. and calculate new end
     } else {                                             // if not defined, calc start ..
-        params.start.subtract(params.dauer, 'h');               // .. from span (= dauer)
+        params.start.subtract(params.dauer, 'h');        // .. from span (= dauer)
     }
     params.gstart = moment(params.start);
     params.start.subtract(params.mavg,'m');                     // start earlier to calc right average

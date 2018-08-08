@@ -20,7 +20,10 @@ router.get('/getaktdata/', function (req, res) {
     var east = parseFloat(req.query.east);
     var west = parseFloat(req.query.west);
     let st = req.query.start;
-    let poly = JSON.parse(req.query.poly);
+    let poly = [];
+    if(req.query.poly != undefined) {
+        poly = JSON.parse(req.query.poly);
+    }
     console.log('Box:', south,north,east,west);
 
 /* Versuch, über die CSV-Dateien einen beliebigen Zeitpunkt einzulesen.
@@ -43,7 +46,7 @@ router.get('/getaktdata/', function (req, res) {
     var lastDate = 0;
     let loc;
     console.log("fetching data ");
-    if(poly != undefined) {
+    if(poly.length != 0) {
         loc = {
             location: {
                 $geoWithin: {

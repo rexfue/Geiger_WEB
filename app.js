@@ -39,6 +39,7 @@ app.get('*', function(req, res, next){
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
         (req.headers.host == 'fstst.rexfue.de') ||
+        (req.headers.host == 'test1.rexfue.de') ||
         (req.headers.host == 'localhost:3005') ||
         (req.headers.host == 'castor') ||
         (req.headers.host == 'macbig:3005')                 //Port is important if the url has it

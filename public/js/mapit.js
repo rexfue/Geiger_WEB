@@ -227,9 +227,8 @@ function initMap() {												// Map initialisieren
             boundBox = map.getBounds().toJSON();
             first = true;
             clearMarker();
-            fetchStuttgartBounds()
-                .then(() => fetchAktualData());
-
+            fetchAktualData();
+            fetchStuttgartBounds();
         }
         if (!((info == undefined) || (info == ""))) {
             var sid = infowindow.anchor.sensorid;
@@ -317,7 +316,7 @@ function removeOneMarker(n) {
 // Aktuelle Daten vom Server holen
 function fetchAktualData() {
     boundBox.start = startDay;
-    boundBox.poly = JSON.stringify(mongoPoints);
+//    boundBox.poly = JSON.stringify(mongoPoints);
     $.getJSON('/mapdata/getaktdata', boundBox, function (data1, err) {	// JSON-Daten vom Server holen
         if (err != 'success') {
             alert("Fehler <br />" + err);						// ggf. fehler melden
@@ -341,6 +340,39 @@ function showLastDate(dt) {
 
 
 function fetchStuttgartBounds() {
+    $.ajax({
+        type: "GET",
+        url: "/mapdata/getStuttgart",
+        dataType: "xml",
+        success: function(xml) {
+            var points = [];
+            var bounds = new google.maps.LatLngBounds ();
+            $(xml).find("rtept").each(function() {
+                var lat = parseFloat($(this).attr("lat"));
+                var lon = parseFloat($(this).attr("lon"));
+                var p = new google.maps.LatLng(lat, lon);
+                points.push(p);
+                bounds.extend(p);
+            });
+
+            var poly = new google.maps.Polyline({
+                // use your own style here
+                path: points,
+                strokeColor: "#FF00AA",
+                strokeOpacity: .7,
+                strokeWeight: 4
+            });
+
+            poly.setMap(map);
+
+            // fit bounds to track
+//            map.fitBounds(bounds);
+        }
+    });
+
+}
+
+/* function fetchStuttgartBounds() {
     const p = new Promise((resolve,reject) => {
 
         $.ajax({
@@ -372,13 +404,14 @@ function fetchStuttgartBounds() {
 
                 // fit bounds to track
 //            map.fitBounds(bounds);
-                findStuttgartSensors();
+//                findStuttgartSensors();
                 resolve();
             }
         });
     });
     return p;
 }
+*/
 
 // Aus den GeoDaten und dem akt. Feinstaubwert den Marker bauen. Es wird eine
 // Säule erzeugt mit 20 Pixel Duchmesswer und Höhe abh. vom Feinstaubwert

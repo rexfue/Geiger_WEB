@@ -183,10 +183,10 @@ function getLatestValues(db,sensorid,sensorname,samples) {
                 y = calcMinMaxAvgDHT(docs);
                 resolve({'T':y.temp_avg, 'H':y.humi_avg});
             } else if (sensorname == "BMP180") {
-                y =  calcMinMaxAvgBMP(docs);
+                y = calcMinMaxAvgBMP(db, sensorid, docs)
                 resolve({'T':y.temp_avg, 'P':y.press_avg});
             } else if (sensorname == "BME280") {
-                y = calcMinMaxAvgBME(docs);
+                y = calcMinMaxAvgBME(db, sensorid, docs);
                 resolve({'T':y.temp_avg, 'H':y.humi_avg, 'P': y.press_avg });
             }
         });
@@ -224,9 +224,9 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                 var collection = db.collection(colstr);
                 if (live == true) {
                     start.subtract(24, 'h');
-                    start.subtract(avg,'m');
+                    start.subtract(avg, 'm');
                 } else {
-                    start.subtract(avg,'m');
+                    start.subtract(avg, 'm');
                     end.add(24, 'h');
                 }
                 docs = await collection.find({
@@ -241,74 +241,75 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                 return {'docs': []};
             } else {
                 if (isPM(sensorname)) {
-                    var x = calcMovingAverage(docs, sensorid, avg,  0, false);
-                    var y = calcMinMaxAvgSDS(docs, false);
+                    let x = await util.calcMovingAverage(db, sensorid, docs, avg,  0, false);
+                    let y = calcMinMaxAvgSDS(docs, false);
                     return {'docs': x.PM, 'maxima': y};
                 } else if (sensorname == "DHT22") {
-                    return {'docs': calcMovingAverage(docs, sensorid, avg,  0, false).THP,
-                    'minmax': calcMinMaxAvgDHT(docs)};
+                    let x = await util.calcMovingAverage(db, sensorid, docs, avg,  0, false);
+                    return {'docs': x.THP, 'minmax': calcMinMaxAvgDHT(docs)};
                 } else if (sensorname == "BMP180") {
-                    return {'docs': calcMovingAverage(docs, sensorid, avg,  altitude, false).THP,
-                    'minmax': calcMinMaxAvgBMP(docs,altitude)};
+                    let x = await util.calcMovingAverage(db, sensorid, docs, avg,  altitude, false);
+                    return {'docs': x.THP,
+                    'minmax': await calcMinMaxAvgBMP(db, sensorid, docs)};
                 } else if (sensorname == "BME280") {
-                    return {'docs': calcMovingAverage(docs, sensorid, avg, altitude, false).THP,
-                    'minmax':calcMinMaxAvgBME(docs,altitude)};
+                    let x = await util.calcMovingAverage(db, sensorid, docs, avg, altitude, false);
+                    return {'docs': x.THP,
+                    'minmax': await calcMinMaxAvgBME(db, sensorid, docs)};
                 }
             }
         }
         catch(e) {
-            console.log(e);
+            console.log('getDayData',e);
         }
 }
 
 // Daten für eine Woche aus der DB holen
-function getWeekData(db, sensorid, sensorname, altitude , st, live) {
-    var p = new Promise(function(resolve,reject) {
-        var start = moment(st);
-        var end = moment(st);
-        var colstr = 'data_' + sensorid;
-        var collection = db.collection(colstr);
-        if (live == true) {
-            if (isPM(sensorname)) {
-                start.subtract(24 * 8, 'h');
-            } else {
-                start.subtract(24 * 7, 'h');
-            }
+async function getWeekData(db, sensorid, sensorname, altitude , st, live) {
+    var start = moment(st);
+    var end = moment(st);
+    var colstr = 'data_' + sensorid;
+    var collection = db.collection(colstr);
+    let docs;
+    if (live == true) {
+        if (isPM(sensorname)) {
+            start.subtract(24 * 8, 'h');
         } else {
-            start.subtract(24,'h');
-            end.add(24*7,'h');
+            start.subtract(24 * 7, 'h');
         }
-        collection.find({
+    } else {
+        start.subtract(24, 'h');
+        end.add(24 * 7, 'h');
+    }
+    try {
+        docs = await collection.find({
             datetime: {
                 $gte: new Date(start),
                 $lt: new Date(end)
             }
-        }, {sort: {datetime: 1}}).toArray(function (e, docs) {
-            if (e != null) {
-                reject(e);
-            }
-            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
-            if (docs.length == 0) {
-                resolve({'docs': []})
-            } else {
-                if (isPM(sensorname)) {
-                    var wdata = calcMovingAverage(docs, sensorid, sensorid, 1440 , false);
-                    var y = calcMinMaxAvgSDS(wdata.PM,true);
-                    resolve({'docs': wdata.PM, 'maxima': y });
-                } else if (sensorname == "DHT22") {
-                    resolve({'docs': calcMovingAverage(docs, sensorid, 10, false).THP,
-                        'minmax': calcMinMaxAvgDHT(docs)});
-                } else if (sensorname == "BMP180") {
-                    resolve({'docs': calcMovingAverage(docs, sensorid, 10,  false).THP,
-                        'minmax': calcMinMaxAvgBMP(docs,altitude)});
-                } else if (sensorname == "BME280") {
-                    resolve({'docs': calcMovingAverage(docs, sensorid, 10,  false).THP,
-                        'minmax':calcMinMaxAvgBME(docs,altitude)});
-                }
-            }
-        });
-    });
-    return p;
+        }, {sort: {datetime: 1}}).toArray();
+    }
+    catch (e) {
+        console.log(e);
+        docs = [];
+    }
+    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
+    if (docs.length == 0) {
+        return ({'docs': []})
+    } else {
+        if (isPM(sensorname)) {
+            let x = await util.calcMovingAverage(db, sensorid, docs, 1440, false);
+            return ({'docs': x.PM, 'maxima': calcMinMaxAvgSDS(x.PM, true)});
+        } else if (sensorname == "DHT22") {
+            let x = await util.calcMovingAverage(db, sensorid, docs, 10, false);
+            return ({'docs': x.THP, 'minmax': calcMinMaxAvgDHT(docs)});
+        } else if (sensorname == "BMP180") {
+            let x = await util.calcMovingAverage(db, sensorid, docs, 10, false);
+            return ({'docs': x.THP, 'minmax': await calcMinMaxAvgBMP(db, sensorid, docs)});
+        } else if (sensorname == "BME280") {
+            let x = await util.calcMovingAverage(db, sensorid, docs, 10, false);
+            return ({'docs': x.THP, 'minmax': await calcMinMaxAvgBME(db, sensorid, docs)});
+        }
+    }
 }
 
 
@@ -539,39 +540,45 @@ function calcMinMaxAvgDHT(data) {
 }
 
 
-function calcMinMaxAvgBMP(data,altitude) {
-    var t=[], p=[];
-    for (var i=0; i<data.length; i++) {
-        if(data[i].temperature != undefined) {
+async function calcMinMaxAvgBMP(db, sid, data) {
+    var t = [], p = [];
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].temperature != undefined) {
             t.push(data[i].temperature);
         }
-        if(data[i].pressure != undefined) {
+        if (data[i].pressure != undefined) {
             p.push(data[i].pressure);
         }
     }
-    p = calcSealevelPressure(p,'',altitude);
-    return { 'temp_max': mathe.max(t), 'press_max': mathe.max(p),
-    'temp_min': mathe.min(t), 'press_min': mathe.min(p),
-    'temp_avg' : mathe.mean(t), 'press_avg' : mathe.mean(p) };
+    let altitude = await util.getAltitude(db, sid);
+    p = util.calcSealevelPressure(p, '', altitude);
+    return {
+        'temp_max': mathe.max(t), 'press_max': mathe.max(p),
+        'temp_min': mathe.min(t), 'press_min': mathe.min(p),
+        'temp_avg': mathe.mean(t), 'press_avg': mathe.mean(p)
+    };
 }
 
-function calcMinMaxAvgBME(data,altitude) {
-    var t=[], h=[], p=[], sumt=0;
-    for (var i=0; i<data.length; i++) {
-        if(data[i].temperature != undefined) {
+async function calcMinMaxAvgBME(db, sid, data) {
+    var t = [], h = [], p = [], sumt = 0;
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].temperature != undefined) {
             t.push(data[i].temperature);
         }
-        if(data[i].humidity != undefined) {
+        if (data[i].humidity != undefined) {
             h.push(data[i].humidity);
         }
-        if(data[i].pressure != undefined) {
+        if (data[i].pressure != undefined) {
             p.push(data[i].pressure);
         }
     }
-    p = calcSealevelPressure(p,'',altitude);
-    return { 'temp_max': mathe.max(t), 'humi_max': mathe.max(h), 'press_max': mathe.max(p),
-    'temp_min': mathe.min(t), 'humi_min': mathe.min(h), 'press_min': mathe.min(p),
-    'temp_avg' : mathe.mean(t), 'humi_avg' : mathe.mean(h), 'press_avg' : mathe.mean(p) };
+    let altitude = await util.getAltitude(db, sid);
+    p = util.calcSealevelPressure(p, '', altitude);
+    return {
+        'temp_max': mathe.max(t), 'humi_max': mathe.max(h), 'press_max': mathe.max(p),
+        'temp_min': mathe.min(t), 'humi_min': mathe.min(h), 'press_min': mathe.min(p),
+        'temp_avg': mathe.mean(t), 'humi_avg': mathe.mean(h), 'press_avg': mathe.mean(p)
+    };
 }
 
 function isPM(name) {
@@ -582,19 +589,6 @@ function isPM(name) {
 }
 
 
-// Aus der 'properties'-collection die altitude für die
-// übergebene sid rausholen
-async function getAltitude(db,sid) {
-    let collection = db.collection('properties');
-    try {
-        let values = await collection.findOne({"_id":sid});
-        return values.location[values.location.length-1].altitude;
-        }
-    catch(e) {
-        console.log("GetAltitude Error",e);
-        return 0
-    }
-}
 
 
 

@@ -17,7 +17,7 @@ const mathe = require('mathjs');
 //      array with averaged values
 // TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
-function calcMovingAverage(sid, data, mav, api) {
+async function calcMovingAverage(db, sid, data, mav, api) {
     var newDataF = [], newDataT = [];
     var avgTime = mav*60;           // average time in sec
 
@@ -27,7 +27,7 @@ function calcMovingAverage(sid, data, mav, api) {
     if (avgTime === 0) {            // if there's nothing to average, then
         avgTime = 1;
     }
-    // first convert date to timestam (in secs)
+    // first convert date to timestamp (in secs)
     for (var i=0; i<data.length; i++) {
         data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the convertion
     }
@@ -99,17 +99,15 @@ function calcMovingAverage(sid, data, mav, api) {
         }
     }
     if (havepressure == true) {
-        getAltitude(db,sid)
-            .then (altitude => {
-                if (api == true) {
-                    newDataT = calcSealevelPressure(newDataT, 'P', altitude);
-                    for (let i = 0; i < newDataT.length; i++) {
-                        newDataT[i].P = (newDataT[i].P / 100).toFixed(0);
-                    }
-                } else {
-                    newDataT = calcSealevelPressure(newDataT, 'press_mav', altitude);
-                }
-            });
+        let altitude = await getAltitude(db, sid);
+        if (api == true) {
+            newDataT = calcSealevelPressure(newDataT, 'P', altitude);
+            for (let i = 0; i < newDataT.length; i++) {
+                newDataT[i].P = (newDataT[i].P / 100).toFixed(0);
+            }
+        } else {
+            newDataT = calcSealevelPressure(newDataT, 'press_mav', altitude);
+        }
     }
     if (api == true) {
         return (iamPM == true ? newDataF : newDataT);
@@ -155,4 +153,20 @@ function calcSealevelPressure(data, p, alti) {
     return data
 }
 
+// Aus der 'properties'-collection die altitude für die
+// übergebene sid rausholen
+async function getAltitude(db,sid) {
+    let collection = db.collection('properties');
+    try {
+        let values = await collection.findOne({"_id":sid});
+        return values.location[values.location.length-1].altitude;
+    }
+    catch(e) {
+        console.log("GetAltitude Error",e);
+        return 0
+    }
+}
+
 module.exports.calcMovingAverage = calcMovingAverage;
+module.exports.calcSealevelPressure = calcSealevelPressure;
+module.exports.getAltitude = getAltitude;
