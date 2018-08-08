@@ -6,7 +6,7 @@ RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
 WORKDIR /opt/app
 ADD . /opt/app
-RUN cd /opt/app && cp package_tst.json /tmp/package.json
+RUN cd /opt/app && cp package_web.json package.json
 
 RUN apk add --no-cache tzdata
 ENV TZ Europe/Berlin
