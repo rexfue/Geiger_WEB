@@ -31,6 +31,8 @@ $(document).ready(function() {
 	var specialDate = "";					// extra for 'Silvester'
 	var doUpdate = true;					// update every 5 min
     var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
+	var showscatter = false;				// show lines, no scatter
+	var logyaxis = false;					// y-Axis logatithmic
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -96,28 +98,28 @@ $(document).ready(function() {
 		}
 	}
 
-	function saveSettings() {
-		if($('#mapcenter').val() == "") {
-            localStorage.setItem('defaulktmapCenter', 'Stuttgart');
-        } else {
-            localStorage.setItem('defaultmapCenter',$('#mapcenter').val())
-		}
-		var avg = $('#average').val();
-		localStorage.setItem('averageTime', avg);
-		if (avgTime != parseInt(avg)) {
+    function saveSettings() {
+        let avg = $('#average').val();
+        localStorage.setItem('averageTime', avg);
+        let scatter =  $('#scatter').is(':checked')
+        localStorage.setItem('showScatter',scatter);
+        console.log('logInput:', $('input[name="logy"]:checked').val());
+        let logar =   $('#log').is(':checked');
+        localStorage.setItem('logYaxis',logar);
+        if ((avgTime != parseInt(avg)) || (scatter != showscatter) || (logar != logyaxis)) {
             avgTime = parseInt(avg);
+            showscatter = scatter;
+            logyaxis = logar;
             doPlot('oneday', startDay);						// Start with plotting one day from now on
             doPlot('oneweek', startDay);						// Start with plotting one day from now on
             doPlot('onemonth', startDay);						// Start with plotting one day from now on
             switchPlot(active);
         }
-		dialogSet.dialog('close');
-		console.log('mapCenter:',localStorage.defaultmapCenter);
-        console.log('avgTime:',localStorage.averageTime);
-	}
+        dialogSet.dialog('close');
+    }
 
-	// Dialog für das Einstell-Menü
-	var dialogSet = $('#dialogWinSet').dialog({
+    // Dialog für das Einstell-Menü
+    var dialogSet = $('#dialogWinSet').dialog({
         autoOpen: false,
         width: 400,
         title: 'Einstellungen',
@@ -125,39 +127,50 @@ $(document).ready(function() {
             function() {
                 $('#page-mask').css('visibility', 'visible');
                 $(this).load('/fsdata/setting', function () {
+                    if(showscatter) {
+                        $('#scatter').prop("checked", true).trigger("click");
+                    } else {
+                        $('#lines').prop("checked", true).trigger("click");
+                    }
+                    console.log("LogAxis:", logyaxis);
+                    if(logyaxis) {
+                        $('#log').prop("checked", true).trigger("click");
+                    } else {
+                        $('#linear').prop("checked", true).trigger("click");
+                    }
+                    //$("#radio_1").is(":checked")
+                    console.log('logInputDialog:', $('#log').is(':checked'));
+
                     $('#average').focus();
+                    $('#invalid').hide();
                     buildAverageMenue();
                 });
             },
-//			function() {
-//                console.log("loaded");
-//            }
-
-		buttons: [
+        buttons: [
             {
-                text: "Sichern",
+                text: "Übernehmen",
                 class: "btnOK",
                 click: saveSettings,
                 style: "margin-right:40px;",
-                width: 100,
-			},{
-				text: "Abbrechen",
-				click : function() {
+                width: 120,
+            },{
+                text: "Abbrechen",
+                click : function() {
                     dialogSet.dialog("close");
                 },
                 style: "margin-right:40px;",
                 width: 100,
-			}
-			],
-		modal: true,
-		close: function() {
-			$('#page-mask').css('visibility','hidden');
+            }
+        ],
+        modal: true,
+        close: function() {
+            $('#page-mask').css('visibility','hidden');
             $('#btnSet').css('background','#0099cc');
-		},
-	});
+        },
+    });
 
 
-	var dialogHelp = $('#dialogWinHelp').dialog({
+    var dialogHelp = $('#dialogWinHelp').dialog({
         autoOpen: false,
         width: 750,
         title: 'Info',
@@ -294,7 +307,17 @@ $(document).ready(function() {
             avgTime = parseInt(localStorage.getItem('averageTime'));
         }
         console.log('avgTime = ' + avgTime);
-	}
+        let scatter = localStorage.getItem('showScatter');
+        if(scatter != null) {
+            showscatter = scatter=='true' ? true : false;
+        }
+        console.log("Scatter:", showscatter);
+        let logy = localStorage.getItem('logYaxis');
+        if(logy != null) {
+            logyaxis = logy=='true' ? true : false;
+        }
+        console.log("LogYaxis:", logyaxis);
+    }
 
 	getLocalStorage();
 	$('#h1name').html(kopf);
@@ -1079,6 +1102,10 @@ function createGlobObtions() {
 
 		var yAxis_dust =  {											// 0
 				opposite: true,
+	            type: logyaxis == true ? 'logarithmic' : 'linear',
+    	        max: logyaxis == true ? 1000 : maxY,
+        	    min: logyaxis == true ? 1 : 0,
+				type: logyaxis == true ? 'logarithmic' : 'linear',
 				title: {
 					text: 'Feinstaub µg/m<sup>3</sup>',
 					useHTML: true,
@@ -1088,8 +1115,6 @@ function createGlobObtions() {
 					    }
 				    },
 				},
-				min: 0,
-				max: maxY,
 //				tickAmount: 9,
 				gridLineColor: '#A2A6A4', // 'lightgray',
 				plotLines : [{
@@ -1124,8 +1149,13 @@ function createGlobObtions() {
 		if (what == 'oneday') {
 			options.series[0] = series_P10_m;
 			options.series[1] = series_P2_5_m;
-			options.series[2] = series_P10;
-			options.series[3] = series_P2_5;
+            if(showscatter) {
+                options.series[2] = series_P10_sc;
+                options.series[3] = series_P2_5_sc;
+            } else {
+                options.series[2] = series_P10;
+                options.series[3] = series_P2_5;
+            }
 //            var dlt = moment();
   			var dlt = start.clone();
   			if(live) {
@@ -1143,8 +1173,13 @@ function createGlobObtions() {
 		} else if (what == 'oneweek'){
             options.series[0] = series_P10_m;
             options.series[1] = series_P2_5_m;
-            options.series[2] = series_P10;
-            options.series[3] = series_P2_5;
+            if(showscatter) {
+                options.series[2] = series_P10_sc;
+                options.series[3] = series_P2_5_sc;
+            } else {
+                options.series[2] = series_P10;
+                options.series[3] = series_P2_5;
+            }
 //			options.series[0] = series_P10_m;
 //			options.series[1] = series_P2_5_m;
 			options.title.text = 'Feinstaub über 1 Woche';
@@ -1575,7 +1610,9 @@ function createGlobObtions() {
 							text: 'µg/m<sup>3</sup>',
 							useHTML: true,
 						},
-						max: maxy,
+						type: logyaxis == true ? 'logarithmic' : 'linear',
+						max: logyaxis == true ? null : maxy,
+						min: logyaxis == true ? 1 : 0,
 //						tickAmount: 9,
 						opposite: true,
 						gridLineColor: 'lightgray',
