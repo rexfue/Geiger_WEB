@@ -777,7 +777,18 @@ function createGlobObtions() {
 				title: {
 					text: 'Uhrzeit',
 				},
-			},
+                gridLineWidth: 2,
+                labels : {
+                    formatter : function() {
+                        let v = this.axis.defaultLabelFormatter.call(this);
+                        if (v.indexOf(':') == -1) {
+                            return "<span style='font-weight:bold;color:red'>"+v+"<span>";
+                        } else {
+                            return v;
+                        }
+                    }
+                },
+            },
 			legend: {
 				enabled: true,
 				layout: 'horizontal',
@@ -1553,7 +1564,11 @@ function createGlobObtions() {
                         text: 'Datum',
                     },
                     minTickInterval: moment.duration(1, 'day').asMilliseconds(),
-
+                    labels: {
+                        formatter: function() {
+                            return this.axis.defaultLabelFormatter.call(this);
+                        }
+                    },
                 },
 				yAxis:  {
 						title: {
