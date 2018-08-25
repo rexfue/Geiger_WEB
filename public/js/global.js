@@ -1065,7 +1065,8 @@ function createGlobObtions() {
 		var series_P10_sc = {
 			name: 'P10',
 			data: series1,
-			color: '#00CCFF',
+//			color: '#00CCFF',
+            color: '#ABCFFF',
 			zIndex:3,
 			marker: {
 				enabled: true,
@@ -1078,7 +1079,8 @@ function createGlobObtions() {
 		var series_P2_5_sc ={
 			name: 'P2.5',
 			data: series2,
-			color: '#00CC00',
+//			color: '#00CC00',
+            color: '#3FFF70',
 			zIndex:3,
 			marker: {
 				enabled: true,
@@ -1103,8 +1105,8 @@ function createGlobObtions() {
 		var yAxis_dust =  {											// 0
 				opposite: true,
 	            type: logyaxis == true ? 'logarithmic' : 'linear',
-    	        max: logyaxis == true ? 1000 : maxY,
-        	    min: logyaxis == true ? 1 : 0,
+    	        max: logyaxis == true ? null : maxY,
+        	    min: logyaxis == true ? null : 0,
 				type: logyaxis == true ? 'logarithmic' : 'linear',
 				title: {
 					text: 'Feinstaub µg/m<sup>3</sup>',
