@@ -87,13 +87,17 @@ router.get('/getaktdata/', function (req, res) {
                 oneAktData['value10'] = -1;                             // -1 zurückgeben
                 oneAktData['value25'] = -1;
             } else {
-                oneAktData['value10'] = -5;
+                oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
                 oneAktData['value25'] = -5;
                 if (item.values.P1 != undefined) {
-                    oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
+                    if (item.values.P1 < 1990.0) {
+                        oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
+                    }
                 }
                 if (item.values.P2 != undefined) {
-                    oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
+                    if (item.values.P2 < 990.0) {
+                        oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
+                    }
                 }
                 if (dati > lastDate) {
                     lastDate = dati;
@@ -184,6 +188,17 @@ function readOneSensorData(url, dt) {
     return p;
 }
 */
+
+/*
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+router.get('/adressSensors/', function (req, res) {
+    var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
+    var spoints = JSON.parse(req.query.points);
+    getRegionSensors(db,spoints)
+        .then(erg => res.json(erg));
+});
+*/
+
 
 router.get('/regionSensors/', function (req, res) {
     var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)

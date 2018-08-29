@@ -426,7 +426,7 @@ function getBalken(height,breit,offset) {
     var startx = offset - (breit/2);							// Kresimittelpunkt =^= Koordinatenpunkt
 
     let color ;
-    for (let c=0; c<=colorTable.length; c+=2) {					// Farbzuordnun anhand der
+    for (let c=0; c<=colorTable.length; c+=2) {					// Farbzuordnung anhand der
         if (height >= colorTable[c]) {							// Tafel bestimmen
             color = colorTable[c+1];
             break;
@@ -459,14 +459,25 @@ function getBalken(height,breit,offset) {
 // Übergabe
 //		data		aktuelle Daten vom Server
 function buildMarkers(data) {
+    var sensor = localStorage.getItem('currentSensor');
+    if((sensor == "") || (sensor == null)) {
+        sensor = 0;
+    }
+    let centerMarker = -1;
     var lold = 0.0;												// Merke für den Längengrad
 //    clearMarker();
     marker = [];
-    for (var x in data) {											// alle daten durchgehen
-        var offset = 0;											// deault Offset ist 0
+    for (var j=0,x=0; x <data.length; x++) {                        // alle daten durchgehen
         var item = data[x];
+        if(item.value10 == -5) {
+            continue;
+        }
+        if (item.id == 1627) {
+            console.log('1627');
+        }
+        var offset = 0;											// deault Offset ist 0
         if (item.location[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
-            offset = 5;											// enen neuen etwas nach rechts verscheiben
+            offset = 10;											// enen neuen etwas nach rechts verscheiben
         }
         lold = item.location[0];							            // und die Länge merken
         var oneMarker = new google.maps.Marker({				// Marker-Objekt erzeugen
@@ -479,11 +490,17 @@ function buildMarkers(data) {
             // Koordinaten
             offset: offset,
         });
-        marker[x] = oneMarker;									// diesen Marker in das Array einfogen
+        if(sensor == item.id) {
+            oneMarker.icon.fillColor = 'white';
+            oneMarker.icon.fillOpacity = 1;
+//            oneMarker.ZIndex = 100;
+            centerMarker = j;
+        }
+        marker[j] = oneMarker;									// diesen Marker in das Array einfogen
 //        removeOneMarker(x);
         // Click event an den Marker binden. Wenn geklickt wird, dann ein
         // Info-Window mit den Werte aufpoppen lassen.
-        google.maps.event.addListener(marker[x], 'click', function () {
+        google.maps.event.addListener(marker[j], 'click', function () {
             if(this.werte[0]  < 0) {
                 var seit = (this.werte[0] == -2) ? 'Woche' : 'Stunde';
                 var infoContent = '<div id="infoTitle"><h4>Sensor: ' + this.sensorid + '</h4>' +
@@ -516,9 +533,15 @@ function buildMarkers(data) {
             infowindow.open(map, this);							// am Marker anzeigen
             geocodeLatLng(this.latlon);
         });
-        marker[x].setMap(map);									// dann  hin zeichnen
+        if(j != centerMarker) {
+            marker[j].setMap(map);									// dann  hin zeichnen
+        }
+        j++;
     }
-
+    if(centerMarker >= 0) {
+        marker[centerMarker].setMap(map);
+        marker[centerMarker].setZIndex(200);
+    }
 }
 
 function updateValues(data) {

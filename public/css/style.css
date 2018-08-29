@@ -201,6 +201,13 @@ button {
 	font-size: 70%;
 }
 
+#nosensor {
+	text-align: center;
+	font-size: 120%;
+	font-weight: bold;
+}
+
+
 #infoTable table, #infoTable tr, #infoTable td {
 	margin: auto;
 	text-align: center;

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Fehler-Sensoren</title>
+    </head>
+    <body>
+        <div id='help' style="font-family: 'arial';">
+        <h1>Warum wird mein Sensor nicht angezeigt?</h1>
+
+        <p>
+            Es gibt viele Gründe, warum ein bestimmter Sensor nicht auf der Karte erscheint:
+            <ul>
+            <li>Der Sensor sendet schon über eine Woche keine Daten (mehr) zum Server</li>
+            <li>Der Sensor ist noch nicht an der Datenbank angemeldet (siehe
+                <a href="https://luftdaten.info/feinstaubsensor-bauen">Letzte Schritte</a>
+                auf luftdaten.info (ganz unten).</li>
+            <li>Der Sensor zeigt unsinnige oder unplausible Werte.</li>
+        </ul>
+        </p>
+
+        <p>
+            <h3>Unsinnige und unplausible Werte</h3>
+            Bevor die Daten zu Anzeige kommen, werden sie überprüft. Sensoren, die die folgenden Bedingunegen
+            erfüllen, werden <b>nicht</b> angezeigt.
+            <ul>
+                <li>Sensoren, die dauernd Werte von 1999 (bei P10) oder 999 (bei P2.5) ausgeben. Diese
+                    Sensoren sind eindeutig defekt (oder ein Tierchen ist in die Laser-Kammer gekrabbelt).</li>
+                <li>Sensoren, die dauernd Werte kleiner 1 für P10 bzw. P2.5 anzeigen. Auch hier ist ein
+                    Defekt (oder eine Verstopfung der Ansaug-Leitung) anzunehmen.</li>
+                <li>Sensoren, deren Wert signifikant vom Mittelwert der umgebenden Sensoren abweicht.</li>
+            </ul>
+        </p>
+        <p>
+            In der <a href="fehlerliste.html">Liste der fehlerhaften Sensoren</a> sind alle Sensoren, die als fehlerhaft
+            erkannt wurden, nach Fehlerklassen aufgelistet.<br />
+            <p></p>
+            Falls Dein Sensor dabei ist, kanns Du mir gerne eine <a href="mailto:rexfue@gmail.com">
+                e-mail</a> schreiben. Wir können dann gemeinsam entscheiden, welche Maßnahmen wir ergreifen können.
+
+</body>
+</html>
