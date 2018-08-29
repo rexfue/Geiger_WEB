@@ -207,6 +207,13 @@ button {
 	font-weight: bold;
 }
 
+.hrefsimu {
+	color: blue;
+	cursor:pointer;
+}
+
+#fehlersensoren {
+}
 
 #infoTable table, #infoTable tr, #infoTable td {
 	margin: auto;
@@ -285,3 +292,7 @@ radio {
 	z-index: 99;
 }
 
+.ui-widget-content a {
+	color: blue;
+	/*  Überschreibt das default in jquery (das ist nicht blau) */
+}

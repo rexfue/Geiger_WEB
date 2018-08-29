@@ -28,7 +28,7 @@ router.get('/getdata', function (req, res) {
         getAPIdataTown(db, req.query.sensorid, avg, span, dt, res)
             .then(erg => res.json(erg));
     } else {
-        getAPIdataSensor(db, sid, avg, span, dt,res)
+        getAPIdataSensor(db, sid, avg, span, dt)
            .then(erg => res.json(erg));
     }
 
@@ -55,6 +55,26 @@ router.get('/getprops', function (req, res) {
     getAPIprops(db, sid, name, dt)
         .then(erg => res.json(erg));
 });
+
+
+router.get('/getproblemsensors', function (req, res) {
+    let db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
+    let south = parseFloat(req.query.south);
+    let north = parseFloat(req.query.north);
+    let east = parseFloat(req.query.east);
+    let west = parseFloat(req.query.west);
+    let st = req.query.start;
+    let poly = [];
+    if (req.query.poly != undefined) {
+        poly = JSON.parse(req.query.poly);
+    }
+    console.log('Box:', south, north, east, west);
+    let ptype = parseInt(req.query.ptype);
+
+    getApiProblemSensors(db, north, south, east, west, st, poly, res)
+        .then(erg => res.json(erg));
+});
+
 
 // ***********************************************************
 // getAPIdataNew  -  Get data direct via API for one sensor
@@ -237,7 +257,6 @@ async function  getAPIdataTown(db, town, avg, span, dt, res) {
 //      avg:    time over that to build the average [minutes]
 //      span:   duration for the data [hours]
 //      dt:     starting point of 'span'
-//      res:    http-object to send result
 //
 // return:
 //      nothing; JSON document will be sent back
@@ -246,7 +265,7 @@ async function  getAPIdataTown(db, town, avg, span, dt, res) {
 // ***** Neue DB-Struktur - Versuch
 //
 // ********************************************************************
-async function  getAPIdataSensor(db, sid, avg, span, dt, res) {
+async function  getAPIdataSensor(db, sid, avg, span, dt) {
     let p = parseParams(avg, span, dt);
     return getAPIdata(db,sid,p.mavg,p.dauer,p.start,p.end,p.gstart)
 }
@@ -474,6 +493,92 @@ function parseParams(avg, span, dt) {
     params.start.subtract(params.mavg,'m');                     // start earlier to calc right average
 
     return params;
+}
+
+// ******************************************************************
+// getAPIproblemSensors  -  Get senosor-IDs of problematic sensor
+//                          within map bounds
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api/getprobsens/?bounds=[bounds]&ptype=1&datetime=2018-08-ß02T20:12:00
+//
+//      mit:
+//          bounds:     corner coordinates of map or polygone for town border
+//          ptype:      type of problem (optional)
+//          datetime:   day for which to calculate (optional)
+//
+//  Parameter:
+//      db:     database
+//      no,so,ea,we: coordinates of bounding box
+//      st:     date to calculate at
+//      poly:   instead of nesw-coordinates, polygone of border
+//      ptype:  typüe of problem (undefined means ALL problems)
+//      res:    http-object to send result
+//
+// return:
+//      nothing; JSON document will be sent back
+//
+//
+//
+// ********************************************************************
+async function getApiProblemSensors(db, no, so, ea, we, st, poly, ptype, res) {
+    // fetch list of sensor ids within bounds
+    let slist = [];
+    let collection = db.collection('properties');
+    let loc;
+    if (poly.length != 0) {
+        loc = {
+            'location.0.loc': {
+                $geoWithin: {
+                    $geometry: {
+                        type: "Polygon",
+                        coordinates: [poly],
+                    }
+                }
+
+            }
+        }
+    } else {
+        loc = {
+            'location.0.loc': {
+                $geoWithin: {
+                    $box: [
+                        [we, so],
+                        [ea, no]
+                    ]
+                }
+            }
+        }
+    }
+    let docs = await collection.find(loc, {_id: 1}).toArray();              // find all data within map borders (box)
+//        .toArray(async function (err, docs) {
+    console.log(docs);
+    for (let i = docs.length - 1; i >= 0; i--) {
+        let erg = await getAPIdataSensor(db, docs[i]._id, 1, 24);
+
+        if (!erg.values[0].hasOwnProperty('P1')) {
+            docs.splice(i, 1);
+            continue;
+        }
+
+        if (erg.values.length == 0) {
+            docs[i].mean = -1;
+            docs[i].type = 'noData';
+            continue;
+        }
+//                console.log(erg);
+        let result = erg.values.map(x => x.P1);
+//                console.log(result);
+        let mean = mathe.mean(result);
+        console.log(mean);
+        docs[i].mean = Math.round(mean);
+    }
+    console.log(docs);
+    // nun in docs alle Mittelwerte über die letzten 24h
+    // nun sortieren
+    let docs_sorted = docs.sort((a, b) => a.mean - b.mean);
+    console.log(docs_sorted);
+    return docs_sorted;
 }
 
 module.exports = router;

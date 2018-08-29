@@ -81,6 +81,14 @@ app.get('/fs/fsdata/helpmap', function(req, res, next) {
     res.sendFile(__dirname+'/public/helpmap.html');
 });
 
+app.get('/fs/fsdata/fehlersensoren', function(req, res, next) {
+    res.sendFile(__dirname+'/public/fehlersensoren.html');
+});
+
+app.get('/fs/fsdata/fehlerliste', function(req, res, next) {
+    res.sendFile(__dirname+'/public/fehlerliste.html');
+});
+
 app.get('/fs/fsdata/selsensor', function(req, res, next) {
     res.sendFile(__dirname+'/public/selsensor.html');
 });

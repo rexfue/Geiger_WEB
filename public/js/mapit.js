@@ -127,6 +127,48 @@ function initMap() {												// Map initialisieren
         }
     });
 
+    $('#fehlersensoren').click(function(){
+        dialogFehlS.dialog("open");
+    });
+
+    let dialogFehlS = $('#dialogFehlSens').dialog({
+        autoOpen: false,
+        width: 800,
+        title: 'Mein Sensor fehlt',
+        position: {my:'center', at: 'top', of:'#map'},
+        open: function() {
+            $('#page-mask').css('visibility','visible');
+            $(this).load('/fsdata/fehlersensoren',function() {
+                $('#fehlerliste').click(function(){
+                    dialogFehlS.dialog("close");
+                    dialogFehlL.dialog("open");
+                });
+            })
+        },
+        close: function() {
+            $('#page-mask').css('visibility','hidden');
+            $('#btnHelp').css('background','#0099cc');
+
+        },
+
+});
+
+
+    let dialogFehlL = $('#dialogFehlList').dialog({
+        autoOpen: false,
+        width: 800,
+        title: 'Liste Fehlerhafter Sensoren',
+        position: {my:'center', at: 'top', of:'#map'},
+        open: function() {
+            $('#page-mask').css('visibility','visible');
+            $(this).load('/fsdata/fehlerliste')
+        },
+        close: function() {
+            $('#page-mask').css('visibility','hidden');
+            $('#btnHelp').css('background','#0099cc');
+
+        },
+    });
 
 
     var dialogHelp = $('#dialogWinHelpM').dialog({
