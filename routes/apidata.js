@@ -57,21 +57,22 @@ router.get('/getprops', function (req, res) {
 });
 
 
-router.get('/getproblemsensors', function (req, res) {
+router.get('/getmapsensors', function (req, res) {
     let db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
-    let south = parseFloat(req.query.south);
-    let north = parseFloat(req.query.north);
-    let east = parseFloat(req.query.east);
-    let west = parseFloat(req.query.west);
-    let st = req.query.start;
-    let poly = [];
+    let bounds = {};
+    bounds.south = parseFloat(req.query.south);
+    bounds.north = parseFloat(req.query.north);
+    bounds.east = parseFloat(req.query.east);
+    bounds.west = parseFloat(req.query.west);
+    bounds.poly = [];
     if (req.query.poly != undefined) {
-        poly = JSON.parse(req.query.poly);
+        bounds.poly = JSON.parse(req.query.poly);
     }
-    console.log('Box:', south, north, east, west);
     let ptype = parseInt(req.query.ptype);
+    let stype = req.query.stype;
+    let st = req.query.start;
 
-    getApiProblemSensors(db, north, south, east, west, st, poly, res)
+    getApiMapSensors(db, bounds, stype, ptype, st)
         .then(erg => res.json(erg));
 });
 
@@ -509,30 +510,33 @@ function parseParams(avg, span, dt) {
 //
 //  Parameter:
 //      db:     database
-//      no,so,ea,we: coordinates of bounding box
-//      st:     date to calculate at
-//      poly:   instead of nesw-coordinates, polygone of border
-//      ptype:  typüe of problem (undefined means ALL problems)
-//      res:    http-object to send result
+//      bounds: corner coordinates of map or polygone for town border
+//      stype:  'PM' or 'THP' or 'TH' os 'T' or 'H'  (default: 'PM')
+//      ptype:  type of problem (undefined means ALL problems)
+//      st:     date to calculate for
 //
 // return:
-//      nothing; JSON document will be sent back
+//      array wit 24h-Average-Value for the last 24hours for every sensor
 //
 //
 //
 // ********************************************************************
-async function getApiProblemSensors(db, no, so, ea, we, st, poly, ptype, res) {
+async function getApiMapSensors(db, bounds, stype, ptype, st) {
     // fetch list of sensor ids within bounds
     let slist = [];
     let collection = db.collection('properties');
     let loc;
-    if (poly.length != 0) {
+    let name = 'PM';
+    if (stype != undefined) {
+        name = stype;
+    }
+    if (bounds.poly.length != 0) {
         loc = {
             'location.0.loc': {
                 $geoWithin: {
                     $geometry: {
                         type: "Polygon",
-                        coordinates: [poly],
+                        coordinates: [bounds.poly],
                     }
                 }
 
@@ -543,42 +547,59 @@ async function getApiProblemSensors(db, no, so, ea, we, st, poly, ptype, res) {
             'location.0.loc': {
                 $geoWithin: {
                     $box: [
-                        [we, so],
-                        [ea, no]
+                        [bounds.west, bounds.south],
+                        [bounds.east, bounds.north]
                     ]
                 }
             }
         }
     }
-    let docs = await collection.find(loc, {_id: 1}).toArray();              // find all data within map borders (box)
+    let docs = await collection.find(loc, {_id: 1, name:1}).toArray();              // find all data within map borders (box)
 //        .toArray(async function (err, docs) {
     console.log(docs);
     for (let i = docs.length - 1; i >= 0; i--) {
-        let erg = await getAPIdataSensor(db, docs[i]._id, 1, 24);
-
-        if (!erg.values[0].hasOwnProperty('P1')) {
+        if (!((name == 'PM') == isPM(docs[i].name)))  {
             docs.splice(i, 1);
             continue;
         }
+        let erg = await getAPIdataSensor(db, docs[i]._id, 1, 24);
 
         if (erg.values.length == 0) {
             docs[i].mean = -1;
+            docs[i].std = 0;
             docs[i].type = 'noData';
+            delete docs[i].name;
             continue;
         }
+
+//        if (!erg.values[0].hasOwnProperty('P1')) {
+//            continue;
+//        }
+
 //                console.log(erg);
         let result = erg.values.map(x => x.P1);
 //                console.log(result);
         let mean = mathe.mean(result);
+        let std = mathe.std(result);
         console.log(mean);
         docs[i].mean = Math.round(mean);
+        docs[i].std = std;
+        delete docs[i].name;
     }
     console.log(docs);
     // nun in docs alle Mittelwerte über die letzten 24h
     // nun sortieren
     let docs_sorted = docs.sort((a, b) => a.mean - b.mean);
+    let docs_std = docs.sort((a, b) => a.std - b.std);
     console.log(docs_sorted);
     return docs_sorted;
 }
 
+function isPM(name) {
+    let pms = ['SDS011','PMS7003','PMS3003','PMS5003','HPM','SDS021','PPD42NS'];
+    if (pms.findIndex(n => n == name) != -1) {
+        return true;
+    }
+    return false;
+}
 module.exports = router;
