@@ -102,9 +102,9 @@ router.get('/getaktdata/', function (req, res) {
                 //         oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
                 //     }
                 // }
-                // if (dati > lastDate) {
-                //     lastDate = dati;
-                // }
+                if (dati > lastDate) {
+                    lastDate = dati;
+                 }
             }
             aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
  //           console.log('lastDate:',lastDate);

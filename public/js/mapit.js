@@ -52,7 +52,7 @@ function initMap() {												// Map initialisieren
         }
     }
 
-
+    $('#nosensor').hide();
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,													// Start-Zoom-Wert
         center: myLatLng,
@@ -410,6 +410,9 @@ function fetchAktualData() {
                 updateValues(data1.avgs);
             }
             showLastDate(data1.lastDate);
+            if (problems.findIndex(x => x._id==curSensor) != -1) {
+                $('#nosensor').show();
+            }
         }
     });
 }
