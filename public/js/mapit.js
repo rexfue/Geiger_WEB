@@ -11,7 +11,8 @@ var newBounds = false;
 var geocod;
 var trafficLayer;
 let mongoPoints = [];
-
+let problems = [];
+let curSensor = 0;
 
 var w = $('#btnTraf span').width();
 $('#btnTraf').css('width',w+30);
@@ -42,6 +43,13 @@ function initMap() {												// Map initialisieren
     if(!((koo == null) || (koo === undefined) || (koo == ""))) {
         var koord = JSON.parse(koo);
         myLatLng = {lat: koord[1], lng: koord[0]};
+    }
+    curSensor = localStorage.getItem('currentSensor');
+    if((curSensor == "") || (curSensor == null)){
+        curSensor = localStorage.getItem('defaultSensor');
+        if((curSensor == "") || (curSensor == null)) {
+            curSensor = "140";
+        }
     }
 
 
@@ -94,14 +102,7 @@ function initMap() {												// Map initialisieren
 */
 
     $('#btnBack').click(function() {
-        var sensor = localStorage.getItem('currentSensor');
-        if((sensor == "") || (sensor == null)){
-            sensor = localStorage.getItem('defaultSensor');
-            if((sensor == "") || (sensor == null)) {
-                sensor = "140";
-            }
-        }
-        window.location = "/"+sensor;
+        window.location = "/"+curSensor;
     });
 
 
@@ -139,6 +140,8 @@ function initMap() {												// Map initialisieren
         open: function() {
             $('#page-mask').css('visibility','visible');
             $(this).load('/fsdata/fehlersensoren',function() {
+                $('.psensornr').html('Nr. ' + curSensor);
+                explainProblem(curSensor);
                 $('#fehlerliste').click(function(){
                     dialogFehlS.dialog("close");
                     dialogFehlL.dialog("open");
@@ -153,6 +156,28 @@ function initMap() {												// Map initialisieren
 
 });
 
+    function explainProblem(sensor) {
+        let fnd = problems.findIndex(x => x._id == curSensor);
+        if (fnd == -1)
+            return;
+        let fnbr = problems[fnd].problemNr;
+        let ftxt = 'Grund, warum der Sensor ' + curSensor + ' nicht angezeigt wird: <br /><b>';
+        if (fnbr == 1) {
+            ftxt += 'Der Sensor sendet keine Daten!';
+        } else if (fnbr == 2) {
+            ftxt += 'Der Sensor sendet unplausibel kleine Werte (< 1 &mu;g/m<sup>3</sup>). ' +
+                'Eventuell ist das Ansaugrohr verstopft.';
+        } else if (fnbr == 3) {
+            ftxt += 'Der Sensor sendet dauernd zu große Werte (>= 1990 &mu;g/m<sup>3</sup>). ' +
+                'Eventuell ist ein Tierchen in die Messkammer gekrabbelt';
+        } else if (fnbr == 4) {
+            ftxt += "Die Werte des Sensor sind zu gleichförmig. Es gibt kaum Änderungen im " +
+                "Laufe des Tages; dieses ist unplausibel."
+        } else if (fnbr == 5) {
+            ftxt += "Der P2.5-Wert ist im Tagesmittel über 50 &mu;g/m<sup>3</sup>; dieses ist unplausibel."
+        }
+        $('#fehlerexplain').html(ftxt+'</b>');
+    }
 
     let dialogFehlL = $('#dialogFehlList').dialog({
         autoOpen: false,
@@ -269,8 +294,9 @@ function initMap() {												// Map initialisieren
             boundBox = map.getBounds().toJSON();
             first = true;
             clearMarker();
-            fetchAktualData();
-            fetchStuttgartBounds();
+            fetchProblemSensors();
+//            fetchAktualData();
+//            fetchStuttgartBounds();
         }
         if (!((info == undefined) || (info == ""))) {
             var sid = infowindow.anchor.sensorid;
@@ -354,6 +380,20 @@ function clearMarker() {
 function removeOneMarker(n) {
     marker[n].setMap(null);
 }
+
+// Problem-Sensoren holen
+function fetchProblemSensors() {
+    $.getJSON('/api/getprobdata', function(data,err) {
+        if (err != 'success') {
+            alert("Fehler <br />" + err);						// ggf. fehler melden
+        } else {
+            problems = data;
+            fetchAktualData();
+            fetchStuttgartBounds();
+        }
+    });
+}
+
 
 // Aktuelle Daten vom Server holen
 function fetchAktualData() {
@@ -501,10 +541,6 @@ function getBalken(height,breit,offset) {
 // Übergabe
 //		data		aktuelle Daten vom Server
 function buildMarkers(data) {
-    var sensor = localStorage.getItem('currentSensor');
-    if((sensor == "") || (sensor == null)) {
-        sensor = 0;
-    }
     let centerMarker = -1;
     var lold = 0.0;												// Merke für den Längengrad
 //    clearMarker();
@@ -514,8 +550,12 @@ function buildMarkers(data) {
         if(item.value10 == -5) {
             continue;
         }
-        if (item.id == 1627) {
-            console.log('1627');
+        // Wenn der Sensor in der Problem-Datenbank ist und NICHT gerade der
+        // gesuchte zentrale Sensor, dann einfach auslassen
+        if (problems.findIndex(x => x._id == item.id) != -1) {
+//            if(item.id != curSensor) {
+                continue;
+//            }
         }
         var offset = 0;											// deault Offset ist 0
         if (item.location[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
@@ -532,7 +572,7 @@ function buildMarkers(data) {
             // Koordinaten
             offset: offset,
         });
-        if(sensor == item.id) {
+        if(curSensor == item.id) {
             oneMarker.icon.fillColor = 'white';
             oneMarker.icon.fillOpacity = 1;
 //            oneMarker.ZIndex = 100;

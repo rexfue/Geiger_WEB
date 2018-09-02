@@ -5,7 +5,7 @@
     </head>
     <body>
         <div id='help' style="font-family: 'arial';">
-        <h1>Warum wird mein Sensor nicht angezeigt?</h1>
+        <h2>Warum wird mein Sensor <span class="psensornr"> Nr. </span> nicht angezeigt?</h2>
 
         <p>
             Es gibt viele Gründe, warum ein bestimmter Sensor nicht auf der Karte erscheint:
@@ -20,19 +20,20 @@
 
         <p>
             <h3>Unsinnige und unplausible Werte</h3>
-            Bevor die Daten zu Anzeige kommen, werden sie überprüft. Sensoren, die die folgenden Bedingungen
-            erfüllen, werden <b>nicht</b> angezeigt.
+            Bevor die Daten zu Anzeige kommen, werden sie überprüft. Es wird der Mittelwert über alle Werte
+            von 'gestern' gebildet und daraus dann die folgenden Bedingungen abgeleitet. Sensoren, die mindestens eine
+            dieser Bedingungen erfüllen, werden <b>nicht</b> angezeigt.
             <ul>
                 <li>Sensoren, die dauernd Werte von 1999 (bei P10) oder 999 (bei P2.5) ausgeben. Diese
                     Sensoren sind eindeutig defekt (oder ein Tierchen ist in die Laser-Kammer gekrabbelt).</li>
                 <li>Sensoren, die dauernd Werte kleiner 1 für P10 bzw. P2.5 anzeigen. Auch hier ist ein
                     Defekt (oder eine Verstopfung der Ansaug-Leitung) anzunehmen.</li>
-                <li>Sensoren, deren Wert signifikant vom Mittelwert der umgebenden Sensoren abweicht.</li>
+                <li>Sensoren, die keine oder nur sehr kleine Änderungen im Laufe des Tages gemessen haben.</li>
+                <li>Sensoren, deren P2.5-Wert im Tagesmittel über 50 &mu;g/m<sup>3</sup> liegt</li>
             </ul>
         </p>
         <p>
-            In der <span class="hrefsimu" id="fehlerliste">Liste der fehlerhaften Sensoren</span> sind alle Sensoren, die als fehlerhaft
-            erkannt wurden, nach Fehlerklassen aufgelistet.
+            <div id="fehlerexplain"></div> <br />
         </p>
 
 </body>

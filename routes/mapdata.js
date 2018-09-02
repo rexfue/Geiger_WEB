@@ -87,21 +87,24 @@ router.get('/getaktdata/', function (req, res) {
                 oneAktData['value10'] = -1;                             // -1 zurückgeben
                 oneAktData['value25'] = -1;
             } else {
-                oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
-                oneAktData['value25'] = -5;
-                if (item.values.P1 != undefined) {
-                    if (item.values.P1 < 1990.0) {
-                        oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
-                    }
-                }
-                if (item.values.P2 != undefined) {
-                    if (item.values.P2 < 990.0) {
-                        oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
-                    }
-                }
-                if (dati > lastDate) {
-                    lastDate = dati;
-                }
+                // oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
+                // oneAktData['value25'] = -5;
+                oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
+                oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
+
+                // if (item.values.P1 != undefined) {
+                //     if (item.values.P1 < 1990.0) {
+                //         oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
+                //     }
+                // }
+                // if (item.values.P2 != undefined) {
+                //     if (item.values.P2 < 990.0) {
+                //         oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
+                //     }
+                // }
+                // if (dati > lastDate) {
+                //     lastDate = dati;
+                // }
             }
             aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
  //           console.log('lastDate:',lastDate);

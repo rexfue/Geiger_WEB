@@ -225,6 +225,11 @@ button {
 	margin-top: 10px;
 }
 
+#fehlerexplain {
+	margin-left: 30px;
+	padding: 5px;
+	border: solid 2px red;
+}
 
 /*label, input { display: block; }
 */

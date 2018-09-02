@@ -31,6 +31,15 @@ router.post('/putdata/:what', function(req,res) {
 });
 
 
+// API zum Holen der Problem-Sensoren
+router.get('/getprobdata', function(req,res) {
+    let db = req.app.get('dbase');
+    getAPIprobSensors(db)
+        .then(erg => res.json(erg));
+});
+
+
+
 //API to read all datas from the database
 router.get('/getdata', function (req, res) {
     let db = req.app.get('dbase');
@@ -125,6 +134,23 @@ async function putAPIproblemdata(db, cmd, data) {
     }
     return { error: 'wrong command'};
 }
+
+// ***********************************************************
+// getAPIprobSensors -  Get data for problematic sensors
+//
+//  Parameter:
+//      db:     Mongo-Database
+//
+// return:
+//      JSON Dokument mit den angefragten Werten
+// ***********************************************************
+
+async function getAPIprobSensors(db) {
+    let coll = db.collection('problemsensors');
+    let docs = await coll.find().toArray();
+    return docs;
+}
+
 
 
 // ***********************************************************

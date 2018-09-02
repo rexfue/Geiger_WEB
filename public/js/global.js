@@ -31,8 +31,8 @@ $(document).ready(function() {
 	var specialDate = "";					// extra for 'Silvester'
 	var doUpdate = true;					// update every 5 min
     var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
-	var showscatter = false;				// show lines, no scatter
-	var logyaxis = false;					// y-Axis logatithmic
+	var showscatter = true;				// show lines, no scatter
+	var logyaxis = true;					// y-Axis logatithmic
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
