@@ -14,6 +14,23 @@ const util = require('./utilities');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
+// API to put data into dBase
+router.post('/putdata/:what', function(req,res) {
+    let db = req.app.get('dbase');
+    let cmd = req.query.cmd;
+    let what = req.params.what;
+    if (what=='problems') {
+        putAPIproblemdata(db, cmd, req.body)
+            .then((erg) => {
+                console.log(erg);
+                res.send(erg);
+            });
+    } else {
+        res.send ( {error:'wrong call'})
+    }
+});
+
+
 //API to read all datas from the database
 router.get('/getdata', function (req, res) {
     let db = req.app.get('dbase');
@@ -75,6 +92,39 @@ router.get('/getmapsensors', function (req, res) {
     getApiMapSensors(db, bounds, stype, ptype, st)
         .then(erg => res.json(erg));
 });
+
+
+// ***********************************************************
+// putAPIproblemdata  -  Daten in der DB speichern
+//
+//  Parameter:
+//      db:     Mongo-Database
+//      cmd:    kind of data
+//      data:   JSON string to put into db
+//
+// return:
+//      error, if not correctly saved, else null
+// ***********************************************************
+async function putAPIproblemdata(db, cmd, data) {
+    let collection = db.collection('problemsensors');
+    if (cmd == 'start') {
+        try {
+            await collection.drop();  // remover collection
+        }
+        catch (e) {
+        }
+        return {error:'start'};
+    }
+    if(cmd == 'end') {
+        return {error: 'done'};
+    }
+    if(cmd == 'data') {
+        let inserted = await collection.insertOne(data);
+        console.log("Inserted:", inserted.insertedId)
+        return {error: inserted.result};
+    }
+    return { error: 'wrong command'};
+}
 
 
 // ***********************************************************
@@ -408,11 +458,18 @@ async function getAPIalldata(db,dt) {
 // Get properties for all sensors
 //
 //  Call:
-//      http://feinstaub.rexfue.de/api/getprops?sensorid=1234&since=2810-03-23
+//      http://feinstaub.rexfue.de/api/getprops?sensorid=1234&since=2810-03-23&sensortyp=SDS011
 //
 //      mit:
 //          sid:  Sensornummer (all -> alle Sensoren)
 //          since: seit dem Datum (incl)
+//          sensortyp: Type des Sensors (z.B. SDS011 oder PM(für alle Feinstaub-Sensoren))
+//
+// params:
+//      db      Datenbank
+//      sid     Sensor-Nummer oder all
+//      typ     Sensor-Typ
+//      dt      Datum, ab wann gesucht werden soll
 //
 // return:
 //      JSON Dokument mit den angefragten werten
@@ -426,6 +483,8 @@ async function getAPIprops(db,sid,typ,dt) {
     if(sid == 0) {
         if(typ == "") {
             query = {date_since: {$gte: new Date(dt)}};
+        } else if (typ == 'PM') {
+            query = {date_since: {$gte: new Date(dt)}, name: { $in: ['SDS011', 'PMS7003', 'PMS3003', 'PMS5003', 'HPM', 'SDS021', 'PPD42NS']}};
         } else {
             query = {date_since: {$gte: new Date(dt)}, name: typ};
         }

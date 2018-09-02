@@ -34,8 +34,7 @@ app.use(express.static("node_modules/jquery/dist"));
 app.use(express.static("node_modules/moment/min"));
 
 
-app.get('*', function(req, res, next){
-//    console.log("Host:",req.headers.host);
+function checkHost(req, res, next) {
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
         (req.headers.host == 'fstst.rexfue.de') ||
@@ -43,18 +42,23 @@ app.get('*', function(req, res, next){
         (req.headers.host == 'localhost:3005') ||
         (req.headers.host == 'castor') ||
         (req.headers.host == 'macbig:3005')                 //Port is important if the url has it
-        ) {
+    ) {
         req.url = '/fs' + req.url;
     }
 //    console.log("Path:",req.path);
     if(req.path.startsWith('/TEST')) {
-    	req.url = '/TEST' + req.url;	
+        req.url = '/TEST' + req.url;
     }
 //    console.log("URL:",req.url);
     next();
-});
+}
 
-//app.use(bodyParser.json());
+
+app.get('*', checkHost);
+app.post('*', checkHost);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 //app.post('/sensors', function(res,req,next){
 //    var body = res.body;
