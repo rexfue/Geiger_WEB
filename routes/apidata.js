@@ -34,7 +34,11 @@ router.post('/putdata/:what', function(req,res) {
 // API zum Holen der Problem-Sensoren
 router.get('/getprobdata', function(req,res) {
     let db = req.app.get('dbase');
-    getAPIprobSensors(db)
+    let pnr = 0;
+    if (!((req.query.probnr == undefined) || (req.query.probnr == ""))) {
+        pnr = parseInt(req.query.probnr);
+    }
+    getAPIprobSensors(db,pnr)
         .then(erg => res.json(erg));
 });
 
@@ -145,9 +149,14 @@ async function putAPIproblemdata(db, cmd, data) {
 //      JSON Dokument mit den angefragten Werten
 // ***********************************************************
 
-async function getAPIprobSensors(db) {
+async function getAPIprobSensors(db,pnr) {
     let coll = db.collection('problemsensors');
-    let docs = await coll.find().toArray();
+    let docs;
+    if (pnr == 0) {
+        docs = await coll.find().toArray();
+    } else {
+        docs = await coll.find({'problemNr':pnr}).toArray();
+    }
     return docs;
 }
 

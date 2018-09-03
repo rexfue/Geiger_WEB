@@ -1581,6 +1581,9 @@ function createGlobObtions() {
             dlt.subtract(366, 'd');
         }
 		var localOptions = {
+		        chart: {
+		            type: 'column'
+                },
 				tooltip: {
                     formatter: function () {
                         return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">'+
@@ -1648,7 +1651,7 @@ function createGlobObtions() {
 					         {
 					        	 name: 'P10',
 					        	 data: series1,
-					        	 type: 'column',
+//					        	 type: 'column',
 					        	 color: 'blue',
 //					        	 dataLabels: {
 //					        		 rotation: -90,
@@ -1664,7 +1667,7 @@ function createGlobObtions() {
 					         {
 					        	 name: 'P2.5',
 					        	 data: series2,
-					        	 type: 'column',
+//					        	 type: 'column',
 //								 color:'red',
 //					        	 dataLabels: {
 //					        		 rotation: -90,
@@ -1683,15 +1686,15 @@ function createGlobObtions() {
 				{
 					animation: false,
 //					pointWidth: 5,
-//					groupPadding: 0.1,
-					pointPlacement: 'between',
-					grouping: false,
+					groupPadding: 0.1,
+//					pointPlacement: 'between',
+//					grouping: false,
 				},
 			    column: {
-			        pointPadding: 0,
-			        borderWidth: 0,
-			        groupPadding: 0,
-			        shadow: false
+			         pointPadding: 0,
+			    //     borderWidth: 0,
+			    //     groupPadding: 0,
+			    //     shadow: false
 			    }
 			},
 			title: {

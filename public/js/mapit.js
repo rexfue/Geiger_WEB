@@ -175,6 +175,8 @@ function initMap() {												// Map initialisieren
                 "Laufe des Tages; dieses ist unplausibel."
         } else if (fnbr == 5) {
             ftxt += "Der P2.5-Wert ist im Tagesmittel über 50 &mu;g/m<sup>3</sup>; dieses ist unplausibel."
+        } else if (fnbr == 6) {
+            ftxt += "Die Werte von P10 und P2.5 liegen den ganzen Tag sehr eng zusammen."
         }
         $('#fehlerexplain').html(ftxt+'</b>');
     }
