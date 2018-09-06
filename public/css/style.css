@@ -98,6 +98,12 @@ button {
 
 #btnst {
 	margin-left: 50px;
+	width: 120px;
+	margin-top: -1px;
+	white-space:normal;
+	height: 45px;
+	line-height: 17px;
+	box-sizing: border-box;
 }
 
 #btnTraf {

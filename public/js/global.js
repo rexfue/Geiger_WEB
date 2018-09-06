@@ -976,6 +976,7 @@ function createGlobObtions() {
 					symbol: 'square',
 				},
 				visible: true,
+//                type: 'spline',
 		};
 
 		var series_P2_5 ={
@@ -1829,8 +1830,13 @@ function createGlobObtions() {
                     plotBands: calcWeekends(d1,true),
                     plotLines: calcDays(d1,true),
                     max: moment().valueOf(),
-                    min: dlt.valueOf()
-				},
+                    min: dlt.valueOf(),
+                    labels: {
+                        formatter: function() {
+                            return this.axis.defaultLabelFormatter.call(this);
+                        }
+                    },
+                },
                 yAxis: [{
                     title: {
                         text: 'Temperatur °C'
