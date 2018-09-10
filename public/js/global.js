@@ -2,7 +2,7 @@
 "use strict";
 
 $(document).ready(function() {
-	
+
 	var TOPIC_SDS = "SDS011",
 		TOPIC_DHT = "DHT22",
 		TOPIC_BMP = "BMP180";
@@ -118,7 +118,7 @@ $(document).ready(function() {
         dialogSet.dialog('close');
     }
 
-    // Dialog für das Einstell-Menü
+    // Dialog für ein Statistik-Overlay
     var dialogSet = $('#dialogWinSet').dialog({
         autoOpen: false,
         width: 400,
@@ -157,6 +157,38 @@ $(document).ready(function() {
                 text: "Abbrechen",
                 click : function() {
                     dialogSet.dialog("close");
+                },
+                style: "margin-right:40px;",
+                width: 100,
+            }
+        ],
+        modal: true,
+        close: function() {
+            $('#page-mask').css('visibility','hidden');
+            $('#btnSet').css('background','#0099cc');
+        },
+    });
+
+
+
+
+    // Dialog für das Einstell-Menü
+    var dialogStatistik = $('#dialogStatistik').dialog({
+        autoOpen: false,
+        width: 600,
+        title: 'Statistik',
+        open:
+            function() {
+                $('#page-mask').css('visibility', 'visible');
+                $(this).load('/fsdata/statistik', function () {
+                    buildStatistik(aktsensorid);
+                });
+            },
+        buttons: [
+            {
+                text: "Schließen",
+                click : function() {
+                    dialogStatistik.dialog("close");
                 },
                 style: "margin-right:40px;",
                 width: 100,
@@ -371,6 +403,60 @@ $(document).ready(function() {
 	}
 
 
+	// Diverse Statistiken für den übergenen Sensor vom Server holen
+    // und als Tabvelle darstellen
+	function buildStatistik(sid) {
+        $.getJSON('fsdata/getfs/statistik', {sensorid: sid}, function (data, err) {				// AJAX Call
+            if (err != 'success') {
+                alert("Fehler <br />" + err);						// if error, show it
+            } else {
+                if ((data == null) || (data.length == 0)) {
+                    showError(2, "No data at statistics ", aktsensorid);
+                } else {
+                    $('#stat_sid').text(sid);
+                    $('#stat_table tbody').append("<tr>" +
+                        "<td>Aktueller Wert</td>" +
+                        "<td>" + data.p10 + "</td>" +
+                        "<td>" + data.p25 + "</td>" +
+                        "<td>--</td>" +
+                        "</tr><tr>" +
+                        "<td>Mittelwert letzte 15min</td>" +
+                        "<td>" + data.p10_a15m + "</td>" +
+                        "<td>" + data.p25_a15m + "</td>" +
+                        "<td>--</td>" +
+                        "</tr><tr>" +
+                        "<td>Mittelwert letzte 60min</td>" +
+                        "<td>" + data.p10_a60m + "</td>" +
+                        "<td>" + data.p25_a60m + "</td>" +
+                        "<td>--</td>" +
+                        "</tr><tr>" +
+                        "<td>Mittelwert letzte 24h</td>" +
+                        "<td>" + data.p10_a24h + "</td>" +
+                        "<td>" + data.p25_a24h + "</td>" +
+                        "<td>--</td>" +
+                        "</tr><tr>" +
+                        "<td>Standardabweichung letzte 24h</td>" +
+                        "<td>" + data.p10_d24h + "</td>" +
+                        "<td>" + data.p25_d24h + "</td>" +
+                        "<td> > 0.1 und < 10.0</td>" +
+                        "</tr><tr>" +
+                        "<td>TagesMittelWert gestern</td>" +
+                        "<td>" + data.p10_a24hy + "</td>" +
+                        "<td>" + data.p25_a24hy + "</td>" +
+                        "<td> --</td>" +
+                        "</tr><tr>" +
+                        "<td>Standardabweichung gestern</td>" +
+                        "<td>" + data.p10_d24hy + "</td>" +
+                        "<td>" + data.p25_d24hy + "</td>" +
+                        "<td> > 0.1 und < 10.0</td>" +
+                        "</tr>");
+                }
+            }
+        });
+    }
+
+
+
 // ************** Event-Handler **************
 
     $('#btnMap').click(function() {
@@ -390,6 +476,10 @@ $(document).ready(function() {
 
     $('#btnHelp').click(function() {
         dialogHelp.dialog("open");
+    });
+
+    $('#btnStat').click(function() {
+        dialogStatistik.dialog("open");
     });
 
     // Clicking one of the buttons
