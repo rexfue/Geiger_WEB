@@ -72,14 +72,14 @@ header #subtitle {
 
 #buttonsLeft {
 	text-align: left;
-	width: 70%;
+	width: 60%;
 	float: left;
 	margin-bottom: 15px;
 }
 
 #buttonsRight {
 	text-align: right;
-	width: 30%;
+	width: 40%;
 	float: right;
 	margin-bottom: 15px;
 }
@@ -91,10 +91,26 @@ button {
 	margin-top: 15px;
 }
 
-#btnHelp, #btnMap, #btnSet {
+#btnda {
+	width: 110px;
+	margin-right: 10px;
+}
+
+#btnMap, #btnHelp {
 	width: 70px;
 	margin-right: 10px;
 }
+
+#btnSet {
+	width: 100px;
+	margin-right: 10px;
+}
+
+#btnStat {
+	width: 90px;
+	margin-right: 10px;
+}
+
 
 #btnst {
 	margin-left: 50px;
@@ -307,4 +323,42 @@ radio {
 .ui-widget-content a {
 	color: blue;
 	/*  Überschreibt das default in jquery (das ist nicht blau) */
+}
+
+#stat_table {
+    margin: auto;
+}
+
+#stat_table tr:hover {
+    background-color: #ffff99;
+    border: 1px solid black;
+}
+
+
+#stat_table caption {
+    text-align: center;
+}
+
+#stat_table table, #stat_table th {
+	border: 1px solid black;
+}
+
+#stat_table th {
+	padding: 5px;
+    text-align: center;
+    background-color: green;
+    color: white;
+}
+
+.w25, .w10 {
+    text-align:right;
+    width: 80px;
+}
+
+#body2 {
+    border-top: 3px green solid;
+}
+
+.bord1 {
+    border-top: 2px black solid;
 }

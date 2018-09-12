@@ -42,6 +42,9 @@ router.get('/getfs/:week', function (req, res) {
     } else if (week == "oldest") {
         getOldestEntry(db, sid)
             .then(erg => res.json(erg));
+    } else if (week == "statistik") {
+        getStatistics(db, sid)
+            .then(erg => res.json(erg));
     } else {
         res.json({'error': 'MIST VERDAMMTER!!'});
     }
@@ -589,7 +592,89 @@ function isPM(name) {
 }
 
 
+// Statistiken für den Sensor holen und übergeben
+async function getStatistics(db,sensorid) {
+    let ret = { error:'empty'};
+    const Avgs = [
+        { nameA: 'a15m', nameD: 'd15m', nameM: 'm15m', time: 15 , art: 'avg'},
+        { nameA: 'a60m', nameD: 'd60m', nameM: 'm60m', time: 60 , art: 'avg'},
+        { nameA: 'a24h', nameD: 'd24h', nameM: 'm24h', time: 1440 , art: 'avg'},
+        ];
 
+    const now = moment();                                 // Zeiten in einen moment umsetzen
+
+    const colstr = 'data_' + sensorid;
+    const collection = db.collection(colstr);
+
+    // get aktual value
+    let erg  = await collection.findOne({},{sort:{datetime:-1}})
+    ret.p10 = erg.P1;
+    ret.p25 = erg.P2;
+
+    // get the averages
+    for (let i=0; i<Avgs.length; i++) {
+        let start = moment(now).subtract(Avgs[i].time,'m');
+        erg = await collection.aggregate(
+            [
+                { $match: {
+                        datetime: {
+                            $gte: new Date(start),
+                        }
+                    }
+                },
+                { $group: {
+                        _id: null,
+                        avg1: { $avg: '$P1' },
+                        std1: { $stdDevPop: '$P1' },
+                        max1: { $max: '$P1'},
+                        avg2: { $avg: '$P2' },
+                        std2: { $stdDevPop: '$P2' },
+                        max2: { $max: '$P2'},
+                    }
+                }
+            ]
+        ). toArray();
+        ret['p10_'+Avgs[i].nameD] = parseFloat(erg[0].std1.toFixed(2));
+        ret['p10_'+Avgs[i].nameA] = parseFloat(erg[0].avg1.toFixed(2));
+        ret['p10_'+Avgs[i].nameM] = parseFloat(erg[0].max1.toFixed(2));
+        ret['p25_'+Avgs[i].nameD] = parseFloat(erg[0].std2.toFixed(2));
+        ret['p25_'+Avgs[i].nameA] = parseFloat(erg[0].avg2.toFixed(2));
+        ret['p25_'+Avgs[i].nameM] = parseFloat(erg[0].max2.toFixed(2));
+    }
+
+    // get the yesterday values
+    let start = moment(now).subtract(1,'d');
+    start.startOf('day');
+    let end = moment(now).startOf('day');
+    erg = await collection.aggregate(
+        [
+            { $match: {
+                    datetime: {
+                        $gte: new Date(start),
+                        $lt: new Date(end),
+                    }
+                }
+            },
+            { $group: {
+                    _id: null,
+                    avg1: { $avg: '$P1'},
+                    std1: { $stdDevPop: '$P1' },
+                    max1: { $max: '$P1'},
+                    avg2: { $avg: '$P2'},
+                    std2: { $stdDevPop: '$P2' },
+                    max2: { $max: '$P2'},
+                }
+            }
+        ]
+    ). toArray();
+    ret.p10_d24hy = parseFloat(erg[0].std1.toFixed(2));
+    ret.p10_a24hy = parseFloat(erg[0].avg1.toFixed(2));
+    ret.p25_d24hy = parseFloat(erg[0].std2.toFixed(2));
+    ret.p25_a24hy = parseFloat(erg[0].avg2.toFixed(2));
+
+
+    return ret;
+}
 
 
 module.exports = router;

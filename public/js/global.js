@@ -414,42 +414,61 @@ $(document).ready(function() {
                     showError(2, "No data at statistics ", aktsensorid);
                 } else {
                     $('#stat_sid').text(sid);
-                    $('#stat_table tbody').append("<tr>" +
+                    $('#stat_table').append("<tbody><tr>" +
+                        "<td></td>" +
                         "<td>Aktueller Wert</td>" +
-                        "<td>" + data.p10 + "</td>" +
-                        "<td>" + data.p25 + "</td>" +
-                        "<td>--</td>" +
+                        "<td class='w10'>" + data.p10 + "</td>" +
+                        "<td class='w25'>" + data.p25 + "</td>" +
                         "</tr><tr>" +
-                        "<td>Mittelwert letzte 15min</td>" +
-                        "<td>" + data.p10_a15m + "</td>" +
-                        "<td>" + data.p25_a15m + "</td>" +
-                        "<td>--</td>" +
+                        "<td class='bord1'  rowspan='3'>letzte 15min</td>" +
+                        "<td class='bord1' >Mittelwert</td>" +
+                        "<td class='bord1 w10'>" + data.p10_a15m + "</td>" +
+                        "<td class='bord1 w25'>" + data.p25_a15m + "</td>" +
                         "</tr><tr>" +
-                        "<td>Mittelwert letzte 60min</td>" +
-                        "<td>" + data.p10_a60m + "</td>" +
-                        "<td>" + data.p25_a60m + "</td>" +
-                        "<td>--</td>" +
+                        "<td>Standardabweichung</td>" +
+                        "<td class='w10'>" + data.p10_d15m + "</td>" +
+                        "<td class='w25'>" + data.p25_d15m + "</td>" +
                         "</tr><tr>" +
-                        "<td>Mittelwert letzte 24h</td>" +
-                        "<td>" + data.p10_a24h + "</td>" +
-                        "<td>" + data.p25_a24h + "</td>" +
-                        "<td>--</td>" +
+                        "<td>Maximum</td>" +
+                        "<td class='w10'>" + data.p10_m15m + "</td>" +
+                        "<td class='w25'>" + data.p25_m15m + "</td>" +
                         "</tr><tr>" +
-                        "<td>Standardabweichung letzte 24h</td>" +
-                        "<td>" + data.p10_d24h + "</td>" +
-                        "<td>" + data.p25_d24h + "</td>" +
-                        "<td> > 0.1 und < 10.0</td>" +
+                        "<td class='bord1' rowspan='3'>letzte 60min</td>" +
+                        "<td class='bord1' >Mittelwert</td>" +
+                        "<td class='bord1 w10'>" + data.p10_a60m + "</td>" +
+                        "<td class='bord1 w25'>" + data.p25_a60m + "</td>" +
                         "</tr><tr>" +
-                        "<td>TagesMittelWert gestern</td>" +
-                        "<td>" + data.p10_a24hy + "</td>" +
-                        "<td>" + data.p25_a24hy + "</td>" +
-                        "<td> --</td>" +
+                        "<td>Standardabweichung</td>" +
+                        "<td class='w10'>" + data.p10_d60m + "</td>" +
+                        "<td class='w25'>" + data.p25_d60m + "</td>" +
                         "</tr><tr>" +
-                        "<td>Standardabweichung gestern</td>" +
-                        "<td>" + data.p10_d24hy + "</td>" +
-                        "<td>" + data.p25_d24hy + "</td>" +
-                        "<td> > 0.1 und < 10.0</td>" +
-                        "</tr>");
+                        "<td>Maximum</td>" +
+                        "<td class='w10'>" + data.p10_m60m + "</td>" +
+                        "<td class='w25'>" + data.p25_m60m + "</td>" +
+                        "</tr><tr>" +
+                        "<td class='bord1' rowspan='3'>letzte 24h</td>" +
+                        "<td class='bord1'>Mittelwert</td>" +
+                        "<td class='bord1 w10'>" + data.p10_a24h + "</td>" +
+                        "<td class='bord1 w25'>" + data.p25_a24h + "</td>" +
+                        "</tr><tr>" +
+                        "<td>Standardabweichung</td>" +
+                        "<td class='w10'>" + data.p10_d24h + "</td>" +
+                        "<td class='w25'>" + data.p25_d24h + "</td>" +
+                        "</tr><tr>" +
+                        "<td>Maximum</td>" +
+                        "<td class='w10'>" + data.p10_m24h + "</td>" +
+                        "<td class='w25'>" + data.p25_m24h + "</td>" +
+                        "</tr><tr>" +
+                        "</tbody><tbody id='body2'>" +
+                        "<td rowspan='2'>gestern (24h)</td>" +
+                        "<td>Mittelwert</td>" +
+                        "<td class='w10'>" + data.p10_a24hy + "</td>" +
+                        "<td class='w25'>" + data.p25_a24hy + "</td>" +
+                        "</tr><tr>" +
+                        "<td>Standardabweichung</td>" +
+                        "<td class='w10'>" + data.p10_d24hy + "</td>" +
+                        "<td class='w25'>" + data.p25_d24hy + "</td>" +
+                        "</tr></tbody>");
                 }
             }
         });

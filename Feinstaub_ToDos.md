@@ -2,7 +2,7 @@
 letzte Änderung: 2018-09-06
 
 ### Properties
-* Typ einfohren: PM,T,TH,THP,TP, .... Erkennen am Vorhandensein der Werte
+* Typ einführen: PM,T,TH,THP,TP, .... Erkennen am Vorhandensein der Werte
 * Änderungen berücksichtigen von
  * Typ
  * Adresse
@@ -96,7 +96,7 @@ bei avg=1440 und span=0 ist kein Wert >= start in dem Array, d.h. das Mittelwert
 * Meldung, dass der Sensor Probleme hat (auch welche) schon gleich bei der Grafik, nicht erst bei der Map
 * API mit der Liste dieser Senoren (sie auch API)
 * evtl. weiter problematische Senoren von Hand raussuchen und in der DB in einer eigene Kategire sammel, extr Text dazu nbauen, der dann angezeigt wird
-
+* neue bzw. welche, die rausgefallen sind erkennen und entweder im log melden oder per email
 
 ###Tests
 * Lesezeit für alle Stadt-Sensoren über die alte und die neue DB vergleichen

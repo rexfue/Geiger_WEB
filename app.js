@@ -77,6 +77,10 @@ app.get('/fs/fsdata/setting', function(req, res, next) {
     res.sendFile(__dirname+'/public/settings.html');
 });
 
+app.get('/fs/fsdata/statistik', function(req, res, next) {
+    res.sendFile(__dirname+'/public/statistik.html');
+});
+
 app.get('/fs/fsdata/centermap', function(req, res, next) {
     res.sendFile(__dirname+'/public/centermap.html');
 });

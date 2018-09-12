@@ -112,7 +112,7 @@ router.get('/getmapsensors', function (req, res) {
 //
 //  Parameter:
 //      db:     Mongo-Database
-//      cmd:    kind of data
+//      cmd:    'start', 'end', 'data'
 //      data:   JSON string to put into db
 //
 // return:
@@ -122,7 +122,7 @@ async function putAPIproblemdata(db, cmd, data) {
     let collection = db.collection('problemsensors');
     if (cmd == 'start') {
         try {
-            await collection.drop();  // remover collection
+            await collection.drop();  // remove collection
         }
         catch (e) {
         }
