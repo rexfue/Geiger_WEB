@@ -1,0 +1,77 @@
+version: '3'
+services:
+
+  nginx-proxy:
+    image: nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - '80:80'
+      - '443:443'  
+    container_name: nginx-proxy
+    restart: always
+
+  fst-mongo:
+    image: mongo
+    volumes:
+      - /var/lib/mongodb:/data/db
+      - /var/log/feinstaub:/var/log
+    ports:
+      - '27017:27017'
+    container_name: fst-mongo
+    command: '--auth'
+    restart: always
+
+  fst-data:
+    image: fst-data
+    volumes:
+      - /var/log/feinstaub:/var/log
+    environment:
+      - TTS_KEY=MUFFBAA88CI0BP5D        
+      - MONGOHOST=fst-mongo
+      - MONGOAUTH=true  
+      - "MONGOUSRP=rxf:5C5dB|m"  
+    container_name: fst-data
+    restart: always
+
+  fst-web:
+    image: fst-web
+    volumes:
+      - /var/log/feinstaub:/var/log
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    environment:
+      - VIRTUAL_HOST=feinstaub.rexfue.de
+      - MONGOHOST=fst-mongo
+      - MONGOAUTH=true  
+      - "MONGOUSRP=rxf:5C5dB|m"
+      - TZ=Europe/Berlin  
+    container_name: fst-web
+    restart: always
+
+  fstst-web:
+    image: fstst-web
+    volumes:
+      - /var/log/feinstaub:/var/log
+    environment:
+      - VIRTUAL_HOST=test1.rexfue.de
+      - MONGOHOST=fst-mongo
+      - MONGOAUTH=true  
+      - "MONGOUSRP=rxf:5C5dB|m"  
+      - TZ=Europe/Berlin  
+    container_name: fstst-web
+    restart: always
+
+  probsens:
+    image: probsens
+    container_name: probsens
+    restart: always
+
+  web-nginx:
+    image: web-nginx
+    environment:
+      - VIRTUAL_HOST=www.rexfue.de,rexfue.de
+    container_name: web-nginx          
+    restart: always
+
+
