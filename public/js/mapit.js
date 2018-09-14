@@ -581,7 +581,7 @@ function buildMarkers(data) {
         });
         if(curSensor == item.id) {
             oneMarker.icon.fillColor = 'white';
-            oneMarker.icon.fillOpacity = 1;
+            oneMarker.icon.fillOpacity = 0.7;
 //            oneMarker.ZIndex = 100;
             centerMarker = j;
         }
