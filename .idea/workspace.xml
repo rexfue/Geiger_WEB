@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/apidata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/apidata.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -23,126 +23,198 @@
     <favorites_list name="feinstaub_js" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/css/style.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3330">
-              <caret line="222" column="21" selection-start-line="222" selection-start-column="21" selection-end-line="222" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/global.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="650">
-              <caret line="1082" column="27" selection-start-line="1082" selection-start-column="27" selection-end-line="1082" selection-end-column="27" />
-              <folding>
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#82#88#0" expanded="true" />
-                <element signature="e#96#102#0" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#47#53#0" expanded="true" />
-                <element signature="e#53#59#0" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#94#100#0" expanded="true" />
-                <element signature="e#108#114#0" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#47#53#0" expanded="true" />
-                <element signature="e#53#59#0" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#94#100#0" expanded="true" />
-                <element signature="e#108#114#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/settings.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
-              <folding>
-                <element signature="e#443#449#0" expanded="true" />
-                <element signature="e#449#455#0" expanded="true" />
-                <element signature="e#455#461#0" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#fieldset#0;n#form#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utilities.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/utilities.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1515">
-              <caret line="101" column="23" selection-start-line="101" selection-start-column="23" selection-end-line="101" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="apidata.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/apidata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1755">
-              <caret line="117" column="22" selection-start-line="117" selection-start-column="22" selection-end-line="117" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Dockerfile_WEB" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Dockerfile_WEB">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="connection.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/node_modules/mongodb-core/lib/connection/connection.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8670">
-              <caret line="578" column="43" selection-start-line="578" selection-start-column="43" selection-end-line="578" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="help.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/help.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="855">
-              <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mapdata.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2692" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mapit.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1622">
-              <caret line="406" column="31" selection-start-line="406" selection-start-column="18" selection-end-line="406" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5298945">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/css/style.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="4665">
+                  <caret line="311" selection-start-line="311" selection-end-line="311" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="420">
+                  <caret line="28" column="29" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.pug" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/index.pug">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="555">
+                  <caret line="37" column="20" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Dockerfile_fstst-web" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Dockerfile_fstst-web">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="315">
+                  <caret line="21" selection-start-line="21" selection-end-line="21" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Dockerfile_fst-web" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Dockerfile_fst-web">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="285">
+                  <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="docker-compose.yml" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="570">
+                  <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.gitignore">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="45">
+                  <caret line="3" selection-start-line="3" selection-end-line="3" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="layout.pug" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/layout.pug">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="405">
+                  <caret line="27" column="46" selection-start-line="24" selection-start-column="5" selection-end-line="27" selection-end-column="46" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="fehlersensoren.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/fehlersensoren.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="495">
+                  <caret line="33" column="94" selection-start-line="33" selection-start-column="94" selection-end-line="33" selection-end-column="94" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/package.json">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="45">
+                  <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="apidata.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/routes/apidata.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="595">
+                  <caret line="42" column="12" selection-start-line="42" selection-start-column="12" selection-end-line="42" selection-end-column="12" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="build_and_copy.sh" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/build_and_copy.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="345">
+                  <caret line="23" column="2" selection-start-line="23" selection-start-column="2" selection-end-line="23" selection-end-column="2" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="mapit.pug" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/mapit.pug">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="60">
+                  <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="utilities.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/utilities.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1515">
+                  <caret line="101" column="26" selection-start-line="101" selection-start-column="23" selection-end-line="101" selection-end-column="26" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="mapit.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="8745">
+                  <caret line="583" column="44" selection-start-line="583" selection-start-column="44" selection-end-line="583" selection-end-column="44" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="fehlerliste.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/fehlerliste.html">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file leaf-file-name="help.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/help.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="855">
+                  <caret line="57" column="43" selection-start-line="57" selection-start-column="43" selection-end-line="57" selection-end-column="43" />
+                  <folding>
+                    <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="helpmap.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/helpmap.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="720">
+                  <caret line="48" column="44" selection-start-line="48" selection-start-column="44" selection-end-line="48" selection-end-column="44" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="mapdata.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="255">
+                  <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="statistik.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/statistik.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="315">
+                  <caret line="21" column="7" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
+                  <folding>
+                    <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -153,7 +225,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>calcMinMaxAvgBME</find>
       <find>oneday</find>
       <find>live</find>
       <find>doPlot</find>
@@ -183,6 +254,7 @@
       <find>yaxis</find>
       <find>mongopoints</find>
       <find>findstuttgart</find>
+      <find>getAPIprobSensors</find>
     </findStrings>
     <replaceStrings>
       <replace>aktsensorid</replace>
@@ -241,10 +313,12 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/routes/mapdata.js" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/package_web.json" />
         <option value="$PROJECT_DIR$/public/css/style.css" />
         <option value="$PROJECT_DIR$/public/settings.html" />
         <option value="$PROJECT_DIR$/public/js/global.js" />
+        <option value="$PROJECT_DIR$/package_web.json" />
+        <option value="$PROJECT_DIR$/package_tst.json" />
+        <option value="$PROJECT_DIR$/routes/apidata.js" />
       </list>
     </option>
   </component>
@@ -273,7 +347,7 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="154" />
+    <option name="x" value="140" />
     <option name="y" value="23" />
     <option name="width" value="2025" />
     <option name="height" value="1336" />
@@ -283,7 +357,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -299,24 +372,13 @@
             <path>
               <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
               <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -502,13 +564,6 @@
       <workItem from="1527876213835" duration="323000" />
       <workItem from="1528662705960" duration="696000" />
       <workItem from="1535045564193" duration="2576000" />
-    </task>
-    <task id="LOCAL-00023" summary="Spelling mistake corrected (Zentrieren)">
-      <created>1495608384642</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1495608384642</updated>
     </task>
     <task id="LOCAL-00024" summary="Cosmetic changes">
       <created>1495608435292</created>
@@ -846,11 +901,18 @@
       <option name="project" value="LOCAL" />
       <updated>1534621604036</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="package_[tst|web].json&#10;   - version and date">
+      <created>1536929424897</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1536929424897</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="729973000" />
+    <option name="totallyTimeSpent" value="732722000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -862,30 +924,63 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="154" y="23" width="2025" height="1336" extended-state="0" />
+    <frame x="140" y="23" width="2025" height="1336" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49322033" visible="true" weight="0.14870259" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.2374269" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49322033" visible="true" weight="0.14870259" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.499501" weight="0.23684211" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5523952" side_tool="true" visible="true" weight="0.24259868" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.55688626" side_tool="true" visible="true" weight="0.24259868" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.46433318" weight="0.24533106" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49612778" weight="0.19067797" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49501" weight="0.5493421" />
       <window_info id="npm" order="2" sideWeight="0.50324374" side_tool="true" weight="0.26076695" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24906367" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4745237" weight="0.32767403" />
-      <window_info anchor="bottom" x="41" y="748" width="1145" height="612" id="Debug" order="3" sideWeight="0.4476048" visible="true" weight="0.24259868" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.47205588" weight="0.32730263" />
+      <window_info active="true" anchor="bottom" x="41" y="748" width="1145" height="612" id="Debug" order="3" sideWeight="0.44311377" visible="true" weight="0.24259868" />
       <window_info id="Favorites" order="3" sideWeight="0.5067797" side_tool="true" weight="0.15984777" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info id="npm" order="2" sideWeight="0.50324374" side_tool="true" weight="0.26076695" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49322033" visible="true" weight="0.14870259" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.24906367" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.2374269" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49612778" weight="0.19067797" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.46433318" weight="0.24533106" />
       <window_info anchor="bottom" id="REST Client" order="12" sideWeight="0.49900597" visible="true" weight="0.36588237" />
+      <window_info anchor="bottom" x="41" y="748" width="1145" height="612" id="Debug" order="3" sideWeight="0.4476048" visible="true" weight="0.24259868" />
+      <window_info anchor="bottom" id="Messages" order="9" sideWeight="0.4780439" weight="0.328125" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5523952" side_tool="true" visible="true" weight="0.24259868" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32881355" />
-      <window_info anchor="bottom" id="Messages" order="9" sideWeight="0.4780439" weight="0.328125" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4745237" weight="0.32767403" />
+      <window_info id="Favorites" order="3" sideWeight="0.5067797" side_tool="true" weight="0.15984777" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info id="npm" order="2" sideWeight="0.50324374" side_tool="true" weight="0.26076695" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.46433318" weight="0.24533106" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49322033" visible="true" weight="0.14887019" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.24906367" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.2374269" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49612778" weight="0.19067797" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32881355" />
+      <window_info anchor="bottom" id="REST Client" order="12" sideWeight="0.49900597" visible="true" weight="0.36588237" />
+      <window_info anchor="bottom" x="41" y="748" width="1145" height="612" id="Debug" order="3" sideWeight="0.4483828" weight="0.24278438" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4745237" weight="0.32767403" />
+      <window_info active="true" anchor="bottom" id="Event Log" order="11" sideWeight="0.5516172" side_tool="true" visible="true" weight="0.24278438" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Messages" order="9" sideWeight="0.47895437" visible="true" weight="0.32881355" />
+      <window_info id="Favorites" order="3" sideWeight="0.5067797" side_tool="true" weight="0.15984777" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -930,7 +1025,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fehlende SID mit Fehlermeldung" />
     <MESSAGE value="help.html an neue Gegebenheiten angepasst" />
     <MESSAGE value="yMax-Einstellung für 24h und 7Tage" />
     <MESSAGE value="public/js/global.js&#10;   - Texte in der Legend angepasst&#10;   - Silvester eingeführt&#10;  &#10;public/help.html&#10;   - an aktuelle Features angepasst&#10;   &#10;routes/fsdate.js      &#10;   - in proerties ist nun  _id die sid" />
@@ -955,7 +1049,8 @@
     <MESSAGE value="added some js files" />
     <MESSAGE value="public/js/global.js&#10;   - x-axis: date in red" />
     <MESSAGE value="public/js/global.js&#10;   - show scatter/lines&#10;   - yAxis log/linear&#10;   &#10;public/css/style.css&#10;   -  css for radio buttons removed&#10;   &#10;public/settings.htm&#10;   - setting for sactter/lines and for log/linear Y axis" />
-    <option name="LAST_COMMIT_MESSAGE" value="public/js/global.js&#10;   - show scatter/lines&#10;   - yAxis log/linear&#10;   &#10;public/css/style.css&#10;   -  css for radio buttons removed&#10;   &#10;public/settings.htm&#10;   - setting for sactter/lines and for log/linear Y axis" />
+    <MESSAGE value="package_[tst|web].json&#10;   - version and date" />
+    <option name="LAST_COMMIT_MESSAGE" value="package_[tst|web].json&#10;   - version and date" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="640" key="Git.Branch.Popup" />
@@ -965,14 +1060,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>1104</line>
-          <option name="timeStamp" value="624" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="626" />
+      <option name="time" value="647" />
     </breakpoint-manager>
   </component>
   <component name="XPathView.XPathProjectComponent">
@@ -980,30 +1068,6 @@
     <find-history />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/layer.js" />
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="58" selection-start-line="8" selection-start-column="58" selection-end-line="8" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/select.pug">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/layer.js" />
     <entry file="file://$PROJECT_DIR$/public/sensors.json">
       <provider selected="true" editor-type-id="text-editor">
@@ -1022,13 +1086,6 @@
     <entry file="file://$PROJECT_DIR$/node_modules/jquery-ui/README.md" />
     <entry file="file://$PROJECT_DIR$/feinstaub2mongo_T.js" />
     <entry file="file://$PROJECT_DIR$/readCSV.js" />
-    <entry file="file://$PROJECT_DIR$/public/helpmap.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="47" selection-start-line="31" selection-start-column="47" selection-end-line="31" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/PYTHON/korrelation/dat2mongo.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
@@ -1088,24 +1145,10 @@
     <entry file="file://$PROJECT_DIR$/views/showRaw.html" />
     <entry file="file://$PROJECT_DIR$/ToDos.md" />
     <entry file="file://$PROJECT_DIR$/jquery.csv.js" />
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="31" column="16" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/layout.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="7" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -1116,27 +1159,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/mapit.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build_and_copy.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="2" selection-start-line="26" selection-start-column="2" selection-end-line="26" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/copycontainer.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -1144,41 +1166,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile_TST">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package_web.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package_tst.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="1" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile_TST" />
     <entry file="file://$PROJECT_DIR$/public/centermap.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1188,22 +1176,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3810">
-          <caret line="254" column="28" selection-start-line="254" selection-start-column="28" selection-end-line="254" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/utilities.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1515">
-          <caret line="101" column="23" selection-start-line="101" selection-start-column="23" selection-end-line="101" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/apidata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1755">
-          <caret line="117" column="22" selection-start-line="117" selection-start-column="22" selection-end-line="117" selection-end-column="22" />
+        <state relative-caret-position="3855">
+          <caret line="257" column="28" selection-start-line="257" selection-start-column="28" selection-end-line="257" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -1214,40 +1188,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/help.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile_WEB">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3330">
-          <caret line="222" column="21" selection-start-line="222" selection-start-column="21" selection-end-line="222" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile_WEB" />
     <entry file="file://$PROJECT_DIR$/public/settings.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#443#449#0" expanded="true" />
-            <element signature="e#449#455#0" expanded="true" />
-            <element signature="e#455#461#0" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#fieldset#0;n#form#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1279,16 +1224,160 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/package_web.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package_tst.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4665">
+          <caret line="311" selection-start-line="311" selection-end-line="311" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="29" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="37" column="20" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile_fst-web">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/layout.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="46" selection-start-line="24" selection-start-column="5" selection-end-line="27" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/fehlersensoren.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="94" selection-start-line="33" selection-start-column="94" selection-end-line="33" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile_fstst-web">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_and_copy.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="2" selection-start-line="23" selection-start-column="2" selection-end-line="23" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/mapit.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/utilities.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1515">
+          <caret line="101" column="26" selection-start-line="101" selection-start-column="23" selection-end-line="101" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1622">
-          <caret line="406" column="31" selection-start-line="406" selection-start-column="18" selection-end-line="406" selection-end-column="31" />
+        <state relative-caret-position="8745">
+          <caret line="583" column="44" selection-start-line="583" selection-start-column="44" selection-end-line="583" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/fehlerliste.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/help.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="57" column="43" selection-start-line="57" selection-start-column="43" selection-end-line="57" selection-end-column="43" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2692" />
+        <state relative-caret-position="255">
+          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/statistik.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="7" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/helpmap.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="48" column="44" selection-start-line="48" selection-start-column="44" selection-end-line="48" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/apidata.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="42" column="12" selection-start-line="42" selection-start-column="12" selection-end-line="42" selection-end-column="12" />
+        </state>
       </provider>
     </entry>
   </component>
