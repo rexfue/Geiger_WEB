@@ -172,7 +172,11 @@ async function getAPIprobSensors(db,pnr,only) {
         }
         count = await coll.find({'problemNr': pnr}).count();
     }
-    return { count: count, values: docs };
+    if (only) {
+        return {count: count, problemNr: pnr, values: docs};
+    } else {
+        return {count: count, values: docs};
+    }
 }
 
 
@@ -557,7 +561,7 @@ async function getAPIprops(db,sid,typ,dt) {
     entry.sensortyp = typ =="" ? "all" : typ;
     entry.count = erg.length;
     entry.since = dt;
-    entry.werte = erg;
+    entry.values = erg;
     return entry;
 }
 
