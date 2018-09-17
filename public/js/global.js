@@ -54,6 +54,7 @@ $(document).ready(function() {
         }
 	}
 
+
 //	moment.locale('de', {
 //        months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
 //	});
@@ -479,8 +480,8 @@ $(document).ready(function() {
 // ************** Event-Handler **************
 
     $('#btnMap').click(function() {
-        localStorage.setItem('currentSensor',aktsensorid);			// remember actual sensor
-        window.location = "/map";
+//        localStorage.setItem('currentSensor',aktsensorid);			// remember actual sensor
+        window.location = "/map?sid="+aktsensorid;
     });
 
 

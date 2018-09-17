@@ -54,7 +54,7 @@ services:
     volumes:
       - /var/log/feinstaub:/var/log
     environment:
-      - VIRTUAL_HOST=test1.rexfue.de
+      - VIRTUAL_HOST=develop.rexfue.de
       - MONGOHOST=fst-mongo
       - MONGOAUTH=true  
       - "MONGOUSRP=rxf:5C5dB|m"  

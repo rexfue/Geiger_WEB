@@ -123,7 +123,7 @@ router.get('/getmapsensors', function (req, res) {
 //      error, if not correctly saved, else null
 // ***********************************************************
 async function putAPIproblemdata(db, cmd, data) {
-    let collection = db.collection('problemsensors');
+    let collection = db.collection('problemsensors_N1');
     if (cmd == 'start') {
         try {
             await collection.drop();  // remove collection
@@ -154,7 +154,7 @@ async function putAPIproblemdata(db, cmd, data) {
 // ***********************************************************
 
 async function getAPIprobSensors(db,pnr,only) {
-    let coll = db.collection('problemsensors');
+    let coll = db.collection('problemsensors_N1');
     let docs;
     let count;
     if (pnr == 0) {

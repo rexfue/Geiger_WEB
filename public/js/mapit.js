@@ -12,7 +12,6 @@ var geocod;
 var trafficLayer;
 let mongoPoints = [];
 let problems = [];
-let curSensor = 0;
 
 var w = $('#btnTraf span').width();
 $('#btnTraf').css('width',w+30);
@@ -26,31 +25,27 @@ if(!((typeof startday == 'undefined') || (startday == ""))) {
     }
 }
 
+let allMap = false;
+if (!((typeof allmap == 'undefined') || (allmap == ""))) {
+    allMap = true;
+}
+
+let curSensor = 140;                                                // default-Sensor
+if (!((typeof csid == 'undefined') || (csid == ""))) {
+    curSensor = csid;
+}
+
 //	localStorage.clear();
 
 // Karte und die Marker erzeugen
-function initMap() {												// Map initialisieren
+async function initMap() {												// Map initialisieren
     var trafficLayer;
-    var myLatLng = {lat: 48.784373, lng: 9.182};					// Zentrum
 
     // 'globale' Variable
     infowindow = new google.maps.InfoWindow;
     geocod = new google.maps.Geocoder;
 
-
-    // get coordinates from selected sensor (saved in localStorage)
-    var koo = localStorage.getItem('curcoord');
-    if(!((koo == null) || (koo === undefined) || (koo == ""))) {
-        var koord = JSON.parse(koo);
-        myLatLng = {lat: koord[1], lng: koord[0]};
-    }
-    curSensor = localStorage.getItem('currentSensor');
-    if((curSensor == "") || (curSensor == null)){
-        curSensor = localStorage.getItem('defaultSensor');
-        if((curSensor == "") || (curSensor == null)) {
-            curSensor = "140";
-        }
-    }
+    let myLatLng = await getSensorKoords(curSensor);
 
     $('#nosensor').hide();
     map = new google.maps.Map(document.getElementById('map'), {
@@ -157,29 +152,13 @@ function initMap() {												// Map initialisieren
 });
 
     function explainProblem(sensor) {
-        let fnd = problems.findIndex(x => x._id == curSensor);
+        let fnd = problems.values.findIndex(x => x._id == curSensor);
         if (fnd == -1)
             return;
-        let fnbr = problems[fnd].problemNr;
-        let ftxt = 'Grund, warum der Sensor ' + curSensor + ' nicht angezeigt wird: <br /><b>';
-        if (fnbr == 1) {
-            ftxt += 'Der Sensor sendet keine Daten!';
-        } else if (fnbr == 2) {
-            ftxt += 'Der Sensor sendet unplausibel kleine Werte (< 1 &mu;g/m<sup>3</sup>). ' +
-                'Eventuell ist das Ansaugrohr verstopft.';
-        } else if (fnbr == 3) {
-            ftxt += 'Der Sensor sendet dauernd zu große Werte (>= 1990 &mu;g/m<sup>3</sup>). ' +
-                'Eventuell ist ein Tierchen in die Messkammer gekrabbelt';
-        } else if (fnbr == 4) {
-            ftxt += "Die Werte des Sensor sind zu gleichförmig. Es gibt kaum Änderungen im " +
-                "Laufe des Tages; dieses ist unplausibel."
-        } else if (fnbr == 5) {
-            ftxt += "Der P2.5-Wert ist im Tagesmittel über 50 &mu;g/m<sup>3</sup>; dieses ist unplausibel."
-        } else if (fnbr == 6) {
-            ftxt += "Die Werte von P10 und P2.5 liegen den ganzen Tag sehr eng zusammen."
-        } else if (fnbr == 7) {
-            ftxt += "Die Werte von P10 und P2.5 liegen den ganzen Tag sehr weit auseinander."
-        }
+        let fnbr = problems[fnd].values.problemNr;
+        let txtnr = problems.texte.findIndex(x => x.nr == fnbr);
+        let ftxt = 'Grund, warum der Sensor ' + curSensor + ' nicht angezeigt wird: <br /><b>'+
+            problems.texte[txtnr].text;
         $('#fehlerexplain').html(ftxt+'</b>');
     }
 
@@ -414,7 +393,7 @@ function fetchAktualData() {
                 updateValues(data1.avgs);
             }
             showLastDate(data1.lastDate);
-            if (problems.findIndex(x => x._id==curSensor) != -1) {
+            if (problems.values.findIndex(x => x._id==curSensor) != -1) {
                 $('#nosensor').show();
             }
         }
@@ -557,12 +536,16 @@ function buildMarkers(data) {
         if(item.value10 == -5) {
             continue;
         }
-        // Wenn der Sensor in der Problem-Datenbank ist und NICHT gerade der
-        // gesuchte zentrale Sensor, dann einfach auslassen
-        if (problems.findIndex(x => x._id == item.id) != -1) {
-//            if(item.id != curSensor) {
-                continue;
+        // Wenn der Sensor in der Problem-Datenbank ist, dann
+        // diesen Sensor auslassen
+        if(!allMap) {
+            let fnd = problems.values.findIndex(x => x._id == item.id);
+            if (fnd != -1) {
+                if (problems.values[fnd].problemNr != 8) {          // Problem Nr. 8 mal ausklammern
+                    continue;
+                }
 //            }
+            }
         }
         var offset = 0;											// deault Offset ist 0
         if (item.location[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
@@ -666,5 +649,23 @@ function findStuttgartSensors() {
             });
         }
     });
+}
+
+// fetch coordinates for selected sensor
+// use the API
+function getSensorKoords(csens) {
+    let p = new Promise(function(resolve,reject){
+    let url = 'https://feinstaub.rexfue.de/api/getprops?sensorid='+csens;
+    $.get(url, (data,err) => {
+            if (err != 'success') {
+                resolve({lat: 48.784373, lng: 9.182});
+            } else {
+                console.log(data);
+                resolve({lat: data.werte[0].lat, lng: data.werte[0].lon});
+            }
+            ;
+        });
+    });
+    return p;
 }
 
