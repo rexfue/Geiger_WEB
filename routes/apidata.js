@@ -35,10 +35,14 @@ router.post('/putdata/:what', function(req,res) {
 router.get('/getprobdata', function(req,res) {
     let db = req.app.get('dbase');
     let pnr = 0;
+    let only=false;
     if (!((req.query.probnr == undefined) || (req.query.probnr == ""))) {
         pnr = parseInt(req.query.probnr);
     }
-    getAPIprobSensors(db,pnr)
+    if (!((req.query.only_id == undefined) || (req.query.only_id == ""))) {
+        only = true
+    }
+    getAPIprobSensors(db,pnr,only)
         .then(erg => res.json(erg));
 });
 
@@ -149,15 +153,30 @@ async function putAPIproblemdata(db, cmd, data) {
 //      JSON Dokument mit den angefragten Werten
 // ***********************************************************
 
-async function getAPIprobSensors(db,pnr) {
+async function getAPIprobSensors(db,pnr,only) {
     let coll = db.collection('problemsensors');
     let docs;
+    let count;
     if (pnr == 0) {
-        docs = await coll.find().toArray();
+        if(only) {
+            docs = await coll.find({},{_id:1}).toArray();
+        } else {
+            docs = await coll.find().toArray();
+        }
+        count =  await coll.find().count();
     } else {
-        docs = await coll.find({'problemNr':pnr}).toArray();
+        if(only) {
+            docs = await coll.find({'problemNr': pnr}, {_id: 1}).toArray();
+        } else {
+            docs = await coll.find({'problemNr': pnr}).toArray();
+        }
+        count = await coll.find({'problemNr': pnr}).count();
     }
-    return docs;
+    if (only) {
+        return {count: count, problemNr: pnr, values: docs};
+    } else {
+        return {count: count, values: docs};
+    }
 }
 
 
@@ -542,7 +561,7 @@ async function getAPIprops(db,sid,typ,dt) {
     entry.sensortyp = typ =="" ? "all" : typ;
     entry.count = erg.length;
     entry.since = dt;
-    entry.werte = erg;
+    entry.values = erg;
     return entry;
 }
 
