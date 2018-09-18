@@ -661,7 +661,7 @@ function getSensorKoords(csens) {
                 resolve({lat: 48.784373, lng: 9.182});
             } else {
                 console.log(data);
-                resolve({lat: data.werte[0].lat, lng: data.werte[0].lon});
+                resolve({lat: data.values[0].lat, lng: data.values[0].lon});
             }
             ;
         });
