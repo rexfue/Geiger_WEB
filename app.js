@@ -37,10 +37,8 @@ app.use(express.static("node_modules/moment/min"));
 function checkHost(req, res, next) {
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
-        (req.headers.host == 'fstst.rexfue.de') ||
-        (req.headers.host == 'test1.rexfue.de') ||
+        (req.headers.host == 'develop.rexfue.de') ||
         (req.headers.host == 'localhost:3005') ||
-        (req.headers.host == 'castor') ||
         (req.headers.host == 'macbig:3005')                 //Port is important if the url has it
     ) {
         req.url = '/fs' + req.url;
