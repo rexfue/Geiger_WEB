@@ -155,10 +155,10 @@ async function initMap() {												// Map initialisieren
         let fnd = problems.values.findIndex(x => x._id == curSensor);
         if (fnd == -1)
             return;
-        let fnbr = problems[fnd].values.problemNr;
-        let txtnr = problems.texte.findIndex(x => x.nr == fnbr);
+        let fnbr = problems.values[fnd].problemNr;
+        let txtnr = problems.texte.texte.findIndex(x => x.nr == fnbr);
         let ftxt = 'Grund, warum der Sensor ' + curSensor + ' nicht angezeigt wird: <br /><b>'+
-            problems.texte[txtnr].text;
+            problems.texte.texte[txtnr].txt;
         $('#fehlerexplain').html(ftxt+'</b>');
     }
 
@@ -366,7 +366,7 @@ function removeOneMarker(n) {
 
 // Problem-Sensoren holen
 function fetchProblemSensors() {
-    $.getJSON('/api/getprobdata', function(data,err) {
+    $.getJSON('/api/getprobdata',{mitTxt: true}, function(data,err) {
         if (err != 'success') {
             alert("Fehler <br />" + err);						// ggf. fehler melden
         } else {

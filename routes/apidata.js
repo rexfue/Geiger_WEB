@@ -42,7 +42,11 @@ router.get('/getprobdata', function(req,res) {
     if (!((req.query.only_id == undefined) || (req.query.only_id == ""))) {
         only = true
     }
-    getAPIprobSensors(db,pnr,only)
+    let mittxt=false;
+    if (!((req.query.mitTxt == undefined) || (req.query.mitTxt == ""))) {
+        mittxt = true;
+    }
+    getAPIprobSensors(db,pnr,only,mittxt)
         .then(erg => res.json(erg));
 });
 
@@ -153,30 +157,36 @@ async function putAPIproblemdata(db, cmd, data) {
 //      JSON Dokument mit den angefragten Werten
 // ***********************************************************
 
-async function getAPIprobSensors(db,pnr,only) {
+async function getAPIprobSensors(db,pnr,only,withTxt) {
     let coll = db.collection('problemsensors_N1');
-    let docs;
-    let count;
-    if (pnr == 0) {
-        if(only) {
-            docs = await coll.find({},{_id:1}).toArray();
-        } else {
-            docs = await coll.find().toArray();
-        }
-        count =  await coll.find().count();
-    } else {
-        if(only) {
-            docs = await coll.find({'problemNr': pnr}, {_id: 1}).toArray();
-        } else {
-            docs = await coll.find({'problemNr': pnr}).toArray();
-        }
-        count = await coll.find({'problemNr': pnr}).count();
+    let query = {_id: {$gt: 0}};
+    let proj = {};
+    if(withTxt == undefined) {
+        withTxt = true;
     }
+    if (pnr != 0) {
+        query = { $and: [ {problemNr: pnr}, {_id: {$gt: 0}} ]} ;
+    }
+    if(only) {
+        proj = {_id: 1};
+    }
+    let docs = await coll.find(query,proj).toArray();
+    let count = await coll.find(query).count();
+    let texte = {};
+    if(withTxt) {
+        texte = await coll.findOne({_id: 0});
+    }
+    count--;
+    let ret;
     if (only) {
-        return {count: count, problemNr: pnr, values: docs};
+        ret =  {count: count, problemNr: pnr, values: docs, texte: texte};
     } else {
-        return {count: count, values: docs};
+        ret =  {count: count, values: docs, texte: texte};
     }
+    if(!withTxt) {
+        delete ret.texte;
+    }
+    return ret
 }
 
 
