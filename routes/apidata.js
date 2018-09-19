@@ -181,9 +181,9 @@ async function getAPIprobSensors(db,pnr,only,withTxt) {
     }
     let ret;
     if (only) {
-        ret =  {count: count, problemNr: pnr, values: docs, texte: texte};
+        ret =  {count: count, problemNr: pnr, values: docs, texte: texte.texte};
     } else {
-        ret =  {count: count, values: docs, texte: texte};
+        ret =  {count: count, values: docs, texte: texte.texte};
     }
     if(!withTxt) {
         delete ret.texte;

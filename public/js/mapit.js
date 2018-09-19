@@ -156,9 +156,9 @@ async function initMap() {												// Map initialisieren
         if (fnd == -1)
             return;
         let fnbr = problems.values[fnd].problemNr;
-        let txtnr = problems.texte.texte.findIndex(x => x.nr == fnbr);
+        let txtnr = problems.texte.findIndex(x => x.nr == fnbr);
         let ftxt = 'Grund, warum der Sensor ' + curSensor + ' nicht angezeigt wird: <br /><b>'+
-            problems.texte.texte[txtnr].txt;
+            problems.texte[txtnr].txt;
         $('#fehlerexplain').html(ftxt+'</b>');
     }
 
