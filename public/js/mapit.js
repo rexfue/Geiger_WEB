@@ -533,9 +533,9 @@ function buildMarkers(data) {
     marker = [];
     for (var j=0,x=0; x <data.length; x++) {                        // alle daten durchgehen
         var item = data[x];
-        if(item.value10 == -5) {
-            continue;
-        }
+//        if(item.value10 == -5) {
+//            continue;
+//        }
         // Wenn der Sensor in der Problem-Datenbank ist, dann
         // diesen Sensor auslassen
         if(!allMap) {
