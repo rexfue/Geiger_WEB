@@ -161,6 +161,7 @@ async function getAPIprobSensors(db,pnr,only,withTxt) {
     let coll = db.collection('problemsensors');
     let query = {_id: {$gt: 0}};
     let proj = {};
+    let count = 0;
     if(withTxt == undefined) {
         withTxt = true;
     }
@@ -171,12 +172,13 @@ async function getAPIprobSensors(db,pnr,only,withTxt) {
         proj = {_id: 1};
     }
     let docs = await coll.find(query,proj).toArray();
-    let count = await coll.find(query).count();
+    if(docs != null) {
+        count = docs.length;
+    }
     let texte = {};
     if(withTxt) {
         texte = await coll.findOne({_id: 0});
     }
-    count--;
     let ret;
     if (only) {
         ret =  {count: count, problemNr: pnr, values: docs, texte: texte};
