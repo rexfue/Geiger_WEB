@@ -121,7 +121,7 @@ async function getSensorProperties(db,sid) {
 // Feinstaubalarm in Stuttgart cjecken
 function checkFeinstaubAlarm() {
     var p = new Promise(function (resolve,reject) {
-        request('http://www.stuttgart.de/feinstaubalarm/widget/xtrasmall')
+        request('https://www.stuttgart.de/feinstaubalarm/widget/xtrasmall')
             .then(function (html) {
 //                console.log(html);
                 if (html.indexOf('widget alarm-on') > 0) {
