@@ -7,7 +7,7 @@
 #
 # 2018-09-14  rxf
 #
-#set -x
+set -x
 if [ $# -lt 1 ]
   then
     echo "Usage buildit_and_copy.sh name [target]"
@@ -16,9 +16,11 @@ if [ $# -lt 1 ]
     exit
 fi
 
-docker build -f Dockerfile_$1 -t $1 .
+ docker build -f Dockerfile_$1 -t $1 .
 
 if [ $2 != "" ]
 then
+    dat=`date +%Y%m%d%H%M`
+    ssh $2 "docker tag $1 $1:V_$dat"
     docker save $1 | bzip2 | pv | ssh $2 'bunzip2 | docker load'
 fi
