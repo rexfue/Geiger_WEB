@@ -3,11 +3,16 @@
 #
 # Call: buildit.sh name [target]
 #
-# The Dockerfile_fst-data mus be named like Dockerfile_name
+# The Dockerfile must be named like Dockerfile_name
+#
+# 2018-09-20 rxf
+#   -  before sending docker image to remote, tag actual remote image
 #
 # 2018-09-14  rxf
+#   - first Version
 #
-set -x
+
+# set -x
 if [ $# -lt 1 ]
   then
     echo "Usage buildit_and_copy.sh name [target]"
