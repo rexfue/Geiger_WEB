@@ -87,11 +87,18 @@ router.get('/getaktdata/', function (req, res) {
                 oneAktData['value10'] = -1;                             // -1 zurückgeben
                 oneAktData['value25'] = -1;
             } else {
-                // oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
-                // oneAktData['value25'] = -5;
-                oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
-                oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
-
+                oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
+                oneAktData['value25'] = -5;
+                if (item.values.hasOwnProperty('P1')) {
+                    oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
+                } else {
+                    console.log(item._id+': P1 fehlt',)
+                }
+                if(item.values.hasOwnProperty('P2')) {
+                    oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
+                } else {
+                    console.log(item._id + ': P2 fehlt',)
+                }
                 // if (item.values.P1 != undefined) {
                 //     if (item.values.P1 < 1990.0) {
                 //         oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
