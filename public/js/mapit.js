@@ -393,8 +393,11 @@ function fetchAktualData() {
                 updateValues(data1.avgs);
             }
             showLastDate(data1.lastDate);
-            if (problems.values.findIndex(x => x._id==curSensor) != -1) {
-                $('#nosensor').show();
+            let fnd = problems.values.findIndex(x => x._id==curSensor);
+            if (fnd != -1) {
+                if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
+                    $('#nosensor').show();
+                }
             }
         }
     });
@@ -541,7 +544,11 @@ function buildMarkers(data) {
         if(!allMap) {
             let fnd = problems.values.findIndex(x => x._id == item.id);
             if (fnd != -1) {
-                if (problems.values[fnd].problemNr != 8) {          // Problem Nr. 8 mal ausklammern
+                // Problem Nr. 8 und 5 mal ausklammern
+                if(item.id == 140) {
+                    print("140");
+                }
+                if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
                     continue;
                 }
 //            }
