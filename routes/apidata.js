@@ -114,6 +114,19 @@ router.get('/getmapsensors', function (req, res) {
         .then(erg => res.json(erg));
 });
 
+router.get('/getcities', (req,res) => {
+    let db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
+    let country = req.query.country;
+    let type = req.query.type;
+    if (country == undefined) {
+        country = 'all';
+    }
+    if (type == undefined) {
+        type = 'PM';
+    }
+    getApiCities(db,country.toUpperCase(),type.toUpperCase())
+        .then(erg => res.json(erg));
+});
 
 // ***********************************************************
 // putAPIproblemdata  -  Daten in der DB speichern
@@ -727,4 +740,92 @@ function isPM(name) {
     }
     return false;
 }
+
+
+// ******************************************************************
+// getAPICities  -  Get all cities, containing sensors
+//
+//
+//  Call:
+//      http://feinstaub.rexfue.de/api/getcities/?country=de
+//
+//      with:
+//          county:     2 character coutrycode to find the city (all or absent => world)
+//          type:       PM or THP  (or absent => PM)
+//
+//  Parameter:
+//      db:     database
+//      county:  2 character coutrycode to find the citie (all => world)
+//      pm:     PM for particulate sensors, THP for temp/hum/press-sensors
+//
+// return:
+//      JSON array with cities
+//
+//
+//
+// ********************************************************************
+async function getApiCities(db, country, pm) {
+    let slist = [];
+    let collection = db.collection('properties');
+    let loc;
+    let query = {};
+    if(country != 'ALL') {
+        query = {'location.0.address.country': country};
+    }
+    let pms = ['SDS011','PMS7003','PMS3003','PMS5003','HPM','SDS021','PPD42NS'];
+    let matchtype = {name: {$in : pms}};
+    if (pm == 'THP') {
+        matchtype = {name: {$nin: pms}};
+    }
+    /*
+    let docs = await collection.find(query,
+        {   _id:1,
+            country: {$elemMatch:}
+            'location.0.address.country':1,
+            'location.0.address.city':1,
+            'location.0.address.plz':1,
+            name:1
+        }).toArray();              // find all data within map borders (box)
+        */
+    let docs = await collection.aggregate([
+        {$match: matchtype},
+        { $match: query},
+        { $project: {
+                _id:1,
+                name:1,
+                location: {
+                    '$map': {
+                        input: '$location',
+                        as: 'm',
+                        in: {
+                            country: '$$m.address.country',
+                            city: '$$m.address.city',
+                            plz: '$$m.address.plz'
+                        }
+                    }
+                }
+            }},
+        { $unwind: '$location'},
+       { $group: {
+               sensorids: { $addToSet: '$_id'},
+                _id: '$location.city',
+                plz: { $addToSet: '$location.plz'},
+                country: { $first: '$location.country' }
+            }},
+        { $project: {
+                _id: 0,
+                city: '$_id',
+                sensors: { count: {$size: '$sensorids'}, ids : '$sensorids'},
+                plz: '$plz',
+                country: '$country',
+            }}
+    ]).toArray();
+//    console.log(docs);
+    return { count: docs.length, cities: docs };
+}
+
+
+
+
+
 module.exports = router;
