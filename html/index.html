@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>rexfue.de</title>
+    <meta charset="utf-8" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Willkommen auf meinen Feinstaub-Seiten</h1>
+
+    Auf diesen Seiten befinden sich diverse Auswertungen der Feinstaub-Daten, die von <a href='https://luftdaten.info'>luftdaten.info</a> zur Verfügung gestellt werden:
+    <ul>
+	    <li>Anzeige der aktuellen Feinstaub-Werte in einer Karte. Die Karte kann verschoben und gezoomed werden<br />
+		    <a href='https://feinstaub.rexfue.de'>feinstaub.rexfue.de</a> </li>
+	    <li>Anzeige des Feinstaub-Verlaufs eines einzelnen Sensors als Grafik <br />
+		    Aufruf: <br />feinstaub.rexfue.de/SNR mit SNR = Sensornummer (z.B.: mein Sensor hat  die Nummer 140, 
+		    also lautet der Aufruf: <a href='https://feinstaub.rexfue.de/140'>feinstaub.rexfue.de/140</a> </li>
+	    <li>Abfrage verschiedener Werte von den Sensoren über eine API. Die Beschreibung der API ist zu finden unter 
+		    <a href='Feinstaub_API.pdf'>Feinstaub_API.pdf</a> (Version vom 2018-11-23)
+    </ul>
+    <p>
+    Die Daten aller Sensoren (z. Zt. über 5000) werden alle 5 min von  <a href='https://luftdaten.info'>luftdaten.info</a> abgeholt und in einer lokalen Datenbank gespeichert. 
+    Die Anzeige in der Grafik und auf der Karte wird mit diesen lokalen Daten erzeugt. Auch die Ausgabe mit der API erfolgt über die lokale Datenbank. 
+    Außerdem werden die Daten einmal täglich analysiert um unsinnige und unplausible Werte zu erkennen. 
+    Diese werden dann in der Karte <b>nicht</b> dargestellt und es erscheint ein Hinweis. Um doch <em>alle</em> (also auch die unplausiblen) Sensoren auf der Karte zu sehen,
+        ist der Aufruf für die Karte wie folgt zu ändern:  <a href='https://feinstaub.rexfue.de?mall=true'>feinstaub.rexfue.de?mall=true</a>
+    </p>
+  
+    <div id='author'>
+	    <div id='mailadr'>
+		    <a href="mailto:rexfue@gmail.com"> mailto:rexfue@gmail.com </a>
+	    </div>
+	    <div id='versn'> letzte Änderung: 2018-11-28
+	    </div>
+    </div>	    
+  
+  </body>
+</html>
+
