@@ -64,14 +64,60 @@ services:
 
   probsens:
     image: probsens
+    volumes:
+      - /var/log/feinstaub:/var/log
     container_name: probsens
     restart: always
 
-  web-nginx:
-    image: web-nginx
+  ttngw-influx:
+    image: influxdb
+    volumes:
+      - /home/rxf/InfluxDB:/var/lib/influxdb
+      - /var/log/ttngw:/var/log
+    ports:
+      - '8086:8086'
+    environment:
+      - INFLUX_DB=TTNgateways
+    container_name: ttngw-influx
+
+  nginx-web:
+    image: nginx-web
+    volumes:
+      - /home/rxf/Projekte/Feinstaub_WEB/html:/usr/share/nginx/html        
     environment:
       - VIRTUAL_HOST=www.rexfue.de,rexfue.de
-    container_name: web-nginx          
+    container_name: nginx-web          
+    restart: always
+  
+  ttngw-web:
+    image: ttngw-web
+    volumes:
+      - /var/log/test1:/var/log      
+    environment:
+      - VIRTUAL_HOST=test1.rexfue.de
+      - MONGOHOST=fst-mongo
+      - MONGOAUTH=true  
+      - "MONGOUSRP=rxf:5C5dB|m"
+    container_name: ttngw-web
+    restart: always
+
+  ttngw-data:
+    image: ttngw-data
+    volumes:
+      - /var/log/ttngw:/var/log
+    environment:
+      - MONGOHOST=fst-mongo
+      - INFLUXHOST=ttngw-influx
+      - MONGOAUTH=true  
+      - "MONGOUSRP=rxf:5C5dB|m"
+    container_name: ttngw-data
+    restart: always
+
+  hansled-web:
+    image: hansled-web
+    environment: 
+      - VIRTUAL_HOST=play.rexfue.de
+    container_name: hansled-web
     restart: always
 
 
