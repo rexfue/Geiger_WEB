@@ -662,7 +662,8 @@ function findStuttgartSensors() {
 // use the API
 function getSensorKoords(csens) {
     let p = new Promise(function(resolve,reject){
-    let url = 'https://feinstaub.rexfue.de/api/getprops?sensorid='+csens;
+//    let url = 'https://feinstaub.rexfue.de/api/getprops?sensorid='+csens;
+    let url = '/api/getprops?sensorid='+csens;
     $.get(url, (data,err) => {
             if (err != 'success') {
                 resolve({lat: 48.784373, lng: 9.182});

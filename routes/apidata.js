@@ -574,13 +574,14 @@ async function getAPIprops(db,sid,typ,dt) {
     console.log("Anzahl gekommen: ",properties.length);
     console.log("First:", properties[0]);
     for (let i = 0; i < properties.length; i++) {
+        let loclast = (properties[i].location.length)-1
         erg.push({
             sid:properties[i]._id,
             typ: properties[i].name,
             since: moment(properties[i].date_since).format(),
-            lat: properties[i].location[0].loc.coordinates[1],
-            lon: properties[i].location[0].loc.coordinates[0],
-            alt: properties[i].location[0].altitude,
+            lat: properties[i].location[loclast].loc.coordinates[1],
+            lon: properties[i].location[loclast].loc.coordinates[0],
+            alt: properties[i].location[loclast].altitude,
         });
     }
     entry.sensortyp = typ =="" ? "all" : typ;
