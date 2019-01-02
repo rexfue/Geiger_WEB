@@ -46,9 +46,12 @@ $(document).ready(function() {
 
     var startDay = "";
 	if(!((typeof startday == 'undefined') || (startday == ""))) {
-		if(startday == "Silvester") {
+		if(startday == "Silvester17") {
 			specialDate = "silvester17";
 			startDay = "2017-12-31T11:00:00Z";
+		} else if(startday == "Silvester18") {
+                specialDate = "silvester18";
+                startDay = "2018-12-31T11:00:00Z";
 		} else {
             startDay = startday;
         }
@@ -228,7 +231,10 @@ $(document).ready(function() {
             window.location = '/' + aktsensorid;
 		} else if (val == 'silvester17') {
             doUpdate= false;
-            window.location = '/'+aktsensorid+'?stday=Silvester';
+            window.location = '/'+aktsensorid+'?stday=Silvester17';
+        } else if (val == 'silvester18') {
+            doUpdate= false;
+            window.location = '/'+aktsensorid+'?stday=Silvester18';
 		} else {
             doUpdate= false;
             const newDay = $('#selnewday').val();
@@ -1278,7 +1284,9 @@ function createGlobObtions() {
             } else {
   				if(specialDate == 'silvester17') {
   					dlt = moment("2017-12-31T11:00:00Z");
-				}
+				}else if(specialDate == 'silvester18') {
+                    dlt = moment("2018-12-31T11:00:00Z");
+                }
                 options.xAxis.min = dlt.valueOf();
                 dlt.add(1, 'd');
                 options.xAxis.max = dlt.valueOf();
@@ -1611,7 +1619,9 @@ function createGlobObtions() {
             } else {
             	if(specialDate == 'silvester17') {
             		dlt = moment("2017-12-31T11:00:00Z");
-				}
+				} else if(specialDate == 'silvester18') {
+                    dlt = moment("2018-12-31T11:00:00Z");
+                }
                 options.xAxis.min = dlt.valueOf();
                 dlt.add(1, 'd');
                 options.xAxis.max = dlt.valueOf();
