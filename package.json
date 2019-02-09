@@ -22,7 +22,7 @@
     "math": "0.0.3",
     "mathjs": "^3.18.0",
     "moment": "^2.20.1",
-    "mongodb": "^2.2.33",
+    "mongodb": "^2.2.36",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",

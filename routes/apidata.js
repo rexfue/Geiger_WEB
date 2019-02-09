@@ -153,8 +153,12 @@ async function putAPIproblemdata(db, cmd, data) {
         return {error: 'done'};
     }
     if(cmd == 'data') {
-        let inserted = await collection.insertOne(data);
-        console.log("Inserted:", inserted.insertedId)
+        try {
+            let inserted = await collection.insertOne(data);
+            console.log("Inserted:", inserted.insertedId)
+        }
+        catch(e) {
+        }
         return {error: inserted.result};
     }
     return { error: 'wrong command'};
