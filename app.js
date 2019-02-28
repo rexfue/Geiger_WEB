@@ -125,7 +125,7 @@ var apidatas = require('./routes/apidata');
 app.use('/fs/api',apidatas);
 
 
-const connect = MongoClient.connect(MONGO_URL);
+const connect = MongoClient.connect(MONGO_URL, {poolSize:20});
 connect
     .then(db => {
         app.set('dbase', db);								    // Übergabe von db
