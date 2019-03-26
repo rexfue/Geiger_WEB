@@ -4,9 +4,12 @@ const app = express();
 const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
 const os = require('os');
+const moment = require('moment');
 
 // Consts
 const PORT = 3005;											// Port for server
+
+const MONGOBASE = 'Feinstaubi_A';
 
 let MONGOHOST = process.env.MONGOHOST;
 let MONGOPORT = process.env.MONGOPORT;
@@ -17,9 +20,9 @@ if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
 if (MONGOPORT === undefined) { MONGOPORT =  27017; }
 if (MONGOAUTH === undefined) { MONGOAUTH =  'false'; }
 
-let MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT+'/Feinstaubi_A';  	// URL to mongo database
+let MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT;  	// URL to mongo database
 if (MONGOAUTH == 'true') {
-    MONGO_URL = 'mongodb://'+MONGOUSRP+'@' + MONGOHOST + ':' + MONGOPORT + '/Feinstaubi_A';          // URL to mongo database
+    MONGO_URL = 'mongodb://'+MONGOUSRP+'@' + MONGOHOST + ':' + MONGOPORT + '/?authSource=admin';          // URL to mongo database
 }
 
 console.log(os.hostname());
@@ -34,11 +37,13 @@ app.use(express.static("node_modules/jquery/dist"));
 app.use(express.static("node_modules/moment/min"));
 
 
-function checkHost(req, res, next) {
+async function checkHost(req, res, next) {
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
         (req.headers.host == 'develop.rexfue.de') ||
         (req.headers.host == 'localhost:3005') ||
+        (req.headers.host == 'nuccy:3005') ||
+        (req.headers.host == '213.136.85.253:3005') ||
         (req.headers.host == 'macbig:3005')                 //Port is important if the url has it
     ) {
         req.url = '/fs' + req.url;
@@ -47,7 +52,25 @@ function checkHost(req, res, next) {
     if(req.path.startsWith('/TEST')) {
         req.url = '/TEST' + req.url;
     }
-//    console.log("URL:",req.url);
+
+    let uri = req.url.substr(3);
+    let city = "unknown";
+    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
+    {
+        let dbs = app.get('dbase');
+        city = await apidatas.api.getCity(dbs, parseInt(uri.substring(1)));
+    }
+
+    if(
+        (!isNaN(uri.substring(1) - parseInt(uri.substring(1)))) ||
+        (uri.substring(1,4)=='api') ||
+        ((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd'))
+    ) {
+        console.log(moment().format(),"  ", uri, "  ", city);
+    }
+    if (req.url.substring(4,5) == 'i') {
+        req.url = '/fs/' + req.url.substring(5);
+    }
     next();
 }
 
@@ -125,10 +148,10 @@ var apidatas = require('./routes/apidata');
 app.use('/fs/api',apidatas);
 
 
-const connect = MongoClient.connect(MONGO_URL, {poolSize:20});
+const connect = MongoClient.connect(MONGO_URL, {poolSize:20, useNewUrlParser: true });
 connect
-    .then(db => {
-        app.set('dbase', db);								    // Übergabe von db
+    .then(client => {
+        app.set('dbase', client.db(MONGOBASE));								    // Übergabe von db
         app.listen(PORT, function () {
             console.log("App listens on port " + PORT);
         })

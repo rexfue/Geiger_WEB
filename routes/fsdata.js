@@ -69,7 +69,7 @@ function getSensorName(db,sid) {
 // fetch the properties for the given sensor
 async function getSensorProperties(db,sid) {
 
-    console.log("Get properties for", sid,"from DB");
+//    console.log("Get properties for", sid,"from DB");
     let sensorEntries = [{'sid':sid}];
     let coll = db.collection('properties');
     let properties = await coll.findOne({_id: sid});
@@ -158,7 +158,7 @@ function getOldestEntry(db,sid) {
  dieses dann zurückgeben.
  */
 function getLatestValues(db,sensorid,sensorname,samples) {
-    console.log("GetLatest  " + sensorid + "  " + sensorname + "  " + samples);
+//    console.log("GetLatest  " + sensorid + "  " + sensorname + "  " + samples);
     var p = new Promise(function(resolve,reject) {
         var colstr = 'data_' + sensorid ;
         var collection = db.collection(colstr);
@@ -167,7 +167,7 @@ function getLatestValues(db,sensorid,sensorname,samples) {
         }
         var start = moment().subtract(samples,'m');
         var end = moment();
-        console.log(start,end);
+//        console.log(start,end);
         collection.find({
             date: {
                 $gte: new Date(start),
@@ -177,7 +177,7 @@ function getLatestValues(db,sensorid,sensorname,samples) {
             if (e != null) {
                 reject(e);
             }
-            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei latest')
+//            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei latest')
             var y;
             if (isPM(sensorname)) {
                 y = calcMinMaxAvgSDS(docs,false);
@@ -239,7 +239,7 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                     }
                 }, {sort: {datetime: 1}}).toArray();
             }
-            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
+//            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
             if (docs.length == 0) {
                 return {'docs': []};
             } else {
@@ -295,7 +295,7 @@ async function getWeekData(db, sensorid, sensorname, altitude , st, live) {
         console.log(e);
         docs = [];
     }
-    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
+//    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
     if (docs.length == 0) {
         return ({'docs': []})
     } else {
@@ -355,7 +355,7 @@ function getYearData(db,sensorid,sensorname, st,what) {
                     ]);
                     cursor.toArray(function (err, docs) {
 //                    console.log(docs);
-                        console.log("Dauer SDS:", new Date() - stt)
+//                        console.log("Dauer SDS:", new Date() - stt)
                         resolve({'docs': docs});
                     });
                 } else if (sensorname == 'DHT22') {
@@ -378,7 +378,7 @@ function getYearData(db,sensorid,sensorname, st,what) {
                             if (docs[x].tempMI < min) min = docs[x].tempMI;
                             if (docs[x].tempMX > max) max = docs[x].tempMX;
                         }
-                        console.log("Dauer DHT:", new Date() - stt)
+//                        console.log("Dauer DHT:", new Date() - stt)
                         resolve({'docs': docs, 'maxima': {'tmax': max, 'tmin': min}});
                     });
                 } else if ((sensorname == 'BMP180') || (sensorname == 'BME280')) {
@@ -402,7 +402,7 @@ function getYearData(db,sensorid,sensorname, st,what) {
                             if (docs[x].tempMI < min) min = docs[x].tempMI;
                             if (docs[x].tempMX > max) max = docs[x].tempMX;
                         }
-                        console.log("Dauer BMP/E:", new Date() - stt)
+//                        console.log("Dauer BMP/E:", new Date() - stt)
                         resolve({'docs': docs, 'maxima': {'tmax': max, 'tmin': min}});
                     });
                 }

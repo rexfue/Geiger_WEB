@@ -12,7 +12,25 @@ const MongoClient1 = require('mongodb').MongoClient;
 const fsdata = require('./fsdata');
 const util = require('./utilities');
 
+
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
+
+// Get the city for given Sensor
+async function getCity(db, sensorid) {
+    let pcoll = db.collection("properties");
+    let properties = await pcoll.findOne({_id:sensorid});
+    let addr = "unKnown";
+    try {
+        addr = properties.location[0].address.country + " " +
+            properties.location[0].address.plz + " " +
+            properties.location[0].address.city;
+    }
+    catch(e) {
+    // do nothing, just skip
+    }
+    return addr;
+}
+
 
 // API to put data into dBase
 router.post('/putdata/:what', function(req,res) {
@@ -22,7 +40,7 @@ router.post('/putdata/:what', function(req,res) {
     if (what=='problems') {
         putAPIproblemdata(db, cmd, req.body)
             .then((erg) => {
-                console.log(erg);
+//                console.log(erg);
                 res.send(erg);
             });
     } else {
@@ -140,26 +158,26 @@ router.get('/getcities', (req,res) => {
 //      error, if not correctly saved, else null
 // ***********************************************************
 async function putAPIproblemdata(db, cmd, data) {
+//    console.log("putAPIproblemdata","  Länge: ", data.length);
     let collection = db.collection('problemsensors');
-    if (cmd == 'start') {
-        try {
-            await collection.drop();  // remove collection
-        }
-        catch (e) {
-        }
-        return {error:'start'};
-    }
     if(cmd == 'end') {
         return {error: 'done'};
     }
     if(cmd == 'data') {
+        let inserted;
+        let upd = [];
+        for (let i=0; i< data.length; i++){
+            let one = { updateOne: { "filter" : { "_id": data[i]._id}, "update": { $set: data[i]}, "upsert": true } };
+            upd.push(one);
+        }
         try {
-            let inserted = await collection.insertOne(data);
-            console.log("Inserted:", inserted.insertedId)
+            inserted = await collection.bulkWrite(upd)
+//            console.log("Modifiziert:", inserted.modifiedCount)
         }
         catch(e) {
+            console.log(e)
         }
-        return {error: inserted.result};
+        return {error: "OK"}
     }
     return { error: 'wrong command'};
 }
@@ -194,7 +212,10 @@ async function getAPIprobSensors(db,pnr,only,withTxt) {
     }
     let texte = {};
     if(withTxt) {
-        texte = await coll.findOne({_id: 0});
+        let tt = await coll.findOne({_id: 0});
+        if (tt == null) {
+            texte.texte = [];
+        }
     }
     let ret;
     if (only) {
@@ -419,22 +440,24 @@ async function  getAPIdataSensor(db, sid, avg, span, dt) {
 // return:
 //      JSON Dokument mit den angefragten Werten
 // *********************************************
-async function getAPIdata(db,sid,mavg,dauer,start,end, gstart) {
-    let values=[];
+async function getAPIdata(db, sid, mavg, dauer, start, end, gstart) {
+    let values = [];
     let retur = {sid: sid, avg: mavg, span: dauer, start: gstart};
-    let collection = db.collection('data_'+sid);
+    let collection = db.collection('data_' + sid);
     try {
-        values = await collection.find({
+        values = await collection.find(
+            {
                 datetime: {
                     $gte: new Date(start),
                     $lt: new Date(end)
-                }},{ _id: 0 },
+                }
+            },
             {
-                sort: {datetime:1}
+                projection: {_id: 0},
+                sort: {datetime: 1}
             }
         ).toArray()
-    }
-    catch(e) {
+    } catch (e) {
         console.log(e);
     }
     if(values.length == 0) {
@@ -575,10 +598,13 @@ async function getAPIprops(db,sid,typ,dt) {
         query = { _id:sid };
     }
     properties = await pcoll.find(query).sort({_id: 1}).toArray();
-    console.log("Anzahl gekommen: ",properties.length);
-    console.log("First:", properties[0]);
+//    console.log("Anzahl properties gekommen: ",properties.length);
+//    console.log("First:", properties[0]);
     for (let i = 0; i < properties.length; i++) {
         let loclast = (properties[i].location.length)-1
+        if(properties[i].last_seen == undefined) {
+            properties[i].last_seen = moment("1900-01-01T00:00Z");
+        }
         erg.push({
             sid:properties[i]._id,
             typ: properties[i].name,
@@ -586,6 +612,7 @@ async function getAPIprops(db,sid,typ,dt) {
             lat: properties[i].location[loclast].loc.coordinates[1],
             lon: properties[i].location[loclast].loc.coordinates[0],
             alt: properties[i].location[loclast].altitude,
+            lastSeen: moment(properties[i].last_seen).format(),
         });
     }
     entry.sensortyp = typ =="" ? "all" : typ;
@@ -699,7 +726,7 @@ async function getApiMapSensors(db, bounds, stype, ptype, st) {
     }
     let docs = await collection.find(loc, {_id: 1, name:1}).toArray();              // find all data within map borders (box)
 //        .toArray(async function (err, docs) {
-    console.log(docs);
+//    console.log(docs);
     for (let i = docs.length - 1; i >= 0; i--) {
         if (!((name == 'PM') == isPM(docs[i].name)))  {
             docs.splice(i, 1);
@@ -729,12 +756,12 @@ async function getApiMapSensors(db, bounds, stype, ptype, st) {
         docs[i].std = std;
         delete docs[i].name;
     }
-    console.log(docs);
+//    console.log(docs);
     // nun in docs alle Mittelwerte über die letzten 24h
     // nun sortieren
     let docs_sorted = docs.sort((a, b) => a.mean - b.mean);
     let docs_std = docs.sort((a, b) => a.std - b.std);
-    console.log(docs_sorted);
+//    console.log(docs_sorted);
     return docs_sorted;
 }
 
@@ -834,3 +861,4 @@ async function getApiCities(db, country, pm) {
 
 
 module.exports = router;
+module.exports.api = { getCity };

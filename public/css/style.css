@@ -28,6 +28,8 @@ header {
 
 header #h1name {
 	float: left;
+	font-size: 148%;
+	margin-top: 23px;
 }
 
 header #btnssel {
@@ -51,6 +53,8 @@ header #ssel {
 }
 header #h1uhr {
 	float: right;
+	font-size: 148%;
+	margin-top: 23px;
 }
 
 header #adresse {
@@ -83,6 +87,7 @@ header #subtitle {
 	float: right;
 	margin-bottom: 15px;
 }
+
 
 button {
 	width: 15%;
@@ -130,6 +135,8 @@ button {
 .btn-primary {
 	background: #0099cc;
 	color: #ffffff;
+	font-size: 90%;
+	padding-bottom: 25px;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
