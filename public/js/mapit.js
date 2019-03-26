@@ -366,7 +366,7 @@ function removeOneMarker(n) {
 
 // Problem-Sensoren holen
 function fetchProblemSensors() {
-    $.getJSON('/api/getprobdata',{mitTxt: true}, function(data,err) {
+    $.getJSON('/iapi/getprobdata',{mitTxt: true}, function(data,err) {
         if (err != 'success') {
             alert("Fehler <br />" + err);						// ggf. fehler melden
         } else {
@@ -393,12 +393,12 @@ function fetchAktualData() {
                 updateValues(data1.avgs);
             }
             showLastDate(data1.lastDate);
-            let fnd = problems.values.findIndex(x => x._id==curSensor);
-            if (fnd != -1) {
-                if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
-                    $('#nosensor').show();
-                }
-            }
+            // let fnd = problems.values.findIndex(x => x._id==curSensor);
+            // if (fnd != -1) {
+            //     if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
+            //         $('#nosensor').show();
+            //     }
+            // }
         }
     });
 }
@@ -541,19 +541,19 @@ function buildMarkers(data) {
 //        }
         // Wenn der Sensor in der Problem-Datenbank ist, dann
         // diesen Sensor auslassen
-        if(!allMap) {
-            let fnd = problems.values.findIndex(x => x._id == item.id);
-            if (fnd != -1) {
-                // Problem Nr. 8 und 5 mal ausklammern
-                if(item.id == 140) {
-                    print("140");
-                }
-                if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
-                    continue;
-                }
-//            }
-            }
-        }
+//         if(!allMap) {
+//             let fnd = problems.values.findIndex(x => x._id == item.id);
+//             if (fnd != -1) {
+//                 // Problem Nr. 8 und 5 mal ausklammern
+//                 if(item.id == 140) {
+//                     print("140");
+//                 }
+//                 if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
+//                     continue;
+//                 }
+// //            }
+//             }
+//         }
         var offset = 0;											// deault Offset ist 0
         if (item.location[0] == lold ) {					            // Wenn Marker auf gleicher Lönge liegen, dann
             offset = 10;											// enen neuen etwas nach rechts verscheiben
@@ -663,7 +663,7 @@ function findStuttgartSensors() {
 function getSensorKoords(csens) {
     let p = new Promise(function(resolve,reject){
 //    let url = 'https://feinstaub.rexfue.de/api/getprops?sensorid='+csens;
-    let url = '/api/getprops?sensorid='+csens;
+    let url = '/iapi/getprops?sensorid='+csens;
     $.get(url, (data,err) => {
             if (err != 'success') {
                 resolve({lat: 48.784373, lng: 9.182});

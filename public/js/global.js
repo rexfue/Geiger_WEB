@@ -377,7 +377,7 @@ $(document).ready(function() {
                 korrelation = data;
                 fstAlarm = data.alarm;
             }
-			console.log("Korrelation: ",korrelation);
+//			console.log("Korrelation: ",korrelation);
 //            getOldestDate(aktsensorid, korrelation.sensors,function(old){
 //                oldestDate = old;
 //                console.log("Oldest Entry:",oldestDate);
@@ -672,7 +672,7 @@ $(document).ready(function() {
             $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
 			$('#ssel').val(aktsensorid);
         }
-        console.log(addr);
+//        console.log(addr);
 		var adtxt = '';
 		if(!((addr == undefined) || (addr == {}))) {
             if (extAddr) {
@@ -765,7 +765,7 @@ $(document).ready(function() {
 		var url = '/fsdata/getfs/'+what;
 		var count = korrelation.othersensors.length;			// Anzahl der Sensoren
 //		var korridx = 0;
-		console.log(aktsensorid, korrelation);
+//		console.log(aktsensorid, korrelation);
 
 		// find aktsensor in korrelation.othersensors
         let korridx = korrelation.othersensors.findIndex( function(x) {
@@ -795,8 +795,8 @@ $(document).ready(function() {
 			if(err != 'success') {
 				alert("Fehler <br />" + err);						// if error, show it
 			} else {
-                console.log(moment().format() + " --> " +data1.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
-				console.log("Zeit dafür:",moment()-s2);
+//                console.log(moment().format() + " --> " +data1.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
+//				console.log("Zeit dafür:",moment()-s2);
 //			    if (data1.docs.length == 0) {
 //                    showError(1,"No data at " + what, aktsensorid);
 //                }
@@ -816,8 +816,8 @@ $(document).ready(function() {
                         alert("Fehler <br />" + err);				// if error, show it
                     } else {
                         d2 = data2;
-                        console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
-						console.log("Zeit dafür:",moment()-s3);
+//                        console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
+//						console.log("Zeit dafür:",moment()-s3);
 /*                        korridx++;
                         if (!((korridx == count) || (count >= 3))) {
 	                        currentSensor = korrelation.othersensors[korridx];
@@ -1224,31 +1224,19 @@ function createGlobObtions() {
 	            type: logyaxis == true ? 'logarithmic' : 'linear',
     	        max: logyaxis == true ? null : maxY,
         	    min: logyaxis == true ? null : 0,
-				type: logyaxis == true ? 'logarithmic' : 'linear',
 				title: {
 					text: 'Feinstaub µg/m<sup>3</sup>',
 					useHTML: true,
                     events: {
 					    click: function() {
-                            dialogYmax.dialog('open');
+					        if(!logyaxis) {
+                                dialogYmax.dialog('open');
+                            }
 					    }
 				    },
 				},
 //				tickAmount: 9,
 				gridLineColor: '#A2A6A4', // 'lightgray',
-				plotLines : [{
-					color: 'red', // Color value
-					value: 50, // Value of where the line will appear
-					width: 2, // Width of the line
-					label: {
-						useHTML: true,
-						text : labelText,
-						y: -10,
-						align: 'center',
-						style : { color: 'red'},
-					},
-					zIndex: 8,
-				}],
 				labels: {
 					formatter: function() {
 						if('50' == this.value){
@@ -1261,11 +1249,41 @@ function createGlobObtions() {
 		};
 
 
-		options.series = [];
+		const plot50lineWeek = [{
+                color: 'red', // Color value
+                value: 50, // Value of where the line will appear
+                width: 2, // Width of the line
+                label: {
+                    useHTML: true,
+                    text: labelText,
+                    y: -10,
+                    align: 'center',
+                    style: {color: 'red'},
+                },
+                zIndex: 8,
+            }];
+
+        const plot50lineDay = [{
+            color: 'red', // Color value
+            value: 50, // Value of where the line will appear
+            width: 1, // Width of the line
+            dashStyle: 'dash',
+            label: {
+                useHTML: true,
+                text: labelText,
+                y: -10,
+                align: 'center',
+                style: {color: 'red'},
+            },
+            zIndex: 8,
+        }];
+
+        options.series = [];
 		options.yAxis = [];
 		options.yAxis[0] = yAxis_dust;
 		options.chart.zoomType = 'x';
 		if (what == 'oneday') {
+            options.yAxis[0].plotLines = plot50lineDay;
 			options.series[0] = series_P10_m;
 			options.series[1] = series_P2_5_m;
             if(showscatter) {
@@ -1292,6 +1310,7 @@ function createGlobObtions() {
                 options.xAxis.max = dlt.valueOf();
 			}
 		} else if (what == 'oneweek'){
+            options.yAxis[0].plotLines = plot50lineWeek;
             options.series[0] = series_P10_m;
             options.series[1] = series_P2_5_m;
             if(showscatter) {

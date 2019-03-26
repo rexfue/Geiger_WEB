@@ -24,7 +24,7 @@ router.get('/getaktdata/', function (req, res) {
     if(req.query.poly != undefined) {
         poly = JSON.parse(req.query.poly);
     }
-    console.log('Box:', south,north,east,west);
+ //   console.log('Box:', south,north,east,west);
 
 /* Versuch, über die CSV-Dateien einen beliebigen Zeitpunkt einzulesen.
     Das funtioniert erstens noch nicht (Fehler, wenn CSV nicht da ist, wird nicht richtig
@@ -45,7 +45,7 @@ router.get('/getaktdata/', function (req, res) {
     var now = moment();                                                 // akt. Uhrzeit
     var lastDate = 0;
     let loc;
-    console.log("fetching data ");
+//    console.log("fetching data ");
     if(poly.length != 0) {
         loc = {
             location: {
@@ -117,9 +117,9 @@ router.get('/getaktdata/', function (req, res) {
  //           console.log('lastDate:',lastDate);
  //           console.log("Daten für "+ oneAktData.id + " geholt");
         }
-        console.log("Komm direkt vor res.json in route.get(/getaktdata) und lastDate ist:", lastDate);
+//        console.log("Komm direkt vor res.json in route.get(/getaktdata) und lastDate ist:", lastDate);
         res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
-        console.log("Array-Länge:",aktData.length);
+//        console.log("Array-Länge:",aktData.length);
     });
 });
 
