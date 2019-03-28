@@ -251,10 +251,20 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                     let x = await util.calcMovingAverage(db, sensorid, docs, avg,  0, false);
                     return {'docs': x.THP, 'minmax': calcMinMaxAvgDHT(docs)};
                 } else if (sensorname == "BMP180") {
+                    for ( let i=docs.length-1; i>=0; i--) {
+                        if ((docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
+                            docs.splice(i, 1);
+                        }
+                    }
                     let x = await util.calcMovingAverage(db, sensorid, docs, avg,  altitude, false);
                     return {'docs': x.THP,
                     'minmax': await calcMinMaxAvgBMP(db, sensorid, docs)};
                 } else if (sensorname == "BME280") {
+                    for ( let i=docs.length-1; i>=0; i--) {
+                        if ((docs[i].pressure == undefined) || (docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
+                            docs.splice(i, 1);
+                        }
+                    }
                     let x = await util.calcMovingAverage(db, sensorid, docs, avg, altitude, false);
                     return {'docs': x.THP,
                     'minmax': await calcMinMaxAvgBME(db, sensorid, docs)};
