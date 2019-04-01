@@ -1224,13 +1224,14 @@ function createGlobObtions() {
 	            type: logyaxis == true ? 'logarithmic' : 'linear',
     	        max: logyaxis == true ? null : maxY,
         	    min: logyaxis == true ? null : 0,
-				type: logyaxis == true ? 'logarithmic' : 'linear',
 				title: {
 					text: 'Feinstaub µg/m<sup>3</sup>',
 					useHTML: true,
                     events: {
 					    click: function() {
-                            dialogYmax.dialog('open');
+					        if(!logyaxis) {
+                                dialogYmax.dialog('open');
+                            }
 					    }
 				    },
 				},
@@ -1248,7 +1249,7 @@ function createGlobObtions() {
 		};
 
 
-		const plot50line = [{
+		const plot50lineWeek = [{
                 color: 'red', // Color value
                 value: 50, // Value of where the line will appear
                 width: 2, // Width of the line
@@ -1262,11 +1263,27 @@ function createGlobObtions() {
                 zIndex: 8,
             }];
 
-		options.series = [];
+        const plot50lineDay = [{
+            color: 'red', // Color value
+            value: 50, // Value of where the line will appear
+            width: 1, // Width of the line
+            dashStyle: 'dash',
+            label: {
+                useHTML: true,
+                text: labelText,
+                y: -10,
+                align: 'center',
+                style: {color: 'red'},
+            },
+            zIndex: 8,
+        }];
+
+        options.series = [];
 		options.yAxis = [];
 		options.yAxis[0] = yAxis_dust;
 		options.chart.zoomType = 'x';
 		if (what == 'oneday') {
+            options.yAxis[0].plotLines = plot50lineDay;
 			options.series[0] = series_P10_m;
 			options.series[1] = series_P2_5_m;
             if(showscatter) {
@@ -1293,7 +1310,7 @@ function createGlobObtions() {
                 options.xAxis.max = dlt.valueOf();
 			}
 		} else if (what == 'oneweek'){
-            options.yAxis[0].plotLines = plot50line;
+            options.yAxis[0].plotLines = plot50lineWeek;
             options.series[0] = series_P10_m;
             options.series[1] = series_P2_5_m;
             if(showscatter) {
