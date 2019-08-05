@@ -1,0 +1,10 @@
+node-modules
+PYTHON
+.gitignore
+.dockerignore
+build_and_copy.sh
+buildit.sh
+copycontainder.sh
+docker-compose.yml
+Dockerfile*
+nginx-proxy

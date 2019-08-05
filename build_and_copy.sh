@@ -23,9 +23,9 @@ fi
 
  docker build -f Dockerfile_$1 -t $1 .
 
-if [ $2 != "" ]
+if [ "$2" != "" ]
 then
     dat=`date +%Y%m%d%H%M`
-    ssh $2 "docker tag $1 $1:V_$dat"
-    docker save $1 | bzip2 | pv | ssh $2 'bunzip2 | docker load'
+    ssh -p 22022 $2 "docker tag $1 $1:V_$dat"
+    docker save $1 | bzip2 | pv | ssh -p 22022 $2 'bunzip2 | docker load'
 fi
