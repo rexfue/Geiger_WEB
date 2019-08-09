@@ -386,7 +386,7 @@ $(document).ready(function() {
 			// save coordinates in localStorage
             localStorage.setItem('curcoord',JSON.stringify(korrelation.location[korrelation.location.length-1].loc.coordinates));
 
-			buildHeaderline(korrelation.othersensors,korrelation.location[korrelation.location.length-1].address);
+			buildHeaderline(korrelation.othersensors,korrelation.location[korrelation.location.length-1]);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
 			doPlot('oneweek',startDay);								// Start with plotting one week from now on
 			doPlot('onemonth');								// Start with plotting one month from now on
@@ -651,7 +651,7 @@ $(document).ready(function() {
 	}
 
 	// Sensornummer und Name und Adresse oben mit eintragen
-	function buildHeaderline(sensors,addr) {
+	function buildHeaderline(sensors,loc) {
 		var idx;
 		var count = sensors.length;
 		if(count > 0) {
@@ -673,6 +673,11 @@ $(document).ready(function() {
 			$('#ssel').val(aktsensorid);
         }
 //        console.log(addr);
+        var addr = loc.address;
+		if((loc.loc.coordinates[0]) == 0 && (loc.loc.coordinates[1] == 0)) {
+            $('#adresse').html("Keine Koordinaten bzw. keine Adresse angegeben!");
+            return;
+        }
 		var adtxt = '';
 		if(!((addr == undefined) || (addr == {}))) {
             if (extAddr) {
