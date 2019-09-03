@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js >>/var/log/fst-web.log 2>&1"
+    "start": "node app.js >>/var/log/fst-geig.log 2>&1"
   },
   "author": "rxf@gmail.com",
   "license": "ISC",

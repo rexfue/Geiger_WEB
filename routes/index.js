@@ -7,7 +7,7 @@ var pkg = require('../package.json');
 var MAINT = false;
 var idx = 'index';
 var mapit = 'mapit';
-var title = 'Feinstaub';
+var title = 'Geiger';
 
 
 if (MAINT==true) {
@@ -18,7 +18,7 @@ if (MAINT==true) {
 // GET home page.
 router.get('/', function(req, res, next) {
     res.render(mapit, {
-        title: 'Feinstaub-Map',
+        title: 'Geiger-Map',
         version: pkg.version,
         date: pkg.date,
         name: 'map',
@@ -39,7 +39,7 @@ router.get('/:nam', function(req, res, next) {
     }
     if (name == 'map') {
     	res.render(mapit, {
-    		title: 'Feinstaub-Map',
+    		title: 'Geiger-Map',
     		version : pkg.version,
     		date : pkg.date,
             param: req.query.addr,

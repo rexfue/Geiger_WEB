@@ -1,123 +1,43 @@
 version: '3'
 services:
 
-  nginx-proxy:
-    image: nginx-proxy
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    ports:
-      - '80:80'
-      - '443:443'  
-    container_name: nginx-proxy
-    restart: always
-
   fst-mongo:
     image: mongo
     volumes:
-      - /var/lib/mongodb:/data/db
-      - /var/log/feinstaub:/var/log
+      - /private/var/lib/mongodb:/data/db
+      - /private/var/log/feinstaub:/var/log
     ports:
       - '27017:27017'
     container_name: fst-mongo
-    command: '--auth'
+#    command: '--auth'
     restart: always
 
   fst-data:
     image: fst-data
     volumes:
-      - /var/log/feinstaub:/var/log
+      - /private/var/log/feinstaub:/var/log
     environment:
-      - TTS_KEY=MUFFBAA88CI0BP5D        
+      - TTS_KEY=YU4D8C6L39L53B8Q        
       - MONGOHOST=fst-mongo
-      - MONGOAUTH=true  
-      - "MONGOUSRP=rxf:5C5dB|m"  
+#      - MONGOAUTH=true  
+#      - "MONGOUSRP=rxf:5C5dB|m"  
     container_name: fst-data
     restart: always
 
-  fst-web:
-    image: fst-web
-    volumes:
-      - /var/log/feinstaub:/var/log
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-    environment:
-      - VIRTUAL_HOST=feinstaub.rexfue.de
-      - MONGOHOST=fst-mongo
-      - MONGOAUTH=true  
-      - "MONGOUSRP=rxf:5C5dB|m"
-      - TZ=Europe/Berlin  
-    container_name: fst-web
-    restart: always
-
-  fstst-web:
-    image: fstst-web
-    volumes:
-      - /var/log/feinstaub:/var/log
-    environment:
-      - VIRTUAL_HOST=develop.rexfue.de
-      - MONGOHOST=fst-mongo
-      - MONGOAUTH=true  
-      - "MONGOUSRP=rxf:5C5dB|m"  
-      - TZ=Europe/Berlin  
-    container_name: fstst-web
-    restart: always
-
-  probsens:
-    image: probsens
-    volumes:
-      - /var/log/feinstaub:/var/log
-    container_name: probsens
-    restart: always
-
-  ttngw-influx:
-    image: influxdb
-    volumes:
-      - /home/rxf/InfluxDB:/var/lib/influxdb
-      - /var/log/ttngw:/var/log
-    ports:
-      - '8086:8086'
-    environment:
-      - INFLUX_DB=TTNgateways
-    container_name: ttngw-influx
-
-  nginx-web:
-    image: nginx-web
-    volumes:
-      - /home/rxf/Projekte/Feinstaub_WEB/html:/usr/share/nginx/html        
-    environment:
-      - VIRTUAL_HOST=www.rexfue.de,rexfue.de
-    container_name: nginx-web          
-    restart: always
-  
-  ttngw-web:
-    image: ttngw-web
-    volumes:
-      - /var/log/test1:/var/log      
-    environment:
-      - VIRTUAL_HOST=test1.rexfue.de
-      - MONGOHOST=fst-mongo
-      - MONGOAUTH=true  
-      - "MONGOUSRP=rxf:5C5dB|m"
-    container_name: ttngw-web
-    restart: always
-
-  ttngw-data:
-    image: ttngw-data
-    volumes:
-      - /var/log/ttngw:/var/log
-    environment:
-      - MONGOHOST=fst-mongo
-      - INFLUXHOST=ttngw-influx
-      - MONGOAUTH=true  
-      - "MONGOUSRP=rxf:5C5dB|m"
-    container_name: ttngw-data
-    restart: always
-
-  hansled-web:
-    image: hansled-web
-    environment: 
-      - VIRTUAL_HOST=play.rexfue.de
-    container_name: hansled-web
-    restart: always
-
+#  fst-web:
+#    image: fst-web
+#    volumes:
+#      - /private/var/log/feinstaub:/var/log
+##      - "/etc/timezone:/etc/timezone:ro"
+##      - "/etc/localtime:/etc/localtime:ro"
+#    environment:
+##      - VIRTUAL_HOST=feinstaub.rexfue.de
+#      - MONGOHOST=fst-mongo
+##      - MONGOAUTH=true  
+##      - "MONGOUSRP=rxf:5C5dB|m"
+#      - TZ=Europe/Berlin  
+#    ports:
+#      - '3005:3005'
+#    container_name: fst-web
+#    restart: always
 

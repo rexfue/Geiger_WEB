@@ -12,6 +12,10 @@ var geocod;
 var trafficLayer;
 let mongoPoints = [];
 let problems = [];
+let icon = "";
+let image_red, image_green, image_yellow;
+let colorRadio = [];
+
 
 var w = $('#btnTraf span').width();
 $('#btnTraf').css('width',w+30);
@@ -36,6 +40,8 @@ if (!((typeof csid == 'undefined') || (csid == ""))) {
 }
 
 //	localStorage.clear();
+
+
 
 // Karte und die Marker erzeugen
 async function initMap() {												// Map initialisieren
@@ -317,6 +323,16 @@ async function initMap() {												// Map initialisieren
         infowindow.setContent("");
     });
 
+
+    image_red = new google.maps.MarkerImage('../nuclear-red.svg',
+        null,null,null, new google.maps.Size(30,30));
+    image_green = new google.maps.MarkerImage('../nuclear-green.svg',
+        null,null,null, new google.maps.Size(30,30));
+    image_yellow = new google.maps.MarkerImage('../nuclear-yellow.svg',
+        null,null,null, new google.maps.Size(30,30));
+    colorRadio = [500,image_red,100,image_yellow,0,image_green,-1,'black'];
+
+
 }
 
 
@@ -503,7 +519,25 @@ function getBalken(height,breit,offset) {
             break;
         }
     }
-    /* zylindrische Säule */
+    // für Geiger mal nur einen Kreis machen
+    var rx = breit/2, ry = breit/2;								// x- und y-Radius der Ellipse
+    var pstr =													// SVG-Pfad für die Säule
+        'M ' + startx + ',0 ' +
+        'a ' + rx + ' ' + ry + ',0,0,0,'+ (rx*2) +' 0 '+
+        'a ' + rx + ' ' + ry + ',0,0,0,-'+ (rx*2) +' 0' ;
+
+
+    var kreis = {												// Balken-Objekt erzeugen
+        path: pstr,
+        fillColor: color,
+        fillOpacity: 0.6,										// ein wenig durchsichtig
+        scale: 1,
+        strokeColor: 'black',									// schwarze Umrandung
+        strokeWeight: 1,
+    };
+    return kreis;
+
+    /* zylindrische Säule
     if (height < 0 )  { height = 0;}
     if(height >101) { height = 101; }
     var rx = breit/2, ry = breit/4;								// x- und y-Radius der Ellipse
@@ -524,6 +558,8 @@ function getBalken(height,breit,offset) {
         strokeWeight: 1,
     };
     return balken;
+
+     */
 }
 
 // die Marker erzeugen
@@ -559,22 +595,40 @@ function buildMarkers(data) {
             offset = 10;											// enen neuen etwas nach rechts verscheiben
         }
         lold = item.location[0];							            // und die Länge merken
+
+        let image;
+        for (let c=0; c<=colorRadio.length; c+=2) {					// Farbzuordnung anhand der
+            if (item.cpm >= colorRadio[c]) {							// Tafel bestimmen
+                image = colorRadio[c + 1];
+                break;
+            }
+        }
+
+
+        // let image = {
+        //     url: "http://localhost:3005/mapdata/getIcon/"+color,
+        //     size: new google.maps.Size(50, 50),
+        // };
+
+
         var oneMarker = new google.maps.Marker({				// Marker-Objekt erzeugen
             position: new google.maps.LatLng(item.location[1],item.location[0]), // mit den Koordinaten aus den daten
-            icon: getBalken(item.value10,sBreit,offset),			// die Säule dazu
-            werte: [item.value10, item.value25],				// auch die Werte mit speichern
+            icon: image,
+//            icon: getBalken(item.cpm,sBreit,offset),			// die Säule dazu
+//            werte: [item.value10, item.value25],				// auch die Werte mit speichern
+            werte: [item.cpm],	                    			// auch die Werte mit speichern
             sensorid: item.id,						        	// und auch die Sensor-Nummer
             url: '/'+item.id,		    						// URL zum Aufruf der Grafik
             latlon:  {lat: parseFloat(item.location[1]), lng: parseFloat(item.location[0])}, // und extra nocmla die
             // Koordinaten
             offset: offset,
         });
-        if(curSensor == item.id) {
-            oneMarker.icon.fillColor = 'white';
-            oneMarker.icon.fillOpacity = 0.7;
-//            oneMarker.ZIndex = 100;
-            centerMarker = j;
-        }
+//         if(curSensor == item.id) {
+//             oneMarker.icon.fillColor = 'white';
+//             oneMarker.icon.fillOpacity = 0.7;
+// //            oneMarker.ZIndex = 100;
+//             centerMarker = j;
+//         }
         marker[j] = oneMarker;									// diesen Marker in das Array einfogen
 //        removeOneMarker(x);
         // Click event an den Marker binden. Wenn geklickt wird, dann ein
@@ -595,9 +649,7 @@ function buildMarkers(data) {
                 var infoContent = '<div id="infoTitle"><h4>Sensor: ' + this.sensorid + '</h4>' +
                     '<div id="infoTable">' +
                     '<table><tr>' +
-                    '<td>P10_m5</td><td>' + this.werte[0] + '</td>' +
-                    '</tr><tr>' +
-                    '<td>P2.5_m5</td><td>' + this.werte[1] + '</td>' +
+                    '<td>cpm</td><td>' + this.werte[0] + '</td>' +
                     '</tr></table>' +
                     '</div>' +
                     '<div id="infoHref">' +
@@ -631,7 +683,7 @@ function updateValues(data) {
         if(mark ==  undefined) {
             console.log("Marker["+x+"] undefined");
         }
-        marker[x].icon = getBalken(item.value10, sBreit, marker[x].offset);
+        marker[x].icon = getBalken(item.cpm, sBreit, marker[x].offset);
         marker[x].setMap(map);
     }
 }
@@ -668,7 +720,7 @@ function getSensorKoords(csens) {
             if (err != 'success') {
                 resolve({lat: 48.784373, lng: 9.182});
             } else {
-                console.log(data);
+//                console.log(data);
                 resolve({lat: data.values[0].lat, lng: data.values[0].lon});
             }
             ;
@@ -677,3 +729,14 @@ function getSensorKoords(csens) {
     return p;
 }
 
+// fetch the Icom
+async function getIcon() {
+        await $.get('/mapdata/getIcon', (data,err) => {
+            if (err != 'success') {
+                return 0
+            } else {
+//                console.log(data);
+                return data;
+            }
+        });
+}

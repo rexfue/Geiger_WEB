@@ -268,6 +268,26 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                     let x = await util.calcMovingAverage(db, sensorid, docs, avg, altitude, false);
                     return {'docs': x.THP,
                     'minmax': await calcMinMaxAvgBME(db, sensorid, docs)};
+                } else if (sensorname == 'Laerm') {
+                    let d = [];
+                    for (let i = 0; i < docs.length; i++) {
+                        let e = {};
+                        e.date = (new Date(docs[i].datetime));
+                        e.LAeq = docs[i].noise_LAeq;
+                        e.LAMax = docs[i].noise_LA_max;
+                        e.LAMin = docs[i].noise_LA_min;
+                        d.push(e)
+                    }
+                    return { docs: d};
+                } else if (sensorname.startsWith("Radiation")) {
+                    let d = [];
+                    for (let i = 0; i < docs.length; i++) {
+                        let e = {};
+                        e.date = (new Date(docs[i].datetime));
+                        e.cpm = docs[i].counts_per_minute;
+                        d.push(e)
+                    }
+                    return { docs: d};
                 }
             }
         }

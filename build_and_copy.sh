@@ -13,6 +13,8 @@
 #
 
 # set -x
+port=""
+
 if [ $# -lt 1 ]
   then
     echo "Usage buildit_and_copy.sh name [target]"
@@ -25,7 +27,11 @@ fi
 
 if [ "$2" != "" ]
 then
-    dat=`date +%Y%m%d%H%M`
-    ssh -p 22022 $2 "docker tag $1 $1:V_$dat"
-    docker save $1 | bzip2 | pv | ssh -p 22022 $2 'bunzip2 | docker load'
+  if [ "$3" != "" ]
+  then
+    port=$3
+  fi
+  dat=`date +%Y%m%d%H%M`
+  ssh $port $2 "docker tag $1 $1:V_$dat"
+  docker save $1 | bzip2 | pv | ssh $port $2 'bunzip2 | docker load'
 fi

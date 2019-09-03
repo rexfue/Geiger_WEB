@@ -41,6 +41,7 @@ async function checkHost(req, res, next) {
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
         (req.headers.host == 'develop.rexfue.de') ||
+        (req.headers.host == 'test1.rexfue.de') ||
         (req.headers.host == 'localhost:3005') ||
         (req.headers.host == 'nuccy:3005') ||
         (req.headers.host == '213.136.85.253:3005') ||
@@ -55,19 +56,25 @@ async function checkHost(req, res, next) {
 
     let uri = req.url.substr(3);
     let city = "unknown";
-    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
-    {
-        let dbs = app.get('dbase');
-        city = await apidatas.api.getCity(dbs, parseInt(uri.substring(1)));
+    let sid = 0;
+    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1)))) {
+        sid = parseInt(uri.substring(1));
+    } else if (uri.substring(1,8) == "map?sid") {
+        sid = parseInt(uri.substring(9));
     }
+    let dbs = app.get('dbase');
+    city = await apidatas.api.getCity(dbs, parseInt(sid));
 
     if(
         (!isNaN(uri.substring(1) - parseInt(uri.substring(1)))) ||
-        (uri.substring(1,4)=='api') ||
-        ((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd'))
+        (uri.substring(1,4)=='api')
+        || ((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd'))
     ) {
         console.log(moment().format(),"  ", uri, "  ", city);
     }
+    // if((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd')){
+    //     console.log(moment().format(),"  ", uri);
+    // }
     if (req.url.substring(4,5) == 'i') {
         req.url = '/fs/' + req.url.substring(5);
     }

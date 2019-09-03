@@ -1,12 +1,12 @@
 FROM node:9-alpine
 
-ADD package_web.json /tmp/package.json
+ADD package_geig.json /tmp/package.json
 RUN cd /tmp && npm install
 RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
 WORKDIR /opt/app
 ADD . /opt/app
-RUN cd /opt/app && cp package_web.json package.json
+RUN cd /opt/app && cp package_geig.json package.json
 
 RUN apk add --no-cache tzdata
 ENV TZ Europe/Berlin

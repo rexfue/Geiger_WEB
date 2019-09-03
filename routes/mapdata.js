@@ -8,6 +8,9 @@ let $ = require('jquery');
 require('../jquery.csv.js');
 var fs = require('fs');
 
+let searchTypes = {'PM':''}
+
+
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
 let URL='http://archive.luftdaten.info/';
@@ -67,12 +70,13 @@ router.get('/getaktdata/', function (req, res) {
                         [east, north]
                     ]
                 }
-            }
+            },
+            name: /Radiation/,
         }
     }
     collection.find( loc )                                                 // find all data within map borders (box)
         .toArray(function (err, docs) {
- //       console.log(docs);
+//        console.log(docs);
         for (var i=0; i< docs.length; i++) {
             var item = docs[i];
             var oneAktData = {};
@@ -89,16 +93,16 @@ router.get('/getaktdata/', function (req, res) {
             } else {
                 oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
                 oneAktData['value25'] = -5;
-                if (item.values.hasOwnProperty('P1')) {
-                    oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
-                } else {
-                    console.log(item._id+': P1 fehlt',)
-                }
-                if(item.values.hasOwnProperty('P2')) {
-                    oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
-                } else {
-                    console.log(item._id + ': P2 fehlt',)
-                }
+                if (item.values.hasOwnProperty('counts_per_minute')) {
+                    oneAktData['cpm'] = item.values.counts_per_minute.toFixed(0);    // und merken
+                } // else {
+//                    console.log(item._id+': P1 fehlt',)
+//                 }
+//                 if(item.values.hasOwnProperty('P2')) {
+//                     oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
+//                 } else {
+//                     console.log(item._id + ': P2 fehlt',)
+//                 }
                 // if (item.values.P1 != undefined) {
                 //     if (item.values.P1 < 1990.0) {
                 //         oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
@@ -129,6 +133,13 @@ router.get('/getStuttgart/', function (req, res) {
     })
 });
 
+router.get('/getIcon/:col', function (req, res) {
+    let color = req.params.col;
+//    fs.readFile('public/radioak4_30.png',function(err,data) {
+    fs.readFile('public/nuclear-'+color+'.svg',function(err,data) {
+        res.send(data);
+    })
+});
 /*
 
 async function fetchCSV(db,start,south,north,east,west) {

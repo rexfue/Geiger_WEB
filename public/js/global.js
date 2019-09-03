@@ -23,7 +23,7 @@ $(document).ready(function() {
 	var habBMP = false;
 	var txtMeldung = false;					// falls keine Daten da sind, Text melden
 	var korrelation = {};
-	var kopf = 'Feinstaub- und Klima-Werte  ';
+	var kopf = 'Radioaktivitäts-Messung  ';
 	var oldestDate = "01-01-2016";			// oldest date in dbase
 	var avgTime = 30;						// defaul average time für particulate matter
 	var avgTable = [15,30,60,120];
@@ -374,6 +374,10 @@ $(document).ready(function() {
 				showError(2,"No data at korrelation ", aktsensorid);
 //					return -1;
 			} else {
+			    if (!data.name.startsWith('Radia')) {
+                     showError(3,"This is no Radiation-Sensor", aktsensorid);
+                     return -1;
+                 }
                 korrelation = data;
                 fstAlarm = data.alarm;
             }
@@ -712,7 +716,9 @@ $(document).ready(function() {
 	    	errtxt = "Dieser Sensor (" + id + ") liefert keine aktuellen Daten!";
 		} else if (err == 2) {
 	    	errtxt = "Sensor Nr. " + id + " existiert nicht in der Datenbank";
-		}
+		} else if (err == 3) {
+        errtxt = "Sensor Nr. " + id + " ist kein Geigerzähler-Sensor";
+    }
 		$('#errorDialog').text(errtxt);
 		dialogError.dialog("open");
     }
@@ -731,7 +737,14 @@ $(document).ready(function() {
 
     function startPlot(what,d1,d2,sensor,start,live) {
 		var name = sensor.name;
-		if((name.startsWith("SDS")) || (name.startsWith("PMS")) || (name.startsWith("PPD"))) {
+		if(name.startsWith("Radiation"))  {
+            if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
+                PlotYM_Geiger(what, d1, sensor,live);
+                showNewDate();
+            } else {
+                PlotDay_Geiger(what, d1, sensor, start, live);
+            }
+		} else if((name.startsWith("SDS")) || (name.startsWith("PMS")) || (name.startsWith("PPD"))) {
             if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
                 PlotYearfs(what, d1, sensor,live);
 				showNewDate();
@@ -1013,8 +1026,9 @@ function createGlobObtions() {
     };
 
     function addSensorID2chart(chart, sensor) {
+        let sn =  (sensor.name.startsWith("Radiation")) ? sensor.name.substring(10) : sensor.name;
         var sens = chart.renderer.label(
-            'Sensor: ' + sensor.sid + ' - ' + sensor.name,
+            'Sensor: ' + sensor.sid + ' - ' + sn,
             400, 55,
             'text', 0, 0, true)
             .css({
@@ -2039,7 +2053,273 @@ function createGlobObtions() {
 		}
 		return(sum/arr.length);
 	}
-	
+
+	var PlotYM_Geiger = function(what, datas, sensor, live)
+    {
+    }
+
+    // Geiger
+    var PlotDay_Geiger = function(what, datas, sensor, start,live) {
+
+        var series1 = [];
+        var series2 = [];
+        var series3 = [];
+
+        // Arrays for Berechnung der Min, Max und Mittewerte über die kompletten 24h
+        var aktVal = {};
+
+        // Put values into the arrays
+        var cnt=0;
+        var data = datas.docs;
+        $.each(data, function(i){
+            var dat = new Date(this.date).getTime();
+            series1.push([dat,this.cpm])
+            // series2.push([dat,this.LAMax]);
+            // series3.push([dat,this.LAMin]);			// put data and value into series array
+        });
+
+        if(data.length != 0) {
+            if (what == 'oneday') {
+                // Aktuelle Werte speichern
+
+                aktVal['cpm'] = data[data.length - 1].cpm;
+                // aktVal['LAMax'] = data[data.length - 1].LAMax;
+                // aktVal['LAMin'] = data[data.length - 1].LAMin;
+
+                // InfoTafel füllen
+                var infoTafel =
+                    '<table class="infoTafel"><tr >' +
+                    '<th colspan="3">Aktuelle Werte</th>' +
+                    '</tr><tr>' +
+                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(1) + '</td><td></td>';
+                // infoTafel +=
+                //     '</tr><tr>' +
+                //     '<td>LA_Minimum</td><td>' + (aktVal.LAMin).toFixed(0) + '</td><td>dbA</td>';
+                // infoTafel +=
+                //     '</tr><tr>' +
+                //     '<td>LA_Maximum</td><td>' + (aktVal.LAMax).toFixed(0) + '</td><td>dbA</td>';
+                infoTafel +=
+                    '</tr></table>' +
+                    '</div>';
+            }
+            txtMeldung = false;
+        } else {
+            txtMeldung = true;
+        }
+
+
+        // Plot-Options
+        var options = createGlobObtions();
+
+        var series_cpm = {
+            name: 'Impulse_pro_Minute',
+            data: series1,
+            color: 'red',
+            yAxis: 0,
+            zIndex:1,
+            marker: {
+                enabled: false,
+                symbol: 'square',
+            },
+            visible: true,
+        };
+
+        var series_LAMax = {
+            name: 'LA_Maximum',
+            data: series2,
+            color: '#946CBD',
+            yAxis: 1,
+            zIndex:0,
+            marker: {
+                enabled: false,
+                symbol: 'square',
+            },
+            visible: true,
+        };
+
+        var series_LAMin = {
+            name: 'LA_Minimum',
+            data: series3,
+            color: '#DA9E24',
+            yAxis: 2,
+            zIndex: 6,
+            marker: {
+                enabled: false,
+                symbol: 'square',
+            },
+            visible: true,
+        };
+
+/*        // Check min/max of temp to arrange y-axis
+        let tmi = datas.minmax.temp_min;
+        let tma = datas.minmax.temp_max;
+        let loy=0, hiy=0;
+
+        if (tmi < 0) {
+            loy = (Math.ceil((tmi-5)/5))*5;
+            hiy = loy + 50;
+        } else {
+            hiy = (Math.round((tma+5)/5))*5;
+            loy = hiy-50;
+        }
+//		let lowy = tmi/5
+*/
+        var yAxis_cpm = {													// 1
+            title: {
+                text: 'Impulse pro Minute',
+                style: {
+                    color: 'red'
+                }
+            },
+//            min: 20,
+//            max: 120,
+            opposite: true,
+            tickAmount: 11,
+            useHTML: true,
+        };
+
+        var yAxis_LAMax = {
+            title: {										// 2
+                text: 'LA_Maximum [dbA]',
+                style: {
+                    color: '#946CBD',
+                }
+            },
+//            min: 20,
+//            max: 120,
+            gridLineColor: 'lightgray',
+            opposite: true,
+            tickAmount: 11,
+        };
+
+/*        // Check min/max of press to arrange y-axis
+        let pmi = datas.minmax.press_min/100;
+        let pma = datas.minmax.press_max/100;
+        let lopy=0, hipy=0;
+        if (pmi < 990) {
+            lopy = (Math.ceil((pmi-5)/5))*5;
+            hipy = lopy + 50;
+        } else {
+            hipy = (Math.floor((pma+5)/5))*5;
+            lopy = hipy-50;
+        }
+//        let lopy = tmi/5
+*/
+        var yAxis_LAMin = {													// 3
+            title: {
+                text: 'LA_Minimum [dbA]',
+                style: {
+                    color: '#DA9E24',
+                }
+            },
+            gridLineColor: 'lightgray',
+//            min: 20,
+//            max: 120,
+            opposite: true,
+            tickAmount: 11,
+        };
+
+        options.series = [];
+        options.yAxis = [];
+        options.series[0] = series_cpm;
+//        options.series[1] = series_LAMin;
+        options.title.text = 'Strahlung über einen Tag';
+        options.subtitle.text = 'Impulse pr Minute (gemessen 2.5min lang)';
+//        options.series[2] = series_LAMax;
+//        options.yAxis[2] = yAxis_LAMin;
+        options.yAxis[0] = yAxis_cpm;
+//        options.yAxis[1] = yAxis_LAMax;
+        options.chart.zoomType = 'x';
+        if (what == 'oneweek'){
+            options.title.text = 'Temperatur und Feuchte über 1 Woche';
+            if (mitBMP) {
+                options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Woche';
+            }
+            options.xAxis.tickInterval = 3600*6*1000;
+            options.xAxis.plotBands = calcWeekends(data,false);
+            options.xAxis.plotLines = calcDays(data,false);
+            var dlt = start.clone();
+            if(live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(7, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(7,'d');
+                options.xAxis.max = dlt.valueOf();
+            }
+        } else {
+            dlt = start.clone();
+            if(live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(1, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                if(specialDate == 'silvester17') {
+                    dlt = moment("2017-12-31T11:00:00Z");
+                } else if(specialDate == 'silvester18') {
+                    dlt = moment("2018-12-31T11:00:00Z");
+                }
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(1, 'd');
+                options.xAxis.max = dlt.valueOf();
+            }
+        }
+
+        var noDataTafel = '<div class="errTafel">' +
+            'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
+            '</div>';
+
+
+        if(what == 'oneweek') {
+            var chr = Highcharts.chart($('#placeholderFS_2')[0],options,function(chart) {
+                addSensorID2chart(chart, sensor);
+            }) ;
+//			$('#placeholderTHP_2').highcharts(options);
+        } else {
+            chr = Highcharts.chart($('#placeholderFS_1')[0],options,function(chart) {
+                addSensorID2chart(chart, sensor);
+                chart.renderer.label(
+                    infoTafel,
+                    15,
+                    78,'rect',0,0,true)
+                    .css({
+                        fontSize:'10pt',
+                        color: 'green'})
+                    .attr({
+                        zIndex: 5,
+                    }).add();
+                if( txtMeldung == true) {
+                    var labeText = "";
+                    var errtext = chart.renderer.label(
+                        noDataTafel,
+                        250,
+                        120, 'rect', 0, 0, true)
+                        .css({
+                            fontSize: '18pt',
+                            color: 'red'
+                        })
+                        .attr({
+                            zIndex: 1000,
+                            stroke: 'black',
+                            'stroke-width': 2,
+                            fill: 'white',
+                            padding: 10,
+                        }).add();
+                }
+                // let extrMax = chart.yAxis[1].getExtremes();
+                // let extrMin = chart.yAxis[2].getExtremes();
+                // let min = extrMin.min;
+                // let max = extrMax.max;
+                // chart.yAxis[0].setExtremes(min,max,true,false);
+                // chart.yAxis[1].setExtremes(min,max,true,false);
+                // chart.yAxis[2].setExtremes(min,max,true,false);
+            });
+        }
+    }
+
+
+
 
 });
 
