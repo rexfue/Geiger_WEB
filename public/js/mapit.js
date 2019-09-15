@@ -283,9 +283,9 @@ async function initMap() {												// Map initialisieren
             boundBox = map.getBounds().toJSON();
             first = true;
             clearMarker();
-            fetchProblemSensors();
-//            fetchAktualData();
-//            fetchStuttgartBounds();
+//            fetchProblemSensors();
+            fetchAktualData();
+            fetchStuttgartBounds();
         }
         if (!((info == undefined) || (info == ""))) {
             var sid = infowindow.anchor.sensorid;
@@ -382,7 +382,7 @@ function removeOneMarker(n) {
 
 // Problem-Sensoren holen
 function fetchProblemSensors() {
-    $.getJSON('/iapi/getprobdata',{mitTxt: true}, function(data,err) {
+    $.getJSON('/api/getprobdata',{mitTxt: true}, function(data,err) {
         if (err != 'success') {
             alert("Fehler <br />" + err);						// ggf. fehler melden
         } else {
@@ -715,13 +715,17 @@ function findStuttgartSensors() {
 function getSensorKoords(csens) {
     let p = new Promise(function(resolve,reject){
 //    let url = 'https://feinstaub.rexfue.de/api/getprops?sensorid='+csens;
-    let url = '/iapi/getprops?sensorid='+csens;
+    let url = '/api/getprops?sensorid='+csens;
     $.get(url, (data,err) => {
             if (err != 'success') {
                 resolve({lat: 48.784373, lng: 9.182});
             } else {
 //                console.log(data);
-                resolve({lat: data.values[0].lat, lng: data.values[0].lon});
+                if (data.values.length == 0) {
+                    resolve({lat: 48.780045, lng: 9.182646});
+                } else {
+                    resolve({lat: data.values[0].lat, lng: data.values[0].lon});
+                }
             }
             ;
         });

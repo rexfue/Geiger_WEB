@@ -23,12 +23,13 @@ router.get('/getfs/:week', function (req, res) {
     let altitude = req.query.altitude;
     let live = (req.query.live == 'true');
     let special = req.query.special;
+    let movingAvg = (req.query.moving=='true');
 
     if (week == 'oneday') {
         getDayData(db, sid, sname, altitude, st, avg, live,special)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
-        getWeekData(db, sid, sname, altitude, st, live)
+        getWeekData(db, sid, sname, altitude, st, avg, live, movingAvg)
             .then(erg => res.json(erg));
     } else if ((week == 'oneyear') || (week == 'onemonth')) {
         getYearData(db, sid, sname, st, week, live)
@@ -75,16 +76,16 @@ async function getSensorProperties(db,sid) {
     let properties = await coll.findOne({_id: sid});
     if(properties == null) return null;
     let alarm = false;
-    if(properties.location[properties.location.length-1].address.city == 'Stuttgart') {
-        try {
-            alarm = await checkFeinstaubAlarm();
-            console.log('ALARM:', alarm);
-        }
-        catch(e) {
-            alarm = false;
-            console.log("Problems with  'CheckFeinstaubAlarm()'");
-        }
-    }
+    // if(properties.location[properties.location.length-1].address.city == 'Stuttgart') {
+    //     try {
+    //         alarm = await checkFeinstaubAlarm();
+    //         console.log('ALARM:', alarm);
+    //     }
+    //     catch(e) {
+    //         alarm = false;
+    //         console.log("Problems with  'CheckFeinstaubAlarm()'");
+    //     }
+    // }
     properties.alarm = alarm;
     sensorEntries[0]['name'] = properties.name;
     let mustbeobject = false;
@@ -297,7 +298,7 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
 }
 
 // Daten für eine Woche aus der DB holen
-async function getWeekData(db, sensorid, sensorname, altitude , st, live) {
+async function getWeekData(db, sensorid, sensorname, altitude , st, mav, live, domoving) {
     var start = moment(st);
     var end = moment(st);
     var colstr = 'data_' + sensorid;
@@ -313,17 +314,66 @@ async function getWeekData(db, sensorid, sensorname, altitude , st, live) {
         start.subtract(24, 'h');
         end.add(24 * 7, 'h');
     }
-    try {
-        docs = await collection.find({
-            datetime: {
-                $gte: new Date(start),
-                $lt: new Date(end)
-            }
-        }, {sort: {datetime: 1}}).toArray();
-    }
-    catch (e) {
-        console.log(e);
-        docs = [];
+    if((sensorname.startsWith("Radiation"))  && !domoving && (mav != 0)) {
+        try {
+            let datRange = {datetime: {$gte: new Date(start), $lt: new Date(end)}};
+//            console.log('datrange:', datRange);
+            docs = await collection.aggregate([
+                // {$project: {
+                //     parts: {
+                //         $dateToParts: {
+                //             date: '$datetime',
+                //             timezone: 'Europe/Berlin'
+                //         }
+                //     }
+                //     }},
+                // {$project: {
+                //     date: {
+                //         $dateFromParts: {
+                //             'year': '$parts.year',
+                //             'month': '$parts.month',
+                //             'day': '$parts.day',
+                //             'hour': '$parts.hour',
+                //             'minute': '$parts.minute',
+                //             'second': '$parts.second',
+                //         }
+                //     }}
+                // },
+                {$sort: {datetime: 1 }},
+                {$match: {datetime: {$gte: new Date(start), $lt: new Date(end)}}},
+                {
+                    $group: {
+                        _id: {
+                            $toDate: {
+                                $subtract: [
+                                    {$toLong: '$datetime'},
+                                    {$mod: [{$toLong: '$datetime'}, 1000 * 60 * mav]}
+                                ]
+                            }
+                        },
+                        cpm_mav: {$avg: '$counts_per_minute'},
+                        count: {$sum: 1}
+                    }
+                },
+                {$sort: {_id: 1}}
+            ]).toArray();
+        } catch (e) {
+            console.log(e);
+            docs = [];
+        }
+        return {docs: {RAD: docs}};
+    } else {
+        try {
+            docs = await collection.find({
+                datetime: {
+                    $gte: new Date(start),
+                    $lt: new Date(end)
+                }
+            }, {sort: {datetime: 1}}).toArray();
+        } catch (e) {
+            console.log(e);
+            docs = [];
+        }
     }
 //    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
     if (docs.length == 0) {
@@ -339,13 +389,25 @@ async function getWeekData(db, sensorid, sensorname, altitude , st, live) {
             let x = await util.calcMovingAverage(db, sensorid, docs, 10, false);
             return ({'docs': x.THP, 'minmax': await calcMinMaxAvgBMP(db, sensorid, docs)});
         } else if (sensorname == "BME280") {
-            for ( let i=docs.length-1; i>=0; i--) {
+            for (let i = docs.length - 1; i >= 0; i--) {
                 if ((docs[i].pressure == undefined) || (docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
                     docs.splice(i, 1);
                 }
             }
             let x = await util.calcMovingAverage(db, sensorid, docs, 10, false);
             return ({'docs': x.THP, 'minmax': await calcMinMaxAvgBME(db, sensorid, docs)});
+        } else if (sensorname.startsWith("Radiation")) {
+            // let d = [];
+            // for (let i = 0; i < docs.length; i++) {
+            //     let e = {};
+            //     e.date = (new Date(docs[i].datetime));
+            //     e.cpm = docs[i].counts_per_minute;
+            //     d.push(e)
+            // }
+            if (domoving) {                                        // if moving average
+                let d = await util.calcMovingAverage(db, sensorid, docs, mav, 0, false);
+                return {docs: d};
+            }
         }
     }
 }
@@ -439,6 +501,29 @@ function getYearData(db,sensorid,sensorname, st,what) {
                         }
 //                        console.log("Dauer BMP/E:", new Date() - stt)
                         resolve({'docs': docs, 'maxima': {'tmax': max, 'tmin': min}});
+                    });
+                } else if (sensorname.startsWith("Radiation")) {
+                    cursor = collection.aggregate([
+                        {$sort: sorting},
+                        {$match: datRange},
+                        {
+                            $group: {
+                                _id: grpId,
+                                cpmAV: {$avg: '$counts_per_minute'},
+                                cpmMX: {$max: '$counts_per_minute'},
+                                cpmMI: {$min: '$counts_per_minute'},
+                            }
+                        },
+                        {$sort: {_id: 1}}
+                    ], {cursor: {batchSize: 1}});
+                    cursor.toArray(function (err, docs) {
+                        var min = Infinity, max = -Infinity, x;
+                        for (x in docs) {
+                            if (docs[x].cpmMI < min) min = docs[x].cpmMI;
+                            if (docs[x].cpmMX > max) max = docs[x].cpmMX;
+                        }
+//                        console.log("Dauer BMP/E:", new Date() - stt)
+                        resolve({'docs': docs, 'maxima': {'cpmmax': max, 'cpmmin': min}});
                     });
                 }
     });

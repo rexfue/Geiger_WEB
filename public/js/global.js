@@ -26,13 +26,14 @@ $(document).ready(function() {
 	var kopf = 'Radioaktivitäts-Messung  ';
 	var oldestDate = "01-01-2016";			// oldest date in dbase
 	var avgTime = 30;						// defaul average time für particulate matter
-	var avgTable = [15,30,60,120];
+	var avgTable = [0, 30,60,180,360,720,1440];
 	var globMaxY = null;					// max Y für Feinstaub
 	var specialDate = "";					// extra for 'Silvester'
 	var doUpdate = true;					// update every 5 min
     var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
 	var showscatter = true;				// show lines, no scatter
 	var logyaxis = true;					// y-Axis logatithmic
+    var movingAVG = true;                   // 7-Days: use moving average
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -104,16 +105,20 @@ $(document).ready(function() {
 
     function saveSettings() {
         let avg = $('#average').val();
-        localStorage.setItem('averageTime', avg);
-        let scatter =  $('#scatter').is(':checked')
-        localStorage.setItem('showScatter',scatter);
-        console.log('logInput:', $('input[name="logy"]:checked').val());
-        let logar =   $('#log').is(':checked');
-        localStorage.setItem('logYaxis',logar);
-        if ((avgTime != parseInt(avg)) || (scatter != showscatter) || (logar != logyaxis)) {
+        localStorage.setItem('geiger_averageTime', avg);
+        let avgkind = $('#movingavg').is(':checked')
+        localStorage.setItem('geiger_movAVG',avgkind);
+        // let scatter =  $('#scatter').is(':checked')
+        // localStorage.setItem('showScatter',scatter);
+        // console.log('logInput:', $('input[name="logy"]:checked').val());
+        // let logar =   $('#log').is(':checked');
+        // localStorage.setItem('logYaxis',logar);
+        // if ((avgTime != parseInt(avg)) || (scatter != showscatter) || (logar != logyaxis)) {
+        //     showscatter = scatter;
+        //     logyaxis = logar;
+        if ((avgTime != parseInt(avg)) || (avgkind != movingAVG)) {
             avgTime = parseInt(avg);
-            showscatter = scatter;
-            logyaxis = logar;
+            movingAVG = avgkind;
             doPlot('oneday', startDay);						// Start with plotting one day from now on
             doPlot('oneweek', startDay);						// Start with plotting one day from now on
             doPlot('onemonth', startDay);						// Start with plotting one day from now on
@@ -122,7 +127,7 @@ $(document).ready(function() {
         dialogSet.dialog('close');
     }
 
-    // Dialog für ein Statistik-Overlay
+    // Dialog für die Einstellungen
     var dialogSet = $('#dialogWinSet').dialog({
         autoOpen: false,
         width: 400,
@@ -131,19 +136,24 @@ $(document).ready(function() {
             function() {
                 $('#page-mask').css('visibility', 'visible');
                 $(this).load('/fsdata/setting', function () {
-                    if(showscatter) {
-                        $('#scatter').prop("checked", true).trigger("click");
+                    if(movingAVG) {
+                        $('#movingavg').prop("checked", true).trigger("click");
                     } else {
-                        $('#lines').prop("checked", true).trigger("click");
+                        $('#staticavg').prop("checked", true).trigger("click");
                     }
-                    console.log("LogAxis:", logyaxis);
-                    if(logyaxis) {
-                        $('#log').prop("checked", true).trigger("click");
-                    } else {
-                        $('#linear').prop("checked", true).trigger("click");
-                    }
-                    //$("#radio_1").is(":checked")
-                    console.log('logInputDialog:', $('#log').is(':checked'));
+                    // if(showscatter) {
+                    //     $('#scatter').prop("checked", true).trigger("click");
+                    // } else {
+                    //     $('#lines').prop("checked", true).trigger("click");
+                    // }
+                    // console.log("LogAxis:", logyaxis);
+                    // if(logyaxis) {
+                    //     $('#log').prop("checked", true).trigger("click");
+                    // } else {
+                    //     $('#linear').prop("checked", true).trigger("click");
+                    // }
+                    // //$("#radio_1").is(":checked")
+                    // console.log('logInputDialog:', $('#log').is(':checked'));
 
                     $('#average').focus();
                     $('#invalid').hide();
@@ -341,21 +351,26 @@ $(document).ready(function() {
 
 	function getLocalStorage() {
         // fetch the average time
-        var avg = localStorage.getItem('averageTime');
+        var avg = localStorage.getItem('geiger_averageTime');
         if (avg != null) {
-            avgTime = parseInt(localStorage.getItem('averageTime'));
+            avgTime = parseInt(localStorage.getItem('geiger_averageTime'));
         }
         console.log('avgTime = ' + avgTime);
-        let scatter = localStorage.getItem('showScatter');
-        if(scatter != null) {
-            showscatter = scatter=='true' ? true : false;
+        let movAVG = localStorage.getItem('geiger_movAVG');
+        if(movAVG != null) {
+            movingAVG = movAVG=='true' ? true : false;
         }
-        console.log("Scatter:", showscatter);
-        let logy = localStorage.getItem('logYaxis');
-        if(logy != null) {
-            logyaxis = logy=='true' ? true : false;
-        }
-        console.log("LogYaxis:", logyaxis);
+        console.log("MovAVG:", movingAVG);
+        // let scatter = localStorage.getItem('showScatter');
+        // if(scatter != null) {
+        //     showscatter = scatter=='true' ? true : false;
+        // }
+        // console.log("Scatter:", showscatter);
+        // let logy = localStorage.getItem('logYaxis');
+        // if(logy != null) {
+        //     logyaxis = logy=='true' ? true : false;
+        // }
+        // console.log("LogYaxis:", logyaxis);
     }
 
 	getLocalStorage();
@@ -388,7 +403,7 @@ $(document).ready(function() {
 //            });
 
 			// save coordinates in localStorage
-            localStorage.setItem('curcoord',JSON.stringify(korrelation.location[korrelation.location.length-1].loc.coordinates));
+            localStorage.setItem('geiger_curcoord',JSON.stringify(korrelation.location[korrelation.location.length-1].loc.coordinates));
 
 			buildHeaderline(korrelation.othersensors,korrelation.location[korrelation.location.length-1]);
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
@@ -808,6 +823,7 @@ $(document).ready(function() {
 			live:live,
 			altitude: location.altitude,
 			special: specialDate,
+            moving: movingAVG
 		};
 		$.getJSON(url, callopts, function(data1,err) {				// AJAX Call
 			if(err != 'success') {
@@ -2054,8 +2070,164 @@ function createGlobObtions() {
 		return(sum/arr.length);
 	}
 
-	var PlotYM_Geiger = function(what, datas, sensor, live)
-    {
+	var PlotYM_Geiger = function(what, datas, sensor, live) {
+        var series1 = [];
+        var series2 = [];
+
+        var data = datas.docs;
+        var mx = [];
+        if(what == 'onemonth') {
+            data = data.slice(-32);							// nur einen Monat auswählen
+        }
+        $.each(data, function(i){
+            var dat = new Date(this._id).getTime();	// retrieve the date
+            series1.push([dat,this.cpmAV]);
+//            series2.push([dat,this.avgP2_5]);
+            mx.push(this.cpmAV);
+        });
+        var maxcpm = Math.max.apply(null,mx);
+        var maxy = 50;
+        if(maxcpm>50) maxy = null;
+        var options = createGlobObtions();
+        var dlt = moment();	// retrieve the date
+        if (what == 'onemonth') {
+            dlt.subtract(31,'d');
+        } else {
+            dlt.subtract(366, 'd');
+        }
+        var localOptions = {
+            chart: {
+                type: 'column'
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">'+
+                        '&nbsp;&nbsp;'+moment(this.x).format("DD.MMM") + '<br />' +
+                        '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+                        this.series.name + ':&nbsp; <b>' +
+                        Highcharts.numberFormat(this.y,1) +
+                        '</b></div>';
+                }
+            },
+            xAxis: {
+//					tickInterval: 24*3600*1000,
+                plotBands: calcWeekends(data,true),
+                plotLines: calcDays(data,true),
+                max: moment().startOf('day').subtract(1,'d').valueOf(),
+                min: dlt.valueOf(),
+                title: {
+                    text: 'Datum',
+                },
+                minTickInterval: moment.duration(1, 'day').asMilliseconds(),
+                labels: {
+                    formatter: function() {
+                        return this.axis.defaultLabelFormatter.call(this);
+                    }
+                },
+            },
+            yAxis:  {
+                title: {
+                    text: 'Impulse pro Minute',
+                    useHTML: true,
+                },
+                type: logyaxis == true ? 'logarithmic' : 'linear',
+                max: logyaxis == true ? null : maxy,
+                min: logyaxis == true ? 1 : 0,
+//						tickAmount: 9,
+                opposite: true,
+                gridLineColor: 'lightgray',
+                plotLines : [
+                    // {
+                    // color: 'red', // Color value
+                    // value: 50, // Value of where the line will appear
+                    // width: 2, // Width of the line
+                    // label: {
+                    //     useHTML: true,
+                    //     text : 'Grenzwert 50µg/m<sup>3</sup>',
+                    //     y: -10,
+                    //     align: 'center',
+                    //     style : { color: 'red'},
+                    // },
+                    // zIndex: 8,
+                    //},
+                    {
+                    color: 'blue', // Color value
+                    value: maxcpm, // Value of where the line will appear
+                    width: 1, // Width of the line
+                    label: {
+                        useHTML: true,
+                        text : 'max. Wert : '+ maxcpm.toFixed(0) + ' Impule/min',
+                        y: -10,
+                        align: 'center',
+                        style : { color: 'blue'},
+                    },
+                    zIndex: 8,
+                }],
+            },
+            series:  [
+                {
+                    name: 'cpm',
+                    data: series1,
+//					        	 type: 'column',
+                    color: 'blue',
+//					        	 dataLabels: {
+//					        		 rotation: -90,
+//					        		 color: '#fff',
+//					        		 enabled: true,
+//					        		 format: '{y:.1f}',
+//					        		 align: 'right',
+//					        		 x: 0,
+//					        		 y: 10,
+//					        	 },
+//					             pointPadding: 0.3,
+                },
+                // {
+                //     name: 'P2.5',
+                //     data: series2,
+//					        	 type: 'column',
+//								 color:'red',
+//					        	 dataLabels: {
+//					        		 rotation: -90,
+//					        		 color: '#fff',
+//					        		 enabled: true,
+//					        		 format: '{y:.1f}',
+//					        		 align: 'right',
+//					        		 x: 0,
+//					        		 y: 10,
+//					        	 },
+//					             pointPadding: 0.4,
+//                 },
+            ],
+            plotOptions:  {
+                series:
+                    {
+                        animation: false,
+//					pointWidth: 5,
+                    groupPadding: 0.1,
+//					pointPlacement: 'between',
+//					grouping: false,
+                },
+                column: {
+                    pointPadding: 0,
+//                        borderWidth: 0,
+//                         groupPadding: 0,
+//                         shadow: false
+                }
+            },
+            title: {
+                text: "Strahlung Tagesmittelwerte",
+            },
+            subtitle:{
+                text: 'Tagesmittelwert jeweils von 0h00 bis 23h59'
+            },
+        }
+        options.chart.zoomType = 'x';
+
+        $.extend(true,options,localOptions);
+
+        // Do the PLOT
+        var ch = $('#placeholderFS_3').highcharts(options);
+//        ch.renderer.text("Sensor-Nr 141", 10, 10).add();
     }
 
     // Geiger
@@ -2071,9 +2243,15 @@ function createGlobObtions() {
         // Put values into the arrays
         var cnt=0;
         var data = datas.docs;
+        if(what == 'oneweek') {
+            data = data.RAD
+        }
         $.each(data, function(i){
             var dat = new Date(this.date).getTime();
-            series1.push([dat,this.cpm])
+            if((what == 'oneweek') && !movingAVG) {
+                dat = new Date(this._id).getTime();
+            }
+            series1.push([dat,what=='oneweek'? this.cpm_mav : this.cpm])
             // series2.push([dat,this.LAMax]);
             // series3.push([dat,this.LAMin]);			// put data and value into series array
         });
@@ -2113,13 +2291,14 @@ function createGlobObtions() {
 
         var series_cpm = {
             name: 'Impulse_pro_Minute',
+            type: ((what=='oneweek')&&!movingAVG) ? 'column':'spline',
             data: series1,
-            color: 'red',
+            color:  (what=='oneweek')?'green':'red',
             yAxis: 0,
             zIndex:1,
             marker: {
-                enabled: false,
-                symbol: 'square',
+                enabled: what == 'oneweek' ? false: true,
+                symbol: 'circle',
             },
             visible: true,
         };
@@ -2164,6 +2343,18 @@ function createGlobObtions() {
         }
 //		let lowy = tmi/5
 */
+        let maxcpm = series1.reduce(function(a,b) {
+            let x = a[1] >= b[1] ? a : b;
+            return x;
+        });
+        let mincpm = series1.reduce(function(a,b) {
+            let x = a[1] <= b[1] ? a : b;
+            return x;
+        });
+        let ymx = Math.round((maxcpm[1] * 2)/10+0.5)*10;
+        let ymi = Math.round(mincpm[1]/10-0.5)*10;
+        console.log("ymx: ",ymx,"  ymi: ", ymi);
+
         var yAxis_cpm = {													// 1
             title: {
                 text: 'Impulse pro Minute',
@@ -2171,10 +2362,10 @@ function createGlobObtions() {
                     color: 'red'
                 }
             },
-//            min: 20,
-//            max: 120,
+//            min: ymi,
+//            max: ymx,
             opposite: true,
-            tickAmount: 11,
+//            tickAmount: 11,
             useHTML: true,
         };
 
@@ -2224,17 +2415,37 @@ function createGlobObtions() {
         options.series[0] = series_cpm;
 //        options.series[1] = series_LAMin;
         options.title.text = 'Strahlung über einen Tag';
-        options.subtitle.text = 'Impulse pr Minute (gemessen 2.5min lang)';
+        options.subtitle.text = 'Impulse pro Minute (gemessen 10min lang)';
 //        options.series[2] = series_LAMax;
 //        options.yAxis[2] = yAxis_LAMin;
         options.yAxis[0] = yAxis_cpm;
 //        options.yAxis[1] = yAxis_LAMax;
         options.chart.zoomType = 'x';
         if (what == 'oneweek'){
-            options.title.text = 'Temperatur und Feuchte über 1 Woche';
-            if (mitBMP) {
-                options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Woche';
+            options.plotOptions=  {
+                column: {
+                    pointPadding: 0.1,
+                    borderWidth: 0,
+                    groupPadding: 0,
+                    shadow: false
+                }
+            };
+
+            options.title.text = 'Strahlung über eine Woche';
+            let dau = ' Minuten';
+            let avt = avgTime;
+            if (avgTime >= 60) {
+                dau = (avgTime == 60) ? ' Stunde' : ' Stunden';
+                avt /= 60;
             }
+            if(movingAVG) {
+                options.subtitle.text = 'Impulse pro Minute - gleitender Mittelwert über ' + avt + dau;
+            } else {
+                options.subtitle.text = 'Impulse pro Minute - Mittelwert über je ' + avt + dau;
+            }
+//            if (mitBMP) {
+//                options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Woche';
+//            }
             options.xAxis.tickInterval = 3600*6*1000;
             options.xAxis.plotBands = calcWeekends(data,false);
             options.xAxis.plotLines = calcDays(data,false);
@@ -2311,7 +2522,7 @@ function createGlobObtions() {
                 // let extrMin = chart.yAxis[2].getExtremes();
                 // let min = extrMin.min;
                 // let max = extrMax.max;
-                // chart.yAxis[0].setExtremes(min,max,true,false);
+                // chart.yAxis[0].setExtremes(ymi,ymx,true,false);
                 // chart.yAxis[1].setExtremes(min,max,true,false);
                 // chart.yAxis[2].setExtremes(min,max,true,false);
             });

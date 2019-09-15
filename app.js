@@ -54,6 +54,7 @@ async function checkHost(req, res, next) {
         req.url = '/TEST' + req.url;
     }
 
+/*
     let uri = req.url.substr(3);
     let city = "unknown";
     let sid = 0;
@@ -78,6 +79,7 @@ async function checkHost(req, res, next) {
     if (req.url.substring(4,5) == 'i') {
         req.url = '/fs/' + req.url.substring(5);
     }
+*/
     next();
 }
 

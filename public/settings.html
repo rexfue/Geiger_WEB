@@ -1,30 +1,39 @@
 <br />
 <form onkeypress="return event.keyCode != 13;">
     <fieldset>
-        <label for="average">Gleitender Mittelwert über:</label><br />
-        <select  name = 'average' id='average'>
-        </select>
-        <br /><br />
-        <div id="scatterlines">
-            <h4>Darstellung:</h4>
-            <input type='radio' name = 'scatter' id='scatter' value='false'>
+        <h6 class="setting_head">Mittelwert-Bildung bei 7-Tage-Darstellung:</h6>
+        <div id="avgselect">
+            <input type='radio' name = 'avgsel' id='movingavg' value='false'>
             </input>
-            <label for="scatter">Punktwolke</label>&nbsp;&nbsp;&nbsp;
-            <input type='radio' name = 'scatter' id='lines' value='true'>
+            <label for="avgsel">gleitend</label>&nbsp;&nbsp;&nbsp;
+            <input type='radio' name = 'avgsel' id='staticavg' value='true'>
             </input>
-            <label for="lines">Linien</label><br />
+            <label for="lines">statisch  </label>
+            <label id="lueber" for="average">über:</label>
+            <select  name = 'average' id='average'>
+            </select>
+            <br /><br />
         </div>
-        <div id="logyaxis">
-            <h4>Y-Achse:</h4>
-            <input type='radio' name = 'logy' id='log' value='false'>
-            </input>
-            <label for="log">logarithmisch</label>&nbsp;&nbsp;&nbsp;
-            <input type='radio' name = 'logy' id='linear' value='true'>
-            </input>
-            <label for="linear">linear</label><br />
-        </div>
-        <br /><br />
-        <input type='submit' tabindex='-1' style="position:absolute; top:-1000px">
+        <!--        <div id="scatterlines">
+                    <h4>Darstellung:</h4>
+                    <input type='radio' name = 'scatter' id='scatter' value='false'>
+                    </input>
+                    <label for="scatter">Punktwolke</label>&nbsp;&nbsp;&nbsp;
+                    <input type='radio' name = 'scatter' id='lines' value='true'>
+                    </input>
+                    <label for="lines">Linien</label><br />
+                </div>
+                <div id="logyaxis">
+                    <h4>Y-Achse:</h4>
+                    <input type='radio' name = 'logy' id='log' value='false'>
+                    </input>
+                    <label for="log">logarithmisch</label>&nbsp;&nbsp;&nbsp;
+                    <input type='radio' name = 'logy' id='linear' value='true'>
+                    </input>
+                    <label for="linear">linear</label><br />
+                </div>
+                <br /><br />
+        -->        <input type='submit' tabindex='-1' style="position:absolute; top:-1000px">
     </fieldset>
 </form>
 

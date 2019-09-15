@@ -369,3 +369,20 @@ radio {
 .bord1 {
     border-top: 2px black solid;
 }
+
+.setting_head {
+	background-color: blue;
+	color: white;
+	padding-left: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#avgselect {
+	margin-left:30px;
+}
+
+#lueber {
+	margin-left: 15px;
+	margin-right: 5px;
+}

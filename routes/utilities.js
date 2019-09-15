@@ -18,7 +18,7 @@ const mathe = require('mathjs');
 // TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
 async function calcMovingAverage(db, sid, data, mav, api) {
-    var newDataF = [], newDataT = [];
+    var newDataF = [], newDataT = [], newDataR = [];
     var avgTime = mav*60;           // average time in sec
 
     let havepressure = false;       // true: we have pressure
@@ -32,7 +32,7 @@ async function calcMovingAverage(db, sid, data, mav, api) {
         data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the convertion
     }
 
-    let left=0, roll_sum1=0, roll_sum2=0,  roll_sum3=0, roll_sum4=0, roll_sum5=0;
+    let left=0, roll_sum1=0, roll_sum2=0,  roll_sum3=0, roll_sum4=0, roll_sum5=0, roll_sum6=0;
     if(data[0].P1 != undefined) {
         iamPM = true;
     }
@@ -56,6 +56,9 @@ async function calcMovingAverage(db, sid, data, mav, api) {
         if (data[right].pressure != undefined) {
             roll_sum5 += data[right].pressure;
         }
+        if (data[right].counts_per_minute != undefined) {
+            roll_sum6 += data[right].counts_per_minute;
+        }
         while (data[left].datetime <= data[right].datetime - avgTime) {
             if (data[left].P1 != undefined) {
                 roll_sum1 -= data[left].P1;
@@ -72,6 +75,9 @@ async function calcMovingAverage(db, sid, data, mav, api) {
             if (data[left].pressure != undefined) {
                 roll_sum5 -= data[left].pressure;
             }
+            if (data[left].counts_per_minute != undefined) {
+                roll_sum6 -= data[left].counts_per_minute;
+            }
             left += 1;
         }
         if (api == true) {
@@ -84,6 +90,9 @@ async function calcMovingAverage(db, sid, data, mav, api) {
             if (roll_sum3 != 0) newDataT[right]['T'] = (roll_sum3 / (right - left + 1)).toFixed(1);
             if (roll_sum4 != 0) newDataT[right]['H'] = (roll_sum4 / (right - left + 1)).toFixed(0);
             if (roll_sum5 != 0) newDataT[right]['P'] = (roll_sum5 / (right - left + 1)).toFixed(2);
+
+            newDataR[right] = {'date': data[right].datetime * 1000};
+            if (roll_sum6 != 0) newDataR[right]['cpm'] = roll_sum6 / (right - left + 1);
         } else {
             newDataF[right] = {
                 'P10_mav': roll_sum1 / (right - left + 1),
@@ -96,6 +105,9 @@ async function calcMovingAverage(db, sid, data, mav, api) {
             if (roll_sum3 != 0) newDataT[right]['temp_mav'] = roll_sum3 / (right - left + 1);
             if (roll_sum4 != 0) newDataT[right]['humi_mav'] = roll_sum4 / (right - left + 1);
             if (roll_sum5 != 0) newDataT[right]['press_mav'] = roll_sum5 / (right - left + 1);
+
+            newDataR[right] = {'date': data[right].datetime * 1000};
+            if (roll_sum6 != 0) newDataR[right]['cpm_mav'] = roll_sum6 / (right - left + 1);
         }
     }
     if (havepressure == true) {
@@ -112,7 +124,7 @@ async function calcMovingAverage(db, sid, data, mav, api) {
     if (api == true) {
         return (iamPM == true ? newDataF : newDataT);
     }
-    return { 'PM': newDataF, 'THP' : newDataT };
+    return { 'PM': newDataF, 'THP' : newDataT , 'RAD' : newDataR};
 }
 
 // Berechnung des barometrischen Druckes auf Seehöhe
