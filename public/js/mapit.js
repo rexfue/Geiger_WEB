@@ -34,7 +34,7 @@ if (!((typeof allmap == 'undefined') || (allmap == ""))) {
     allMap = true;
 }
 
-let curSensor = 140;                                                // default-Sensor
+let curSensor = -1;                                             // default-Sensor
 if (!((typeof csid == 'undefined') || (csid == ""))) {
     curSensor = csid;
 }

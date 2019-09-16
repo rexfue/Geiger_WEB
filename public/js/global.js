@@ -730,7 +730,11 @@ $(document).ready(function() {
 	    if (err == 1) {
 	    	errtxt = "Dieser Sensor (" + id + ") liefert keine aktuellen Daten!";
 		} else if (err == 2) {
-	    	errtxt = "Sensor Nr. " + id + " existiert nicht in der Datenbank";
+	        if(id == -1) {
+                errtxt = "Keine Sensornummer eingegeben!\nBitte eingeben";
+	        } else {
+                errtxt = "Sensor Nr. " + id + " existiert nicht in der Datenbank";
+            }
 		} else if (err == 3) {
         errtxt = "Sensor Nr. " + id + " ist kein Geigerzähler-Sensor";
     }
