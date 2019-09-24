@@ -22,14 +22,85 @@ htnml {
 }
 
 header {
-	width: 930px;
+	width: 950px;
 	margin: auto;
 }
 
-header #h1name {
+#hline1 {
+	width: 100%;
+	margin: 0px auto 0px;
+	padding-top: 20px;
+}
+
+#h1name {
+	font-size: 148%;
+	clear: both;
+	float: left;
+	width:40%;
+	text-align: left;
+}
+
+#insel {
+	float: left;
+	width: 50%;
+	text-align: left;
+}
+
+#ssel {
+	float: left;
+	width: 90px;
+	margin-top: 5px;
+	font-size: 1.1em;
+	background-color: #0099cc;
+	color: white;
+	text-align: right;
+	padding-right: 5px;
+}
+
+
+#insel label {
 	float: left;
 	font-size: 148%;
-	margin-top: 23px;
+	padding-right: 30px;
+}
+
+#h1uhr {
+	font-size: 148%;
+	float: right;
+}
+
+#hline2 {
+	width: 100%;
+	height: 100%;
+	margin: 20px auto 0px;
+	clear:both;
+}
+
+#adresse {
+	float: left;
+	width:40%;
+	text-align: left;
+}
+
+#sbx {
+	float:left;
+}
+
+#sbx label , #sbx select{
+	float: left;
+}
+
+#combo {
+	float: left;
+	width: 150px;
+	background-color: #0099cc;
+	color: white;
+	margin-right:20px;
+}
+
+
+#subtitle {
+	float: right;
 }
 
 header #btnssel {
@@ -38,33 +109,6 @@ header #btnssel {
     height: 30px;
 	padding-bottom: 25px;
     font-size: 1.1em;
-}
-
-header #ssel {
-	float: left;
-	width: 80px;
-/*	padding-top: 30px; */
-	margin-top: 20px;
-	margin-left: 10px;
-	font-size: 1.1em;
-	background-color: #0099cc;
-	color: white;
-	padding-left: 10px;
-}
-header #h1uhr {
-	float: right;
-	font-size: 148%;
-	margin-top: 23px;
-}
-
-header #adresse {
-	clear: both;
-	float: left;
-}
-
-header #subtitle {
-	font-size: 80%;
-	float: right;
 }
 
 #buttons {
@@ -76,9 +120,10 @@ header #subtitle {
 
 #buttonsLeft {
 	text-align: left;
-	width: 60%;
+	width: 50%;
 	float: left;
 	margin-bottom: 15px;
+	margin-left: 15px;
 }
 
 #buttonsRight {
@@ -86,6 +131,7 @@ header #subtitle {
 	width: 40%;
 	float: right;
 	margin-bottom: 15px;
+	margin-right: 18px;
 }
 
 
@@ -127,8 +173,8 @@ button {
 	box-sizing: border-box;
 }
 
-#btnTraf {
-	width: 160px;
+#btnCent {
+	width: 120px;
 }
 
 
@@ -253,6 +299,7 @@ button {
 
 #infoHref {
 	margin-top: 10px;
+	text-align: center;
 }
 
 #fehlerexplain {
@@ -272,8 +319,6 @@ radio {
 	disaplay: inline;
 }
 */
-
-.ui-dialog-titlebar-close { width: 30px !important; }
 
 
 #page-mask {
@@ -385,4 +430,8 @@ radio {
 #lueber {
 	margin-left: 15px;
 	margin-right: 5px;
+}
+
+.ui-dialog {
+	z-index:1000 !important;
 }

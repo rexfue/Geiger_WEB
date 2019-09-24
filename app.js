@@ -116,7 +116,7 @@ app.get('/fs/fsdata/centermap', function(req, res, next) {
 });
 
 app.get('/fs/fsdata/helpmap', function(req, res, next) {
-    res.sendFile(__dirname+'/public/helpmap.html');
+    res.sendFile(__dirname+'/public/help_map.html');
 });
 
 app.get('/fs/fsdata/fehlersensoren', function(req, res, next) {

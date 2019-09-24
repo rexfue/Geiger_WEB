@@ -6,7 +6,8 @@ $(document).ready(function() {
 	var TOPIC_SDS = "SDS011",
 		TOPIC_DHT = "DHT22",
 		TOPIC_BMP = "BMP180";
-	
+
+	const MAXOPTARR = 5;
 	
 	// Defaults für die Mittelwertbildungen
 	var AVG_DUST = 59,						// 30 minutes moving average for dust particles
@@ -19,11 +20,11 @@ $(document).ready(function() {
 	var active = 'oneday';					// default: plot 1 day
 	var xbreit = 24;						// 24h Breite der  x-Achs
 	var lastButton = '';
-	var refreshRate = 5;                    // Grafik so oft auffrischen (in Minuten)
+	var refreshRate = 10;                    // Grafik so oft auffrischen (in Minuten)
 	var habBMP = false;
 	var txtMeldung = false;					// falls keine Daten da sind, Text melden
 	var korrelation = {};
-	var kopf = 'Radioaktivitäts-Messung  ';
+	var kopf = 'Radioaktivitäts-Messung';
 	var oldestDate = "01-01-2016";			// oldest date in dbase
 	var avgTime = 30;						// defaul average time für particulate matter
 	var avgTable = [0, 30,60,180,360,720,1440];
@@ -32,8 +33,10 @@ $(document).ready(function() {
 	var doUpdate = true;					// update every 5 min
     var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
 	var showscatter = true;				// show lines, no scatter
-	var logyaxis = true;					// y-Axis logatithmic
+	var logyaxis = false;					// y-Axis logatithmic
     var movingAVG = true;                   // 7-Days: use moving average
+    let optSidsArray = [];                  // Arrray der letzten 5 Einträge
+    let plotStart;                          // Startzeit des Plots
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -375,6 +378,7 @@ $(document).ready(function() {
 
 	getLocalStorage();
 	$('#h1name').html(kopf);
+	$('#sbx label').html('Auswahl der letzten ' + MAXOPTARR);
 
     // Die Plots für die diversen Sensoren ausführen:
 	// dazu via Korrelation erst mal alle Sensor-Nummern aus der Datenbank holen
@@ -406,6 +410,7 @@ $(document).ready(function() {
             localStorage.setItem('geiger_curcoord',JSON.stringify(korrelation.location[korrelation.location.length-1].loc.coordinates));
 
 			buildHeaderline(korrelation.othersensors,korrelation.location[korrelation.location.length-1]);
+            buildSelectTable();
 			doPlot('oneday',startDay);						// Start with plotting one day from now on
 			doPlot('oneweek',startDay);								// Start with plotting one week from now on
 			doPlot('onemonth');								// Start with plotting one month from now on
@@ -413,7 +418,6 @@ $(document).ready(function() {
 
 		}
     });
-
 
 
 	function buildAverageMenue() {
@@ -548,6 +552,7 @@ $(document).ready(function() {
             var newSens = $('#ssel').val();
             checkSensorNr(newSens, function (erg,data) {
                 if (erg) {
+                    enterSid2optArray(newSens);
                 	window.location = '/' + newSens;
                 } else {
                     showError(2, "", newSens);
@@ -569,8 +574,49 @@ $(document).ready(function() {
     });
 
 
+    $('#combo').change(function() {
+        let sid = $('#combo').val();
+        if(sid != aktsensorid) {
+            window.location = '/' + sid;
+        }
+    });
 
 //	*************  Functions *****************
+
+    // Selektirerte Sensornummer in das Merk-Array eintragen und ggs. in
+    // localStorage abspeichern
+    function enterSid2optArray(sid) {
+        // Check if sid is already in Array
+        for (let i =0; i< optSidsArray.length; i++) {
+            if(optSidsArray[i] == sid) {
+                return;                             // schon enthalten -> nix machen
+            }
+        }
+        // Sid ist nicht im Array, also an freine Platz eintragen bzw. anfügen
+        if(optSidsArray.length == MAXOPTARR) {
+            optSidsArray.pop();
+        } else {
+            optSidsArray.unshift(sid);
+        }
+        localStorage.setItem('geiger_optSidsArray',JSON.stringify(optSidsArray));
+    }
+
+
+    // Tabelle bit den 5 letzten Eiträgen bilden
+    function buildSelectTable() {
+        optSidsArray = JSON.parse(localStorage.getItem('geiger_optSidsArray'));
+        if(optSidsArray == null) {
+            optSidsArray = [];
+        } else {
+            for (let i = 0; i < optSidsArray.length; i++) {
+                let option = document.createElement("option");
+                option.value = optSidsArray[i];
+                option.text = optSidsArray[i];
+                $('#combo').append(option);
+            }
+        }
+    }
+
 
 	// Aus der Datenbank für den Sensor das älteste datum holen und übergeben
 	function getOldestDate(sid, sensors, callback) {
@@ -688,7 +734,8 @@ $(document).ready(function() {
             $('#subtitle').html(hl);
             //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + sensors[0].id);
 */
-            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
+//            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
+//            $('#insel').html("Sensor-Nr: ");
 			$('#ssel').val(aktsensorid);
         }
 //        console.log(addr);
@@ -724,22 +771,22 @@ $(document).ready(function() {
 	}
 
 
-	function showError(err,txt,id) {
-	    console.log("*** Fehler: " + txt + " from id " + id);
-	    let errtxt = "";
-	    if (err == 1) {
-	    	errtxt = "Dieser Sensor (" + id + ") liefert keine aktuellen Daten!";
-		} else if (err == 2) {
-	        if(id == -1) {
+    function showError(err, txt, id) {
+        console.log("*** Fehler: " + txt + " from id " + id);
+        let errtxt = "";
+        if (err == 1) {
+            errtxt = "Dieser Sensor (" + id + ") liefert keine aktuellen Daten!";
+        } else if (err == 2) {
+            if (id == -1) {
                 errtxt = "Keine Sensornummer eingegeben!\nBitte eingeben";
-	        } else {
+            } else {
                 errtxt = "Sensor Nr. " + id + " existiert nicht in der Datenbank";
             }
-		} else if (err == 3) {
-        errtxt = "Sensor Nr. " + id + " ist kein Geigerzähler-Sensor";
-    }
-		$('#errorDialog').text(errtxt);
-		dialogError.dialog("open");
+        } else if (err == 3) {
+            errtxt = "Sensor Nr. " + id + " ist kein Geigerzähler-Sensor";
+        }
+        $('#errorDialog').text(errtxt);
+        dialogError.dialog("open");
     }
 
     function showNewDate() {
@@ -909,10 +956,22 @@ function createGlobObtions() {
 					position: {
 //						align: 'left',
 //						verticalAlign: 'bottom',
-						x: -900,
+						x: -30,
 						y: 350,
 					},
-					relativeTo: 'chart'
+					relativeTo: 'chart',
+                    theme: {
+					    fill: 'lightblue',
+                        r:2,
+                        states: {
+                            hover: {
+                                fill: 'blue',
+                                style: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    }
 				},
                 events: {
                     selection: function (event) {
@@ -2074,6 +2133,7 @@ function createGlobObtions() {
 		return(sum/arr.length);
 	}
 
+	// ************************  GEIGER  **********************************
 	var PlotYM_Geiger = function(what, datas, sensor, live) {
         var series1 = [];
         var series2 = [];
@@ -2271,9 +2331,9 @@ function createGlobObtions() {
                 // InfoTafel füllen
                 var infoTafel =
                     '<table class="infoTafel"><tr >' +
-                    '<th colspan="3">Aktuelle Werte</th>' +
+                    '<th colspan="2">Aktuelle Werte</th>' +
                     '</tr><tr>' +
-                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(1) + '</td><td></td>';
+                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(1) + '</td>';
                 // infoTafel +=
                 //     '</tr><tr>' +
                 //     '<td>LA_Minimum</td><td>' + (aktVal.LAMin).toFixed(0) + '</td><td>dbA</td>';
@@ -2366,7 +2426,7 @@ function createGlobObtions() {
                     color: 'red'
                 }
             },
-//            min: ymi,
+            min: 0,
 //            max: ymx,
             opposite: true,
 //            tickAmount: 11,
@@ -2504,6 +2564,11 @@ function createGlobObtions() {
                     .attr({
                         zIndex: 5,
                     }).add();
+                renderPfeil(chart,25,350,'<<',-24);
+                renderPfeil(chart,65,350,'<',-3);
+                renderPfeil(chart,95,350,'live',0);
+                renderPfeil(chart,135,350,'>',-3);
+                renderPfeil(chart,165,350,'>>',-3);
                 if( txtMeldung == true) {
                     var labeText = "";
                     var errtext = chart.renderer.label(
@@ -2533,8 +2598,41 @@ function createGlobObtions() {
         }
     }
 
+    let butOpts = [
+        { fill: 'lightblue', r:2},
+        { fill: 'blue', r:2, style: { color: 'white'} },
+        { fill: 'lightblue', r:2},
+        { fill: 'lightblue', r:2}
+	];
+    function renderPfeil(chart,x,y,txt, time) {
+        chart.renderer.button(txt,x,y, null, butOpts[0],butOpts[1],butOpts[2],butOpts[3])
+             .attr({
+                 zIndex: 3,
+// //                fill: 'lightblue',
+             })
+             .on('click', function() {
+                 prevHour(time);
+             })
+            .add();
+    }
 
+    function prevHour(hours) {
+	    console.log("Zurück um ",hours,"Stunden");
+        let start;
+	    if (startDay == "") {
+	        start = moment();
+        } else {
+	        start = moment(startDay);
+	    }
+	    if (hours < 0) {
+	        start.subtract(Math.abs(hours),'h');
+        } else {
+            start.add(hours, 'h');
+        }
+	    startDay = start.format("YYYY-MM-DDTHH:mm:ssZ");
+	    doPlot('oneday',startDay);
 
+    }
 
 });
 

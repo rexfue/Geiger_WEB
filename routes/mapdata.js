@@ -3,13 +3,15 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
-const request = require('request');
+const axios = require('axios');
 let $ = require('jquery');
 require('../jquery.csv.js');
 var fs = require('fs');
 
 let searchTypes = {'PM':''}
 
+// URL to get coordinates for cities
+const NOMINATIM_URL="https://nominatim.openstreetmap.org/search?format=json&limit=3&q=";
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -18,31 +20,15 @@ let URL='http://archive.luftdaten.info/';
 // Fetch the actual out of the dbase
 router.get('/getaktdata/', function (req, res) {
     var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
-    var south = parseFloat(req.query.south);
-    var north = parseFloat(req.query.north);
-    var east = parseFloat(req.query.east);
-    var west = parseFloat(req.query.west);
+    var south = parseFloat(req.query.box[0][1]);
+    var north = parseFloat(req.query.box[1][1]);
+    var east = parseFloat(req.query.box[1][0]);
+    var west = parseFloat(req.query.box[0][0]);
     let st = req.query.start;
     let poly = [];
     if(req.query.poly != undefined) {
         poly = JSON.parse(req.query.poly);
     }
- //   console.log('Box:', south,north,east,west);
-
-/* Versuch, über die CSV-Dateien einen beliebigen Zeitpunkt einzulesen.
-    Das funtioniert erstens noch nicht (Fehler, wenn CSV nicht da ist, wird nicht richtig
-    abgefangen.
-    Und es dauert wohl doch einfach viel zu lange.
-    if(st != "") {
-        fetchCSV(db,moment.utc(st),south,north,east,west)
-            .then((erg) => {
-                res.json(erg);
-                return;
-            });
-        return;
-    }
-*/
-
     var collection = db.collection('mapdata');                         // die 'korrelation' verwenden
     var aktData = [];                                                   // hier die daten sammeln
     var now = moment();                                                 // akt. Uhrzeit
@@ -82,48 +68,25 @@ router.get('/getaktdata/', function (req, res) {
             var oneAktData = {};
             oneAktData['location'] = item.location.coordinates;
             oneAktData['id'] = item._id;                                // ID des Sensors holen
+            oneAktData['lastSeen'] = item.values.datetime;
             var dati = item.values.datetime;
             var dt = new Date(dati);
-            if((now-dt) >= 7*24*3600*1000) {                            // älter als 1 WOCHE ->
-                oneAktData['value10'] = -2;                             // -2 zurückgeben
-                oneAktData['value25'] = -2;
+            if((now-dt) >= 31*24*3600*1000) {                            // älter als 1 Monat ->
+                oneAktData['cpm'] = -2;                                 // -2 zurückgeben
             } else if((now-dt) >= 3600*1000) {                          // älter als 1 Stunde ->
-                oneAktData['value10'] = -1;                             // -1 zurückgeben
-                oneAktData['value25'] = -1;
+                oneAktData['cpm'] = -1;                                 // -1 zurückgeben
             } else {
-                oneAktData['value10'] = -5;                             // bedutet -> nicht anzeigen
-                oneAktData['value25'] = -5;
+                oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen
                 if (item.values.hasOwnProperty('counts_per_minute')) {
                     oneAktData['cpm'] = item.values.counts_per_minute.toFixed(0);    // und merken
-                } // else {
-//                    console.log(item._id+': P1 fehlt',)
-//                 }
-//                 if(item.values.hasOwnProperty('P2')) {
-//                     oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
-//                 } else {
-//                     console.log(item._id + ': P2 fehlt',)
-//                 }
-                // if (item.values.P1 != undefined) {
-                //     if (item.values.P1 < 1990.0) {
-                //         oneAktData['value10'] = item.values.P1.toFixed(2);    // und merken
-                //     }
-                // }
-                // if (item.values.P2 != undefined) {
-                //     if (item.values.P2 < 990.0) {
-                //         oneAktData['value25'] = item.values.P2.toFixed(2);      // und merken
-                //     }
-                // }
+                }
                 if (dati > lastDate) {
                     lastDate = dati;
-                 }
+                }
             }
             aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
- //           console.log('lastDate:',lastDate);
- //           console.log("Daten für "+ oneAktData.id + " geholt");
         }
-//        console.log("Komm direkt vor res.json in route.get(/getaktdata) und lastDate ist:", lastDate);
         res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
-//        console.log("Array-Länge:",aktData.length);
     });
 });
 
@@ -131,6 +94,11 @@ router.get('/getStuttgart/', function (req, res) {
     fs.readFile('public/Stuttgart.gpx',function(err,data) {
         res.send(data);
     })
+});
+
+router.get('/getcoord/', function (req, res) {
+    getCoordinates(req.query.city)
+        .then(erg => res.json(erg));
 });
 
 router.get('/getIcon/:col', function (req, res) {
@@ -266,6 +234,13 @@ function isPM(name) {
         return true;
     }
     return false;
+}
+
+async function getCoordinates(city) {
+    let url = NOMINATIM_URL + city;
+    const response = await axios.get(encodeURI(url));
+    const data = response.data;
+    return data[0];
 }
 
 module.exports = router;

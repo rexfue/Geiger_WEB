@@ -1,20 +1,24 @@
 "use strict";
 
 var map;
-var colorTable = [100, 'purple',50,'red',30,'orange',0,'green',-1,'black'];	// default Fabraufteilung der Werte
 var marker = [];
 var sBreit = 30;
 var infowindow;
 var first = true;
-var boundBox;
 var newBounds = false;
 var geocod;
 var trafficLayer;
 let mongoPoints = [];
 let problems = [];
 let icon = "";
-let image_red, image_green, image_yellow;
-let colorRadio = [];
+let radius = 10;
+
+let firstZoom = 11;
+let useStgtBorder = false;
+let popuptext = "";
+let bounds;
+let polygon;
+let refreshRate = 10;                    // Grafik so oft auffrischen (in Minuten)
 
 
 var w = $('#btnTraf span').width();
@@ -41,8 +45,291 @@ if (!((typeof csid == 'undefined') || (csid == ""))) {
 
 //	localStorage.clear();
 
+// Custom Sensor images
+let image_red = new L.Icon({
+    iconUrl: '../images/radiation_red.svg',
+    iconSize: [25, 25]
+});
+let image_orange = new L.Icon({
+    iconUrl: '../images/radiation_red.orange',
+    iconSize: [25, 25]
+});
+let image_green = new L.Icon({
+    iconUrl: '../images/radiation_green.svg',
+    iconSize: [25, 25]
+});
+let image_ygr = new L.Icon({
+    iconUrl: '../images/radiation_ygr.svg',
+    iconSize: [25, 25]
+});
+let image_yellow = new L.Icon({
+    iconUrl: '../images/radiation_yellow.svg',
+    iconSize: [25, 25]
+});
+
+let image_black = new L.Icon({
+    iconUrl: '../images/radiation_black.svg',
+    iconSize: [25, 25]
+});
+
+let colorRadiat = [
+    {value:500, image:image_red},
+    {value:250, image:image_orange},
+    {value:100, image:image_yellow},
+    {value:30, image:image_ygr},
+    {value:0, image:image_green},
+    {value:-999, image:image_black}
+    ];
 
 
+/* Alle Minute die ktuelle Urzeit anzeigen und
+ * den Plot für Tages - und Wochendaten updaten.
+ * Alle 'refreshRate' plus 15sec die Grafiken neu zeichnen
+ * Die Funktion wird alle Sekunde aufgerufen !
+ */
+function showUhrzeit(sofort) {
+    var d = moment()								// akt. Zeit holen
+    if (sofort || (d.second() == 0)) {				// Wenn Minute grade um
+        $('#h1uhr').html(d.format('HH:mm'));
+        $('#subtitle').html(d.format('YYYY-MM-DD'));		// dann zeit anzeigen
+    }
+    if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
+        console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
+        fetchAktualData(bounds);
+    }
+}
+
+plotMap(curSensor,null);
+
+// Zeit gleich anzeigen
+showUhrzeit(true);
+setInterval(function()
+{
+    showUhrzeit(false);
+},1000);								// alle Sekunde aufrufen
+
+
+function calcPolygon(bound) {
+    return L.polygon([[bounds.getNorth(),bounds.getWest()],[bounds.getNorth(),bounds.getEast()],[bounds.getSouth(),bounds.getEast()],[bounds.getSouth(), bounds.getWest()]], {color:'black', fillOpacity: 0.5});;
+}
+
+async function plotMap(cid, poly) {
+    // if sensor nbr is give, find coordinates, else use Stuttgart center
+    let myLatLng;
+    if( cid != -1) {
+        myLatLng = await getSensorKoords(curSensor);
+    } else {
+        let stgt = await getCoords("Stuttgart");
+        myLatLng = {lat: parseFloat(stgt.lat),lng: parseFloat(stgt.lon)};
+    }
+
+    // generate map centered on Stuttgart
+    map = L.map('map').setView(myLatLng, firstZoom);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    bounds = map.getBounds();
+
+    map.scrollWheelZoom.disable();
+
+    map.on('moveend', async function () {
+        bounds = map.getBounds();
+        polygon = calcPolygon(bounds);
+        await buildMarkers(bounds)
+    });
+
+    polygon = calcPolygon(bounds);
+/*
+    var circle = L.circle([loc.coordinates[1], loc.coordinates[0]], {
+        radius: radius * 1000,
+        color: 'red',
+        opacity: 0.3,
+//            fillColor: '#f03',
+        fillOpacity: 0,
+        interactive: false,
+    }).addTo(map);
+
+*/
+
+    if (useStgtBorder) {
+        fetchStuttgartBounds();
+    }
+
+    await buildMarkers(bounds);
+
+}
+
+function findImageColor(x) {
+    for (let i = 0; i <= colorRadiat.length; i++) {					// Farbzuordnung anhand der
+        if (x.cpm >= colorRadiat[i].value) {
+            console.log("found", colorRadiat[i].image);// Tafel bestimmen
+            return colorRadiat[i].image;
+        }
+    }
+}
+
+
+async function buildMarkers(bounds) {
+    let sensors = await fetchAktualData(bounds)
+        .catch(e => console.lg(e));
+    for (let x of sensors.avgs) {
+        if (x.location == undefined) {                   // if there is no location defined ...
+            continue;                                   // ... skip this sensor
+        }                                               // otherwise create marker
+        let marker = L.marker([x.location[1],x.location[0]], {
+            name: x.id,
+            icon: findImageColor(x),
+            value: x.cpm,
+            url: '/'+x.id,
+            lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
+
+        })
+            .on('click', e => onMarkerClick(e,true))        // define click- and
+//            .on('mouseover', e => onMarkerClick(e,false))   // over-handler
+//            .on('mouseout', e => e.target.closePopup())
+            .bindPopup(popuptext);                      // and bint the popup text
+        marker.addTo(map);
+    }
+    showLastDate(sensors.lastDate);
+
+}
+
+async function onMarkerClick(e, click) {
+    let item = e.target.options;
+
+    let popuptext = '<div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
+        '<div id="infoTable">' +
+        '<table><tr>';
+    if(item.value < 0 ) {
+        popuptext +='<td colspan="2"><span style="color:red;">offline</span></td></tr>' +
+        '<tr><td>Last seen:</td><td>'+item.lastseen+'</td>';
+    } else {
+        popuptext += '<td>cpm:</td><td>' + item.value + '</td>';
+    }
+    popuptext +=
+        '</tr></table>' +
+        '</div>' +
+        '<div id="infoHref">' +
+        '<a href=' + item.url + '>Grafik anzeigen</a>' +
+        '</div>' +
+        '</div>';
+    let popup = e.target.getPopup();
+    popup.setContent(popuptext);                        // set text into popup
+    e.target.openPopup();                               // show the popup
+    if(click == true) {                                 // if we clicked
+        e.target.closePopup();                               // show the popup
+    }
+}
+
+
+$('#btnBack').click(function() {
+    window.location = "/"+curSensor;
+});
+
+
+$('#btnHelp').click(function() {
+    dialogHelp.dialog("open");
+});
+
+
+$('#btnCent').click(function() {
+//    infowindow.setContent("");
+//    infowindow.close();								// löschen
+    dialogCenter.dialog("open");
+});
+
+
+let dialogHelp = $('#dialogWinHelpM').dialog({
+    autoOpen: false,
+    width: 800,
+    title: 'Info',
+    position: {my:'center', at: 'top', of:'#map'},
+    open: function() {
+        polygon.addTo(map);
+        $('#page-mask').css('visibility','visible');
+        $(this).load('/fsdata/helpmap')
+    },
+    close: function() {
+        $('#page-mask').css('visibility','hidden');
+        $('#btnHelp').css('background','#0099cc');
+        polygon.remove();
+    },
+});
+
+/*        $(
+}'#dialogWinHelpM').dialog({
+    autoOpen: false,
+    width: 800,
+    title: 'Info',
+    position: {my:'center', at: 'top', of:window},
+    open: function() {
+        $('#page-mask').css('visibility','visible');
+        $(this).load('/fsdata/helpmap')
+    },
+    close: function() {
+        $('#page-mask').css('visibility','hidden');
+        $('#btnHelp').css('background','#0099cc');
+
+    },
+    modal: true
+});
+*/
+
+var dialogCenter = $('#dialogCenter').dialog({
+    autoOpen: false,
+    width: 800,
+    title: 'Zentrieren',
+    open: function() {
+        $('#page-mask').css('visibility','visible');
+        polygon.addTo(map);
+        $(this).load('/fsdata/centermap', function() {
+            $('#newmapcenter').focus();
+        });
+    },
+    buttons: [
+        {
+            text: "OK",
+            class: 'btnOK',
+            click: setNewCenter,
+            style: "margin-right:40px;",
+            width: 100,
+        },{
+            text: "Abbrechen",
+            click : function() {
+                dialogCenter.dialog("close");
+            },
+            style: "margin-right:40px;",
+            width: 100,
+        }
+    ],
+    modal: true,
+    close: function() {
+        $('#page-mask').css('visibility','hidden');
+        polygon.remove();
+
+    },
+});
+
+$('.dialog').keypress(function(e) {
+    if (e.keyCode == 13) {
+        $('.btnOK').focus();
+    }
+});
+
+function setNewCenter() {
+    var town = $('#newmapcenter').val();
+    if ((town == "") || (town == null)) {
+        town = 'Stuttgart';
+    }
+    setCenter(town);
+    dialogCenter.dialog("close");
+    $('#btnCent').css('background','#0099cc');
+}
+
+/*
 // Karte und die Marker erzeugen
 async function initMap() {												// Map initialisieren
     var trafficLayer;
@@ -63,7 +350,7 @@ async function initMap() {												// Map initialisieren
 
     trafficLayer = new google.maps.TrafficLayer();
 
-
+*/
 /* Autocenter via geoloc  -  geht nur mit https !!
     var infoWindow = new google.maps.InfoWindow({map: map});
     if (navigator.geolocation) {
@@ -101,7 +388,7 @@ async function initMap() {												// Map initialisieren
     }
     setCenter(town);
 */
-
+/*
     $('#btnBack').click(function() {
         window.location = "/"+curSensor;
     });
@@ -334,7 +621,7 @@ async function initMap() {												// Map initialisieren
 
 
 }
-
+*/
 
 
 // Umrechnung Koordinaten auf Adresse
@@ -351,73 +638,36 @@ function geocodeLatLng(latlon) {
     });
 }
 
+async function getCoords(city) {
+    return $.getJSON('/mapdata/getcoord', {city: city})
+        .fail((jqxhr, textStatus, error) => null )
+        .done(docs => docs);
+}
 
 // Map auf Stadt setzen
-function setCenter(adr) {
-    geocod.geocode({'address' : adr}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            boundBox = map.getBounds().toJSON();
-            newBounds = true;
-        }
-    });
-}
-
-
-// Sets the map on all markers in the array.
-function setMapOnAll(map) {
-    for (var i = 0; i < marker.length; i++) {
-        marker[i].setMap(map);
-    }
-}
-
-// Alle Marker löschen
-function clearMarker() {
-    setMapOnAll(null)
-}
-
-function removeOneMarker(n) {
-    marker[n].setMap(null);
-}
-
-// Problem-Sensoren holen
-function fetchProblemSensors() {
-    $.getJSON('/api/getprobdata',{mitTxt: true}, function(data,err) {
-        if (err != 'success') {
-            alert("Fehler <br />" + err);						// ggf. fehler melden
-        } else {
-            problems = data;
-            fetchAktualData();
-            fetchStuttgartBounds();
-        }
-    });
+async function setCenter(adr) {
+    let data = await getCoords(adr);
+    map.setView([parseFloat(data.lat), parseFloat(data.lon)]);
+    console.log(data);
 }
 
 
 // Aktuelle Daten vom Server holen
-function fetchAktualData() {
-    boundBox.start = startDay;
-//    boundBox.poly = JSON.stringify(mongoPoints);
-    $.getJSON('/mapdata/getaktdata', boundBox, function (data1, err) {	// JSON-Daten vom Server holen
-        if (err != 'success') {
-            alert("Fehler <br />" + err);						// ggf. fehler melden
-        } else {
-            if (first) {
-                buildMarkers(data1.avgs);								// mit den Daten die Marker bauen
-                first = false;
-            } else {
-                updateValues(data1.avgs);
-            }
-            showLastDate(data1.lastDate);
-            // let fnd = problems.values.findIndex(x => x._id==curSensor);
-            // if (fnd != -1) {
-            //     if (!((problems.values[fnd].problemNr == 8) || (problems.values[fnd].problemNr == 5))) {
-            //         $('#nosensor').show();
-            //     }
-            // }
-        }
-    });
+function fetchAktualData(box) {
+    let bnds = null;
+    if(box != null) {
+        bnds = [
+            [box.getWest(), box.getSouth()],
+            [box.getEast(), box.getNorth()]
+        ];
+    }
+    return $.getJSON('/mapdata/getaktdata', {start:startDay, box:bnds})
+        .fail((jqxhr, textStatus, error) => {
+            alert("fetchAktualData: Fehler  " + error);						// if error, show it
+        })
+        .done(docs => docs);
 }
+
 
 // Show the last date below tha map grafics
 function showLastDate(dt) {
@@ -425,143 +675,25 @@ function showLastDate(dt) {
     $("#mapdate").html("Werte von " + ld.format('YYYY-MM-DD HH:mm'));
 }
 
-
 function fetchStuttgartBounds() {
+    let points = [];
     $.ajax({
         type: "GET",
         url: "/mapdata/getStuttgart",
         dataType: "xml",
         success: function(xml) {
-            var points = [];
-            var bounds = new google.maps.LatLngBounds ();
             $(xml).find("rtept").each(function() {
                 var lat = parseFloat($(this).attr("lat"));
                 var lon = parseFloat($(this).attr("lon"));
-                var p = new google.maps.LatLng(lat, lon);
+                var p = [lat,lon];
                 points.push(p);
-                bounds.extend(p);
             });
-
-            var poly = new google.maps.Polyline({
-                // use your own style here
-                path: points,
-                strokeColor: "#FF00AA",
-                strokeOpacity: .7,
-                strokeWeight: 4
-            });
-
-            poly.setMap(map);
-
-            // fit bounds to track
-//            map.fitBounds(bounds);
+            L.polyline(points).addTo(map);
         }
     });
-
 }
 
-/* function fetchStuttgartBounds() {
-    const p = new Promise((resolve,reject) => {
-
-        $.ajax({
-            type: "GET",
-            url: "/mapdata/getStuttgart",
-            dataType: "xml",
-            success: function (xml) {
-                var points = [];
-                var bounds = new google.maps.LatLngBounds();
-                $(xml).find("rtept").each(function () {
-                    var lat = parseFloat($(this).attr("lat"));
-                    var lon = parseFloat($(this).attr("lon"));
-                    var p = new google.maps.LatLng(lat, lon);
-                    points.push(p);
-                    let x = [lon, lat];
-                    mongoPoints.push(x);
-                    bounds.extend(p);
-                });
-
-                var poly = new google.maps.Polyline({
-                    // use your own style here
-                    path: points,
-                    strokeColor: "#FF00AA",
-                    strokeOpacity: .7,
-                    strokeWeight: 4
-                });
-
-                poly.setMap(map);
-
-                // fit bounds to track
-//            map.fitBounds(bounds);
-//                findStuttgartSensors();
-                resolve();
-            }
-        });
-    });
-    return p;
-}
-*/
-
-// Aus den GeoDaten und dem akt. Feinstaubwert den Marker bauen. Es wird eine
-// Säule erzeugt mit 20 Pixel Duchmesswer und Höhe abh. vom Feinstaubwert
-// Zusätzlich wird die Säule eingefärbt (<30 : grün, >= 30  : orange, >=50 : rot, >=100: violett)
-// Übergabe:
-//		height		Höhe der Säulke = akt. Feinstaubwert
-//		breit  		Durcjmesser der säule (default 20)
-//		offset 		Verschiebung des Mittelpunktes (falls 2 Säulen überlappen)
-// Rückgabe:
-//		das erzeugte 'balken'-Objekt
-function getBalken(height,breit,offset) {
-    var startx = offset - (breit/2);							// Kresimittelpunkt =^= Koordinatenpunkt
-
-    let color ;
-    for (let c=0; c<=colorTable.length; c+=2) {					// Farbzuordnung anhand der
-        if (height >= colorTable[c]) {							// Tafel bestimmen
-            color = colorTable[c+1];
-            break;
-        }
-    }
-    // für Geiger mal nur einen Kreis machen
-    var rx = breit/2, ry = breit/2;								// x- und y-Radius der Ellipse
-    var pstr =													// SVG-Pfad für die Säule
-        'M ' + startx + ',0 ' +
-        'a ' + rx + ' ' + ry + ',0,0,0,'+ (rx*2) +' 0 '+
-        'a ' + rx + ' ' + ry + ',0,0,0,-'+ (rx*2) +' 0' ;
-
-
-    var kreis = {												// Balken-Objekt erzeugen
-        path: pstr,
-        fillColor: color,
-        fillOpacity: 0.6,										// ein wenig durchsichtig
-        scale: 1,
-        strokeColor: 'black',									// schwarze Umrandung
-        strokeWeight: 1,
-    };
-    return kreis;
-
-    /* zylindrische Säule
-    if (height < 0 )  { height = 0;}
-    if(height >101) { height = 101; }
-    var rx = breit/2, ry = breit/4;								// x- und y-Radius der Ellipse
-    var pstr =													// SVG-Pfad für die Säule
-        'M ' + startx + ',0 ' +
-        'a ' + rx + ' ' + ry + ',0,0,0,'+ (rx*2) +' 0 '+
-        'v -' + height + ', ' +
-        'a ' + rx + ' ' + ry + ',0,0,0,-'+ (rx*2) +' 0 z ' +
-        'm 0,-' + height +
-        'a ' + rx + ' ' + ry + ',0,0,0,'+ (rx*2) +' 0 ';
-
-    var balken = {												// Balken-Objekt erzeugen
-        path: pstr,
-        fillColor: color,
-        fillOpacity: 0.6,										// ein wenig durchsichtig
-        scale: 1,
-        strokeColor: 'black',									// schwarze Umrandung
-        strokeWeight: 1,
-    };
-    return balken;
-
-     */
-}
-
+/*
 // die Marker erzeugen
 // Übergabe
 //		data		aktuelle Daten vom Server
@@ -674,19 +806,7 @@ function buildMarkers(data) {
         marker[centerMarker].setZIndex(200);
     }
 }
-
-function updateValues(data) {
-    for (let x in data) {
-//        marker[x].setMap(null);
-        var item = data[x];
-        let mark = marker[x];
-        if(mark ==  undefined) {
-            console.log("Marker["+x+"] undefined");
-        }
-        marker[x].icon = getBalken(item.cpm, sBreit, marker[x].offset);
-        marker[x].setMap(map);
-    }
-}
+*/
 
 
 // Mit dem Array 'mongoPoints' aus der properties-Datenbank ALLe Sensor-IDs holen,
