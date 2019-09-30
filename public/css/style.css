@@ -79,6 +79,7 @@ header {
 #adresse {
 	float: left;
 	width:40%;
+	height: 1px;
 	text-align: left;
 }
 
@@ -155,6 +156,11 @@ button {
 #btnSet {
 	width: 100px;
 	margin-right: 10px;
+	display:none;
+}
+
+#btnCent {
+	width: 100px;
 }
 
 #btnStat {
@@ -173,9 +179,6 @@ button {
 	box-sizing: border-box;
 }
 
-#btnCent {
-	width: 120px;
-}
 
 
 .btn-primary {
@@ -266,7 +269,7 @@ button {
 
 #map {
 	clear: both;
-	height: 785px;
+	height: 590px;
 	width: 95%;
 	margin: 50px auto 10px auto;
 	border: 2px solid blue;

@@ -69,11 +69,12 @@ function getSensorName(db,sid) {
 
 // fetch the properties for the given sensor
 async function getSensorProperties(db,sid) {
-
-//    console.log("Get properties for", sid,"from DB");
+    let start = new Date();
+    console.log("Get properties for", sid,"from DB");
     let sensorEntries = [{'sid':sid}];
     let coll = db.collection('properties');
     let properties = await coll.findOne({_id: sid});
+    console.log("got properties - time:", new Date() - start);
     if(properties == null) return null;
     let alarm = false;
     // if(properties.location[properties.location.length-1].address.city == 'Stuttgart') {
@@ -217,7 +218,7 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
         try {
             if (special == 'silvester17') {
                 let coll = db.collection('silvester');
-                let silv  = await coll.findOne({_id:sensorid},{_id:0, data:1});
+                let silv = await coll.findOne({_id: sensorid}, {_id: 0, data: 1});
                 if (silv != null) {
                     docs = silv.data;
                 }
@@ -233,62 +234,82 @@ async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, spe
                     start.subtract(avg, 'm');
                     end.add(24, 'h');
                 }
-                docs = await collection.find({
-                    datetime: {
-                        $gte: new Date(start),
-                        $lt: new Date(end)
-                    }
-                }, {sort: {datetime: 1}}).toArray();
-            }
+                if (sensorname.startsWith("Radiation")) {
+                    let datRange = {datetime: {$gte: new Date(start), $lt: new Date(end)}};
+                    docs = await collection.aggregate([
+                        {$sort: {datetime: 1}},
+                        {$match: {datetime: {$gte: new Date(start), $lt: new Date(end)}}},
+                        {
+                            $group: {
+                                _id: {
+                                    $toDate: {
+                                        $subtract: [
+                                            {$toLong: '$datetime'},
+                                            {$mod: [{$toLong: '$datetime'}, 1000 * 60 * 10]}
+                                        ]
+                                    }
+                                },
+                                cpm: {$avg: '$counts_per_minute'},
+                                count: {$sum: 1}
+                            }
+                        },
+                        {$sort: {_id: 1}}
+                    ]).toArray();
+                } else {
+                    docs = await collection.find({
+                        datetime: {
+                            $gte: new Date(start),
+                            $lt: new Date(end)
+                        }
+                    }, {sort: {datetime: 1}}).toArray();
+                }
 //            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
-            if (docs.length == 0) {
-                return {'docs': []};
-            } else {
-                if (isPM(sensorname)) {
-                    let x = await util.calcMovingAverage(db, sensorid, docs, avg,  0, false);
-                    let y = calcMinMaxAvgSDS(docs, false);
-                    return {'docs': x.PM, 'maxima': y};
-                } else if (sensorname == "DHT22") {
-                    let x = await util.calcMovingAverage(db, sensorid, docs, avg,  0, false);
-                    return {'docs': x.THP, 'minmax': calcMinMaxAvgDHT(docs)};
-                } else if (sensorname == "BMP180") {
-                    for ( let i=docs.length-1; i>=0; i--) {
-                        if ((docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
-                            docs.splice(i, 1);
+                if (docs.length == 0) {
+                    return {'docs': []};
+                } else {
+                    if (isPM(sensorname)) {
+                        let x = await util.calcMovingAverage(db, sensorid, docs, avg, 0, false);
+                        let y = calcMinMaxAvgSDS(docs, false);
+                        return {'docs': x.PM, 'maxima': y};
+                    } else if (sensorname == "DHT22") {
+                        let x = await util.calcMovingAverage(db, sensorid, docs, avg, 0, false);
+                        return {'docs': x.THP, 'minmax': calcMinMaxAvgDHT(docs)};
+                    } else if (sensorname == "BMP180") {
+                        for (let i = docs.length - 1; i >= 0; i--) {
+                            if ((docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
+                                docs.splice(i, 1);
+                            }
                         }
-                    }
-                    let x = await util.calcMovingAverage(db, sensorid, docs, avg,  altitude, false);
-                    return {'docs': x.THP,
-                    'minmax': await calcMinMaxAvgBMP(db, sensorid, docs)};
-                } else if (sensorname == "BME280") {
-                    for ( let i=docs.length-1; i>=0; i--) {
-                        if ((docs[i].pressure == undefined) || (docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
-                            docs.splice(i, 1);
+                        let x = await util.calcMovingAverage(db, sensorid, docs, avg, altitude, false);
+                        return {
+                            'docs': x.THP,
+                            'minmax': await calcMinMaxAvgBMP(db, sensorid, docs)
+                        };
+                    } else if (sensorname == "BME280") {
+                        for (let i = docs.length - 1; i >= 0; i--) {
+                            if ((docs[i].pressure == undefined) || (docs[i].humidity == undefined) || (docs[i].temperature == undefined)) {
+                                docs.splice(i, 1);
+                            }
                         }
+                        let x = await util.calcMovingAverage(db, sensorid, docs, avg, altitude, false);
+                        return {
+                            'docs': x.THP,
+                            'minmax': await calcMinMaxAvgBME(db, sensorid, docs)
+                        };
+                    } else if (sensorname == 'Laerm') {
+                        let d = [];
+                        for (let i = 0; i < docs.length; i++) {
+                            let e = {};
+                            e.date = (new Date(docs[i].datetime));
+                            e.LAeq = docs[i].noise_LAeq;
+                            e.LAMax = docs[i].noise_LA_max;
+                            e.LAMin = docs[i].noise_LA_min;
+                            d.push(e)
+                        }
+                        return {docs: d};
+                    } else if (sensorname.startsWith("Radiation")) {
+                        return {docs: docs};
                     }
-                    let x = await util.calcMovingAverage(db, sensorid, docs, avg, altitude, false);
-                    return {'docs': x.THP,
-                    'minmax': await calcMinMaxAvgBME(db, sensorid, docs)};
-                } else if (sensorname == 'Laerm') {
-                    let d = [];
-                    for (let i = 0; i < docs.length; i++) {
-                        let e = {};
-                        e.date = (new Date(docs[i].datetime));
-                        e.LAeq = docs[i].noise_LAeq;
-                        e.LAMax = docs[i].noise_LA_max;
-                        e.LAMin = docs[i].noise_LA_min;
-                        d.push(e)
-                    }
-                    return { docs: d};
-                } else if (sensorname.startsWith("Radiation")) {
-                    let d = [];
-                    for (let i = 0; i < docs.length; i++) {
-                        let e = {};
-                        e.date = (new Date(docs[i].datetime));
-                        e.cpm = docs[i].counts_per_minute;
-                        d.push(e)
-                    }
-                    return { docs: d};
                 }
             }
         }

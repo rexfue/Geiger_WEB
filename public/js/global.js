@@ -37,6 +37,7 @@ $(document).ready(function() {
     var movingAVG = true;                   // 7-Days: use moving average
     let optSidsArray = [];                  // Arrray der letzten 5 Einträge
     let plotStart;                          // Startzeit des Plots
+    let ymax_geig = 100;
 
 	// Variable selName is defined via index.js and index.pug
 	if (typeof selName == 'undefined') {
@@ -182,6 +183,7 @@ $(document).ready(function() {
         modal: true,
         close: function() {
             $('#page-mask').css('visibility','hidden');
+            $('#btnSet').show();
             $('#btnSet').css('background','#0099cc');
         },
     });
@@ -534,10 +536,10 @@ $(document).ready(function() {
     // Clicking one of the buttons
 	$('.btn').click(function() {
 		var button = $(this).val(); 		// fetch the clicked button
-        if(button == 'month') {
-            $('#btnst').hide();
+        if(button == 'week') {
+            $('#btnSet').show();
         } else {
-            $('#btnst').show();
+            $('#btnSet').hide();
         }
 		active = 'one'+button;
 		switchPlot(active);								// gewählten Plot aktivieren
@@ -652,7 +654,7 @@ $(document).ready(function() {
 	function switchPlot(what) {
 		if (what == 'oneday') {
 			$('#placeholderFS_1').show();
-			$('#placeholderTHP_1').show();
+			$('#placeholderTHP_1').hide();
 			$('#placeholderFS_2').hide();
 			$('#placeholderTHP_2').hide();
 			$('#placeholderFS_3').hide();
@@ -661,7 +663,7 @@ $(document).ready(function() {
 			$('#placeholderFS_1').hide();
 			$('#placeholderTHP_1').hide();
 			$('#placeholderFS_2').show();
-			$('#placeholderTHP_2').show();
+			$('#placeholderTHP_2').hide();
 			$('#placeholderFS_3').hide();
 			$('#placeholderTHP_3').hide();
 		} else if ((what == 'oneyear') || (what == 'onemonth')) {
@@ -671,7 +673,7 @@ $(document).ready(function() {
 			$('#placeholderFS_2').hide();
 			$('#placeholderTHP_2').hide();
 			$('#placeholderFS_3').show();
-			$('#placeholderTHP_3').show();
+			$('#placeholderTHP_3').hide();
 		}
 		if(fstAlarm) {
 			$('#alarm').css('display', 'inline');
@@ -880,11 +882,6 @@ $(document).ready(function() {
 			if(err != 'success') {
 				alert("Fehler <br />" + err);						// if error, show it
 			} else {
-//                console.log(moment().format() + " --> " +data1.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
-//				console.log("Zeit dafür:",moment()-s2);
-//			    if (data1.docs.length == 0) {
-//                    showError(1,"No data at " + what, aktsensorid);
-//                }
 				startPlot(what,data1,null,currentSensor,st,live);
 
                 korridx++;
@@ -901,25 +898,7 @@ $(document).ready(function() {
                         alert("Fehler <br />" + err);				// if error, show it
                     } else {
                         d2 = data2;
-//                        console.log(moment().format() + " --> " + data2.docs.length + " Daten gekommen für " + callopts.sensorname + ' bei ' + what)
-//						console.log("Zeit dafür:",moment()-s3);
-/*                        korridx++;
-                        if (!((korridx == count) || (count >= 3))) {
-	                        currentSensor = korrelation.othersensors[korridx];
-							callopts.sensorname = currentSensor.name;
-							callopts.sensorid = currentSensor.sid;
-
-							$.getJSON(url, callopts, function (data3, err) {		// AJAX Call
-                                if (err != 'success') {
-                                    alert("Fehler <br />" + err);				// if error, show it
-                                } else {
-                                    d3 = data3;
-                                    startPlot(what,d2,d3,currentSensor,st,live);
-                                }
-                            });
-                        } else {
-*/                        	startPlot(what,d2,null,currentSensor,st,live);
-//                        }
+                        	startPlot(what,d2,null,currentSensor,st,live);
 	                }
 				});
 			}
@@ -938,7 +917,7 @@ function createGlobObtions() {
 	// Options, die für alle Plots identisch sind
 	globObject = {
 			chart: {
-				height: 400,
+				height: 600,
 				width: 1000,
 				spacingRight: 20,
 				spacingLeft: 20,
@@ -1746,9 +1725,8 @@ function createGlobObtions() {
 		}
 
         var noDataTafel = '<div class="errTafel">' +
-            'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
+            'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen! <br />' +
             '</div>';
-
 
         if(what == 'oneweek') {
             var chr = Highcharts.chart($('#placeholderTHP_2')[0],options,function(chart) {
@@ -2195,7 +2173,8 @@ function createGlobObtions() {
                     useHTML: true,
                 },
                 type: logyaxis == true ? 'logarithmic' : 'linear',
-                max: logyaxis == true ? null : maxy,
+//                max: logyaxis == true ? null : maxy,
+                max: ymax_geig,
                 min: logyaxis == true ? 1 : 0,
 //						tickAmount: 9,
                 opposite: true,
@@ -2311,9 +2290,9 @@ function createGlobObtions() {
             data = data.RAD
         }
         $.each(data, function(i){
-            var dat = new Date(this.date).getTime();
-            if((what == 'oneweek') && !movingAVG) {
-                dat = new Date(this._id).getTime();
+            var dat = new Date(this._id).getTime();
+            if((what == 'oneweek') && movingAVG) {
+                dat = new Date(this.date).getTime();
             }
             series1.push([dat,what=='oneweek'? this.cpm_mav : this.cpm])
             // series2.push([dat,this.LAMax]);
@@ -2407,17 +2386,17 @@ function createGlobObtions() {
         }
 //		let lowy = tmi/5
 */
-        let maxcpm = series1.reduce(function(a,b) {
-            let x = a[1] >= b[1] ? a : b;
-            return x;
-        });
-        let mincpm = series1.reduce(function(a,b) {
-            let x = a[1] <= b[1] ? a : b;
-            return x;
-        });
-        let ymx = Math.round((maxcpm[1] * 2)/10+0.5)*10;
-        let ymi = Math.round(mincpm[1]/10-0.5)*10;
-        console.log("ymx: ",ymx,"  ymi: ", ymi);
+        // let maxcpm = series1.reduce(function(a,b) {
+        //     let x = a[1] >= b[1] ? a : b;
+        //     return x;
+        // });
+        // let mincpm = series1.reduce(function(a,b) {
+        //     let x = a[1] <= b[1] ? a : b;
+        //     return x;
+        // });
+        // let ymx = Math.round((maxcpm[1] * 2)/10+0.5)*10;
+        // let ymi = Math.round(mincpm[1]/10-0.5)*10;
+        // console.log("ymx: ",ymx,"  ymi: ", ymi);
 
         var yAxis_cpm = {													// 1
             title: {
@@ -2427,7 +2406,7 @@ function createGlobObtions() {
                 }
             },
             min: 0,
-//            max: ymx,
+            max: ymax_geig,
             opposite: true,
 //            tickAmount: 11,
             useHTML: true,
@@ -2479,7 +2458,7 @@ function createGlobObtions() {
         options.series[0] = series_cpm;
 //        options.series[1] = series_LAMin;
         options.title.text = 'Strahlung über einen Tag';
-        options.subtitle.text = 'Impulse pro Minute (gemessen 10min lang)';
+        options.subtitle.text = 'Impulse pro Minute (Mittelwert über jeweils 10min)';
 //        options.series[2] = series_LAMax;
 //        options.yAxis[2] = yAxis_LAMin;
         options.yAxis[0] = yAxis_cpm;
@@ -2545,13 +2524,22 @@ function createGlobObtions() {
             'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
             '</div>';
 
-
+        let navx = 650;
+        let navy = 20;
+        let navbreit = 55;
+        let chr;
         if(what == 'oneweek') {
-            var chr = Highcharts.chart($('#placeholderFS_2')[0],options,function(chart) {
+            let navtxt = ['-7d','-3d','live','+3d','+7d'];
+            let navtime = [-7*24,-3*24,0,3*24,7*24];
+            chr = Highcharts.chart($('#placeholderFS_2')[0],options,function(chart) {
                 addSensorID2chart(chart, sensor);
+                for (let i=0; i<navtxt.length; i++) {
+                    renderPfeil(i, chart, navx+(i*navbreit), navy, navtxt[i], navtime[i]);
+                }
             }) ;
-//			$('#placeholderTHP_2').highcharts(options);
         } else {
+            let navtxt = ['-24h','-12h','live','+12h','+24h'];
+            let navtime = [-24,-12,0,12,24];
             chr = Highcharts.chart($('#placeholderFS_1')[0],options,function(chart) {
                 addSensorID2chart(chart, sensor);
                 chart.renderer.label(
@@ -2564,11 +2552,9 @@ function createGlobObtions() {
                     .attr({
                         zIndex: 5,
                     }).add();
-                renderPfeil(chart,25,350,'<<',-24);
-                renderPfeil(chart,65,350,'<',-3);
-                renderPfeil(chart,95,350,'live',0);
-                renderPfeil(chart,135,350,'>',-3);
-                renderPfeil(chart,165,350,'>>',-3);
+                for (let i=0; i<navtxt.length; i++) {
+                    renderPfeil(i, chart, navx+(i*navbreit), navy, navtxt[i], navtime[i]);
+                }
                 if( txtMeldung == true) {
                     var labeText = "";
                     var errtext = chart.renderer.label(
@@ -2587,13 +2573,6 @@ function createGlobObtions() {
                             padding: 10,
                         }).add();
                 }
-                // let extrMax = chart.yAxis[1].getExtremes();
-                // let extrMin = chart.yAxis[2].getExtremes();
-                // let min = extrMin.min;
-                // let max = extrMax.max;
-                // chart.yAxis[0].setExtremes(ymi,ymx,true,false);
-                // chart.yAxis[1].setExtremes(min,max,true,false);
-                // chart.yAxis[2].setExtremes(min,max,true,false);
             });
         }
     }
@@ -2604,35 +2583,75 @@ function createGlobObtions() {
         { fill: 'lightblue', r:2},
         { fill: 'lightblue', r:2}
 	];
-    function renderPfeil(chart,x,y,txt, time) {
+
+
+    function renderPfeil(n, chart, x, y, txt, time) {
         chart.renderer.button(txt,x,y, null, butOpts[0],butOpts[1],butOpts[2],butOpts[3])
              .attr({
+                 id: 'button'+n,
                  zIndex: 3,
-// //                fill: 'lightblue',
+                 width: 30,
              })
-             .on('click', function() {
-                 prevHour(time);
-             })
+            .on ('click', function() {
+                    prevHour(time,chart);
+            })
             .add();
     }
 
-    function prevHour(hours) {
+    function prevHour(hours,ch) {
 	    console.log("Zurück um ",hours,"Stunden");
         let start;
 	    if (startDay == "") {
 	        start = moment();
+	        start.subtract(24,'h');
         } else {
 	        start = moment(startDay);
 	    }
+	    let mrk = moment();
+	    mrk.subtract(24,'h');
+	    startDay = "";
 	    if (hours < 0) {
-	        start.subtract(Math.abs(hours),'h');
-        } else {
-            start.add(hours, 'h');
-        }
-	    startDay = start.format("YYYY-MM-DDTHH:mm:ssZ");
+	        start.subtract(Math.abs(hours), 'h');
+            startDay = start.format("YYYY-MM-DDTHH:mm:ssZ");
+	    } else if (hours > 0) {
+	        start.add(hours, 'h');
+            if(!start.isAfter(mrk)) {
+                startDay = start.format("YYYY-MM-DDTHH:mm:ssZ");
+            }
+	    }
 	    doPlot('oneday',startDay);
-
     }
+
+/*
+var renderer;
+
+renderer = new Highcharts.Renderer(
+    document.getElementById('container'),
+    400,
+    300
+);
+
+renderer.rect(10, 10, 100, 50, 5).attr({
+    fill: 'blue',
+    stroke: 'black',
+    'stroke-width': 1
+}).add();
+
+
+renderer.circle(100, 100, 50).attr({
+    fill: 'red',
+    stroke: 'black',
+    'stroke-width': 1
+}).add();
+
+renderer.text('Hello world', 200, 100).attr({
+    rotation: 45
+}).css({
+    fontSize: '16pt',
+    color: 'green'
+}).add();
+
+*/
 
 });
 

@@ -47,28 +47,28 @@ if (!((typeof csid == 'undefined') || (csid == ""))) {
 
 // Custom Sensor images
 let image_red = new L.Icon({
-    iconUrl: '../images/radiation_red.svg',
+    iconUrl: '../images/Radiation_red.svg',
     iconSize: [25, 25]
 });
 let image_orange = new L.Icon({
-    iconUrl: '../images/radiation_red.orange',
+    iconUrl: '../images/Radiation_red.orange',
     iconSize: [25, 25]
 });
 let image_green = new L.Icon({
-    iconUrl: '../images/radiation_green.svg',
+    iconUrl: '../images/Radiation_green.svg',
     iconSize: [25, 25]
 });
 let image_ygr = new L.Icon({
-    iconUrl: '../images/radiation_ygr.svg',
+    iconUrl: '../images/Radiation_ygr.svg',
     iconSize: [25, 25]
 });
 let image_yellow = new L.Icon({
-    iconUrl: '../images/radiation_yellow.svg',
+    iconUrl: '../images/Radiation_yellow.svg',
     iconSize: [25, 25]
 });
 
 let image_black = new L.Icon({
-    iconUrl: '../images/radiation_black.svg',
+    iconUrl: '../images/Radiation_black.svg',
     iconSize: [25, 25]
 });
 

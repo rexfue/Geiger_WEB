@@ -7,10 +7,9 @@ const os = require('os');
 const moment = require('moment');
 
 // Consts
-const PORT = 3005;											// Port for server
-
 const MONGOBASE = 'Feinstaubi_A';
 
+let PORT = process.env.PORT;
 let MONGOHOST = process.env.MONGOHOST;
 let MONGOPORT = process.env.MONGOPORT;
 let MONGOAUTH = process.env.MONGOAUTH;
@@ -19,6 +18,7 @@ let MONGOUSRP = process.env.MONGOUSRP;
 if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
 if (MONGOPORT === undefined) { MONGOPORT =  27017; }
 if (MONGOAUTH === undefined) { MONGOAUTH =  'false'; }
+if (PORT === undefined) { PORT =  3005; }
 
 let MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT;  	// URL to mongo database
 if (MONGOAUTH == 'true') {
@@ -42,10 +42,10 @@ async function checkHost(req, res, next) {
         (req.headers.host == 'feinstaub.rexfue.de') ||
         (req.headers.host == 'develop.rexfue.de') ||
         (req.headers.host == 'test1.rexfue.de') ||
-        (req.headers.host == 'localhost:3005') ||
+        (req.headers.host == 'localhost:'+PORT) ||
         (req.headers.host == 'nuccy:3005') ||
-        (req.headers.host == '213.136.85.253:3005') ||
-        (req.headers.host == 'macbig:3005')                 //Port is important if the url has it
+        (req.headers.host == '213.136.85.253:'+PORT) ||
+        (req.headers.host == 'macbig:'+PORT)                 //Port is important if the url has it
     ) {
         req.url = '/fs' + req.url;
     }
