@@ -2128,7 +2128,7 @@ function createGlobObtions() {
             mx.push(this.cpmAV);
         });
         var maxcpm = Math.max.apply(null,mx);
-        var maxy = 50;
+        var maxy = ymax_geig;
         if(maxcpm>50) maxy = null;
         var options = createGlobObtions();
         var dlt = moment();	// retrieve the date
@@ -2174,7 +2174,7 @@ function createGlobObtions() {
                 },
                 type: logyaxis == true ? 'logarithmic' : 'linear',
 //                max: logyaxis == true ? null : maxy,
-                max: ymax_geig,
+                max: maxy,
                 min: logyaxis == true ? 1 : 0,
 //						tickAmount: 9,
                 opposite: true,
@@ -2279,6 +2279,7 @@ function createGlobObtions() {
         var series1 = [];
         var series2 = [];
         var series3 = [];
+        let mx = [];
 
         // Arrays for Berechnung der Min, Max und Mittewerte über die kompletten 24h
         var aktVal = {};
@@ -2295,6 +2296,7 @@ function createGlobObtions() {
                 dat = new Date(this.date).getTime();
             }
             series1.push([dat,what=='oneweek'? this.cpm_mav : this.cpm])
+            mx.push(what=='oneweek'? this.cpm_mav : this.cpm);
             // series2.push([dat,this.LAMax]);
             // series3.push([dat,this.LAMin]);			// put data and value into series array
         });
@@ -2398,6 +2400,10 @@ function createGlobObtions() {
         // let ymi = Math.round(mincpm[1]/10-0.5)*10;
         // console.log("ymx: ",ymx,"  ymi: ", ymi);
 
+        var maxcpm = Math.max.apply(null,mx);
+        var maxy = ymax_geig;
+        if(maxcpm>50) maxy = null;
+
         var yAxis_cpm = {													// 1
             title: {
                 text: 'Impulse pro Minute',
@@ -2406,7 +2412,7 @@ function createGlobObtions() {
                 }
             },
             min: 0,
-            max: ymax_geig,
+            max: maxy,
             opposite: true,
 //            tickAmount: 11,
             useHTML: true,

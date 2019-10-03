@@ -1,12 +1,12 @@
 {
   "name": "feinstaub",
-  "version": "2.3.0",
-  "date": "2019-09-30",
+  "version": "2.3.2",
+  "date": "2019-10-03",
   "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js >>/var/log/fst-geig.log 2>&1"
+    "start": "node app.js >>/var/log/geiger-web.log 2>&1"
   },
   "author": "rxf@gmail.com",
   "license": "ISC",
