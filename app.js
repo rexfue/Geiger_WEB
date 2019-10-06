@@ -7,9 +7,12 @@ const os = require('os');
 const moment = require('moment');
 
 // Consts
+const DEFAULTPORT = 3005;
+const SUBDOMAIN = "test1";
+
 const MONGOBASE = 'Feinstaubi_A';
 
-let PORT = process.env.PORT;
+let PORT = process.env.SERVERPORT;											// Port for server
 let MONGOHOST = process.env.MONGOHOST;
 let MONGOPORT = process.env.MONGOPORT;
 let MONGOAUTH = process.env.MONGOAUTH;
@@ -17,8 +20,7 @@ let MONGOUSRP = process.env.MONGOUSRP;
 
 if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
 if (MONGOPORT === undefined) { MONGOPORT =  27017; }
-if (MONGOAUTH === undefined) { MONGOAUTH =  'false'; }
-if (PORT === undefined) { PORT =  3005; }
+if (PORT === undefined) { PORT =  DEFAULTPORT; }
 
 let MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT;  	// URL to mongo database
 if (MONGOAUTH == 'true') {
@@ -36,7 +38,7 @@ app.use(express.static("node_modules/bootstrap/dist"));
 app.use(express.static("node_modules/jquery/dist"));
 app.use(express.static("node_modules/moment/min"));
 
-
+let requested;
 async function checkHost(req, res, next) {
     if (
         (req.headers.host == 'feinstaub.rexfue.de') ||
@@ -54,32 +56,24 @@ async function checkHost(req, res, next) {
         req.url = '/TEST' + req.url;
     }
 
-/*
     let uri = req.url.substr(3);
     let city = "unknown";
-    let sid = 0;
-    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1)))) {
-        sid = parseInt(uri.substring(1));
-    } else if (uri.substring(1,8) == "map?sid") {
-        sid = parseInt(uri.substring(9));
-    }
     let dbs = app.get('dbase');
-    city = await apidatas.api.getCity(dbs, parseInt(sid));
+    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
+    {
+        city = await apidatas.api.getCity(dbs, parseInt(uri.substring(1)));
+    }
 
     if(
         (!isNaN(uri.substring(1) - parseInt(uri.substring(1)))) ||
-        (uri.substring(1,4)=='api')
-        || ((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd'))
+        (uri.substring(1,4)=='api') ||
+        ((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd'))
     ) {
         console.log(moment().format(),"  ", uri, "  ", city);
     }
-    // if((uri.substring(1,4) == 'map') && (uri.substring(4,5) != 'd')){
-    //     console.log(moment().format(),"  ", uri);
-    // }
     if (req.url.substring(4,5) == 'i') {
         req.url = '/fs/' + req.url.substring(5);
     }
-*/
     next();
 }
 
@@ -116,7 +110,7 @@ app.get('/fs/fsdata/centermap', function(req, res, next) {
 });
 
 app.get('/fs/fsdata/helpmap', function(req, res, next) {
-    res.sendFile(__dirname+'/public/help_map.html');
+    res.sendFile(__dirname+'/public/helpmap.html');
 });
 
 app.get('/fs/fsdata/fehlersensoren', function(req, res, next) {
@@ -162,7 +156,7 @@ connect
     .then(client => {
         app.set('dbase', client.db(MONGOBASE));								    // Übergabe von db
         app.listen(PORT, function () {
-            console.log("App listens on port " + PORT);
+            console.log("App listens on port " + PORT +', Mongo at ' + MONGOHOST);
         })
     })
     .catch(err => {

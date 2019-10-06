@@ -1,5 +1,15 @@
 "use strict";
 
+// History for mapit.js
+//
+// V 2.6.0  2019-10-05 rxf
+//  - identical module für 'geiger' and for 'noise'
+//
+// V 2.5.0  2019-10-05  rxf
+//
+
+const Version = "2.6.0";
+
 var map;
 var marker = [];
 var sBreit = 30;
@@ -17,14 +27,14 @@ let firstZoom = 11;
 let useStgtBorder = false;
 let popuptext = "";
 let bounds;
-let polygon;
-let refreshRate = 10;                    // Grafik so oft auffrischen (in Minuten)
+let polygon;                            // rectangle of whole map to dim background
+let refreshRate = 5;                    // refresh map this often [min]
+
+let colorscale = [];
+let grades = [];
 
 
-var w = $('#btnTraf span').width();
-$('#btnTraf').css('width',w+30);
-
-var startDay = "";
+let startDay = "";
 if(!((typeof startday == 'undefined') || (startday == ""))) {
     if(startday == "Silvester") {
         startDay = "2018-01-01 00:10"
@@ -38,80 +48,63 @@ if (!((typeof allmap == 'undefined') || (allmap == ""))) {
     allMap = true;
 }
 
+let type = "";
+if (!((typeof typeOfSensor == 'undefined') || (typeOfSensor == ""))) {
+    type = typeOfSensor;
+}
+
 let curSensor = -1;                                             // default-Sensor
 if (!((typeof csid == 'undefined') || (csid == ""))) {
     curSensor = csid;
+    $('#btnBack').show();
 }
 
 //	localStorage.clear();
 
-// Custom Sensor images
-let image_red = new L.Icon({
-    iconUrl: '../images/Radiation_red.svg',
-    iconSize: [25, 25]
-});
-let image_orange = new L.Icon({
-    iconUrl: '../images/Radiation_red.orange',
-    iconSize: [25, 25]
-});
-let image_green = new L.Icon({
-    iconUrl: '../images/Radiation_green.svg',
-    iconSize: [25, 25]
-});
-let image_ygr = new L.Icon({
-    iconUrl: '../images/Radiation_ygr.svg',
-    iconSize: [25, 25]
-});
-let image_yellow = new L.Icon({
-    iconUrl: '../images/Radiation_yellow.svg',
-    iconSize: [25, 25]
-});
-
-let image_black = new L.Icon({
-    iconUrl: '../images/Radiation_black.svg',
-    iconSize: [25, 25]
-});
-
-let colorRadiat = [
-    {value:500, image:image_red},
-    {value:250, image:image_orange},
-    {value:100, image:image_yellow},
-    {value:30, image:image_ygr},
-    {value:0, image:image_green},
-    {value:-999, image:image_black}
-    ];
-
 
 /* Alle Minute die ktuelle Urzeit anzeigen und
- * den Plot für Tages - und Wochendaten updaten.
  * Alle 'refreshRate' plus 15sec die Grafiken neu zeichnen
  * Die Funktion wird alle Sekunde aufgerufen !
  */
-function showUhrzeit(sofort) {
+let sofort = true;
+(function showUhrzeit() {
     var d = moment()								// akt. Zeit holen
     if (sofort || (d.second() == 0)) {				// Wenn Minute grade um
         $('#h1uhr').html(d.format('HH:mm'));
-        $('#subtitle').html(d.format('YYYY-MM-DD'));		// dann zeit anzeigen
+        $('#h1datum').html(d.format('YYYY-MM-DD'));		// dann zeit anzeigen
     }
     if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
         console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
-        fetchAktualData(bounds);
+        buildMarkers(bounds);
     }
-}
+    sofort = false;
+    setTimeout(showUhrzeit,1000);
+})();
 
 plotMap(curSensor,null);
-
-// Zeit gleich anzeigen
-showUhrzeit(true);
-setInterval(function()
-{
-    showUhrzeit(false);
-},1000);								// alle Sekunde aufrufen
 
 
 function calcPolygon(bound) {
     return L.polygon([[bounds.getNorth(),bounds.getWest()],[bounds.getNorth(),bounds.getEast()],[bounds.getSouth(),bounds.getEast()],[bounds.getSouth(), bounds.getWest()]], {color:'black', fillOpacity: 0.5});;
 }
+
+if (type == 'Geiger') {
+    colorscale = ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
+    grades = [1000, 500, 250, 100, 50, 0, -999];
+}
+
+function buildIcon(color) {
+    if(type == 'Geiger') {
+        let radiIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
+            '<circle cx="300" cy="300" r="300" fill="' + color + '"/>' +
+            '<circle cx="300" cy="300" r="50"/>' +
+            '<path stroke="#000" stroke-width="175" fill="none" stroke-dasharray="171.74" d="M382,158a164,164 0 1,1-164,0"/>' +
+            '</svg>';
+        let radiIconUrl = encodeURI("data:image/svg+xml," + radiIcon).replace(new RegExp('#', 'g'), '%23');
+        return radiIconUrl;
+    }
+}
+
 
 async function plotMap(cid, poly) {
     // if sensor nbr is give, find coordinates, else use Stuttgart center
@@ -127,7 +120,7 @@ async function plotMap(cid, poly) {
     map = L.map('map').setView(myLatLng, firstZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
-        maxZoom: 19,
+        maxZoom: 17,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
@@ -154,6 +147,27 @@ async function plotMap(cid, poly) {
 
 */
 
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            cgrades = grades,
+            labels = [];
+        div.innerHTML += 'counts per minute<br />';
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length-1; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i - 1] ? '&ndash;' + grades[i - 1] + '<br>' : '+<br />');
+        }
+        div.innerHTML += '<i style="background:' + getColor(grades[grades.length-1]) + '"></i> offline';
+        return div;
+    };
+
+    legend.addTo(map);
+
+
     if (useStgtBorder) {
         fetchStuttgartBounds();
     }
@@ -162,11 +176,11 @@ async function plotMap(cid, poly) {
 
 }
 
-function findImageColor(x) {
-    for (let i = 0; i <= colorRadiat.length; i++) {					// Farbzuordnung anhand der
-        if (x.cpm >= colorRadiat[i].value) {
-            console.log("found", colorRadiat[i].image);// Tafel bestimmen
-            return colorRadiat[i].image;
+
+function getColor(d) {
+    for (let i = 0; i < grades.length; i++) {
+        if (d >= grades[i]) {
+            return (colorscale[i]);
         }
     }
 }
@@ -174,14 +188,17 @@ function findImageColor(x) {
 
 async function buildMarkers(bounds) {
     let sensors = await fetchAktualData(bounds)
-        .catch(e => console.lg(e));
+        .catch(e => console.log(e));
     for (let x of sensors.avgs) {
         if (x.location == undefined) {                   // if there is no location defined ...
             continue;                                   // ... skip this sensor
         }                                               // otherwise create marker
         let marker = L.marker([x.location[1],x.location[0]], {
             name: x.id,
-            icon: findImageColor(x),
+            icon: new L.Icon({
+                iconUrl: buildIcon(getColor(x.cpm)),
+                iconSize: [25, 25]
+            }),
             value: x.cpm,
             url: '/'+x.id,
             lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
@@ -328,6 +345,7 @@ function setNewCenter() {
     dialogCenter.dialog("close");
     $('#btnCent').css('background','#0099cc');
 }
+
 
 /*
 // Karte und die Marker erzeugen
@@ -853,14 +871,3 @@ function getSensorKoords(csens) {
     return p;
 }
 
-// fetch the Icom
-async function getIcon() {
-        await $.get('/mapdata/getIcon', (data,err) => {
-            if (err != 'success') {
-                return 0
-            } else {
-//                console.log(data);
-                return data;
-            }
-        });
-}

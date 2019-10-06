@@ -7,7 +7,7 @@ var pkg = require('../package.json');
 var MAINT = false;
 var idx = 'index';
 var mapit = 'mapit';
-var title = 'Geiger';
+var tit = 'Geiger';
 
 
 if (MAINT==true) {
@@ -18,14 +18,15 @@ if (MAINT==true) {
 // GET home page.
 router.get('/', function(req, res, next) {
     res.render(mapit, {
-        title: 'Geiger-Map',
+        title: tit+'-Map',
         version: pkg.version,
         date: pkg.date,
         name: 'map',
         param: req.query.addr,
         stday: req.query.stday,
         showAllMap: req.query.mall,
-        csensor: req.query.sid
+        csensor: req.query.sid,
+        stype: tit
     });
 });
 
@@ -39,21 +40,23 @@ router.get('/:nam', function(req, res, next) {
     }
     if (name == 'map') {
     	res.render(mapit, {
-    		title: 'Geiger-Map',
+    		title: tit+'-Map',
     		version : pkg.version,
     		date : pkg.date,
             param: req.query.addr,
             stday: req.query.stday,
             showAllMap: req.query.mall,
             csensor: req.query.sid,
+            stype: tit,
     		name: 'map'});
     } else {
     res.render(idx, {
-        title: title+'-'+name,
+        title: tit+'-'+name,
         version : pkg.version,
         date : pkg.date,
         param: req.query.addr,
         stday: req.query.stday,
+        stype: tit,
         name : name});
     }
 });
