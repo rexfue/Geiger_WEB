@@ -20,10 +20,15 @@ let URL='http://archive.luftdaten.info/';
 // Fetch the actual out of the dbase
 router.get('/getaktdata/', function (req, res) {
     var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
-    var south = parseFloat(req.query.box[0][1]);
-    var north = parseFloat(req.query.box[1][1]);
-    var east = parseFloat(req.query.box[1][0]);
-    var west = parseFloat(req.query.box[0][0]);
+    let box = req.query.box;
+    if ((box == "") || (box == undefined)) {
+        res.json({"avgs": [], "lastDate": null});
+        return;
+    }
+    var south = parseFloat(box[0][1]);
+    var north = parseFloat(box[1][1]);
+    var east = parseFloat(box[1][0]);
+    var west = parseFloat(box[0][0]);
     let st = req.query.start;
     let poly = [];
     if(req.query.poly != undefined) {
@@ -63,6 +68,11 @@ router.get('/getaktdata/', function (req, res) {
     collection.find( loc )                                                 // find all data within map borders (box)
         .toArray(function (err, docs) {
 //        console.log(docs);
+            if(docs == null) {
+                console.log("getaktdata: docs==null");
+                res.json({"avgs": [], "lastDate": null});
+                return;
+           }
         for (var i=0; i< docs.length; i++) {
             var item = docs[i];
             var oneAktData = {};
