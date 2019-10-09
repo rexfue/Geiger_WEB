@@ -79,6 +79,7 @@ router.get('/getaktdata/', function (req, res) {
             oneAktData['location'] = item.location.coordinates;
             oneAktData['id'] = item._id;                                // ID des Sensors holen
             oneAktData['lastSeen'] = item.values.datetime;
+            oneAktData['name'] = item.name.substring(10);
             var dati = item.values.datetime;
             var dt = new Date(dati);
             if((now-dt) >= 31*24*3600*1000) {                            // älter als 1 Monat ->

@@ -32,7 +32,7 @@ let refreshRate = 5;                    // refresh map this often [min]
 
 let colorscale = [];
 let grades = [];
-
+let sv_factor = {};
 
 let startDay = "";
 if(!((typeof startday == 'undefined') || (startday == ""))) {
@@ -91,6 +91,9 @@ function calcPolygon(bound) {
 if (type == 'Geiger') {
     colorscale = ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
     grades = [1000, 500, 250, 100, 50, 0, -999];
+
+    sv_factor = {'SBM-20':1/2.47, 'SBM-19': 1/9.81888, 'Si22G' : 1 };
+
 }
 
 function buildIcon(color) {
@@ -147,6 +150,7 @@ async function plotMap(cid, poly) {
 
 */
 
+/*
     var legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function (map) {
@@ -166,7 +170,7 @@ async function plotMap(cid, poly) {
     };
 
     legend.addTo(map);
-
+*/
 
     if (useStgtBorder) {
         fetchStuttgartBounds();
@@ -201,6 +205,7 @@ async function buildMarkers(bounds) {
             }),
             value: x.cpm,
             url: '/'+x.id,
+            rohr: x.name,
             lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
 
         })
@@ -216,6 +221,7 @@ async function buildMarkers(bounds) {
 
 async function onMarkerClick(e, click) {
     let item = e.target.options;
+    let factor = sv_factor[item.rohr];
 
     let popuptext = '<div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
         '<div id="infoTable">' +
@@ -224,14 +230,15 @@ async function onMarkerClick(e, click) {
         popuptext +='<td colspan="2"><span style="color:red;">offline</span></td></tr>' +
         '<tr><td>Last seen:</td><td>'+item.lastseen+'</td>';
     } else {
-        popuptext += '<td>cpm:</td><td>' + item.value + '</td>';
+        popuptext += '<td>' + item.value + '</td><td>cpm</td></tr>' +
+            '<tr><td>' + Math.round((item.value / 60 *factor)*100)/100 + '</td><td>µSv/h</td></tr>';
     }
     popuptext +=
         '</tr></table>' +
         '</div>' +
-        '<div id="infoHref">' +
-        '<a href=' + item.url + '>Grafik anzeigen</a>' +
-        '</div>' +
+//        '<div id="infoHref">' +
+//        '<a href=' + item.url + '>Grafik anzeigen</a>' +
+//        '</div>' +
         '</div>';
     let popup = e.target.getPopup();
     popup.setContent(popuptext);                        // set text into popup

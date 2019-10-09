@@ -1,4 +1,6 @@
+/*
 body {
+
   font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
   font-size: 16px;
   width: 1100px;
@@ -6,12 +8,27 @@ body {
   margin-right: auto;
 	height: 100%;
 }
+*/
+
+body {
+    font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
 
 htnml {
 	height: 100%;
 }
 
 #wrapper {
+    vertical-align: top;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+/*    pointer-events: none;
 	margin : auto;
 	width: 1000px;
 	text-align: center;
@@ -19,6 +36,7 @@ htnml {
     margin-top: 5px;
     height: 100%;
 	position: relative;
+	*/
 }
 
 header {
@@ -283,13 +301,22 @@ button {
 }
 
 #map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+}
+/*
+#map {
 	clear: both;
 	height: 700px;
 	width: 95%;
 	margin: 50px auto 10px auto;
 	border: 2px solid blue;
 }
-
+*/
 #mapdate {
 	font-size: 70%;
 }
@@ -468,14 +495,73 @@ radio {
 	color: #777;
 }
 
+
+#UI_container {
+    position: absolute;
+    left: 85%;
+    bottom: 8%;
+    width: 12%;
+    height: 20%;
+    z-index: 900;
+    vertical-align: bottom;
+    pointer-events: none;
+}
+
+#legendcontainer {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
 .legend {
-	line-height: 18px;
-	color: #555;
+    font-family: arial, sans-serif;
+    color: black;
+    font-size: 15px;
+    position: absolute;
+    bottom: 0;
+    height: 100%;
 }
-.legend i {
-	width: 18px;
-	height: 18px;
-	float: left;
-	margin-right: 8px;
-	opacity: 1;
+
+.legend-inner {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    pointer-events: none;
+    height: 80%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
 }
+
+.legend-inner .gradient {
+    opacity: 1;
+    width: 20px;
+    position: relative;
+}
+
+.legend-inner .labels {
+    width: 10em;
+    position: relative;
+}
+
+.legend-inner .labels .label {
+    position: absolute;
+    -webkit-transform: translateY(50%);
+    transform: translateY(50%);
+}
+
+.legend-inner .labels .label:before {
+    content: '\2013   ';
+}
+
+#legend_Radiation .gradient {
+    background: -webkit-linear-gradient(bottom, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
+    background: linear-gradient(to top, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
+}
+
+img.leaflet-tile {
+    filter: grayscale(85%) saturate(150%) hue-rotate(180deg) contrast(90%) brightness(110%);
+    -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(180deg) contrast(90%) brightness(110%);
+}
+
