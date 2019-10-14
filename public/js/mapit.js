@@ -32,21 +32,14 @@ let refreshRate = 5;                    // refresh map this often [min]
 
 let colorscale = [];
 let grades = [];
+let cpms=[];
 let sv_factor = {};
 
 let startDay = "";
 if(!((typeof startday == 'undefined') || (startday == ""))) {
-    if(startday == "Silvester") {
-        startDay = "2018-01-01 00:10"
-    } else {
         startDay = startday;
-    }
 }
 
-let allMap = false;
-if (!((typeof allmap == 'undefined') || (allmap == ""))) {
-    allMap = true;
-}
 
 let type = "";
 if (!((typeof typeOfSensor == 'undefined') || (typeOfSensor == ""))) {
@@ -87,13 +80,33 @@ plotMap(curSensor,null);
 function calcPolygon(bound) {
     return L.polygon([[bounds.getNorth(),bounds.getWest()],[bounds.getNorth(),bounds.getEast()],[bounds.getSouth(),bounds.getEast()],[bounds.getSouth(), bounds.getWest()]], {color:'black', fillOpacity: 0.5});;
 }
+/*
+                       div.label(style="bottom: 100%;") 10+
+                        div.label(style="bottom: 83.3%;") 5.0
+                        div.label(style="bottom: 66.6%;") 2.0
+                        div.label(style="bottom: 50%;") 1.0
+                        div.label(style="bottom: 33.3%;") 0.5
+                        div.label(style="bottom: 16.6%;") 0.2
+                        div.label(style="bottom: 1%;")  0.1 µSv/h
 
+ */
 if (type == 'Geiger') {
-    colorscale = ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
-    grades = [1000, 500, 250, 100, 50, 0, -999];
+    colorscale = ['#d73027','#fc8d59','#fee08b','#ffffbf','#d9ef8b','#91cf60','#1a9850', '#808080'];
+    grades = [  10,   5,   2,   1,  0.5, 0.2, 0.1, -999];
+    cpms =   [1482, 741, 296, 148, 74,  30,  15,   -999];
 
     sv_factor = {'SBM-20':1/2.47, 'SBM-19': 1/9.81888, 'Si22G' : 1 };
 
+}
+
+
+function getColor(d) {
+    let val = parseInt(d);
+    for (let i = 0; i < cpms.length; i++) {
+        if (val >= cpms[i]) {
+            return (colorscale[i]);
+        }
+    }
 }
 
 function buildIcon(color) {
@@ -150,27 +163,24 @@ async function plotMap(cid, poly) {
 
 */
 
-/*
     var legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function (map) {
-
-        var div = L.DomUtil.create('div', 'info legend'),
-            cgrades = grades,
-            labels = [];
-        div.innerHTML += 'counts per minute<br />';
+        let div = L.DomUtil.create('div','info legend');
+        let div_color = L.DomUtil.create('div', 'info legend inner',div);
+        div_color.innerHTML += 'µSv/h<br />';
         // loop through our density intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length-1; i++) {
-            div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i - 1] ? '&ndash;' + grades[i - 1] + '<br>' : '+<br />');
+            div_color.innerHTML +=
+                '<i style="background:' + colorscale[i] + '"></i>'+
+            '<u>&nbsp;&nbsp;&nbsp;</u>&nbsp;&nbsp;' + grades[i]  + (i==0?"+":"") + '</upan><br />';
         }
-        div.innerHTML += '<i style="background:' + getColor(grades[grades.length-1]) + '"></i> offline';
+        div_color.innerHTML += '&nbsp;<i style="background:' + getColor(grades[grades.length-1]) + '"></i> offline';
         return div;
     };
 
     legend.addTo(map);
-*/
+
 
     if (useStgtBorder) {
         fetchStuttgartBounds();
@@ -181,18 +191,26 @@ async function plotMap(cid, poly) {
 }
 
 
-function getColor(d) {
-    for (let i = 0; i < grades.length; i++) {
-        if (d >= grades[i]) {
-            return (colorscale[i]);
-        }
-    }
-}
-
-
 async function buildMarkers(bounds) {
-    let sensors = await fetchAktualData(bounds)
-        .catch(e => console.log(e));
+    let count = 3;
+    let sensors;
+    while (count != 0) {
+        sensors = await fetchAktualData(bounds)
+            .catch(e => {
+                console.log(e);
+                sensors = null;
+            });
+        if ((sensors == null) || (sensors.length == 0)) {
+            showError(1, 'Daten Laden', 0);
+        } else {
+            dialogError.dialog("close");
+            break;
+        }
+        count--;
+    }
+    if (count == 0) {
+        return;
+    }
     for (let x of sensors.avgs) {
         if (x.location == undefined) {                   // if there is no location defined ...
             continue;                                   // ... skip this sensor
@@ -223,7 +241,7 @@ async function onMarkerClick(e, click) {
     let item = e.target.options;
     let factor = sv_factor[item.rohr];
 
-    let popuptext = '<div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
+    let popuptext = '<div id="infoTitle"><h5>Sensor: ' + item.name + '</h5>' +
         '<div id="infoTable">' +
         '<table><tr>';
     if(item.value < 0 ) {
@@ -236,9 +254,9 @@ async function onMarkerClick(e, click) {
     popuptext +=
         '</tr></table>' +
         '</div>' +
-//        '<div id="infoHref">' +
-//        '<a href=' + item.url + '>Grafik anzeigen</a>' +
-//        '</div>' +
+         '<div id="infoHref">' +
+         '<a href=graph?sid=' + item.url.substring(1) + '>Grafik anzeigen</a>' +
+         '</div>' +
         '</div>';
     let popup = e.target.getPopup();
     popup.setContent(popuptext);                        // set text into popup
@@ -878,3 +896,31 @@ function getSensorKoords(csens) {
     return p;
 }
 
+var dialogError = $('#errorDialog').dialog({
+    autoOpen: false,
+    width: 300,
+    position: {my:'center', at: 'top+100px', of:window},
+    open: function() {
+        $('#page-mask').css('visibility','visible');
+    },
+    close: function() {
+        $('#page-mask').css('visibility','hidden');
+        $('#btnHelp').css('background','#0099cc');
+    },
+    title: "Fehler",
+    modat: true,
+});
+
+
+
+function showError(err, txt, id) {
+    console.log("*** Fehler: " + txt + " from id " + id);
+    let errtxt = "";
+    if (err == 1) {
+        errtxt = "Das Laden der Daten dauert etwas länger";
+    } else {
+        errtxt = "Unbekannter Fehler"
+    }
+    $('#errorDialog').text(errtxt);
+    dialogError.dialog("open");
+}

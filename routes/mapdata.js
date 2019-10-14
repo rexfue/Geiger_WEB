@@ -8,20 +8,17 @@ let $ = require('jquery');
 require('../jquery.csv.js');
 var fs = require('fs');
 
-let searchTypes = {'PM':''}
-
 // URL to get coordinates for cities
 const NOMINATIM_URL="https://nominatim.openstreetmap.org/search?format=json&limit=3&q=";
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
-
-let URL='http://archive.luftdaten.info/';
 
 // Fetch the actual out of the dbase
 router.get('/getaktdata/', function (req, res) {
     var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
     let box = req.query.box;
     if ((box == "") || (box == undefined)) {
+        console.log("getaktdata: box undefined");
         res.json({"avgs": [], "lastDate": null});
         return;
     }
@@ -65,40 +62,53 @@ router.get('/getaktdata/', function (req, res) {
             name: /Radiation/,
         }
     }
-    collection.find( loc )                                                 // find all data within map borders (box)
-        .toArray(function (err, docs) {
+    try {
+        collection.find(loc)                                                 // find all data within map borders (box)
+            .toArray(function (err, docs) {
 //        console.log(docs);
-            if(docs == null) {
-                console.log("getaktdata: docs==null");
-                res.json({"avgs": [], "lastDate": null});
-                return;
-           }
-        for (var i=0; i< docs.length; i++) {
-            var item = docs[i];
-            var oneAktData = {};
-            oneAktData['location'] = item.location.coordinates;
-            oneAktData['id'] = item._id;                                // ID des Sensors holen
-            oneAktData['lastSeen'] = item.values.datetime;
-            oneAktData['name'] = item.name.substring(10);
-            var dati = item.values.datetime;
-            var dt = new Date(dati);
-            if((now-dt) >= 31*24*3600*1000) {                            // älter als 1 Monat ->
-                oneAktData['cpm'] = -2;                                 // -2 zurückgeben
-            } else if((now-dt) >= 3600*1000) {                          // älter als 1 Stunde ->
-                oneAktData['cpm'] = -1;                                 // -1 zurückgeben
-            } else {
-                oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen
-                if (item.values.hasOwnProperty('counts_per_minute')) {
-                    oneAktData['cpm'] = item.values.counts_per_minute.toFixed(0);    // und merken
+                if (docs == null) {
+                    console.log("getaktdata: docs==null");
+                    res.json({"avgs": [], "lastDate": null});
+                    return;
                 }
-                if (dati > lastDate) {
-                    lastDate = dati;
+                for (var i = 0; i < docs.length; i++) {
+                    var item = docs[i];
+
+//                    console.log(item);
+
+                    var oneAktData = {};
+                    oneAktData['location'] = item.location.coordinates;
+                    oneAktData['id'] = item._id;                                // ID des Sensors holen
+                    oneAktData['lastSeen'] = item.values.datetime;
+                    oneAktData['name'] = item.name.substring(10);
+
+ //                   console.log(oneAktData);
+
+                    var dati = item.values.datetime;
+                    var dt = new Date(dati);
+                    if ((now - dt) >= 31 * 24 * 3600 * 1000) {                            // älter als 1 Monat ->
+                        oneAktData['cpm'] = -2;                                 // -2 zurückgeben
+                    } else if ((now - dt) >= 3600 * 1000) {                          // älter als 1 Stunde ->
+                        oneAktData['cpm'] = -1;                                 // -1 zurückgeben
+                    } else {
+                        oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen
+                        if (item.values.hasOwnProperty('counts_per_minute')) {
+                            oneAktData['cpm'] = item.values.counts_per_minute.toFixed(0);    // und merken
+                        }
+                        if (dati > lastDate) {
+                            lastDate = dati;
+                        }
+                    }
+                    aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
                 }
-            }
-            aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
-        }
-        res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
-    });
+                res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
+            });
+    }
+    catch(e) {
+        console.log("Problem mit getaktdata", e);
+        res.json({"avgs": [], "lastDate": null});
+        return;
+    }
 });
 
 router.get('/getStuttgart/', function (req, res) {
@@ -119,85 +129,6 @@ router.get('/getIcon/:col', function (req, res) {
         res.send(data);
     })
 });
-/*
-
-async function fetchCSV(db,start,south,north,east,west) {
-    let datum = start.format('YYYY-MM-DD');
-    let pcoll = db.collection('properties');
-    let werte = [];
-    let ones = {};
-    try {
-        let docs = await pcoll.find({                                                   // find all data within map borders (box)
-            'location.0.loc': {
-                $geoWithin: {
-                    $box: [
-                        [west, south],
-                        [east, north]
-                    ]
-                }
-            }
-        }).toArray();
-        for (let x in docs) {
-            let sid = docs[x]._id;
-            let name = docs[x].name;
-            ones.location = docs[x].location[0].loc.coordinates;
-            ones.id = sid;
-            let fn = URL + datum + '/' + datum + '_' + name.toLowerCase() + '_sensor_' + sid + '.csv';
-            let erg = await readOneSensorData(fn, moment(start));
-            Object.keys(erg).forEach(key => {
-                ones[key] = erg[key];
-            });
-            werte.push(ones);
-        }
-        return {"avgs": werte, "lastDate": datum};
-    }
-    catch (e) {
-        console.log(e);
-    }
-}
-
-
-// read the CSV-File and parse it int right format for DB
-function readOneSensorData(url, dt) {
-    let cdat = dt.startOf('day');
-    const p = new Promise((resolve, reject) => {
-        request(url, function (error, response, body) {         // request the file
-            if((error) || (response.statusCode != 200)) {
-                console.log("error readOneSensorOneDay:", error, '  Status:',response.statusCode, url);
-                reject("Error", error);                         // if not OK, reject
-            }
-            $.csv.toObjects(body, {separator: ';'}, function (err, data) {  // parse CSV
-//                console.log("Lang: ", data.length);
-                for (let i = 0; i < data.length; i++) {
-                    entry = {};
-                    let date = moment.utc(data[i].timestamp);               // extract date of entry
-                    if (cdat.isAfter(date)) continue;
-                    entry.datetime = date.toDate();					        // make date for Mongo (== ISODate)
-                    if (data[i].P1 !== undefined) {
-                        entry.value10 = parseFloat(data[i].P1);
-                    }
-                    if (data[i].P2 !== undefined) {
-                        entry.value25 = parseFloat(data[i].P2);
-                    }
-                    break;
-                }
-                resolve(entry);                  // return all the data
-            });
-        });
-    });
-    return p;
-}
-*/
-
-/*
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-router.get('/adressSensors/', function (req, res) {
-    var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
-    var spoints = JSON.parse(req.query.points);
-    getRegionSensors(db,spoints)
-        .then(erg => res.json(erg));
-});
-*/
 
 
 router.get('/regionSensors/', function (req, res) {
@@ -240,12 +171,6 @@ router.get('/storeSensors/', function (req, res) {
     });
 });
 
-function isPM(name) {
-    if ((name == "SDS011") || (name.startsWith("PPD")) || (name.startsWith("PMS"))) {
-        return true;
-    }
-    return false;
-}
 
 async function getCoordinates(city) {
     let url = NOMINATIM_URL + city;

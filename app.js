@@ -156,7 +156,7 @@ connect
     .then(client => {
         app.set('dbase', client.db(MONGOBASE));								    // Übergabe von db
         app.listen(PORT, function () {
-            console.log("App listens on port " + PORT +', Mongo at ' + MONGOHOST);
+            console.log(moment().format("YYYY-MM-DD HH:mm"), "App listens on port " + PORT +', Mongo at ' + MONGOHOST);
         })
     })
     .catch(err => {
