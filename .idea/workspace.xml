@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="same">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="public/global.js  /public/mapit.js&#10;   - completely redesigned: only global.js is used&#10;   &#10;routes/index.js&#10;   - call mapit instead of index&#10;   &#10;views&#10;   - all adapted to new layout&#10;   &#10;app.js&#10;   - multigeiger.rexfue.de added">
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/markdown-navigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/markdown-navigator/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Feinstaub_WEB.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Geiger_WEB.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package_web.json" beforeDir="false" afterPath="$PROJECT_DIR$/package_web.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/help.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/help.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package_geig.json" beforeDir="false" afterPath="$PROJECT_DIR$/package_geig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/mapit.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/mapit.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/index.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/mapit.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/mapit.pug" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
-    <ignored path=".idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,117 +33,6 @@
   <component name="FavoritesManager">
     <favorites_list name="feinstaub_js" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="810">
-              <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="548" column="47" lean-forward="true" selection-start-line="548" selection-start-column="47" selection-end-line="548" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package_web.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build_and_copy.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="30" column="2" lean-forward="true" selection-start-line="30" selection-start-column="2" selection-end-line="30" selection-end-column="2" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/apidata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1245">
-              <caret line="83" column="12" selection-start-line="83" selection-start-column="8" selection-end-line="83" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="36" column="23" lean-forward="true" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/Dockerfile_fst-web">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" selection-start-line="21" selection-end-line="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/Dockerfile_fstst-web">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/package_tst.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="21" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/global.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="975">
-              <caret line="1312" column="33" selection-start-line="1312" selection-start-column="29" selection-end-line="1312" selection-end-column="33" />
-              <folding>
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#82#88#0" expanded="true" />
-                <element signature="e#96#102#0" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#47#53#0" expanded="true" />
-                <element signature="e#53#59#0" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#94#100#0" expanded="true" />
-                <element signature="e#108#114#0" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#47#53#0" expanded="true" />
-                <element signature="e#53#59#0" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="e#94#100#0" expanded="true" />
-                <element signature="e#108#114#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -142,112 +41,28 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>feinstaub.rexfue</find>
-      <find>rexfue</find>
-      <find>getmapsensors</find>
-      <find>ptype</find>
-      <find>getApiMapSensors</find>
-      <find>loc</find>
-      <find>ispm</find>
-      <find>gelesen</find>
-      <find>place</find>
-      <find>silv</find>
-      <find>dialogce</find>
-      <find>setNewCenter</find>
-      <find>setting</find>
-      <find>localsto</find>
-      <find>prob</find>
-      <find>problems.texte</find>
-      <find>getAPIdataTown</find>
-      <find>getAPIdataSensor</find>
-      <find>parseParams</find>
-      <find>putAPIproblemdata</find>
-      <find>First:</find>
-      <find>loda</find>
-      <find>getprobs</find>
-      <find>getprops</find>
-      <find>getAPIprops</find>
-      <find>getSensorKoords</find>
-      <find>plotli</find>
-      <find>plot</find>
-      <find>getaktdata</find>
-      <find>getakt</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>aktsensorid</replace>
-      <replace>sensorid</replace>
-      <replace>oneyear</replace>
-      <replace>//</replace>
-      <replace>docs</replace>
-      <replace>x</replace>
-      <replace>newData</replace>
-      <replace>datetime</replace>
-      <replace>sensorname</replace>
-      <replace>date</replace>
-      <replace>.sid</replace>
-      <replace>properties</replace>
-      <replace>let</replace>
-      <replace>const</replace>
-      <replace>Feinstaub-Sensor.pdf</replace>
-      <replace>week</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
-        <option value="- added" />
         <option value="-" />
+        <option value="- added" />
         <option value="map hegth new value" />
         <option value="ma" />
         <option value="rxf &lt;rexfue@gmail.com&gt;" />
       </list>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master_50Linie" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/views/select.pug" />
-        <option value="$PROJECT_DIR$/public/sensors.json" />
-        <option value="$PROJECT_DIR$/public/centermap.html" />
-        <option value="$PROJECT_DIR$/routes/data.js" />
-        <option value="$PROJECT_DIR$/public/css/jquery-ui-timepicker-addon.css" />
-        <option value="$PROJECT_DIR$/public/ymax.html" />
-        <option value="$PROJECT_DIR$/public/help.html" />
-        <option value="$PROJECT_DIR$/ToDos.md" />
-        <option value="$PROJECT_DIR$/docker-compose.yml" />
-        <option value="$PROJECT_DIR$/views/index.pug" />
-        <option value="$PROJECT_DIR$/views/mapit.pug" />
-        <option value="$PROJECT_DIR$/public/helpmap.html" />
-        <option value="$PROJECT_DIR$/public/settings.html" />
-        <option value="$PROJECT_DIR$/routes/fsdata.js" />
-        <option value="$PROJECT_DIR$/routes/utilities.js" />
-        <option value="$PROJECT_DIR$/views/layout.pug" />
-        <option value="$PROJECT_DIR$/public/js/leaflet-svg-shape-markers.js" />
-        <option value="$PROJECT_DIR$/public/js/mapit_leaf.js" />
-        <option value="$PROJECT_DIR$/routes/mapdata.js" />
-        <option value="$PROJECT_DIR$/package_tst.json" />
-        <option value="$PROJECT_DIR$/html/index.html" />
-        <option value="$PROJECT_DIR$/html/copy2server.sh" />
-        <option value="$PROJECT_DIR$/public/js/mapit.js" />
-        <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/routes/index.js" />
-        <option value="$PROJECT_DIR$/public/css/style.css" />
-        <option value="$PROJECT_DIR$/public/fehlersensoren.html" />
-        <option value="$PROJECT_DIR$/public/selnewday.html" />
-        <option value="$PROJECT_DIR$/public/js/global.js" />
-        <option value="$PROJECT_DIR$/routes/apidata.js" />
-        <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/package_web.json" />
-      </list>
-    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>
@@ -255,80 +70,27 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="484" />
-    <option name="y" value="23" />
-    <option name="width" value="1824" />
-    <option name="height" value="1336" />
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="html" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Feinstaub_WEB" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Feinstaub_WEB" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
+  <component name="ProjectId" id="1PMNZ8uMYHxPVEvap77eN4wa1PX" />
   <component name="PropertiesComponent">
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="ToolWindowDebug.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/images" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
-    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/routes/mapdata.js" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../Laerm_WEB/routes/mapdata.js" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
@@ -347,9 +109,9 @@
   <component name="RunManager">
     <configuration name="app.js" type="NodeJSConfigurationType" temporary="true" path-to-js-file="app.js" working-dir="$PROJECT_DIR$">
       <envs>
-        <env name="MONGOHOST" value="213.136.85.253" />
-        <env name="MONGOAUTH" value="true" />
+        <env name="MONGOHOST" value="feinstaub.rexfue.de" />
         <env name="MONGOUSRP" value="rxf:5C5dB|m" />
+        <env name="MONGOAUTH" value="true" />
       </envs>
       <method v="2" />
     </configuration>
@@ -540,133 +302,50 @@
       <workItem from="1549218672298" duration="509000" />
       <workItem from="1549548857345" duration="1170000" />
       <workItem from="1549610779194" duration="1744000" />
-      <workItem from="1553772634268" duration="4540000" />
-    </task>
-    <task id="LOCAL-00044" summary="Sealevel wird in fsdata gerechnent&#10;Datenreduzierung wird nicht mehr gemacht">
-      <created>1514667722620</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1514667722620</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Da hammer jetzt viel angepasst und geändert - noch nicht fertig !!">
-      <created>1514915586390</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1514915586390</updated>
-    </task>
-    <task id="LOCAL-00046" summary="Many changes. Ist works now without MAP">
-      <created>1515013181972</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1515013181972</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Wochendartstellung mit ecten Werten außer 24hMitte&#10;Mittelberechnung neu&#10;Starttag richtig rum">
-      <created>1515094532650</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1515094532650</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Map geht wieder&#10;sonst euin Haufen Änderungen">
-      <created>1515271790073</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1515271790073</updated>
-    </task>
-    <task id="LOCAL-00049" summary="Fehlende SID mit Fehlermeldung">
-      <created>1515320434539</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1515320434539</updated>
-    </task>
-    <task id="LOCAL-00050" summary="help.html an neue Gegebenheiten angepasst">
-      <created>1515331138040</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1515331138041</updated>
-    </task>
-    <task id="LOCAL-00051" summary="yMax-Einstellung für 24h und 7Tage">
-      <created>1515418700596</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1515418700596</updated>
-    </task>
-    <task id="LOCAL-00052" summary="public/js/global.js&#10;   - Texte in der Legend angepasst&#10;   - Silvester eingeführt&#10;  &#10;public/help.html&#10;   - an aktuelle Features angepasst&#10;   &#10;routes/fsdate.js      &#10;   - in proerties ist nun  _id die sid">
-      <created>1515749748946</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1515749748947</updated>
-    </task>
-    <task id="LOCAL-00053" summary="css/style.css&#10;   - Button Start-Tag um 50px nach rechts">
-      <created>1515772758823</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1515772758823</updated>
-    </task>
-    <task id="LOCAL-00054" summary="public/js(global.js&#10;   - x-Axis title in mith graph chenged to 'Datum'&#10;   - width of settings dialog changed to 400px&#10;   &#10;routes/mapdata.jd&#10;   - test with CSV data - failed">
-      <created>1515842271563</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1515842271563</updated>
-    </task>
-    <task id="LOCAL-00055" summary="views/layout.pug&#10;   - added Google-Analytics">
-      <created>1516101925980</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1516101925980</updated>
-    </task>
-    <task id="LOCAL-00056" summary="public/css/style.css&#10;   - added div for 'Feinstaubalarm'&#10;      &#10;public/js/global.js&#10;   - show FeinstaubAlarm, if sensor is in Stuttgart and alarm is on&#10;   - only show 2 sensors (skip more)&#10;   &#10;public/js/mapit.js&#10;   - default zoom 12&#10;   - show city bounds of Stuttgart&#10;   &#10;routes/fsdata.js&#10;   - check 'Feinstaubalarm' in Stuttgart   &#10;   &#10;routes/index.js   &#10;    - send alaram variable to javascript      &#10;    &#10;routes/mapdata.js&#10;   - fetch gpx rpute of Stuttgart city bounds&#10;   &#10;views/index.pug&#10;   - added div for 'Feinstaubalarm'&#10;   &#10;package.json&#10;   - added dependency for request-promise">
-      <created>1517905593593</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1517905593593</updated>
-    </task>
-    <task id="LOCAL-00057" summary="routes/index.js&#10;   - deleted variable 'alarm'&#10;   &#10;views/index.pug&#10;   - deleted variable 'falarm'   &#10;   &#10;package.json&#10;   - adapted version number">
-      <created>1517905982881</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1517905982881</updated>
-    </task>
-    <task id="LOCAL-00058" summary="public/ls/global.js&#10;   - put date under time&#10;   &#10;package.json&#10;   - adapt version number">
-      <created>1518032841390</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1518032841390</updated>
-    </task>
-    <task id="LOCAL-00059" summary="public/ls/global.js&#10;   - put date under time&#10;&#10;routes/fdata.js&#10;   - in moths graphics only plot until 'yesterday'&#10;      &#10;package.json&#10;   - version number and date">
-      <created>1518077260366</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1518077260367</updated>
-    </task>
-    <task id="LOCAL-00060" summary="public/ls/global.js&#10;   - if there are no data, plot chart without lines and without error info">
-      <created>1518439579353</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1518439579353</updated>
-    </task>
-    <task id="LOCAL-00061" summary="public/js/global.js&#10;   - immer beide Sensoren immer inder Reihefolge SDS - DHT anzeigen&#10;   - y-Achste für Temperatur etwas Automatik verpasst&#10;&#10;routes/fsdata.js&#10;   - min/max für temp etc immer mitsenden&#10;   - othersensors - Auswertung an dias neue Layout angepasst">
-      <created>1519999341737</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1519999341738</updated>
+      <workItem from="1557748942386" duration="706000" />
+      <workItem from="1558333855848" duration="225000" />
+      <workItem from="1558721580557" duration="6287000" />
+      <workItem from="1558871137291" duration="304000" />
+      <workItem from="1559329796419" duration="506000" />
+      <workItem from="1560531690796" duration="204000" />
+      <workItem from="1563203629791" duration="912000" />
+      <workItem from="1564335144116" duration="577000" />
+      <workItem from="1564380669655" duration="7361000" />
+      <workItem from="1564554342099" duration="161000" />
+      <workItem from="1564570013253" duration="1930000" />
+      <workItem from="1564578581640" duration="2725000" />
+      <workItem from="1564755971399" duration="1051000" />
+      <workItem from="1564986038614" duration="1480000" />
+      <workItem from="1565103967037" duration="105000" />
+      <workItem from="1565276672637" duration="2000" />
+      <workItem from="1565335366190" duration="343000" />
+      <workItem from="1565335787267" duration="1019000" />
+      <workItem from="1565680058993" duration="168000" />
+      <workItem from="1565710201804" duration="825000" />
+      <workItem from="1565712315685" duration="7000" />
+      <workItem from="1565761523905" duration="7336000" />
+      <workItem from="1566226412541" duration="488000" />
+      <workItem from="1566543961096" duration="18848000" />
+      <workItem from="1566991928647" duration="9282000" />
+      <workItem from="1567232064451" duration="5946000" />
+      <workItem from="1567959360802" duration="321000" />
+      <workItem from="1568013731688" duration="32586000" />
+      <workItem from="1568581563652" duration="18316000" />
+      <workItem from="1568992228624" duration="26909000" />
+      <workItem from="1569319673773" duration="12513000" />
+      <workItem from="1569398990526" duration="49000" />
+      <workItem from="1569411710302" duration="1578000" />
+      <workItem from="1569501699610" duration="2607000" />
+      <workItem from="1569573035705" duration="841000" />
+      <workItem from="1569574331103" duration="16871000" />
+      <workItem from="1569850411035" duration="3093000" />
+      <workItem from="1570123634153" duration="2419000" />
+      <workItem from="1570126255788" duration="1006000" />
+      <workItem from="1570365175891" duration="14336000" />
+      <workItem from="1570390411476" duration="23000" />
+      <workItem from="1570448641997" duration="14000" />
+      <workItem from="1570449362013" duration="18081000" />
+      <workItem from="1570740602145" duration="40039000" />
     </task>
     <task id="LOCAL-00062" summary="routes/fsdata.,js&#10;   - jquery mit reingepackt&#10;   - Abfrage wg. Feinstaubalarem berichtigt&#10;   - Date älter 1 Monat via CSV holen">
       <created>1520154456942</created>
@@ -885,45 +564,134 @@
       <option name="project" value="LOCAL" />
       <updated>1546436461460</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="public/js/global.js&#10;   - added 50g line again for day plot&#10;   - change ymax only on linear yaxis&#10;   &#10;public/help.html&#10;   - adapted to new features">
+      <created>1553770963906</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1553770963906</updated>
+    </task>
+    <task id="LOCAL-00094" summary="Wenn daten fehlen, das Array-Elemnt löschen (BME280)">
+      <created>1564578517461</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1564578517461</updated>
+    </task>
+    <task id="LOCAL-00095" summary="Wenn daten fehlen, das Array-Elemnt löschen (BME280)&#10;50ug-Linie für Tag und Woche getrennt&#10;Debugmessages auskommentiert&#10;Versionsnummer angepasst">
+      <created>1564580862995</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1564580862995</updated>
+    </task>
+    <task id="LOCAL-00096" summary="routes/fsdata.js&#10;   - Fehlende Daten aus dem Array löschen (Tag und woche, BME280)&#10;   &#10;package-web.json&#10;   - Version angepasst">
+      <created>1564989413646</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1564989413647</updated>
+    </task>
+    <task id="LOCAL-00097" summary="public/js/global.js&#10;   - wenn Koordinaten=0/0 sind, in der Adresszeile eine Fehlermeldung anzeigen&#10;       &#10;package_web.json&#10;   - Version angepasst">
+      <created>1565336360248</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1565336360249</updated>
+    </task>
+    <task id="LOCAL-00098" summary="Erste Version von Geiger - läuft z.Zt. so auf tst1.rexfue.de">
+      <created>1567535110069</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1567535110069</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Erste Versuche mit Openstreetmap - geht noch nix">
+      <created>1567924644238</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1567924644238</updated>
+    </task>
+    <task id="LOCAL-00100" summary="Größere Anpassungen&#10;Darstellung für 7 tage und 30 Tage">
+      <created>1568578116955</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1568578116956</updated>
+    </task>
+    <task id="LOCAL-00101" summary="Version in package.json angepasst">
+      <created>1568578953683</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1568578953683</updated>
+    </task>
+    <task id="LOCAL-00102" summary="public/js/global.js&#10;   - neue Fehlermeldung, wenn kein Sensor eingegeben&#10;   &#10;public/js/mapit.js&#10;   - default Sensornummer auf -1 gesetzt, Karte wird auf Stgt. zentriert">
+      <created>1568636651749</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1568636651749</updated>
+    </task>
+    <task id="LOCAL-00103" summary="Viel rumgebastelt, vor Allem die MAP auf OpenStreetMap gebracht">
+      <created>1569331807422</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1569331807422</updated>
+    </task>
+    <task id="LOCAL-00104" summary="public/css/style.css&#10;   - map hegth = 590&#10;   - set button hidden&#10;   &#10;public/js/global.js&#10;   - navigation buttons at day display&#10;   - set button only at week display&#10;   - cosmetic&#10;      &#10;public/js/mapit.js&#10;   - use svg icons&#10; &#10;routes/fsdata.js&#10;   - return 10min avg at getday&#10;   &#10;views/index.pug&#10;   - order of buttons&#10;   &#10;views/mapit.pug&#10;   - header adapted&#10;   &#10;app.js&#10;   - PORT via environment&#10;   &#10;package.json package_geiger.json&#10;   - version">
+      <created>1569849591929</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1569849591929</updated>
+    </task>
+    <task id="LOCAL-00105" summary="public/images&#10;   - favicon added&#10;   &#10;views/layout.pug&#10;   - show favicon">
+      <created>1569857046198</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1569857046198</updated>
+    </task>
+    <task id="LOCAL-00106" summary="public/global.js&#10;   - ymax calculated from max of series&#10;   &#10;package-geig.json, package.json&#10;   - version">
+      <created>1570124948707</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1570124948707</updated>
+    </task>
+    <task id="LOCAL-00107" summary="public/css/styl.css&#10;   - headeline changed&#10;  &#10;public/mapit.js&#10;   - new construction of markers&#10;   - add legend to map&#10;   &#10;routes/index.js   &#10;   - changed title to tit&#10;   &#10;views/index.pug /views/mapit.pug&#10;   - added typeofSensor&#10;   &#10;app.js&#10;   - added defaultport&#10;   &#10;package_geig.json package.json&#10;   - version">
+      <created>1570390131498</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1570390131498</updated>
+    </task>
+    <task id="LOCAL-00108" summary="routes/mapdata.js&#10;   - getaktdata: if box is empty, return epty array. dito if docs is null">
+      <created>1570622920371</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1570622920371</updated>
+    </task>
+    <task id="LOCAL-00109" summary="first shot">
+      <created>1570629258932</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1570629258932</updated>
+    </task>
+    <task id="LOCAL-00110" summary="halbfertigproduzkt">
+      <created>1571074642899</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1571074642899</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="906133000" />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="484" y="23" width="1824" height="1336" extended-state="0" />
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49322033" visible="true" weight="0.14087632" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.24906367" />
-      <window_info id="npm" order="2" sideWeight="0.50324374" side_tool="true" weight="0.26076695" />
-      <window_info id="Favorites" order="3" sideWeight="0.5067797" side_tool="true" weight="0.15984777" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32881355" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.46367165" weight="0.24517685" />
-      <window_info anchor="bottom" x="41" y="748" width="1145" height="612" id="Debug" order="3" sideWeight="0.64891845" visible="true" weight="0.2757235" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.2374269" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.494731" weight="0.10530546" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="9" sideWeight="0.4775449" weight="0.328125" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4536883" weight="0.1744373" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.35108152" side_tool="true" visible="true" weight="0.2757235" />
-      <window_info anchor="bottom" id="REST Client" order="12" sideWeight="0.49900597" visible="true" weight="0.36588237" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -941,33 +709,50 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
               <option name="COLUMN_WIDTH">
                 <map>
                   <entry key="2" value="17" />
                   <entry key="3" value="16" />
                 </map>
               </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
+              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
       </map>
+    </option>
+    <option name="OPEN_TABS">
+      <set>
+        <option value="1" />
+      </set>
     </option>
     <option name="RECENT_FILTERS">
       <map>
@@ -985,24 +770,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="package.json&#10;   - VersionsDatum" />
-    <MESSAGE value="public/js&#10;   - added customEvents.min.js, datepicker-de.js, jquery-ui-timepicker-addon.js&#10;   &#10;package_web.json&#10;   - Version: 2.4.8 vom 2018-08-18" />
-    <MESSAGE value="added some js files" />
-    <MESSAGE value="public/js/global.js&#10;   - x-axis: date in red" />
-    <MESSAGE value="public/js/global.js&#10;   - show scatter/lines&#10;   - yAxis log/linear&#10;   &#10;public/css/style.css&#10;   -  css for radio buttons removed&#10;   &#10;public/settings.htm&#10;   - setting for sactter/lines and for log/linear Y axis" />
-    <MESSAGE value="package_[tst|web].json&#10;   - version and date" />
-    <MESSAGE value="public/js/global.js&#10;      - call map with sid in url&#10;      &#10;public/js/global.js&#10;   - interpret url to use sid&#10;   - calc coordinates from sid  &#10;   - show with or wihtout problem sensors &#10;   &#10;public/fehlersensoren.html&#10;   - writing error fixed&#10;   &#10;routes/apidata.js&#10;   - writeong problemsensor to problemsensors_N1&#10;   &#10;routes/index.js&#10;   - interpret mall ans sid in url&#10;   &#10;views/index.pug&#10;   - use maal as allmap&#10;   &#10;views/mapit.pug&#10;   - use allmap and sud in url&#10;   &#10;docker-compose.yml&#10;   - instead of test1 use develop as subdomain for test versions" />
-    <MESSAGE value="public/fehlersensoren.html&#10;   - emailaddress added&#10;   &#10;routes/apidata.js&#10;   -  collection for problemsensor renamed to problemsensors&#10;   &#10;app.js&#10;   - changed accepted hosts (develop)&#10;   &#10;package.json&#10;   - version and date" />
-    <MESSAGE value="public/js/mapit.js&#10;   - values instead of 'werte'&#10;   &#10;routes/apidata.js&#10;   -  in getAPIprobSensors: count is now length of docs" />
-    <MESSAGE value="public/js/mapit.js&#10;   - anstelle von schwarzen nun gelbe Scheiben, auch bei problemsensoren" />
-    <MESSAGE value="public/js/mapit.js&#10;   - problem-sensors type 5 also ignoring&#10;   &#10;package[_tst].json&#10;   - version and date" />
-    <MESSAGE value="Averages move to middle of time range&#10;&#10;routes/fsdata.js&#10;   - avg as paramater on week calulations&#10;   - wrong parameter count corrected&#10;   &#10;routes/utilities-js&#10;   - shift averages half average time to the left&#10;   &#10;docker-compose.yml&#10;   - link log for probsens&#10;   - change name of nginx-web   &#10;   &#10;package[_tst].json&#10;   - version and date" />
-    <MESSAGE value="avg for 7d-graph now seletable&#10;&#10;css/style.css&#10;   - two select boxes&#10;   &#10;public/js/global.js&#10;   - extra avgTome fpr 7d and 24h grafics&#10;   - cleaning&#10;   &#10;settings.html&#10;   - two select boxes for average times&#10;   &#10;routes/fsdata.js&#10;   -  calc different averages also for week data" />
-    <MESSAGE value="public/js/mapit.js&#10;   - all problemsensors a skipped" />
-    <MESSAGE value="Anpassungen für leaflet.js&#10;&#10;many changes !!!!" />
-    <MESSAGE value="marker to test" />
-    <MESSAGE value="Anpassungen an leaflet" />
-    <MESSAGE value="API for cities added&#10;&#10;routes/apidata.js&#10;   - Cities API added&#10;   &#10;package_[tst|web].json&#10;   - version and dat" />
     <MESSAGE value="Changes in index.html for rexfue.de&#10;Feinstaub-API.pdf - newest Version" />
     <MESSAGE value="docker-compose.yml updated" />
     <MESSAGE value="public/js/mapit.js&#10;   - fetch properties data via apüi on localhost&#10;   &#10;routes/apidata.js&#10;   - return latest location of property at /api/getprops" />
@@ -1010,7 +777,25 @@
     <MESSAGE value="Schwarm-Rechnung dabei" />
     <MESSAGE value="public/css/style.css&#10;   - width-definition for placeholder-div&#10;   &#10;public/fehlersensoren.htm&#10;   - writing mistake corrected  &#10;   &#10;package_web.json&#10;   - date and version" />
     <MESSAGE value="added Silverster 2018/19" />
-    <option name="LAST_COMMIT_MESSAGE" value="added Silverster 2018/19" />
+    <MESSAGE value="public/js/global.js&#10;   - added 50g line again for day plot&#10;   - change ymax only on linear yaxis&#10;   &#10;public/help.html&#10;   - adapted to new features" />
+    <MESSAGE value="Wenn daten fehlen, das Array-Elemnt löschen (BME280)" />
+    <MESSAGE value="Wenn daten fehlen, das Array-Elemnt löschen (BME280)&#10;50ug-Linie für Tag und Woche getrennt&#10;Debugmessages auskommentiert&#10;Versionsnummer angepasst" />
+    <MESSAGE value="routes/fsdata.js&#10;   - Fehlende Daten aus dem Array löschen (Tag und woche, BME280)&#10;   &#10;package-web.json&#10;   - Version angepasst" />
+    <MESSAGE value="public/js/global.js&#10;   - wenn Koordinaten=0/0 sind, in der Adresszeile eine Fehlermeldung anzeigen&#10;       &#10;package_web.json&#10;   - Version angepasst" />
+    <MESSAGE value="Erste Version von Geiger - läuft z.Zt. so auf tst1.rexfue.de" />
+    <MESSAGE value="Erste Versuche mit Openstreetmap - geht noch nix" />
+    <MESSAGE value="Größere Anpassungen&#10;Darstellung für 7 tage und 30 Tage" />
+    <MESSAGE value="Version in package.json angepasst" />
+    <MESSAGE value="public/js/global.js&#10;   - neue Fehlermeldung, wenn kein Sensor eingegeben&#10;   &#10;public/js/mapit.js&#10;   - default Sensornummer auf -1 gesetzt, Karte wird auf Stgt. zentriert" />
+    <MESSAGE value="Viel rumgebastelt, vor Allem die MAP auf OpenStreetMap gebracht" />
+    <MESSAGE value="public/css/style.css&#10;   - map hegth = 590&#10;   - set button hidden&#10;   &#10;public/js/global.js&#10;   - navigation buttons at day display&#10;   - set button only at week display&#10;   - cosmetic&#10;      &#10;public/js/mapit.js&#10;   - use svg icons&#10; &#10;routes/fsdata.js&#10;   - return 10min avg at getday&#10;   &#10;views/index.pug&#10;   - order of buttons&#10;   &#10;views/mapit.pug&#10;   - header adapted&#10;   &#10;app.js&#10;   - PORT via environment&#10;   &#10;package.json package_geiger.json&#10;   - version" />
+    <MESSAGE value="public/images&#10;   - favicon added&#10;   &#10;views/layout.pug&#10;   - show favicon" />
+    <MESSAGE value="public/global.js&#10;   - ymax calculated from max of series&#10;   &#10;package-geig.json, package.json&#10;   - version" />
+    <MESSAGE value="public/css/styl.css&#10;   - headeline changed&#10;  &#10;public/mapit.js&#10;   - new construction of markers&#10;   - add legend to map&#10;   &#10;routes/index.js   &#10;   - changed title to tit&#10;   &#10;views/index.pug /views/mapit.pug&#10;   - added typeofSensor&#10;   &#10;app.js&#10;   - added defaultport&#10;   &#10;package_geig.json package.json&#10;   - version" />
+    <MESSAGE value="routes/mapdata.js&#10;   - getaktdata: if box is empty, return epty array. dito if docs is null" />
+    <MESSAGE value="first shot" />
+    <MESSAGE value="halbfertigproduzkt" />
+    <option name="LAST_COMMIT_MESSAGE" value="halbfertigproduzkt" />
   </component>
   <component name="WindowStateProjectService">
     <state width="351" height="640" key="Git.Branch.Popup" />
@@ -1022,286 +807,5 @@
   <component name="XPathView.XPathProjectComponent">
     <history />
     <find-history />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/centermap.html" />
-    <entry file="file://$PROJECT_DIR$/node_modules/mongodb-core/lib/connection/connection.js" />
-    <entry file="file://$PROJECT_DIR$/Dockerfile_WEB" />
-    <entry file="file://$PROJECT_DIR$/Dockerfile_fstst-web" />
-    <entry file="file://$PROJECT_DIR$/.gitignore" />
-    <entry file="file://$PROJECT_DIR$/public/fehlerliste.html" />
-    <entry file="file://$PROJECT_DIR$/public/statistik.html" />
-    <entry file="file://$PROJECT_DIR$/public/helpmap.html" />
-    <entry file="file://$PROJECT_DIR$/public/settings.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/utilities.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2055">
-          <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/mapit_leaf.js" />
-    <entry file="file://$PROJECT_DIR$/public/js/leaflet-svg-shape-markers.js" />
-    <entry file="file://$PROJECT_DIR$/Dockerfile_fst-web">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/maintenance.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/Stuttgart.gpx">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="61" lean-forward="true" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nginx-proxy/rexfue.de_location" />
-    <entry file="file://$PROJECT_DIR$/html/copy2server.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/html/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="112" selection-start-line="24" selection-start-column="112" selection-end-line="24" selection-end-column="112" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nginx-proxy/Dockerfile" />
-    <entry file="file://$PROJECT_DIR$/views/layout.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" selection-start-line="38" selection-end-line="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/selnewday.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="85" selection-start-line="13" selection-start-column="85" selection-end-line="13" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2235">
-          <caret line="149" selection-start-line="149" selection-end-line="149" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Beschreibung.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/fehlersensoren.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="40" column="33" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nginx-proxy/cors.conf" />
-    <entry file="file://$PROJECT_DIR$/package-lock.json" />
-    <entry file="file://$PROJECT_DIR$/public/js/mapit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="63" selection-start-line="50" selection-start-column="63" selection-end-line="50" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="54" selection-start-line="8" selection-start-column="54" selection-end-line="8" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package_tst.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/mapit.pug">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/help.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/routes/apidata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="597" column="28" selection-start-line="597" selection-start-column="28" selection-end-line="597" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/package_web.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/public/js/mapit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8040">
-          <caret line="536" column="92" selection-start-line="536" selection-start-column="92" selection-end-line="536" selection-end-column="92" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/routes/fsdata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="71" column="24" selection-start-line="71" selection-start-column="19" selection-end-line="71" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/public/js/global.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5820">
-          <caret line="388" column="27" selection-start-line="388" selection-start-column="12" selection-end-line="388" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/Dockerfile_fst-web">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/Dockerfile_fstst-web">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../Feinstaub_WEB/package_tst.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="21" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/global.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
-          <caret line="1312" column="33" selection-start-line="1312" selection-start-column="29" selection-end-line="1312" selection-end-column="33" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="e#82#88#0" expanded="true" />
-            <element signature="e#96#102#0" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="e#47#53#0" expanded="true" />
-            <element signature="e#53#59#0" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="e#94#100#0" expanded="true" />
-            <element signature="e#108#114#0" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="e#47#53#0" expanded="true" />
-            <element signature="e#53#59#0" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="e#94#100#0" expanded="true" />
-            <element signature="e#108#114#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package_web.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build_and_copy.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="2" lean-forward="true" selection-start-line="30" selection-start-column="2" selection-end-line="30" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/fsdata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="548" column="47" lean-forward="true" selection-start-line="548" selection-start-column="47" selection-end-line="548" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/mapdata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="23" lean-forward="true" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/apidata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1245">
-          <caret line="83" column="12" selection-start-line="83" selection-start-column="8" selection-end-line="83" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>

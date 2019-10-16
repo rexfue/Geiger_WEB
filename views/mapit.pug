@@ -4,44 +4,52 @@ block content
     script.
         var selName='#{name}';
         var startday='#{stday}';
-        var allmap = '#{showAllMap}';
         var csid = '#{csensor}';
-        var typeOfSensor = '#{stype}';
 
     header
-        #hline1
+        //#hline1
             #h1name Radioaktivitäts-Karte
             #h1right
                 #h1datum
                 #h1uhr
         //#hline2
             #subtitle
-    #buttons
+    //#buttons
         #buttonsLeft
             button.btn.btn-primary#btnBack(value="back") zurück
             button.btn.btn-primary#btnCent(value='map') Zentrieren
             // button.btn.btn-primary#btnTraf(value='traffic') #[span Verkehr einblenden]
         #buttonsRight
             button.btn.btn-primary#btnHelp(value='help') Info
+    //div.mapbox
     #map
-    #mapdate
-    #nosensor Mein Sensor wird nicht angezeigt? Dann bitte <span class="hrefsimu" id="fehlersensoren">hier</span> klicken
+    #overlay
+        #buttons
+            #buttonsLeft
+                //
+                    button.btn.btn-primary#bntye(value="year") 365 Tage
+                button.btn.btn-primary#btnmo(value="month") 30 d
+                button.btn.btn-primary#btnwe(value="week") 7 d
+                button.btn.btn-primary#btnda(autofocus="true",value="day") 24 h
+                //
+                    button.btn.btn-primary#btnst(value="start") anderen&nbsp;Tag wählen
+        #buttonsRight
+            button.btn.btn-primary#btnSet(value='set') Einstellung
+            button.btn.btn-primary#btnMap(value='map') Ende
+            // button.btn.btn-primary#btnStat(value='map') Statistik
+            // button.btn.btn-primary#btnHelp(value='help') Info
+        #loading Lade die Daten ...
+        #placeholderFS_1
+        #dialogWinSet
+        #author
+            #mailadr
+                a(href="mailto:rexfue@gmail.com") mailto:rexfue@gmail.com
+            #versn Version: #{version} vom #{date}
+
+
     #dialogCenter.dialog
     #dialogWinHelpM
     #dialogFehlSens
     #dialogFehlList
     #page-mask
 
-    //#UI_container
-        #legendcontainer
-            #legend_Radiation.legend(style="display: block;")
-                div.legend-inner
-                    div.gradient
-                    div.labels
-                        div.label(style="bottom: 100%;") 10+
-                        div.label(style="bottom: 83.3%;") 5.0
-                        div.label(style="bottom: 66.6%;") 2.0
-                        div.label(style="bottom: 50%;") 1.0
-                        div.label(style="bottom: 33.3%;") 0.5
-                        div.label(style="bottom: 16.6%;") 0.2
-                        div.label(style="bottom: 1%;")  0.1 µSv/h

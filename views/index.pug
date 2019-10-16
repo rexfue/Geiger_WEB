@@ -10,14 +10,14 @@ block content
 
 
 
-    header
-        #hline1
+    #kopf
+        //#hline1
                 #h1name
                 #insel
                     label(for='ssel') Sensor-Nr:
                     input(type='text' name='ssel' id='ssel' list='sids')
                 #h1uhr
-        #hline2
+        //#hline2
             #adresse
             #sbx
                 select(id='combo')
@@ -25,27 +25,28 @@ block content
                 label(for='combo')
             #subtitle
 
-    #buttons
-        #buttonsLeft
-            //
-                button.btn.btn-primary#bntye(value="year") 365 Tage
-            button.btn.btn-primary#btnmo(value="month") 30 d
-            button.btn.btn-primary#btnwe(value="week") 7 d
-            button.btn.btn-primary#btnda(autofocus="true",value="day") 24 h
-            //
-                button.btn.btn-primary#btnst(value="start") anderen&nbsp;Tag wählen
-    #buttonsRight
-            button.btn.btn-primary#btnSet(value='map') Einstellung
-            button.btn.btn-primary#btnMap(value='map') Karte
-            // button.btn.btn-primary#btnStat(value='map') Statistik
-            button.btn.btn-primary#btnHelp(value='help') Info
+    #overlay
+        #buttons
+            #buttonsLeft
+                //
+                    button.btn.btn-primary#bntye(value="year") 365 Tage
+                button.btn.btn-primary#btnmo(value="month") 30 d
+                button.btn.btn-primary#btnwe(value="week") 7 d
+                button.btn.btn-primary#btnda(autofocus="true",value="day") 24 h
+                //
+                    button.btn.btn-primary#btnst(value="start") anderen&nbsp;Tag wählen
+        #buttonsRight
+                button.btn.btn-primary#btnSet(value='set') Einstellung
+                button.btn.btn-primary#btnMap(value='map') Karte
+                // button.btn.btn-primary#btnStat(value='map') Statistik
+                button.btn.btn-primary#btnHelp(value='help') Info
 
-    #placeholderFS_1
-    #placeholderTHP_1
-    #placeholderFS_2
-    #placeholderTHP_2
-    #placeholderFS_3
-    #placeholderTHP_3
+        #placeholderFS_1
+        #placeholderTHP_1
+        #placeholderFS_2
+        #placeholderTHP_2
+        #placeholderFS_3
+        #placeholderTHP_3
     #dialogWinSet.dialog
     #dialogStatistik
     #dialogWinHelp

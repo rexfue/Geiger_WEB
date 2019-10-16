@@ -41,9 +41,8 @@ app.use(express.static("node_modules/moment/min"));
 let requested;
 async function checkHost(req, res, next) {
     if (
-        (req.headers.host == 'feinstaub.rexfue.de') ||
-        (req.headers.host == 'develop.rexfue.de') ||
         (req.headers.host == 'test1.rexfue.de') ||
+        (req.headers.host == 'multigeiger.rexfue.de') ||
         (req.headers.host == 'localhost:'+PORT) ||
         (req.headers.host == 'nuccy:3005') ||
         (req.headers.host == '213.136.85.253:'+PORT) ||

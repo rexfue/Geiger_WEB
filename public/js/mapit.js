@@ -34,6 +34,7 @@ let colorscale = [];
 let grades = [];
 let cpms=[];
 let sv_factor = {};
+let clickedSensor = 0;
 
 let startDay = "";
 if(!((typeof startday == 'undefined') || (startday == ""))) {
@@ -121,6 +122,8 @@ function buildIcon(color) {
     }
 }
 
+//$('#overlay').html("Das ist das DIV");
+// generate map centered on Stuttgart
 
 async function plotMap(cid, poly) {
     // if sensor nbr is give, find coordinates, else use Stuttgart center
@@ -132,7 +135,6 @@ async function plotMap(cid, poly) {
         myLatLng = {lat: parseFloat(stgt.lat),lng: parseFloat(stgt.lon)};
     }
 
-    // generate map centered on Stuttgart
     map = L.map('map').setView(myLatLng, firstZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
@@ -188,6 +190,15 @@ async function plotMap(cid, poly) {
 
     await buildMarkers(bounds);
 
+    map.on('popupopen', function() {
+        $('.speciallink').click(function(x) {
+            showGrafik(clickedSensor);
+        });
+    });
+    map.on('click', function() {
+        $('#overlay').hide();
+    });
+
 }
 
 
@@ -203,7 +214,7 @@ async function buildMarkers(bounds) {
         if ((sensors == null) || (sensors.length == 0)) {
             showError(1, 'Daten Laden', 0);
         } else {
-            dialogError.dialog("close");
+//            dialogError.dialog("close");
             break;
         }
         count--;
@@ -233,13 +244,15 @@ async function buildMarkers(bounds) {
             .bindPopup(popuptext);                      // and bint the popup text
         marker.addTo(map);
     }
-    showLastDate(sensors.lastDate);
+//    showLastDate(sensors.lastDate);
 
 }
+
 
 async function onMarkerClick(e, click) {
     let item = e.target.options;
     let factor = sv_factor[item.rohr];
+    clickedSensor = item.name;
 
     let popuptext = '<div id="infoTitle"><h5>Sensor: ' + item.name + '</h5>' +
         '<div id="infoTable">' +
@@ -249,14 +262,14 @@ async function onMarkerClick(e, click) {
         '<tr><td>Last seen:</td><td>'+item.lastseen+'</td>';
     } else {
         popuptext += '<td>' + item.value + '</td><td>cpm</td></tr>' +
-            '<tr><td>' + Math.round((item.value / 60 *factor)*100)/100 + '</td><td>µSv/h</td></tr>';
+            '<tr><td>' + Math.round((item.value / 60 *factor)*100)/100 + '</td><td>µSv/h</td>';
     }
     popuptext +=
-        '</tr></table>' +
+        '</tr><table>' +
+        '<div id="infoBtn">'+
+        '<a href="#" class="speciallink">Grafik anzeigen</a>'+
         '</div>' +
-         '<div id="infoHref">' +
-         '<a href=graph?sid=' + item.url.substring(1) + '>Grafik anzeigen</a>' +
-         '</div>' +
+        '</div>' +
         '</div>';
     let popup = e.target.getPopup();
     popup.setContent(popuptext);                        // set text into popup
@@ -711,12 +724,13 @@ function fetchAktualData(box) {
         .done(docs => docs);
 }
 
-
+/*
 // Show the last date below tha map grafics
 function showLastDate(dt) {
     var ld = moment(dt);
     $("#mapdate").html("Werte von " + ld.format('YYYY-MM-DD HH:mm'));
 }
+*/
 
 function fetchStuttgartBounds() {
     let points = [];
@@ -923,4 +937,10 @@ function showError(err, txt, id) {
     }
     $('#errorDialog').text(errtxt);
     dialogError.dialog("open");
+}
+
+
+function showGrafik(sid) {
+    $('#overlay').show();
+    doPlot('oneday','');
 }

@@ -23,19 +23,11 @@ html
 body
     #wrapper
       block content
-      #author
-        #mailadr
-          a(href="mailto:rexfue@gmail.com") mailto:rexfue@gmail.com
-        #versn Version: #{version} vom #{date}
 
     script(src="https://code.highcharts.com/highcharts.js")
     script(src="https://code.highcharts.com/highcharts-more.js")
     script(src="/js/customEvents.min.js")
     script(src="/moment.min.js")
-    if name == 'map'
-      link(rel="stylesheet", href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css",integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==",crossorigin="")
-      script(src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js",integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==",crossorigin="")
-      // script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpQm2BKLtU2oxdrgy45s27ao3J1cBj64E&callback=initMap"
-      script(src='/js/mapit.js')
-    else
-      script(src='/js/global.js')
+    link(rel="stylesheet", href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css",integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==",crossorigin="")
+    script(src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js",integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==",crossorigin="")
+    script(src='/js/global.js')

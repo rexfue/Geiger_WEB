@@ -37,49 +37,16 @@ router.get('/:nam', function(req, res, next) {
         idx = 'index';
         name = '140';
         title += '_I';
-    }
-    if (name == 'graph') {
-        res.render(mapit, {
-            title: tit+'-Map',
-            version : pkg.version,
-            date : pkg.date,
-            param: req.query.addr,
-            stday: req.query.stday,
-            showAllMap: req.query.mall,
-            csensor: req.query.sid,
-            stype: tit,
-            name: req.query.sid});
-    } else if (name == 'map') {
+    } else {
     	res.render(mapit, {
     		title: tit+'-Map',
     		version : pkg.version,
     		date : pkg.date,
             param: req.query.addr,
             stday: req.query.stday,
-            showAllMap: req.query.mall,
-            csensor: req.query.sid,
-            stype: tit,
+            csensor: name,
     		name: 'map'});
     }
-    // else {
-    //     res.render(mapit, {
-    //         title: tit+'-'+name,
-    //         version : pkg.version,
-    //         date : pkg.date,
-    //         param: req.query.addr,
-    //         stday: req.query.stday,
-    //         stype: tit,
-    //         csensor: name,
-    //         name : 'map'});
-    // res.render(idx, {
-    //     title: tit+'-'+name,
-    //     version : pkg.version,
-    //     date : pkg.date,
-    //     param: req.query.addr,
-    //     stday: req.query.stday,
-    //     stype: tit,
-    //     name : name});
-//    }
 });
 
 
