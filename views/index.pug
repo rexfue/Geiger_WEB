@@ -8,34 +8,13 @@ block content
          var typeOfSensor='#{stype}';
          var stype='#{csensor}';
 
-
-
-    #kopf
-        //#hline1
-                #h1name
-                #insel
-                    label(for='ssel') Sensor-Nr:
-                    input(type='text' name='ssel' id='ssel' list='sids')
-                #h1uhr
-        //#hline2
-            #adresse
-            #sbx
-                select(id='combo')
-                    option(value="",disabled, selected) --Sensor-Nr--
-                label(for='combo')
-            #subtitle
-
     #overlay
         #buttons
             #buttonsLeft
-                //
-                    button.btn.btn-primary#bntye(value="year") 365 Tage
                 button.btn.btn-primary#btnmo(value="month") 30 d
                 button.btn.btn-primary#btnwe(value="week") 7 d
                 button.btn.btn-primary#btnda(autofocus="true",value="day") 24 h
-                //
-                    button.btn.btn-primary#btnst(value="start") anderen&nbsp;Tag wählen
-        #buttonsRight
+            //#buttonsRight
                 button.btn.btn-primary#btnSet(value='set') Einstellung
                 button.btn.btn-primary#btnMap(value='map') Karte
                 // button.btn.btn-primary#btnStat(value='map') Statistik
@@ -52,7 +31,7 @@ block content
     #dialogWinHelp
     #dialogNewSensor.dialog
     #dialogNewDay.dialog
-    #errorDialog
+    #dialogError
     #dialogymax
     #page-mask
 

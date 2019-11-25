@@ -2,32 +2,26 @@ doctype html
 html
   head
     title= title
-    // meta(name="viewport" content="initial-scale=1.0")
+    meta(name="viewport" content="initial-scale=1.0")
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     link(rel='stylesheet', href='/css/jquery-ui-1.12.1/jquery-ui.min.css')
     link(rel='stylesheet', href='/css/jquery-ui-timepicker-addon.css')
+    link(href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet")
     link(rel='stylesheet', href='/css/style.css')
     link(rel='icon', href='images/favicon.ico' type='image/x-icon')
-    // script(async src="https://www.googletagmanager.com/gtag/js?id=UA-112547702-1")
     script(src="/jquery.min.js")
     script(src="/js/jquery-ui.min.js")
     script(src="/js/datepicker-de.js")
     script(src="/js/jquery-ui-timepicker-addon.js")
-
-    //script.
-    //    window.dataLayer = window.dataLayer || [];
-    //    function gtag(){dataLayer.push(arguments);}
-    //    gtag('js', new Date());
-    //    gtag('config', 'UA-112547702-1');
-
 body
     #wrapper
-      block content
+       block content
 
     script(src="https://code.highcharts.com/highcharts.js")
     script(src="https://code.highcharts.com/highcharts-more.js")
-    script(src="/js/customEvents.min.js")
     script(src="/moment.min.js")
+    script(src='/js/global.js')
     link(rel="stylesheet", href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css",integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==",crossorigin="")
     script(src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js",integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==",crossorigin="")
-    script(src='/js/global.js')
+    link(rel="stylesheet", href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css")
+    script(src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js")

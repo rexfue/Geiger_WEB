@@ -6,7 +6,7 @@ $(document).ready(function() {
     const MAXOPTARR = 5;
 
     var active = 'oneday';					// default: plot 1 day
-    var refreshRate = 10;                    // Grafik so oft auffrischen (in Minuten)
+    var refreshRate = 1;                    // Grafik so oft auffrischen (in Minuten)
     var txtMeldung = false;					// falls keine Daten da sind, Text melden
     var korrelation = {};
     var kopf = 'Radioaktivitäts-Messung';
@@ -27,19 +27,21 @@ $(document).ready(function() {
     let bounds;
     let polygon;                            // rectangle of whole map to dim background
 
-    let colorscale = [];
-    let grades = [];
-    let cpms = [];
-    let sv_factor = {};
     let clickedSensor = 0;
     let properties;
+    let gbreit=100;
+    let grafikON = false;
+
+    let mapLoaded = false;
+
+    let showOnlySi22G = false;
 
 
-    colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
-    grades = [10, 5, 2, 1, 0.5, 0.2, 0.1, -999];
-    cpms = [1482, 741, 296, 148, 74, 30, 15, -999];
+    let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
+    let grades = [10, 5, 2, 1, 0.5, 0.2, 0.1, -999];
+    let cpms = [1482, 741, 296, 148, 74, 30, 15, -999];
 
-    sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 1};
+    let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.0};
 
     // Variable selName is defined via index.js and index.pug
     if (typeof selName == 'undefined') {
@@ -109,12 +111,22 @@ $(document).ready(function() {
         }
     }
 
-    function buildIcon(color) {
+    function buildIcon(color,n) {
+        let x = 100;
+        if (n < 10) {
+            x = 200;
+        } else if (n < 100) {
+            x = 150;
+        }
         let radiIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
             '<circle cx="300" cy="300" r="300" fill="' + color + '"/>' +
             '<circle cx="300" cy="300" r="50"/>' +
-            '<path stroke="#000" stroke-width="175" fill="none" stroke-dasharray="171.74" d="M382,158a164,164 0 1,1-164,0"/>' +
-            '</svg>';
+            '<path stroke="#000" stroke-width="175" fill="none" stroke-dasharray="171.74" d="M382,158a164,164 0 1,1-164,0"/>';
+        if (n !== undefined) {
+            radiIcon +=
+                '<text id="marker_text" x="' + x + '" y="400" font-size="1500%" font-family="Verdana,Lucida Sans Unicode,sans-serif" fill="white">' + n + '</text>';
+        }
+            radiIcon += '</svg>';
         let radiIconUrl = encodeURI("data:image/svg+xml," + radiIcon).replace(new RegExp('#', 'g'), '%23');
         return radiIconUrl;
     }
@@ -129,7 +141,9 @@ $(document).ready(function() {
             myLatLng = {lat: parseFloat(stgt.lat), lng: parseFloat(stgt.lon)};
         }
 
-        map = L.map('map').setView(myLatLng, firstZoom);
+        map = L.map('map');
+        map.on('load',function() { mapLoaded = true; });
+        map.setView(myLatLng, firstZoom);
 
         L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
             maxZoom: 17,
@@ -138,7 +152,7 @@ $(document).ready(function() {
 
         bounds = map.getBounds();
 
-        map.scrollWheelZoom.disable();
+//        map.scrollWheelZoom.disable();
 
         map.on('moveend', async function () {
             bounds = map.getBounds();
@@ -159,8 +173,8 @@ $(document).ready(function() {
 
         */
 
-        var legend = L.control({position: 'topright'});
 
+        var legend = L.control({position: 'topright'});
         legend.onAdd = function (map) {
             let div = L.DomUtil.create('div', 'info legend');
             let div_color = L.DomUtil.create('div', 'info legend inner', div);
@@ -174,8 +188,51 @@ $(document).ready(function() {
             div_color.innerHTML += '&nbsp;<i style="background:' + getColor(grades[grades.length - 1]) + '"></i> offline';
             return div;
         };
-
         legend.addTo(map);
+
+        var infobutton = L.control({position:'bottomright'});
+        infobutton.onAdd = function (map) {
+            let div = L.DomUtil.create('div');
+            div.innerHTML = '<button class="ib infobutt">Info</button>';
+            div .onclick = function() {
+                dialogHelp.dialog('open');
+                console.log("Clicked on 'InfoButton'");
+            }
+            return div;
+        }
+        infobutton.addTo(map);
+
+        var centerbutton = L.control({position:'topleft'});
+        centerbutton.onAdd = function (map) {
+            let div = L.DomUtil.create('div');
+            div.innerHTML = '<button class="cb centerbutt">neu zentrieren</button>';
+            div .onclick = function() {
+                dialogCenter.dialog('open');
+                console.log("Clicked on 'Zentrieren'");
+            }
+            return div;
+        }
+        centerbutton.addTo(map);
+
+        let tubebutton = L.control({position:'bottomleft'});
+        tubebutton.onAdd = function(map) {
+            let div = L.DomUtil.create('div');
+            div.innerHTML = '<select><option value="all">alle Zählrohre</option><option value="sig">nur Si22Gn</option></select>';
+            div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
+            return div;
+        }
+        tubebutton.addTo(map);
+
+        $('select').change(async function() {
+            if(this.value == "sig") {
+                showOnlySi22G = true;
+            } else {
+                showOnlySi22G = false;
+            }
+            bounds = map.getBounds();
+            await buildMarkers(bounds);
+            console.log(this.value);
+        });
 
 
         if (useStgtBorder) {
@@ -187,21 +244,64 @@ $(document).ready(function() {
         map.on('popupopen', function (e) {
             let tg = e.popup._source;
             $('.speciallink').click(function (x, tg) {
-//                tg.closePopup();
+                map.closePopup();
                 showGrafik(clickedSensor);
             });
         });
         map.on('click', function (e) {
             $('#overlay').hide();
+            grafikON = false;
         });
-
-
     }
 
+    // With all Markers in cluster (markers) calculate the median
+    // of the values. With this median fetch the color and return it.
+    // If there are 'offline' sensors (value == -1) strip then before
+    // calculating the median. If there are only offline sensor, return
+    // color of value==-1 (dark gray).
+    function getMedian(markers) {
+        markers.sort(function(a,b) {                        // first sort, lowest first
+            let y1 = a.options.value;
+            let y2 = b.options.value;
+            if(y1 < y2) {
+                return -1;
+            }
+            if(y2 < y1) {
+                return 1;
+            }
+            return 0;
+        });
+        console.log(markers);
+        let i=0;                                            // now find the 'offlines' (value == -1)
+        for(i=0; i<markers.length; i++) {
+            if(markers[i].options.value != -1) {
+                break;
+            }
+        }
+        markers.splice(0,i);                                // remove these from array
+        let lang = markers.length;
+        if (lang > 1) {                                     //
+            if ((lang % 2) == 1) {                          // uneven ->
+                return getColor(markers[(Mathfloor(lang / 2))].options.value);  // median is in the middle
+            } else {                                        // evaen ->
+                lang = lang / 2;                            // median is mean of both middle values
+                console.log(lang);
+                let wert = (markers[lang-1].options.value +
+                    markers[lang].options.value) / 2;
+                return getColor(wert);
+            }
+        } else if (lang == 1) {                             // only one marker -> return its color
+            return getColor(markers[0].options.value);
+        }
+        return getColor(-1);                            // only offlines
+    }
 
+    let markersAll;
     async function buildMarkers(bounds) {
         let count = 3;
         let sensors;
+        let alltubes = [];
+        let sigtubes = [];
         while (count != 0) {
             sensors = await fetchAktualData(bounds)
                 .catch(e => {
@@ -219,17 +319,38 @@ $(document).ready(function() {
         if (count == 0) {
             return;
         }
+        if (markersAll) {
+            map.removeLayer(markersAll);
+        }
+        markersAll = L.markerClusterGroup({
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true,
+            disableClusteringAtZoom: 14,
+            iconCreateFunction: function(cluster) {
+                let mymarkers = cluster.getAllChildMarkers();
+                let color = getMedian(mymarkers);           // calc median of markers in cluster and use that color
+//                return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+                return new L.Icon({
+                    iconUrl: buildIcon(color,cluster.getChildCount()),
+                    iconSize: [35, 35]
+                });
+            }
+        });
         for (let x of sensors.avgs) {
             if (x.location == undefined) {                   // if there is no location defined ...
                 continue;                                   // ... skip this sensor
             }                                               // otherwise create marker
+            if ((x.name != "Si22G") && showOnlySi22G) {
+                continue;
+            }
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
-                    iconUrl: buildIcon(getColor(x.cpm)),
-                    iconSize: [25, 25]
+                    iconUrl: buildIcon(getColor(parseInt(x.cpm))),
+                    iconSize: [35, 35]
                 }),
-                value: x.cpm,
+                value: parseInt(x.cpm),
                 url: '/' + x.id,
                 rohr: x.name,
                 lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
@@ -239,8 +360,9 @@ $(document).ready(function() {
                 //            .on('mouseover', e => onMarkerClick(e,false))   // over-handler
                 //            .on('mouseout', e => e.target.closePopup())
                 .bindPopup(popuptext);                      // and bint the popup text
-            marker.addTo(map);
+            markersAll.addLayer(marker);
         }
+        markersAll.addTo(map);
     }
 
 
@@ -249,11 +371,11 @@ $(document).ready(function() {
         let factor = sv_factor[item.rohr];
         clickedSensor = item.name;
 
-        let popuptext = '<div id="infoTitle"><h5>Sensor: ' + item.name + '</h5>' +
+        let popuptext = '<div id="popuptext"><div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
             '<div id="infoTable">' +
             '<table><tr>';
         if (item.value < 0) {
-            popuptext += '<td colspan="2"><span style="color:red;">offline</span></td></tr>' +
+            popuptext += '<td colspan="2" style="text-align:center;"><span style="color:red;font-size:130%;">offline</span></td></tr>' +
                 '<tr><td>Last seen:</td><td>' + item.lastseen + '</td>';
         } else {
             popuptext += '<td>' + item.value + '</td><td>cpm</td></tr>' +
@@ -265,14 +387,16 @@ $(document).ready(function() {
             '<a href="#" class="speciallink">Grafik anzeigen</a>' +
             '</div>' +
             '</div>' +
-            '</div>';
+            '</div></div>';
         let popup = e.target.getPopup();
         popup.setContent(popuptext);                        // set text into popup
         e.target.openPopup();                               // show the popup
-        if (click == true) {                                 // if we clicked
-             e.target.closePopup();                               // show the popup
+        if (click == true) {                                // if we clicked
+             e.target.closePopup();                         // show the popup
         }
     }
+
+
 
 // ********************************************************************************
 // Events
@@ -292,13 +416,63 @@ $(document).ready(function() {
 // ********************************************************************************
 // Dialogs
 // ********************************************************************************
+/*
+    var dialogError = $('#errorDialog').dialog({
+
+        autoOpen: false,
+        width: 300,
+        position: {my: 'center', at: 'top+100px', of: window},
+        open: function () {
+            $('#page-mask').css('visibility', 'visible');
+            consloe.log('Opening errorDialog');
+        },
+        close: function () {
+            $('#page-mask').css('visibility', 'hidden');
+        },
+        title: "Fehler",
+        modal: true,
+    });
+*/
+
+    var dialogError = $('#dialogError').dialog({
+        autoOpen: false,
+        width: 750,
+        title: 'Fehler',
+        position: {my: 'center', at: 'top+100px', of: window},
+        open: function () {
+            $('#page-mask').css('visibility', 'visible');
+            consloe.log('DialogError: Opening errorDialog');
+        },
+        close: function () {
+            $('#page-mask').css('visibility', 'hidden');
+//            polygon.remove();
+        },
+    });
+
+    var dialogHelp = $('#dialogWinHelpM').dialog({
+        autoOpen: false,
+        width: 750,
+        title: 'Info',
+        position: {my: 'center', at: 'top+100px', of: window},
+        open: function () {
+            $('#page-mask').css('visibility', 'visible');
+//            polygon.addTo(map);
+            console.log("in DialogHelp-open");
+            $(this).load('/fsdata/help');
+        },
+        close: function () {
+            $('#page-mask').css('visibility', 'hidden');
+//            polygon.remove();
+        },
+    });
+
     var dialogCenter = $('#dialogCenter').dialog({
         autoOpen: false,
         width: 800,
         title: 'Zentrieren',
         open: function () {
             $('#page-mask').css('visibility', 'visible');
-            polygon.addTo(map);
+//            polygon.addTo(map);
             $(this).load('/fsdata/centermap', function () {
                 $('#newmapcenter').focus();
             });
@@ -322,7 +496,7 @@ $(document).ready(function() {
         modal: true,
         close: function () {
             $('#page-mask').css('visibility', 'hidden');
-            polygon.remove();
+//            polygon.remove();
 
         },
     });
@@ -333,15 +507,21 @@ $(document).ready(function() {
         }
     });
 
-    function setNewCenter() {
-        var town = $('#newmapcenter').val();
-        if ((town == "") || (town == null)) {
-            town = 'Stuttgart';
+    async function setNewCenter() {
+        let x = $('#newmapcenter').val();
+        let y = parseInt(x);
+        if(isNaN(y)) {
+            var town = x;
+            if (!((town == "") || (town == null))) {
+                setCenter(town);
+            }
+        } else {
+            let coo = await getSensorKoords(x);
+            map.setView([coo.lat,coo.lng]);
         }
-        setCenter(town);
         dialogCenter.dialog("close");
-        $('#btnCent').css('background', '#0099cc');
     }
+
 
 
     function saveSettings() {
@@ -446,20 +626,6 @@ $(document).ready(function() {
     });
 
 
-    var dialogHelp = $('#dialogWinHelp').dialog({
-        autoOpen: false,
-        width: 750,
-        title: 'Info',
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $(this).load('/fsdata/help');
-        },
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-            $('#btnHelp').css('background', '#0099cc');
-        },
-    });
-
 //    $.datepicker.setDefaults( $.datetimepicker.regional[ "de" ] );
 
     // Set new Start-Day and show chart
@@ -536,22 +702,6 @@ $(document).ready(function() {
     });
 
 
-    var dialogError = $('#errorDialog').dialog({
-        autoOpen: false,
-        width: 300,
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-        },
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-            $('#btnHelp').css('background', '#0099cc');
-        },
-        title: "Fehler",
-        modat: true,
-    });
-
-
     $('#selnewday').datepicker($.datepicker.regional["de"]);
 
     // change moment, so theat toJSON returns local Time
@@ -560,9 +710,8 @@ $(document).ready(function() {
     };
 
     // Zeit gleich anzeigen
-    showUhrzeit(true);
     setInterval(function () {
-        showUhrzeit(false);
+        updateGrafik();
     }, 1000);								// alle Sekunde aufrufen
 
 
@@ -726,6 +875,7 @@ $(document).ready(function() {
 
     $('#btnMap').click(function () {
         $('#overlay').hide();
+        grafikON = false;
     });
 
 
@@ -776,27 +926,19 @@ $(document).ready(function() {
 
 //	*************  Functions *****************
 
-    /* Alle Minute die ktuelle Urzeit anzeigen und
-     * den Plot für Tages - und Wochendaten updaten.
-     * Alle 'refreshRate' plus 15sec die Grafiken neu zeichnen
-     * Die Funktion wird alle Sekunde aufgerufen !
-     */
-    function showUhrzeit(sofort) {
+    function updateGrafik() {
         var d = moment()								// akt. Zeit holen
-        if (sofort || (d.second() == 0)) {				// Wenn Minute grade um
-            $('#h1uhr').html(d.format('HH:mm'));
-            $('#subtitle').html(d.format('YYYY-MM-DD'));		// dann zeit anzeigen
-        }
         if (((d.minute() % refreshRate) == 0) && (d.second() == 15)) {	// alle ganzen refreshRate Minuten, 15sec danach
-            console.log(refreshRate, 'Minuten um, Grafik wird erneuert');
-            if ((aktsensorid != 'map') && (doUpdate == true)) {	// Wenn nicht die Karte, dann
+            console.log(refreshRate, 'Minuten um, Grafik wird erneuert jetzt');
+            if (grafikON && (active == 'oneday')) {	// Wenn nicht die Karte, dann
                 doPlot(active, startDay,properties);						// Tages- und
             } else {
-                fetchAktualData();
+                if(mapLoaded) {
+                    fetchAktualData(bounds);
+                }
             }
         }
     }
-
 
     function roundx(value, digits) {
         var mul = 1;
@@ -877,6 +1019,8 @@ $(document).ready(function() {
             }
         } else if (err == 3) {
             errtxt = "Sensor Nr. " + id + " ist kein Geigerzähler-Sensor";
+        } else if (err==4) {
+            errtxt = "Stadt " + id + " nicht gefunden";
         }
         $('#errorDialog').text(errtxt);
         dialogError.dialog("open");
@@ -955,10 +1099,11 @@ $(document).ready(function() {
         globObject = {
             chart: {
                 height: 400,
-                width: 700,
+                width: gbreit-5,
                 spacingRight: 20,
                 spacingLeft: 20,
                 spacingTop: 25,
+                spacingBottom:25,
                 backgroundColor: {
                     linearGradient: [0, 400, 0, 0],
                     stops: [
@@ -1136,25 +1281,42 @@ $(document).ready(function() {
     }
 
 
+    var noDataTafel1 = '<div class="errTafel">' +
+        'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
+        '</div>';
+    var noDataTafel2 = '<div class="errTafel">' +
+        'Für den Zeitraum liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
+        '</div>';
+
+
+    function calcMaxY(values) {
+        let maxcpm = Math.max.apply(null, values);
+        return  maxcpm + (maxcpm/2);
+    }
+
     // ************************  GEIGER  **********************************
     function PlotYM_Geiger(what, datas, sensor, live) {
         var series1 = [];
         var series2 = [];
 
         var data = datas.docs;
-        var mx = [];
-        if (what == 'onemonth') {
-            data = data.slice(-32);							// nur einen Monat auswählen
+        let faktor = sv_factor[datas.sensorname];
+
+        if(data.length != 0) {
+            var mx = [];
+            if (what == 'onemonth') {
+                data = data.slice(-32);							// nur einen Monat auswählen
+            }
+            $.each(data, function (i) {
+                var dat = new Date(this._id).getTime();	// retrieve the date
+                series1.push([dat, this.cpmAV]);
+                mx.push(this.cpmAV);
+            });
+            txtMeldung = false;
+        } else {
+            txtMeldung = true;
         }
-        $.each(data, function (i) {
-            var dat = new Date(this._id).getTime();	// retrieve the date
-            series1.push([dat, this.cpmAV]);
-//            series2.push([dat,this.avgP2_5]);
-            mx.push(this.cpmAV);
-        });
-        var maxcpm = Math.max.apply(null, mx);
-        var maxy = ymax_geig;
-        if (maxcpm > 50) maxy = null;
+        let maxy = calcMaxY(mx);
         var options = createGlobObtions();
         var dlt = moment();	// retrieve the date
         if (what == 'onemonth') {
@@ -1162,6 +1324,8 @@ $(document).ready(function() {
         } else {
             dlt.subtract(366, 'd');
         }
+
+
         var localOptions = {
             chart: {
                 type: 'column'
@@ -1192,94 +1356,21 @@ $(document).ready(function() {
                     }
                 },
             },
-            yAxis: {
-                title: {
-                    text: 'Impulse pro Minute',
-                    useHTML: true,
-                },
-                type: logyaxis == true ? 'logarithmic' : 'linear',
-//                max: logyaxis == true ? null : maxy,
-                max: maxy,
-                min: logyaxis == true ? 1 : 0,
-//						tickAmount: 9,
-                opposite: true,
-                gridLineColor: 'lightgray',
-                plotLines: [
-                    // {
-                    // color: 'red', // Color value
-                    // value: 50, // Value of where the line will appear
-                    // width: 2, // Width of the line
-                    // label: {
-                    //     useHTML: true,
-                    //     text : 'Grenzwert 50µg/m<sup>3</sup>',
-                    //     y: -10,
-                    //     align: 'center',
-                    //     style : { color: 'red'},
-                    // },
-                    // zIndex: 8,
-                    //},
-                    {
-                        color: 'blue', // Color value
-                        value: maxcpm, // Value of where the line will appear
-                        width: 1, // Width of the line
-                        label: {
-                            useHTML: true,
-                            text: 'max. Wert : ' + maxcpm.toFixed(0) + ' Impule/min',
-                            y: -10,
-                            align: 'center',
-                            style: {color: 'blue'},
-                        },
-                        zIndex: 8,
-                    }],
-            },
             series: [
                 {
                     name: 'cpm',
                     data: series1,
-//					        	 type: 'column',
                     color: 'blue',
-//					        	 dataLabels: {
-//					        		 rotation: -90,
-//					        		 color: '#fff',
-//					        		 enabled: true,
-//					        		 format: '{y:.1f}',
-//					        		 align: 'right',
-//					        		 x: 0,
-//					        		 y: 10,
-//					        	 },
-//					             pointPadding: 0.3,
                 },
-                // {
-                //     name: 'P2.5',
-                //     data: series2,
-//					        	 type: 'column',
-//								 color:'red',
-//					        	 dataLabels: {
-//					        		 rotation: -90,
-//					        		 color: '#fff',
-//					        		 enabled: true,
-//					        		 format: '{y:.1f}',
-//					        		 align: 'right',
-//					        		 x: 0,
-//					        		 y: 10,
-//					        	 },
-//					             pointPadding: 0.4,
-//                 },
             ],
             plotOptions: {
                 series:
                     {
                     animation: false,
-//					pointWidth: 5,
                     groupPadding: 0.1,
-//					pointPlacement: 'between',
-//					grouping: false,
                 },
                 column: {
                     pointPadding: 0,
-//                        borderWidth: 0,
-//                         groupPadding: 0,
-//                         shadow: false
                 }
             },
             title: {
@@ -1289,13 +1380,84 @@ $(document).ready(function() {
                 text: 'Tagesmittelwert jeweils von 0h00 bis 23h59'
             },
         }
+
+        let maxcpm = Math.max.apply(null, mx);
+
+        let yAxis_cpm =  [{
+            title: {
+                text: 'Impulse pro Minute',
+                useHTML: true,
+            },
+            type: logyaxis == true ? 'logarithmic' : 'linear',
+//                max: logyaxis == true ? null : maxy,
+            max: maxy,
+            min: logyaxis == true ? 1 : 0,
+//						tickAmount: 9,
+            opposite: true,
+            gridLineColor: 'lightgray',
+            plotLines: [
+                {
+                    color: 'blue', // Color value
+                    value: maxcpm, // Value of where the line will appear
+                    width: 1, // Width of the line
+                    label: {
+                        useHTML: true,
+                        text: 'max. Wert : ' + maxcpm.toFixed(0) + ' Impule/min',
+                        y: -10,
+                        align: 'center',
+                        style: {color: 'blue'},
+                    },
+                    zIndex: 8,
+                }],
+        },{
+            title: {
+                text: 'µSv/h',
+                style: {
+                    color: 'red'
+                }
+            },
+            linkedTo: 0,
+            useHTML: true,
+            labels: {
+                formatter: function () {
+                    let v = this.axis.defaultLabelFormatter.call(this);
+                    let w = parseFloat(v);
+                    let s = Math.round((w / 60 * faktor) * 100) / 100;
+                    return s;
+                }
+            },
+        }
+        ];
         options.chart.zoomType = 'x';
+        options.yAxis=[];
+        options.yAxis[0] = yAxis_cpm[0];
+        if (faktor != 0) {
+            options.yAxis[1] = yAxis_cpm[1];
+        }
 
         $.extend(true, options, localOptions);
 
         // Do the PLOT
         var ch = Highcharts.chart($('#placeholderFS_1')[0], options, function (chart) {
             addSensorID2chart(chart, sensor);
+            if (txtMeldung == true) {
+                var labeText = "";
+                var errtext = chart.renderer.label(
+                    noDataTafel2,
+                    80,
+                    120, 'rect', 0, 0, true)
+                    .css({
+                        fontSize: '18pt',
+                        color: 'red'
+                    })
+                    .attr({
+                        zIndex: 1000,
+                        stroke: 'black',
+                        'stroke-width': 2,
+                        fill: 'white',
+                        padding: 10,
+                    }).add();
+            }
         });
 
 //        ch.renderer.text("Sensor-Nr 141", 10, 10).add();
@@ -1317,19 +1479,21 @@ $(document).ready(function() {
         // Put values into the arrays
         var cnt = 0;
         var data = datas.docs;
-        if (what == 'oneweek') {
-            data = data.RAD
-        }
-        $.each(data, function (i) {
-            var dat = new Date(this._id).getTime();
-            if ((what == 'oneweek') && movingAVG) {
-                dat = new Date(this.date).getTime();
-            }
-            series1.push([dat, what == 'oneweek' ? this.cpm_mav : this.cpm])
-            mx.push(what == 'oneweek' ? this.cpm_mav : this.cpm);
-        });
+        let faktor = sv_factor[datas.sensorname];
 
         if (data.length != 0) {
+            if (what == 'oneweek') {
+                data = data.RAD
+            }
+            $.each(data, function (i) {
+                var dat = new Date(this._id).getTime();
+                if ((what == 'oneweek') && movingAVG) {
+                    dat = new Date(this.date).getTime();
+                }
+                series1.push([dat, what == 'oneweek' ? this.cpm_mav : this.cpm])
+                mx.push(what == 'oneweek' ? this.cpm_mav : this.cpm);
+            });
+
             if (what == 'oneday') {
                 // Aktuelle Werte speichern
 
@@ -1342,14 +1506,9 @@ $(document).ready(function() {
                     '<table class="infoTafel"><tr >' +
                     '<th colspan="2">Aktuelle Werte</th>' +
                     '</tr><tr>' +
-                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(1) + '</td>';
-                // infoTafel +=
-                //     '</tr><tr>' +
-                //     '<td>LA_Minimum</td><td>' + (aktVal.LAMin).toFixed(0) + '</td><td>dbA</td>';
-                // infoTafel +=
-                //     '</tr><tr>' +
-                //     '<td>LA_Maximum</td><td>' + (aktVal.LAMax).toFixed(0) + '</td><td>dbA</td>';
-                infoTafel +=
+                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(1) + '</td>' +
+                    '</tr><tr>' +
+                    '<td>µSv/h</td><td>' + Math.round((aktVal.cpm / 60 * faktor) * 100) / 100  + '</td>';
                     '</tr></table>' +
                     '</div>';
             }
@@ -1376,37 +1535,10 @@ $(document).ready(function() {
             visible: true,
         };
 
-        var series_LAMax = {
-            name: 'LA_Maximum',
-            data: series2,
-            color: '#946CBD',
-            yAxis: 1,
-            zIndex: 0,
-            marker: {
-                enabled: false,
-                symbol: 'square',
-            },
-            visible: true,
-        };
 
-        var series_LAMin = {
-            name: 'LA_Minimum',
-            data: series3,
-            color: '#DA9E24',
-            yAxis: 2,
-            zIndex: 6,
-            marker: {
-                enabled: false,
-                symbol: 'square',
-            },
-            visible: true,
-        };
+        let maxy = calcMaxY(mx);
 
-        var maxcpm = Math.max.apply(null, mx);
-        var maxy = ymax_geig;
-        if (maxcpm > 50) maxy = null;
-
-        var yAxis_cpm = {													// 1
+        var yAxis_cpm = [{													// 1
             title: {
                 text: 'Impulse pro Minute',
                 style: {
@@ -1418,48 +1550,25 @@ $(document).ready(function() {
             opposite: true,
 //            tickAmount: 11,
             useHTML: true,
-        };
-
-        var yAxis_LAMax = {
-            title: {										// 2
-                text: 'LA_Maximum [dbA]',
-                style: {
-                    color: '#946CBD',
-                }
-            },
-//            min: 20,
-//            max: 120,
-            gridLineColor: 'lightgray',
-            opposite: true,
-            tickAmount: 11,
-        };
-
-        /*        // Check min/max of press to arrange y-axis
-                let pmi = datas.minmax.press_min/100;
-                let pma = datas.minmax.press_max/100;
-                let lopy=0, hipy=0;
-                if (pmi < 990) {
-                    lopy = (Math.ceil((pmi-5)/5))*5;
-                    hipy = lopy + 50;
-                } else {
-                    hipy = (Math.floor((pma+5)/5))*5;
-                    lopy = hipy-50;
-                }
-        //        let lopy = tmi/5
-        */
-        var yAxis_LAMin = {													// 3
+        },{
             title: {
-                text: 'LA_Minimum [dbA]',
+                text: 'µSv/h',
                 style: {
-                    color: '#DA9E24',
+                    color: 'red'
                 }
             },
-            gridLineColor: 'lightgray',
-//            min: 20,
-//            max: 120,
-            opposite: true,
-            tickAmount: 11,
-        };
+            linkedTo: 0,
+            useHTML: true,
+            labels: {
+                formatter: function () {
+                    let v = this.axis.defaultLabelFormatter.call(this);
+                    let w = parseFloat(v);
+                    let s = Math.round((w / 60 * faktor) * 100) / 100;
+                    return s;
+                }
+            },
+        }];
+
 
         options.series = [];
         options.yAxis = [];
@@ -1469,8 +1578,10 @@ $(document).ready(function() {
         options.subtitle.text = 'Impulse pro Minute (Mittelwert über jeweils 10min)';
 //        options.series[2] = series_LAMax;
 //        options.yAxis[2] = yAxis_LAMin;
-        options.yAxis[0] = yAxis_cpm;
-//        options.yAxis[1] = yAxis_LAMax;
+        options.yAxis[0] = yAxis_cpm[0];
+        if (faktor != 0) {
+            options.yAxis[1] = yAxis_cpm[1];
+        }
         options.chart.zoomType = 'x';
         if (what == 'oneweek') {
             options.plotOptions = {
@@ -1528,11 +1639,7 @@ $(document).ready(function() {
             }
         }
 
-        var noDataTafel = '<div class="errTafel">' +
-            'Für heute liegen leider keine Daten vor!<br /> Bitte den Sensor überprüfen!\' <br />' +
-            '</div>';
-
-        let navx = 400;
+        let navx = gbreit-300;
         let navy = 20;
         let navbreit = 55;
         let chr;
@@ -1544,6 +1651,24 @@ $(document).ready(function() {
                 for (let i = 0; i < navtxt.length; i++) {
                     renderPfeil(i, chart, navx + (i * navbreit), navy, navtxt[i], navtime[i]);
                 }
+                if (txtMeldung == true) {
+                    var labeText = "";
+                    var errtext = chart.renderer.label(
+                        noDataTafel2,
+                        80,
+                        120, 'rect', 0, 0, true)
+                        .css({
+                            fontSize: '18pt',
+                            color: 'red'
+                        })
+                        .attr({
+                            zIndex: 1000,
+                            stroke: 'black',
+                            'stroke-width': 2,
+                            fill: 'white',
+                            padding: 10,
+                        }).add();
+                }
             });
         } else {
             let navtxt = ['-24h', '-12h', 'live', '+12h', '+24h'];
@@ -1552,8 +1677,8 @@ $(document).ready(function() {
                 addSensorID2chart(chart, sensor);
                 chart.renderer.label(
                     infoTafel,
-                    15,
-                    78, 'rect', 0, 0, true)
+                    50,
+                    chart.chartHeight-80, 'rect', 0, 0, true)
                     .css({
                         fontSize: '10pt',
                         color: 'green'
@@ -1567,7 +1692,7 @@ $(document).ready(function() {
                 if (txtMeldung == true) {
                     var labeText = "";
                     var errtext = chart.renderer.label(
-                        noDataTafel,
+                        noDataTafel1,
                         80,
                         120, 'rect', 0, 0, true)
                         .css({
@@ -1624,36 +1749,6 @@ $(document).ready(function() {
         doPlot(active, startDay, properties);
     }
 
-    /*
-    var renderer;
-
-    renderer = new Highcharts.Renderer(
-        document.getElementById('container'),
-        400,
-        300
-    );
-
-    renderer.rect(10, 10, 100, 50, 5).attr({
-        fill: 'blue',
-        stroke: 'black',
-        'stroke-width': 1
-    }).add();
-
-
-    renderer.circle(100, 100, 50).attr({
-        fill: 'red',
-        stroke: 'black',
-        'stroke-width': 1
-    }).add();
-
-    renderer.text('Hello world', 200, 100).attr({
-        rotation: 45
-    }).css({
-        fontSize: '16pt',
-        color: 'green'
-    }).add();
-
-    */
 
 
 // Umrechnung Koordinaten auf Adresse
@@ -1678,11 +1773,17 @@ $(document).ready(function() {
 
 // Map auf Stadt setzen
     async function setCenter(adr) {
-        let data = await getCoords(adr);
-        map.setView([parseFloat(data.lat), parseFloat(data.lon)]);
-        console.log(data);
+        try {
+            let data = await getCoords(adr);
+            map.setView([parseFloat(data.lat), parseFloat(data.lon)]);
+            console.log(data);
+            return true;
+        } catch (e) {
+            showError(4,"Town not found",adr);
+            console.log(e);
+            return false;
+        }
     }
-
 
 // Aktuelle Daten vom Server holen
     function fetchAktualData(box) {
@@ -1751,7 +1852,7 @@ $(document).ready(function() {
                     resolve({lat: 48.784373, lng: 9.182});
                 } else {
 //                console.log(data);
-                    if (data.values.length == 0) {
+                    if ((data.values.length == 0) || ((data.values[0]==0) && (data.values[1]==0))){
                         resolve({lat: 48.780045, lng: 9.182646});
                     } else {
                         resolve({lat: data.values[0].lat, lng: data.values[0].lon});
@@ -1763,6 +1864,7 @@ $(document).ready(function() {
         return p;
     }
 
+    /*
     var dialogError = $('#errorDialog').dialog({
         autoOpen: false,
         width: 300,
@@ -1788,9 +1890,9 @@ $(document).ready(function() {
             errtxt = "Unbekannter Fehler"
         }
         $('#errorDialog').text(errtxt);
-        dialogError.dialog("open");
+        dialogHelp.dialog("open");
     }
-
+*/
 
     function showGrafik(sid) {
         active = 'oneday';
@@ -1811,11 +1913,14 @@ $(document).ready(function() {
                 // save coordinates in localStorage
                 localStorage.setItem('geiger_curcoord', JSON.stringify(data.location[0].loc.coordinates));
                 doPlot(active, startDay, data);						// Start with plotting one day from now on
-//                switchPlot(active);
                 let breit = $(window).width();
-                let marg = (breit-710)/2;
+                gbreit = breit * 0.8;
+                let marg = (breit-gbreit)/2;
+                $('#overlay').css('width', gbreit);
                 $('#overlay').css('margin-left',marg);
                 $('#overlay').show();
+                grafikON = true;
+                doPlot(active, startDay, data);						// Start with plotting one day from now on
             }
         });
     }

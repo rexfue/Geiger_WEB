@@ -1,7 +1,7 @@
 {
   "name": "feinstaub",
-  "version": "2.5.0",
-  "date": "2019-10-16",
+  "version": "2.5.1",
+  "date": "2019-11-22",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -12,8 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@google/maps": "^0.3.1",
+    "axios": "^0.19.0",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.3.1",
+    "core-js": "^3.4.2",
     "express": "^4.16.4",
     "gauss": "^0.2.12",
     "gpx-parse": "^0.10.4",
@@ -26,6 +28,7 @@
     "pug": "^2.0.0-rc.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "saslprep": "^1.0.3",
     "xml-js": "^1.6.11"
   }
 }

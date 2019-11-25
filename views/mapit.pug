@@ -7,21 +7,6 @@ block content
         var csid = '#{csensor}';
 
     header
-        //#hline1
-            #h1name Radioaktivitäts-Karte
-            #h1right
-                #h1datum
-                #h1uhr
-        //#hline2
-            #subtitle
-    //#buttons
-        #buttonsLeft
-            button.btn.btn-primary#btnBack(value="back") zurück
-            button.btn.btn-primary#btnCent(value='map') Zentrieren
-            // button.btn.btn-primary#btnTraf(value='traffic') #[span Verkehr einblenden]
-        #buttonsRight
-            button.btn.btn-primary#btnHelp(value='help') Info
-    //div.mapbox
     #map
     #overlay
         #buttons
@@ -33,11 +18,9 @@ block content
                 button.btn.btn-primary#btnda(autofocus="true",value="day") 24 h
                 //
                     button.btn.btn-primary#btnst(value="start") anderen&nbsp;Tag wählen
-        #buttonsRight
-            button.btn.btn-primary#btnSet(value='set') Einstellung
-            button.btn.btn-primary#btnMap(value='map') Ende
-            // button.btn.btn-primary#btnStat(value='map') Statistik
-            // button.btn.btn-primary#btnHelp(value='help') Info
+            #buttonsRight
+                button.btn.btn-primary#btnSet(value='set') Einstellung
+                button.btn.btn-primary#btnMap(value='map') Ende
         #loading Lade die Daten ...
         #placeholderFS_1
         #dialogWinSet

@@ -43,9 +43,11 @@ async function checkHost(req, res, next) {
     if (
         (req.headers.host == 'test1.rexfue.de') ||
         (req.headers.host == 'multigeiger.rexfue.de') ||
+        (req.headers.host == 'multigeiger.citysensor.de') ||
         (req.headers.host == 'localhost:'+PORT) ||
         (req.headers.host == 'nuccy:3005') ||
         (req.headers.host == '213.136.85.253:'+PORT) ||
+        (req.headers.host == '192.168.178.78:'+PORT) ||
         (req.headers.host == 'macbig:'+PORT)                 //Port is important if the url has it
     ) {
         req.url = '/fs' + req.url;
@@ -93,7 +95,7 @@ app.use(bodyParser.json());
 
 
 app.get('/fs/fsdata/help', function(req, res, next) {
-	  res.sendFile(__dirname+'/public/help.html');
+	  res.sendFile(__dirname+'/public/info.html');
 	});
 
 app.get('/fs/fsdata/setting', function(req, res, next) {
@@ -150,7 +152,7 @@ var apidatas = require('./routes/apidata');
 app.use('/fs/api',apidatas);
 
 
-const connect = MongoClient.connect(MONGO_URL, {poolSize:20, useNewUrlParser: true });
+const connect = MongoClient.connect(MONGO_URL, {poolSize:20, useNewUrlParser: true ,useUnifiedTopology: true});
 connect
     .then(client => {
         app.set('dbase', client.db(MONGOBASE));								    // Übergabe von db
