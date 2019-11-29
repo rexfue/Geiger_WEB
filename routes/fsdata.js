@@ -3,11 +3,11 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const mathe = require('mathjs');
-const fs = require('fs');
-const $ = require('jquery');
 const util = require('./utilities');
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
+
+let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.081438};
 
 //Get readings for all data out ot the database
 router.get('/getfs/:week', function (req, res) {
@@ -16,33 +16,21 @@ router.get('/getfs/:week', function (req, res) {
     let st = req.query.start;
     let sid = parseInt(req.query.sensorid);
     let sname = req.query.sensorname;
-    let samples = req.query.samples;
     let avg = req.query.avgTime;
-    let altitude = req.query.altitude;
     let live = (req.query.live == 'true');
-    let special = req.query.special;
     let movingAvg = (req.query.moving=='true');
 
     if (week == 'oneday') {
-        getDayData(db, sid, sname, altitude, st, avg, live,special)
+        getDayWeekData(db, sid, st, 10, live, false, 1)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
-        getWeekData(db, sid, sname, altitude, st, avg, live, movingAvg)
+        getDayWeekData(db, sid, st, avg, live, movingAvg, 7)
             .then(erg => res.json(erg));
-    } else if ((week == 'oneyear') || (week == 'onemonth')) {
+    } else if (week == 'onemonth') {
         getYearData(db, sid, sname, st, week, live)
-            .then(erg => res.json(erg));
-    } else if (week == 'latest') {
-        getLatestValues(db, sid, sname, samples)
             .then(erg => res.json(erg));
     } else if (week == 'korr') {
         getSensorProperties(db,sid)
-            .then(erg => res.json(erg));
-    } else if (week == "oldest") {
-        getOldestEntry(db, sid)
-            .then(erg => res.json(erg));
-    } else if (week == "statistik") {
-        getStatistics(db, sid)
             .then(erg => res.json(erg));
     } else {
         res.json({'error': 'MIST VERDAMMTER!!'});
@@ -71,21 +59,16 @@ async function getSensorProperties(db,sid) {
     console.log("Get properties for", sid,"from DB");
     let sensorEntries = [{'sid':sid}];
     let coll = db.collection('properties');
-    let properties = await coll.findOne({_id: sid});
+    let properties;
+    try {
+        properties = await coll.findOne({_id: sid});
+    }
+    catch(e) {
+        console.log("getSensorProperties",e);
+        return {};
+    }
     console.log("got properties - time:", new Date() - start);
     if(properties == null) return null;
-    let alarm = false;
-    // if(properties.location[properties.location.length-1].address.city == 'Stuttgart') {
-    //     try {
-    //         alarm = await checkFeinstaubAlarm();
-    //         console.log('ALARM:', alarm);
-    //     }
-    //     catch(e) {
-    //         alarm = false;
-    //         console.log("Problems with  'CheckFeinstaubAlarm()'");
-    //     }
-    // }
-    properties.alarm = alarm;
     sensorEntries[0]['name'] = properties.name;
     let mustbeobject = false;
     for(let i = 0, j=1; i<properties.othersensors.length; i++) {
@@ -118,169 +101,139 @@ async function getSensorProperties(db,sid) {
     return properties;
 }
 
-// Feinstaubalarm in Stuttgart cjecken
-function checkFeinstaubAlarm() {
-    var p = new Promise(function (resolve,reject) {
-        request('https://www.stuttgart.de/feinstaubalarm/widget/xtrasmall')
-            .then(function (html) {
-//                console.log(html);
-                if (html.indexOf('widget alarm-on') > 0) {
-                    resolve(true);
-                } else {
-                    resolve(false);
+
+async function readRadiationAverages(db, sid, start, end, average, factor) {
+    let docs = [];
+    let collection = db.collection('data_'+sid);
+    try {
+        docs = await collection.aggregate([
+            {$sort: {datetime: 1}},
+            {$match: {datetime: {$gte: new Date(start), $lt: new Date(end)}}},
+            {
+                $group: {
+                    _id: {
+                        $toDate: {
+                            $subtract: [
+                                {$toLong: '$datetime'},
+                                {$mod: [{$toLong: '$datetime'}, 1000 * 60 * average]}    // aggregate every average minutes
+                            ]
+                        }
+                    },
+                    cpmAvg: {$avg: '$counts_per_minute'},
+                    count: {$sum: 1}
                 }
-            })
-            .catch(function (err) {
-                console.log(err);
-                reject(err);
-            });
-    });
-    return p;
+            },
+            { $addFields: { uSvphAvg: { $multiply: ["$cpmAvg", factor]}}},
+            {$sort: {_id: 1}}
+        ]).toArray();
+    }
+    catch(e) {
+        console.log('readRadiationAverages', e);
+        return [];
+    }
+    return docs;
 }
 
-/* für den übergebenen Sensor das Datum des ältesten Eintrages übergeben
- */
-function getOldestEntry(db,sid) {
-    var p = new Promise(function (resolve,reject) {
-        var colstr = 'data_' + sid;
-        var collection = db.collection(colstr);
-        collection.findOne({},{sort: {datetime:1}}, function(err,entry){
-            if (err != null) { reject (err); }
-            resolve(entry.datetime);
-        });
-    })  ;
-    return p;
+async function readClimateAverages(db, sid, start, end, average) {
+    let docs = [];
+    let collection = db.collection('data_'+sid);
+    try {
+        docs = await collection.aggregate([
+            {$sort: {datetime: 1}},
+            {$match: {datetime: {$gte: new Date(start), $lt: new Date(end)}}},
+            {
+                $group: {
+                    _id: {
+                        $toDate: {
+                            $subtract: [
+                                {$toLong: '$datetime'},
+                                {$mod: [{$toLong: '$datetime'}, 1000 * 60 * 10]}    // aggregate every 10min
+                            ]
+                        }
+                    },
+                    tempAvg: {$avg: '$temperature'},            // average over every 10min
+                    humiAvg: {$avg: '$humidity'},
+                    pressSeaAvg: {$avg: '$pressure_at_sealevel'},
+                    count: {$sum: 1}
+                }
+            },
+            {$sort: {_id: 1}}
+        ]).toArray();
+    }
+    catch(e) {
+        console.log('readClimateAverage', e);
+        return [];
+    }
+    return docs;
 }
 
-
-/*
- Die neuesten 'samples' Werte ( d.h. die letzten 'samples' min) holen, davon den Mittelwert bilden (von Hand) und
- dieses dann zurückgeben.
- */
-function getLatestValues(db,sensorid,sensorname,samples) {
-//    console.log("GetLatest  " + sensorid + "  " + sensorname + "  " + samples);
-    var p = new Promise(function(resolve,reject) {
-        var colstr = 'data_' + sensorid ;
-        var collection = db.collection(colstr);
-        if (samples == undefined) {
-            samples = 10;
+function calcTimeRange(st, range, live, avg) {
+    let start = moment(st);
+    let end = moment(st);
+    if(range == 1) {                                       // one day
+        if (live == true) {
+            start.subtract(24, 'h');
+            start.subtract(avg, 'm');
+        } else {
+            start.subtract(avg, 'm');
+            end.add(24, 'h');
         }
-        var start = moment().subtract(samples,'m');
-        var end = moment();
-//        console.log(start,end);
-        collection.find({
-            date: {
-                $gte: new Date(start),
-                $lt: new Date(end)
-            }
-        }, {sort: {datetime: 1}}).toArray(function (e, docs) {
-            if (e != null) {
-                reject(e);
-            }
-//            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei latest')
-            var y;
-            if (isPM(sensorname)) {
-                y = calcMinMaxAvgSDS(docs,false);
-                resolve({'P1':y.P10_avg,'P2':y.P2_5_avg});
-            } else if (sensorname == "DHT22") {
-                y = calcMinMaxAvgDHT(docs);
-                resolve({'T':y.temp_avg, 'H':y.humi_avg});
-            } else if (sensorname == "BMP180") {
-                y = calcMinMaxAvgBMP(db, sensorid, docs)
-                resolve({'T':y.temp_avg, 'P':y.press_avg});
-            } else if (sensorname == "BME280") {
-                y = calcMinMaxAvgBME(db, sensorid, docs);
-                resolve({'T':y.temp_avg, 'H':y.humi_avg, 'P': y.press_avg });
-            }
-        });
-    });
-    return p;
+    } else if (range == 7) {                                // one week (7 days)
+        if (live == true) {
+            start.subtract(24 * 7, 'h');
+        } else {
+            start.subtract(24, 'h');
+            end.add(24 * 7, 'h');
+        }
+    } else if (range == 31) {                               // one month (31 days)
+        start=start.startOf('day');
+        end = end.startOf('day');
+        start.subtract(33, 'd');
+        end.subtract(1,'d');                    // plot until 'yesterday'
+    }
+    return { start: start, end: end };
 }
-
-
-/****  TODO für das Display  ****
-    Zur einfachen Anzeige der atuellen Werte (für das Display z.B.):
-    Hier oben die Abfrage für die aktuellen Werte eines Sensors bzw. einer Location reinbasteln:
-    Wenn :week keine der obigen Bedingungen erfüllt und eine Zahl ist, dann für diese Sensornummer
-    (falls sie existiert) die neuesten Werte aus der DB holen und als einen JSON-String übergeben.
-    Evtl. die 30min-Werte nehmen oder auch nur 5min-Mittelwerte.
-    Format könnte sein:
-        {"P1":"23.5", "P2":"4.5", "T":"12.4","H":"56","P":"1003"}
-     Es müssen also über die Korrelation-Collection die zugehörigen Sensorren dazu gelesen werden.
- ******/
-
 
 // Daten für einen Tag aus der Datenbank holen
-async function getDayData(db, sensorid, sensorname, altitude, st, avg, live, special) {
+async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
         let docs = [];
-        try {
-            if (special == 'silvester17') {
-                let coll = db.collection('silvester');
-                let silv = await coll.findOne({_id: sensorid}, {_id: 0, data: 1});
-                if (silv != null) {
-                    docs = silv.data;
-                }
-            } else {
-                var start = moment(st);                                 // Zeiten in einen moment umsetzen
-                var end = moment(st);
-                var colstr = 'data_' + sensorid;
-                var collection = db.collection(colstr);
-                if (live == true) {
-                    start.subtract(24, 'h');
-                    start.subtract(avg, 'm');
+        let ret = {radiation: [], climate: []};
+        // first fetch properties for this sensor
+        let properties = await getSensorProperties(db,sensorid);
+        // calculate time range
+        let timerange = calcTimeRange(st, span, live, avg);
+        for (let n = 0; n<properties.othersensors.length; n++) {
+            let sid = properties.othersensors[n].sid;
+            let sname = properties.othersensors[n].name;
+            try {
+                if (sname.startsWith("Radiation")) {
+                    let factor = sv_factor[sname.substring(10)] / 60;
+                    docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
+                    if (docs.length != 0) {
+                        ret['radiation'] = docs;
+                    }
+                } else if (sname == "BME280") {
+                    docs = await readClimateAverages(db, sid, timerange.start, timerange.end, avg);
+                    if (docs.length != 0) {
+                        ret['climate'] = docs;
+                    }
                 } else {
-                    start.subtract(avg, 'm');
-                    end.add(24, 'h');
+                    ret['error'] = "Sensor not of right type (unknown)";
                 }
-                if (sensorname.startsWith("Radiation")) {
-                    let datRange = {datetime: {$gte: new Date(start), $lt: new Date(end)}};
-                    docs = await collection.aggregate([
-                        {$sort: {datetime: 1}},
-                        {$match: {datetime: {$gte: new Date(start), $lt: new Date(end)}}},
-                        {
-                            $group: {
-                                _id: {
-                                    $toDate: {
-                                        $subtract: [
-                                            {$toLong: '$datetime'},
-                                            {$mod: [{$toLong: '$datetime'}, 1000 * 60 * 10]}
-                                        ]
-                                    }
-                                },
-                                cpm: {$avg: '$counts_per_minute'},
-                                count: {$sum: 1}
-                            }
-                        },
-                        {$sort: {_id: 1}}
-                    ]).toArray();
-                } else {
-                    docs = await collection.find({
-                        datetime: {
-                            $gte: new Date(start),
-                            $lt: new Date(end)
-                        }
-                    }, {sort: {datetime: 1}}).toArray();
-                }
-//            console.log(docs.length + " Daten gelesen für " + sensorname + ' bei day')
-                if (docs.length == 0) {
-                    return {'docs': [], sensorname: sensorname.substring(10)};
-                } else {
-                    return {docs: docs, sensorname: sensorname.substring(10)};
-                }
+            } catch (e) {
+                console.log('getDayData', e);
             }
         }
-        catch(e) {
-            console.log('getDayData',e);
-        }
+        return ret;
 }
 
 // Daten für eine Woche aus der DB holen
 async function getWeekData(db, sensorid, sensorname, altitude , st, mav, live, domoving) {
+    let docs = [];
     var start = moment(st);
     var end = moment(st);
     var colstr = 'data_' + sensorid;
     var collection = db.collection(colstr);
-    let docs;
     if (live == true) {
         if (isPM(sensorname)) {
             start.subtract(24 * 8, 'h');

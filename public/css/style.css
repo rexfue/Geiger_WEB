@@ -501,13 +501,14 @@ radio {
 }
 
 .cb {
-	background-color: #86bc24;
-	opacity: 0.8;
+/*	background-color: #86bc24;
+	opacity: 0.8;  */
 	font-size: 130%;
 	text-align: center;
 	display: inline-block;
 	width: 130px;
 	height: 40px;
+	border: solid 2px #B5B5B5;
 }
 .centerbutt {
 	border-radius: 5px;

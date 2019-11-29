@@ -47,26 +47,6 @@ router.post('/putdata/:what', function(req,res) {
 });
 
 
-// API zum Holen der Problem-Sensoren
-router.get('/getprobdata', function(req,res) {
-    let db = req.app.get('dbase');
-    let pnr = 0;
-    let only=false;
-    if (!((req.query.probnr == undefined) || (req.query.probnr == ""))) {
-        pnr = parseInt(req.query.probnr);
-    }
-    if (!((req.query.only_id == undefined) || (req.query.only_id == ""))) {
-        only = true
-    }
-    let mittxt=false;
-    if (!((req.query.mitTxt == undefined) || (req.query.mitTxt == ""))) {
-        mittxt = true;
-    }
-    getAPIprobSensors(db,pnr,only,mittxt)
-        .then(erg => res.json(erg));
-});
-
-
 
 //API to read all datas from the database
 router.get('/getdata', function (req, res) {

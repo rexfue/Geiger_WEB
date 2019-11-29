@@ -35,13 +35,14 @@ $(document).ready(function() {
     let mapLoaded = false;
 
     let showOnlySi22G = false;
+    let faktor;
 
 
     let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
-    let grades = [10, 5, 2, 1, 0.5, 0.2, 0.1, -999];
-    let cpms = [1482, 741, 296, 148, 74, 30, 15, -999];
+    let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
+    let cpms = [1482, 741, 296, 148, 74, 30, 0, -999];
 
-    let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.0};
+    let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.081438};
 
     // Variable selName is defined via index.js and index.pug
     if (typeof selName == 'undefined') {
@@ -102,10 +103,12 @@ $(document).ready(function() {
         ;
     }
 
-    function getColor(d) {
+
+    function getColor(name,d) {
         let val = parseInt(d);
-        for (let i = 0; i < cpms.length; i++) {
-            if (val >= cpms[i]) {
+        val = val / 60 * sv_factor[name];
+        for (let i = 0; i < grades.length; i++) {
+            if (val >= grades[i]) {
                 return (colorscale[i]);
             }
         }
@@ -185,7 +188,7 @@ $(document).ready(function() {
                     '<i style="background:' + colorscale[i] + '"></i>' +
                     '<u>&nbsp;&nbsp;&nbsp;</u>&nbsp;&nbsp;' + grades[i] + (i == 0 ? "+" : "") + '</upan><br />';
             }
-            div_color.innerHTML += '&nbsp;<i style="background:' + getColor(grades[grades.length - 1]) + '"></i> offline';
+            div_color.innerHTML += '&nbsp;<i style="background:' + colorscale[colorscale.length - 1] + '"></i> offline';
             return div;
         };
         legend.addTo(map);
@@ -214,10 +217,10 @@ $(document).ready(function() {
         }
         centerbutton.addTo(map);
 
-        let tubebutton = L.control({position:'bottomleft'});
+        let tubebutton = L.control({position:'topright'});
         tubebutton.onAdd = function(map) {
             let div = L.DomUtil.create('div');
-            div.innerHTML = '<select><option value="all">alle Zählrohre</option><option value="sig">nur Si22Gn</option></select>';
+            div.innerHTML = '<select><option value="all">alle Zählrohre</option><option value="sig">nur Si22G</option></select>';
             div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
             return div;
         }
@@ -261,8 +264,8 @@ $(document).ready(function() {
     // color of value==-1 (dark gray).
     function getMedian(markers) {
         markers.sort(function(a,b) {                        // first sort, lowest first
-            let y1 = a.options.value;
-            let y2 = b.options.value;
+            let y1 = a.options.mSvph;
+            let y2 = b.options.mSvph;
             if(y1 < y2) {
                 return -1;
             }
@@ -272,28 +275,29 @@ $(document).ready(function() {
             return 0;
         });
         console.log(markers);
-        let i=0;                                            // now find the 'offlines' (value == -1)
+        let i=0;                                            // now find the 'offlines' (mSvph == -1)
         for(i=0; i<markers.length; i++) {
-            if(markers[i].options.value != -1) {
+            if(markers[i].options.mSvph != -1) {
                 break;
             }
         }
         markers.splice(0,i);                                // remove these from array
         let lang = markers.length;
+        let name = markers[0].options.rohr;
         if (lang > 1) {                                     //
             if ((lang % 2) == 1) {                          // uneven ->
-                return getColor(markers[(Mathfloor(lang / 2))].options.value);  // median is in the middle
+                return getColor(name,markers[(Mathfloor(lang / 2))].options.mSvph);  // median is in the middle
             } else {                                        // evaen ->
-                lang = lang / 2;                            // median is mean of both middle values
+                lang = lang / 2;                            // median is mean of both middle mSvphs
                 console.log(lang);
-                let wert = (markers[lang-1].options.value +
-                    markers[lang].options.value) / 2;
-                return getColor(wert);
+                let wert = (markers[lang-1].options.mSvph +
+                    markers[lang].options.mSvph) / 2;
+                return getColor(name,wert);
             }
         } else if (lang == 1) {                             // only one marker -> return its color
-            return getColor(markers[0].options.value);
+            return getColor(name,markers[0].options.mSvph);
         }
-        return getColor(-1);                            // only offlines
+        return getColor(name,-1);                            // only offlines
     }
 
     let markersAll;
@@ -339,27 +343,27 @@ $(document).ready(function() {
         });
         for (let x of sensors.avgs) {
             if (x.location == undefined) {                   // if there is no location defined ...
-                continue;                                   // ... skip this sensor
+                continue;                                    // ... skip this sensor
             }                                               // otherwise create marker
             if ((x.name != "Si22G") && showOnlySi22G) {
                 continue;
             }
+            let value = parseInt(x.cpm);
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
-                    iconUrl: buildIcon(getColor(parseInt(x.cpm))),
+                    iconUrl: buildIcon(getColor(x.name,parseInt(x.cpm))),
                     iconSize: [35, 35]
                 }),
-                value: parseInt(x.cpm),
+                value: value,
+                mSvph: value < 0 ? -1 : value / 60 * sv_factor[x.name],
                 url: '/' + x.id,
                 rohr: x.name,
                 lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
 
             })
-                .on('click', e => onMarkerClick(e, true))        // define click- and
-                //            .on('mouseover', e => onMarkerClick(e,false))   // over-handler
-                //            .on('mouseout', e => e.target.closePopup())
-                .bindPopup(popuptext);                      // and bint the popup text
+                .on('click', e => onMarkerClick(e, true)) // define click- and
+                .bindPopup(popuptext);                      // and bind the popup text
             markersAll.addLayer(marker);
         }
         markersAll.addTo(map);
@@ -368,7 +372,6 @@ $(document).ready(function() {
 
     async function onMarkerClick(e, click) {
         let item = e.target.options;
-        let factor = sv_factor[item.rohr];
         clickedSensor = item.name;
 
         let popuptext = '<div id="popuptext"><div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
@@ -379,7 +382,7 @@ $(document).ready(function() {
                 '<tr><td>Last seen:</td><td>' + item.lastseen + '</td>';
         } else {
             popuptext += '<td>' + item.value + '</td><td>cpm</td></tr>' +
-                '<tr><td>' + Math.round((item.value / 60 * factor) * 100) / 100 + '</td><td>µSv/h</td>';
+                '<tr><td>' + Math.round(item.mSvph * 100) / 100 + '</td><td>µSv/h</td>';
         }
         popuptext +=
             '</tr><table>' +
@@ -416,23 +419,6 @@ $(document).ready(function() {
 // ********************************************************************************
 // Dialogs
 // ********************************************************************************
-/*
-    var dialogError = $('#errorDialog').dialog({
-
-        autoOpen: false,
-        width: 300,
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-            consloe.log('Opening errorDialog');
-        },
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-        },
-        title: "Fehler",
-        modal: true,
-    });
-*/
 
     var dialogError = $('#dialogError').dialog({
         autoOpen: false,
@@ -552,20 +538,6 @@ $(document).ready(function() {
                     } else {
                         $('#staticavg').prop("checked", true).trigger("click");
                     }
-                    // if(showscatter) {
-                    //     $('#scatter').prop("checked", true).trigger("click");
-                    // } else {
-                    //     $('#lines').prop("checked", true).trigger("click");
-                    // }
-                    // console.log("LogAxis:", logyaxis);
-                    // if(logyaxis) {
-                    //     $('#log').prop("checked", true).trigger("click");
-                    // } else {
-                    //     $('#linear').prop("checked", true).trigger("click");
-                    // }
-                    // //$("#radio_1").is(":checked")
-                    // console.log('logInputDialog:', $('#log').is(':checked'));
-
                     $('#average').focus();
                     $('#invalid').hide();
                     buildAverageMenue();
@@ -596,114 +568,6 @@ $(document).ready(function() {
     });
 
 
-    // Dialog für das Einstell-Menü
-    var dialogStatistik = $('#dialogStatistik').dialog({
-        autoOpen: false,
-        width: 600,
-        title: 'Statistik',
-        open:
-            function () {
-                $('#page-mask').css('visibility', 'visible');
-                $(this).load('/fsdata/statistik', function () {
-                    buildStatistik(aktsensorid);
-                });
-            },
-        buttons: [
-            {
-                text: "Schließen",
-                click: function () {
-                    dialogStatistik.dialog("close");
-                },
-                style: "margin-right:40px;",
-                width: 100,
-            }
-        ],
-        modal: true,
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-            $('#btnSet').css('background', '#0099cc');
-        },
-    });
-
-
-//    $.datepicker.setDefaults( $.datetimepicker.regional[ "de" ] );
-
-    // Set new Start-Day and show chart
-    function setNewDay() {
-        let val = $('input:radio[name=selDates]:checked').val();
-        dialogNewDay.dialog("close");
-        if (val == 'today') {
-            doUpdate = true;
-            window.location = '/' + aktsensorid;
-        } else if (val == 'silvester17') {
-            doUpdate = false;
-            window.location = '/' + aktsensorid + '?stday=Silvester17';
-        } else if (val == 'silvester18') {
-            doUpdate = false;
-            window.location = '/' + aktsensorid + '?stday=Silvester18';
-        } else {
-            doUpdate = false;
-            const newDay = $('#selnewday').val();
-            window.location = '/' + aktsensorid + '?stday=' + newDay;
-        }
-    }
-
-
-    // let select a new start day
-    var dialogNewDay = $('#dialogNewDay').dialog({
-        autoOpen: false,
-        width: 300,
-        title: "Neuen Start-Tag/Zeit wählen",
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-            $(this).load('/fsdata/selnewday', function () {
-                $("#selnewday").datetimepicker({
-//                    minDate: new Date(oldestDate),
-                    minDate: '-2m',
-                    maxDate: '0',
-                    dateFormat: 'yy-mm-dd',
-                    showMinute: false,
-                    hourText: 'Stunde',
-                    timeText: 'Uhrzeit',
-                    closeText: 'OK',
-                    currentText: 'Jetzt',
-                });
-                $('input:radio[name=selDates]').change(function () {
-                    if (this.value == 'frei') {
-                        $('#selnewday').focus();
-                    }
-                });
-                $('#selnewday').focus(function () {
-                    $('input:radio[name=selDates][id=selfrei]').prop('checked', true);
-                });
-            });
-        },
-        buttons: [
-            {
-                text: "OK",
-                class: "btnOK",
-                click: setNewDay,
-                width: 100,
-            }, {
-                text: "Abbrechen",
-                id: "newSensorAbbr",
-                click: function () {
-                    dialogNewDay.dialog("close");
-                },
-                width: 100,
-            }
-        ],
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-            $('#btnHelp').css('background', '#0099cc');
-        },
-        modal: true
-    });
-
-
-    $('#selnewday').datepicker($.datepicker.regional["de"]);
-
     // change moment, so theat toJSON returns local Time
     moment.fn.toJSON = function () {
         return this.format();
@@ -731,60 +595,12 @@ $(document).ready(function() {
             movingAVG = movAVG == 'true' ? true : false;
         }
         console.log("MovAVG:", movingAVG);
-        // let scatter = localStorage.getItem('showScatter');
-        // if(scatter != null) {
-        //     showscatter = scatter=='true' ? true : false;
-        // }
-        // console.log("Scatter:", showscatter);
-        // let logy = localStorage.getItem('logYaxis');
-        // if(logy != null) {
-        //     logyaxis = logy=='true' ? true : false;
-        // }
-        // console.log("LogYaxis:", logyaxis);
     }
 
     getLocalStorage();
     $('#h1name').html(kopf);
     $('#sbx label').html('Auswahl der letzten ' + MAXOPTARR);
 
-    /*
-    // Die Plots für die diversen Sensoren ausführen:
-    // dazu via Korrelation erst mal alle Sensor-Nummern aus der Datenbank holen
-    // Danach dann die Plots der Reihe nach aufrufen
-    let s1 = moment();
-    $.getJSON('fsdata/getfs/korr', {sensorid: aktsensorid}, function (data, err) {				// AJAX Call
-        if (err != 'success') {
-            alert("Fehler <br />" + err);						// if error, show it
-        } else {
-            if ((data == null) || (data.length == 0)) {
-//				korrelation = {'address':{},'location': {},'espid': "", 'sensors': [{'id': aktsensorid}]};
-                showError(2, "No data at korrelation ", aktsensorid);
-//					return -1;
-            } else {
-                if (!data.name.startsWith('Radia')) {
-                    showError(3, "This is no Radiation-Sensor", aktsensorid);
-                    return -1;
-                }
-                korrelation = data;
-                fstAlarm = data.alarm;
-            }
-//			console.log("Korrelation: ",korrelation);
-//            getOldestDate(aktsensorid, korrelation.sensors,function(old){
-//                oldestDate = old;
-//                console.log("Oldest Entry:",oldestDate);
-//            });
-
-            // save coordinates in localStorage
-            localStorage.setItem('geiger_curcoord', JSON.stringify(korrelation.location[korrelation.location.length - 1].loc.coordinates));
-
-            buildHeaderline(korrelation.othersensors, korrelation.location[korrelation.location.length - 1]);
-            buildSelectTable();
-            doPlot(active, startDay);						// Start with plotting one day from now on
-            switchPlot(active);
-
-        }
-    });
-*/
 
     function buildAverageMenue() {
         for (var i = 0; i < avgTable.length; i++) {
@@ -798,77 +614,6 @@ $(document).ready(function() {
 //        $('#average').selectmenu();
     }
 
-
-    // Diverse Statistiken für den übergenen Sensor vom Server holen
-    // und als Tabvelle darstellen
-    function buildStatistik(sid) {
-        $.getJSON('fsdata/getfs/statistik', {sensorid: sid}, function (data, err) {				// AJAX Call
-            if (err != 'success') {
-                alert("Fehler <br />" + err);						// if error, show it
-            } else {
-                if ((data == null) || (data.length == 0)) {
-                    showError(2, "No data at statistics ", aktsensorid);
-                } else {
-                    $('#stat_sid').text(sid);
-                    $('#stat_table').append("<tbody><tr>" +
-                        "<td></td>" +
-                        "<td>Aktueller Wert</td>" +
-                        "<td class='w10'>" + data.p10 + "</td>" +
-                        "<td class='w25'>" + data.p25 + "</td>" +
-                        "</tr><tr>" +
-                        "<td class='bord1'  rowspan='3'>letzte 15min</td>" +
-                        "<td class='bord1' >Mittelwert</td>" +
-                        "<td class='bord1 w10'>" + data.p10_a15m + "</td>" +
-                        "<td class='bord1 w25'>" + data.p25_a15m + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Standardabweichung</td>" +
-                        "<td class='w10'>" + data.p10_d15m + "</td>" +
-                        "<td class='w25'>" + data.p25_d15m + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Maximum</td>" +
-                        "<td class='w10'>" + data.p10_m15m + "</td>" +
-                        "<td class='w25'>" + data.p25_m15m + "</td>" +
-                        "</tr><tr>" +
-                        "<td class='bord1' rowspan='3'>letzte 60min</td>" +
-                        "<td class='bord1' >Mittelwert</td>" +
-                        "<td class='bord1 w10'>" + data.p10_a60m + "</td>" +
-                        "<td class='bord1 w25'>" + data.p25_a60m + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Standardabweichung</td>" +
-                        "<td class='w10'>" + data.p10_d60m + "</td>" +
-                        "<td class='w25'>" + data.p25_d60m + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Maximum</td>" +
-                        "<td class='w10'>" + data.p10_m60m + "</td>" +
-                        "<td class='w25'>" + data.p25_m60m + "</td>" +
-                        "</tr><tr>" +
-                        "<td class='bord1' rowspan='3'>letzte 24h</td>" +
-                        "<td class='bord1'>Mittelwert</td>" +
-                        "<td class='bord1 w10'>" + data.p10_a24h + "</td>" +
-                        "<td class='bord1 w25'>" + data.p25_a24h + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Standardabweichung</td>" +
-                        "<td class='w10'>" + data.p10_d24h + "</td>" +
-                        "<td class='w25'>" + data.p25_d24h + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Maximum</td>" +
-                        "<td class='w10'>" + data.p10_m24h + "</td>" +
-                        "<td class='w25'>" + data.p25_m24h + "</td>" +
-                        "</tr><tr>" +
-                        "</tbody><tbody id='body2'>" +
-                        "<td rowspan='2'>gestern (24h)</td>" +
-                        "<td>Mittelwert</td>" +
-                        "<td class='w10'>" + data.p10_a24hy + "</td>" +
-                        "<td class='w25'>" + data.p25_a24hy + "</td>" +
-                        "</tr><tr>" +
-                        "<td>Standardabweichung</td>" +
-                        "<td class='w10'>" + data.p10_d24hy + "</td>" +
-                        "<td class='w25'>" + data.p25_d24hy + "</td>" +
-                        "</tr></tbody>");
-                }
-            }
-        });
-    }
 
 
 // ************** Event-Handler **************
@@ -940,70 +685,6 @@ $(document).ready(function() {
         }
     }
 
-    function roundx(value, digits) {
-        var mul = 1;
-        for (var i = 0; i < digits; i++) {
-            mul *= 10;
-        }
-        value *= mul;
-        value = Math.round(value);
-        return (value * 1.0 / mul);
-    }
-
-    // Sensornummer und Name und Adresse oben mit eintragen
-    function buildHeaderline(sensors, loc) {
-        var idx;
-        var count = sensors.length;
-        if (count > 0) {
-            /*			// Find aktualsensir in sensors
-                        for(idx=0; idx<count; idx++) {
-                            if (aktsensorid == sensors[idx].id) {
-                                break;
-                            }
-                        }
-                        var hl = 'Sensoren: ';
-                        for (var i=0; i<count; i++) {
-                            hl += sensors[i].id + "-" + sensors[i].name + " / ";
-                        }
-                        hl = hl.slice(0, -2);
-                        $('#subtitle').html(hl);
-                        //		$('#h1name').html($('#h1name').html()+"&nbsp; &nbsp; Sensor-Nr: " + sensors[0].id);
-            */
-//            $('#h1name').html($('#h1name').html() + "&nbsp; &nbsp; Sensor-Nr: ");
-//            $('#insel').html("Sensor-Nr: ");
-            $('#ssel').val(aktsensorid);
-        }
-//        console.log(addr);
-        var addr = loc.address;
-        if ((loc.loc.coordinates[0]) == 0 && (loc.loc.coordinates[1] == 0)) {
-            $('#adresse').html("Keine Koordinaten bzw. keine Adresse angegeben!");
-            return;
-        }
-        var adtxt = '';
-        if (!((addr == undefined) || (addr == {}))) {
-            if (extAddr) {
-                if (addr.number !== undefined) {
-                    adtxt += addr.number + ', ';
-                }
-                if (addr.street !== undefined) {
-                    adtxt += addr.street + ', ';
-                }
-            }
-            if (addr.region !== undefined) {
-                adtxt += addr.region + ', ';
-            }
-            if (addr.plz !== undefined) {
-                adtxt += addr.plz + ' ';
-            }
-            if (addr.city !== undefined) {
-                adtxt += addr.city + ', ';
-            }
-            if (addr.country !== undefined) {
-                adtxt += addr.country;
-            }
-            $('#adresse').html(adtxt);
-        }
-    }
 
 
     function showError(err, txt, id) {
@@ -1038,11 +719,11 @@ $(document).ready(function() {
 
 
     function startPlot(what, d1, d2, sensor, start, live) {
-        if ((what == 'oneyear') || (what == 'onemonth')) {						    // gleich plotten
-            PlotYM_Geiger(what, d1, sensor, live);
+        if (what == 'onemonth') {						    // gleich plotten
+            PlotMonth_Geiger(d1, sensor, live);
             showNewDate();
         } else {
-            PlotDay_Geiger(what, d1, sensor, start, live);
+            PlotDayWeek_Geiger(what, d1, sensor, start, live);
         }
     }
 
@@ -1054,8 +735,7 @@ $(document).ready(function() {
 //		console.log("doPlot");
         $('placeholderFS_1').html("");
         $('#loading').show();
-        let s2 = moment();
-        var st;
+        let st;
         let live = true;
         if ((start === undefined) || (start == "")) {
             st = moment();										// then start 'now'
@@ -1063,20 +743,16 @@ $(document).ready(function() {
             st = moment(start);
             live = false;
         }
-        if (specialDate != "") {
-            live = false;
-        }
-        var d1;
         var url = '/fsdata/getfs/' + what;
         var callopts = {
-            start: st.toJSON(),
+            start: st.format(),
             sensorid: props._id,
             sensorname: props.name,
             avgTime: avgTime,
             live: live,
-            special: specialDate,
             moving: movingAVG
         };
+        faktor = sv_factor[props.name.substring(10)];
         $.getJSON(url, callopts, function (data1, err) {				// AJAX Call
             if (err != 'success') {
                 alert("Fehler <br />" + err);						// if error, show it
@@ -1086,12 +762,19 @@ $(document).ready(function() {
         });
     }
 
-//	**************** PLOT *********************************************
+
+    //	**************** PLOT *********************************************
 
 
-//	PlotIT
-//	Plot the given data
-
+    /******************************************************
+    * createGlobalOptions
+    *
+    * Create all identical option for the plots
+    * params:
+    *      none
+    * return:
+    *      object with all defined options
+    *******************************************************/
     function createGlobObtions() {
         var globObject = {};
 
@@ -1162,11 +845,11 @@ $(document).ready(function() {
                 useHTML: true,
                 formatter: function () {
                     return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">' +
-                        moment(this.x).format("DD.MMM  HH:mm:ss") + '<br />' +
+                        moment(this.x).format("DD.MMM,  HH:mm") + ' Uhr<br />' +
                         '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
                         this.series.name + ':&nbsp; <b>' +
-                        Highcharts.numberFormat(this.y, 1) +
-                        '</b></div>';
+                        Highcharts.numberFormat(this.y, 3) +
+                        '</b><br /> &#x2259; Impulse pro Minute: <b>' + Highcharts.numberFormat(this.y*60/faktor, 0) + '</b></div>';
                 }
             },
             xAxis: {
@@ -1209,6 +892,17 @@ $(document).ready(function() {
         return globObject;
     }
 
+    /******************************************************
+     * calcWeekends
+     *
+     * Calulate the weekends. The ar merked in the plot as
+     * lightgreen bands
+     * params:
+     *      data            array of dates
+     *      isyear          true, if data is year average
+     * return:
+     *      object to be plotted
+     *******************************************************/
     function calcWeekends(data, isyear) {
         var weekend = [];
         var oldDay = 8;
@@ -1241,6 +935,18 @@ $(document).ready(function() {
         return weekend;
     }
 
+
+    /******************************************************
+     * calcDays
+     *
+     * Calulate the day borders. In week oplot every day
+     * border is shown es darker gray vertical line
+     * params:
+     *      data            array of dates
+     *      isyear          true, if data is year average
+     * return:
+     *      object to be plotted
+     *******************************************************/
     function calcDays(data, isyear) {
         var days = [];
         if (data.length == 0) {
@@ -1265,6 +971,18 @@ $(document).ready(function() {
         return days;
     };
 
+
+    /******************************************************
+     * addSensorID2chart
+     *
+     * Plot the sensor number an name in the top center of
+     * chart
+     * params:
+     *      chart           chart, where to plot
+     *      sensor          whos number is to plot
+     * return:
+     *      none
+     *******************************************************/
     function addSensorID2chart(chart, sensor) {
         let sn = (sensor.name.startsWith("Radiation")) ? sensor.name.substring(10) : sensor.name;
         var sens = chart.renderer.label(
@@ -1289,42 +1007,60 @@ $(document).ready(function() {
         '</div>';
 
 
+
+    /******************************************************
+     * calcMaxY
+     *
+     * Calculate the max of the data array. Return the
+     * value for max at yAxis (is max of data + 2/2 * max of data)
+     *
+     * params:
+     *      values        array with data
+     * return:
+     *      object wih max of values and max for yAxis
+     *******************************************************/
     function calcMaxY(values) {
-        let maxcpm = Math.max.apply(null, values);
-        return  maxcpm + (maxcpm/2);
+        let maxval = Math.max.apply(null, values);
+        return  {maxY: maxval*2, maxVal: maxval};
     }
 
-    // ************************  GEIGER  **********************************
-    function PlotYM_Geiger(what, datas, sensor, live) {
-        var series1 = [];
-        var series2 = [];
 
-        var data = datas.docs;
-        let faktor = sv_factor[datas.sensorname];
+    /******************************************************
+     * PlotMonth_Geiger
+     *
+     * Plot the geiger values für the last 31 days
+     *
+     * params:
+     *      datas           object with the data to plot#
+     *      sensor          sensor number, whos values this are
+     *      live            true => live-data
+     * return:
+     *      none
+     *******************************************************/
+    function PlotMonth_Geiger(datas, sensor, live) {
+        let series1 = [];
+        let series2 = [];
+        let series3 = [];
+        let series4 = [];
+        var mx1 = [];
+
+        let data = datas.docs;
 
         if(data.length != 0) {
-            var mx = [];
-            if (what == 'onemonth') {
-                data = data.slice(-32);							// nur einen Monat auswählen
-            }
+            data = data.slice(-32);							// nur einen Monat auswählen
             $.each(data, function (i) {
                 var dat = new Date(this._id).getTime();	// retrieve the date
                 series1.push([dat, this.cpmAV]);
-                mx.push(this.cpmAV);
+                mx1.push(this.cpmAV/60*faktor);
             });
             txtMeldung = false;
         } else {
             txtMeldung = true;
         }
-        let maxy = calcMaxY(mx);
+        let maxima = calcMaxY(mx1);
         var options = createGlobObtions();
         var dlt = moment();	// retrieve the date
-        if (what == 'onemonth') {
-            dlt.subtract(31, 'd');
-        } else {
-            dlt.subtract(366, 'd');
-        }
-
+        dlt.subtract(31, 'd');
 
         var localOptions = {
             chart: {
@@ -1341,7 +1077,6 @@ $(document).ready(function() {
                 }
             },
             xAxis: {
-//					tickInterval: 24*3600*1000,
                 plotBands: calcWeekends(data, true),
                 plotLines: calcDays(data, true),
                 max: moment().startOf('day').subtract(1, 'd').valueOf(),
@@ -1381,28 +1116,24 @@ $(document).ready(function() {
             },
         }
 
-        let maxcpm = Math.max.apply(null, mx);
-
-        let yAxis_cpm =  [{
+        let yAxis =  [{
             title: {
-                text: 'Impulse pro Minute',
-                useHTML: true,
+                text: 'µSv/h',
+                style: {
+                    color: 'red'
+                }
             },
-            type: logyaxis == true ? 'logarithmic' : 'linear',
-//                max: logyaxis == true ? null : maxy,
-            max: maxy,
-            min: logyaxis == true ? 1 : 0,
-//						tickAmount: 9,
-            opposite: true,
+            max: maxima.maxY,
+            min: 0,
             gridLineColor: 'lightgray',
             plotLines: [
                 {
                     color: 'blue', // Color value
-                    value: maxcpm, // Value of where the line will appear
+                    value: maxima.maxVal, // Value of where the line will appear
                     width: 1, // Width of the line
                     label: {
                         useHTML: true,
-                        text: 'max. Wert : ' + maxcpm.toFixed(0) + ' Impule/min',
+                        text: 'max. Wert : ' + maxima.maxVal.toFixed(3) + ' µSv/h',
                         y: -10,
                         align: 'center',
                         style: {color: 'blue'},
@@ -1411,18 +1142,17 @@ $(document).ready(function() {
                 }],
         },{
             title: {
-                text: 'µSv/h',
-                style: {
-                    color: 'red'
-                }
+                text: 'Impulse pro Minute',
+                useHTML: true,
             },
+            opposite: true,
             linkedTo: 0,
             useHTML: true,
             labels: {
                 formatter: function () {
                     let v = this.axis.defaultLabelFormatter.call(this);
                     let w = parseFloat(v);
-                    let s = Math.round((w / 60 * faktor) * 100) / 100;
+                    let s = Math.round((w * 60 / faktor) * 100) / 100;
                     return s;
                 }
             },
@@ -1430,9 +1160,9 @@ $(document).ready(function() {
         ];
         options.chart.zoomType = 'x';
         options.yAxis=[];
-        options.yAxis[0] = yAxis_cpm[0];
+        options.yAxis[0] = yAxis[0];
         if (faktor != 0) {
-            options.yAxis[1] = yAxis_cpm[1];
+            options.yAxis[1] = yAxis[1];
         }
 
         $.extend(true, options, localOptions);
@@ -1466,7 +1196,7 @@ $(document).ready(function() {
     }
 
     // Geiger
-    function PlotDay_Geiger(what, datas, sensor, start, live) {
+    function PlotDayWeek_Geiger(what, datas, sensor, start, live) {
 
         var series1 = [];
         var series2 = [];
@@ -1478,37 +1208,29 @@ $(document).ready(function() {
 
         // Put values into the arrays
         var cnt = 0;
-        var data = datas.docs;
-        let faktor = sv_factor[datas.sensorname];
+        var data = datas.radiation;
 
         if (data.length != 0) {
-            if (what == 'oneweek') {
-                data = data.RAD
-            }
             $.each(data, function (i) {
                 var dat = new Date(this._id).getTime();
-                if ((what == 'oneweek') && movingAVG) {
-                    dat = new Date(this.date).getTime();
-                }
-                series1.push([dat, what == 'oneweek' ? this.cpm_mav : this.cpm])
-                mx.push(what == 'oneweek' ? this.cpm_mav : this.cpm);
+                series1.push([dat, this.uSvphAvg])
+                mx.push(this.uSvphAvg);
             });
 
             if (what == 'oneday') {
                 // Aktuelle Werte speichern
 
-                aktVal['cpm'] = data[data.length - 1].cpm;
-                // aktVal['LAMax'] = data[data.length - 1].LAMax;
-                // aktVal['LAMin'] = data[data.length - 1].LAMin;
+                aktVal['cpm'] = data[data.length - 1].cpmAvg;
+                aktVal['uSvph'] = data[data.length - 1].uSvphAvg;
 
                 // InfoTafel füllen
                 var infoTafel =
                     '<table class="infoTafel"><tr >' +
                     '<th colspan="2">Aktuelle Werte</th>' +
                     '</tr><tr>' +
-                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(1) + '</td>' +
+                    '<td>cpm</td><td>' + (aktVal.cpm).toFixed(0) + '</td>' +
                     '</tr><tr>' +
-                    '<td>µSv/h</td><td>' + Math.round((aktVal.cpm / 60 * faktor) * 100) / 100  + '</td>';
+                    '<td>µSv/h</td><td>' +  (aktVal.uSvph).toFixed(2)  + '</td>';
                     '</tr></table>' +
                     '</div>';
             }
@@ -1521,8 +1243,8 @@ $(document).ready(function() {
         // Plot-Options
         var options = createGlobObtions();
 
-        var series_cpm = {
-            name: 'Impulse_pro_Minute',
+        var series_uSvph = {
+            name: 'µSv pro Stunde',
             type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
             data: series1,
             color: (what == 'oneweek') ? 'green' : 'red',
@@ -1540,30 +1262,30 @@ $(document).ready(function() {
 
         var yAxis_cpm = [{													// 1
             title: {
-                text: 'Impulse pro Minute',
+                text: 'µSv/h',
                 style: {
                     color: 'red'
                 }
             },
             min: 0,
-            max: maxy,
-            opposite: true,
+            max: maxy.maxY,
 //            tickAmount: 11,
             useHTML: true,
         },{
             title: {
-                text: 'µSv/h',
+                text: 'Impulse pro Minute',
                 style: {
                     color: 'red'
                 }
             },
             linkedTo: 0,
             useHTML: true,
+            opposite: true,
             labels: {
                 formatter: function () {
                     let v = this.axis.defaultLabelFormatter.call(this);
                     let w = parseFloat(v);
-                    let s = Math.round((w / 60 * faktor) * 100) / 100;
+                    let s = Math.round((w * 60 / faktor));
                     return s;
                 }
             },
@@ -1572,7 +1294,7 @@ $(document).ready(function() {
 
         options.series = [];
         options.yAxis = [];
-        options.series[0] = series_cpm;
+        options.series[0] = series_uSvph;
 //        options.series[1] = series_LAMin;
         options.title.text = 'Strahlung über einen Tag';
         options.subtitle.text = 'Impulse pro Minute (Mittelwert über jeweils 10min)';
