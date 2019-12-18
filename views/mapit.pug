@@ -7,32 +7,64 @@ block content
         var csid = '#{csensor}';
 
     header
+    nav.navbar.navbar-expand-sm.navbar-light.navbg
+        button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarSupportContent")
+            span.navbar-toggler-icon
+        #navbarSupportContent.collapse.navbar-collapse
+            ul.navbar-nav.mr-auto
+                .btn-group
+                    button.btn.btn-success.mybuttons  Zählrohre
+                    button.btn.btn-success.mybuttons.dropdown-toggle.dropdown-toggle-split(type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                        span.sr-only Zählrore
+                    .dropdown-menu(aria-labelledby="dropdownMenu2")
+                        .custom-control.custom-radio.ml-3
+                            input.custom-control-input.btnrohr#btnall(type="radio" valeu="all" name="rohre" checked)
+                            label.custom-control-label(for="btnall") Alle Zählrohre anzeigen
+                        .custom-control.custom-radio.ml-3
+                            input.custom-control-input.btnrohr#btnsig(type="radio" value="sig" name="rohre")
+                            label.custom-control-label(for="btnsig") nur Si22G anzeigen
+            ul.navbar-nav
+                    button.btn.btn-success.ml-4.mybuttons#btnlegende Legende
+                    .input-wrapper
+                        input.form-control#newmapcenter(type="search" placeholder="Stadt oder Sensor suchen" aria_label="Suche")
+                        label.fas.fa-search.input-icon(for="newmapcenter")
+                    button.btn.btn-success.ml-4.mybuttons#btninfo Info
+
     #map
     #overlay
-        #buttons
-            #buttonsLeft
-                //
-                    button.btn.btn-primary#bntye(value="year") 365 Tage
-                button.btn.btn-primary#btnmo(value="month") 30 d
-                button.btn.btn-primary#btnwe(value="week") 7 d
-                button.btn.btn-primary#btnda(autofocus="true",value="day") 24 h
-                //
-                    button.btn.btn-primary#btnst(value="start") anderen&nbsp;Tag wählen
-            #buttonsRight
-                button.btn.btn-primary#btnSet(value='set') Einstellung
-                button.btn.btn-primary#btnMap(value='map') Ende
+        nav.navbar.navbar-expand.navbar-light.navbg
+            button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarOverlayContent")
+                span.navbar-toggler-icon
+            #navbarOverlayContent.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    button.btn.btn-success#btnmo(value="month") 30 d
+                    button.btn.btn-success#btnwe(value="week") 7 d
+                    button.btn.btn-success#btnda(autofocus="true",value="day") 24 h
+                ul.navbar-nav
+                    button.btn.btn-success#btnset(value='set') Einstellung
+                    button.btn.btn-success#btnend(value='map') Ende
         #loading Lade die Daten ...
         #placeholderFS_1
         #dialogWinSet
-        #author
-            #mailadr
-                a(href="mailto:rexfue@gmail.com") mailto:rexfue@gmail.com
-            #versn Version: #{version} vom #{date}
+    #author
+        #mailadr
+            a(href="mailto:rexfue@gmail.com") mailto:rexfue@gmail.com
+        #versn Version: #{version} vom #{date}
 
 
     #dialogCenter.dialog
-    #dialogWinHelpM
-    #dialogFehlSens
-    #dialogFehlList
+    #dialogWinHelp
     #page-mask
 
+    <!-- Modal Dialog -->
+    #myModal.modal.fade(role="dialog")
+        .modal-dialog.modal-lg(role="document")
+            <!-- Modal content-->
+            .modal-content
+                .modal-header
+                    h4#modalTitle.modal-title
+                    button.close(type="button" data-dismiss="modal") &times;
+                .modal-body
+                    Hier ist der Body von der blödenMeldung
+                .modal-footer
+                    button.btn.btn-default(type="button" data-dismiss="modal") Close

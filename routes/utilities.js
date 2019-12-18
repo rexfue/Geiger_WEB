@@ -17,7 +17,7 @@ const mathe = require('mathjs');
 //      array with averaged values
 // TODO <-----  die ersten Einträge in newData mit 0 füllen bis zum Beginn des average
 // *********************************************
-async function calcMovingAverage(db, sid, data, mav, api) {
+async function calcMovingAverage(db, sid, data, mav, api, factor) {
     var newDataF = [], newDataT = [], newDataR = [];
     var avgTime = mav*60;           // average time in sec
 
@@ -29,7 +29,7 @@ async function calcMovingAverage(db, sid, data, mav, api) {
     }
     // first convert date to timestamp (in secs)
     for (var i=0; i<data.length; i++) {
-        data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the convertion
+        data[i].datetime = ( new Date(data[i].datetime)) / 1000;       // the math does the conversion
     }
 
     let left=0, roll_sum1=0, roll_sum2=0,  roll_sum3=0, roll_sum4=0, roll_sum5=0, roll_sum6=0;
@@ -106,8 +106,13 @@ async function calcMovingAverage(db, sid, data, mav, api) {
             if (roll_sum4 != 0) newDataT[right]['humi_mav'] = roll_sum4 / (right - left + 1);
             if (roll_sum5 != 0) newDataT[right]['press_mav'] = roll_sum5 / (right - left + 1);
 
-            newDataR[right] = {'date': data[right].datetime * 1000};
-            if (roll_sum6 != 0) newDataR[right]['cpm_mav'] = roll_sum6 / (right - left + 1);
+//            newDataR[right] = {'date': data[right].datetime * 1000};
+            newDataR[right] = {'_id':  moment.unix(data[right].datetime).toDate()};
+            if (roll_sum6 != 0) {
+                let val = roll_sum6 / (right - left + 1);
+                newDataR[right]['cpmAvg'] = val;
+                newDataR[right]['uSvphAvg'] = val * factor;
+            }
         }
     }
     if (havepressure == true) {

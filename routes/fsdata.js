@@ -27,7 +27,7 @@ router.get('/getfs/:week', function (req, res) {
         getDayWeekData(db, sid, st, avg, live, movingAvg, 7)
             .then(erg => res.json(erg));
     } else if (week == 'onemonth') {
-        getYearData(db, sid, sname, st, week, live)
+        getDayWeekData(db, sid, st, 1440, false, false, 31)
             .then(erg => res.json(erg));
     } else if (week == 'korr') {
         getSensorProperties(db,sid)
@@ -101,6 +101,27 @@ async function getSensorProperties(db,sid) {
     return properties;
 }
 
+async function readRadiationMovingAverage(db, sid, start, end, average, factor) {
+    let docs = [];
+    let collection = db.collection('data_'+sid);
+    try {
+        docs = await collection.find({
+            datetime: {
+                $gte: new Date(start),
+                $lt: new Date(end)
+            }
+        }, {sort: {datetime: 1}}).toArray();
+    } catch (e) {
+        console.log('readRadiationMovingAverage',e);
+        return [];
+    }
+    if (docs.length == 0) {
+        return [];
+    } else {
+        let d = await util.calcMovingAverage(db, sid, docs, average , false, factor);
+        return d.RAD;
+    }
+}
 
 async function readRadiationAverages(db, sid, start, end, average, factor) {
     let docs = [];
@@ -182,8 +203,9 @@ function calcTimeRange(st, range, live, avg) {
         if (live == true) {
             start.subtract(24 * 7, 'h');
         } else {
-            start.subtract(24, 'h');
-            end.add(24 * 7, 'h');
+            start.subtract(24 * 7, 'h');
+//            end.add(24 * 7, 'h');
+            console.log(start.format(), end.format());
         }
     } else if (range == 31) {                               // one month (31 days)
         start=start.startOf('day');
@@ -208,7 +230,11 @@ async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
             try {
                 if (sname.startsWith("Radiation")) {
                     let factor = sv_factor[sname.substring(10)] / 60;
-                    docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
+                    if(doMoving) {
+                        docs = await readRadiationMovingAverage(db, sid, timerange.start, timerange.end, avg, factor);
+                    } else {
+                        docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
+                    }
                     if (docs.length != 0) {
                         ret['radiation'] = docs;
                     }
@@ -227,6 +253,7 @@ async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
         return ret;
 }
 
+/*
 // Daten für eine Woche aus der DB holen
 async function getWeekData(db, sensorid, sensorname, altitude , st, mav, live, domoving) {
     let docs = [];
@@ -434,7 +461,7 @@ function getYearData(db,sensorid,sensorname, st,what) {
     return p;
 }
 
-
+*/
 
 // für die Wochenanzeige die Daten als gleitenden Mittelwert über 24h durchrechnen
 // und in einem neuen Array übergeben

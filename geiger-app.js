@@ -1,5 +1,5 @@
 const express = require('express');
-const app = express();
+const geigerApp = express();
 //var assert = require('assert');
 const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
@@ -30,13 +30,13 @@ if (MONGOAUTH == 'true') {
 console.log(os.hostname());
 // console.log(MONGO_URL);
 
-app.set('views','./views');
-app.set('view engine','pug');
+geigerApp.set('views','./views');
+geigerApp.set('view engine','pug');
 
-app.use(express.static("public"));
-app.use(express.static("node_modules/bootstrap/dist"));
-app.use(express.static("node_modules/jquery/dist"));
-app.use(express.static("node_modules/moment/min"));
+geigerApp.use(express.static("public"));
+geigerApp.use(express.static("node_modules/bootstrap/dist"));
+geigerApp.use(express.static("node_modules/jquery/dist"));
+geigerApp.use(express.static("node_modules/moment/min"));
 
 let requested;
 async function checkHost(req, res, next) {
@@ -59,7 +59,7 @@ async function checkHost(req, res, next) {
 
     let uri = req.url.substr(3);
     let city = "unknown";
-    let dbs = app.get('dbase');
+    let dbs = geigerApp.get('dbase');
     if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
     {
         city = await apidatas.api.getCity(dbs, parseInt(uri.substring(1)));
@@ -79,11 +79,11 @@ async function checkHost(req, res, next) {
 }
 
 
-app.get('*', checkHost);
-app.post('*', checkHost);
+geigerApp.get('*', checkHost);
+geigerApp.post('*', checkHost);
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+geigerApp.use(bodyParser.urlencoded({ extended: true }));
+geigerApp.use(bodyParser.json());
 
 //app.post('/sensors', function(res,req,next){
 //    var body = res.body;
@@ -94,69 +94,69 @@ app.use(bodyParser.json());
 //})
 
 
-app.get('/fs/fsdata/help', function(req, res, next) {
+geigerApp.get('/fs/fsdata/help', function(req, res, next) {
 	  res.sendFile(__dirname+'/public/info.html');
 	});
 
-app.get('/fs/fsdata/setting', function(req, res, next) {
+geigerApp.get('/fs/fsdata/setting', function(req, res, next) {
     res.sendFile(__dirname+'/public/settings.html');
 });
 
-app.get('/fs/fsdata/statistik', function(req, res, next) {
+geigerApp.get('/fs/fsdata/statistik', function(req, res, next) {
     res.sendFile(__dirname+'/public/statistik.html');
 });
 
-app.get('/fs/fsdata/centermap', function(req, res, next) {
+geigerApp.get('/fs/fsdata/centermap', function(req, res, next) {
     res.sendFile(__dirname+'/public/centermap.html');
 });
 
-app.get('/fs/fsdata/helpmap', function(req, res, next) {
+geigerApp.get('/fs/fsdata/helpmap', function(req, res, next) {
     res.sendFile(__dirname+'/public/helpmap.html');
 });
 
-app.get('/fs/fsdata/fehlersensoren', function(req, res, next) {
+geigerApp.get('/fs/fsdata/fehlersensoren', function(req, res, next) {
     res.sendFile(__dirname+'/public/fehlersensoren.html');
 });
 
-app.get('/fs/fsdata/fehlerliste', function(req, res, next) {
+geigerApp.get('/fs/fsdata/fehlerliste', function(req, res, next) {
     res.sendFile(__dirname+'/public/fehlerliste.html');
 });
 
-app.get('/fs/fsdata/selsensor', function(req, res, next) {
+geigerApp.get('/fs/fsdata/selsensor', function(req, res, next) {
     res.sendFile(__dirname+'/public/selsensor.html');
 });
 
-app.get('/fs/fsdata/ymax', function(req, res, next) {
+geigerApp.get('/fs/fsdata/ymax', function(req, res, next) {
     res.sendFile(__dirname+'/public/ymax.html');
 });
 
-app.get('/fs/fsdata/selnewday', function(req, res, next) {
+geigerApp.get('/fs/fsdata/selnewday', function(req, res, next) {
     res.sendFile(__dirname+'/public/selnewday.html');
 });
 
 
-app.get('/fs/fsdata/erralert', function(req, res, next) {
+geigerApp.get('/fs/fsdata/erralert', function(req, res, next) {
 	  res.sendFile(__dirname+'/public/erralert.html');
 	});
 
 var indexs = require('./routes/index');
-app.use('/fs/',indexs);
+geigerApp.use('/fs/',indexs);
 
 var fsdatas1 = require('./routes/fsdata');
-app.use('/fs/fsdata',fsdatas1);
+geigerApp.use('/fs/fsdata',fsdatas1);
 
 var fsdatas2 = require('./routes/mapdata');
-app.use('/fs/mapdata',fsdatas2);
+geigerApp.use('/fs/mapdata',fsdatas2);
 
 var apidatas = require('./routes/apidata');
-app.use('/fs/api',apidatas);
+geigerApp.use('/fs/api',apidatas);
 
 
 const connect = MongoClient.connect(MONGO_URL, {poolSize:20, useNewUrlParser: true ,useUnifiedTopology: true});
 connect
     .then(client => {
-        app.set('dbase', client.db(MONGOBASE));								    // Übergabe von db
-        app.listen(PORT, function () {
+        geigerApp.set('dbase', client.db(MONGOBASE));								    // Übergabe von db
+        geigerApp.listen(PORT, function () {
             console.log(moment().format("YYYY-MM-DD HH:mm"), "App listens on port " + PORT +', Mongo at ' + MONGOHOST);
         })
     })

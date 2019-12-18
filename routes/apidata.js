@@ -591,6 +591,7 @@ async function getAPIprops(db,sid,typ,dt) {
             lon: properties[i].location[loclast].loc.coordinates[0],
             alt: properties[i].location[loclast].altitude,
             lastSeen: moment(properties[i].last_seen).format(),
+            address: properties[i].location[loclast].address,
         });
     }
     entry.sensortyp = typ =="" ? "all" : typ;

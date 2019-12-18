@@ -1,153 +1,35 @@
-/*
-body {
-
-  font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
-  font-size: 16px;
-  width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-	height: 100%;
-}
-*/
-
-body {
-    font-family: Montserrat, 'Lucida Sans Unicode', sans-serif;
-	font-family:'Montserrat', sans-serif;
-	height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
 htnml {
-	height: 100%;
+	height: 90%;
 }
 
-#wrapper {
-    vertical-align: top;
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-/*    pointer-events: none;
+body {
+	margin: auto;
+	width: 98%;
+	height: 90%;
+	font: 14px  Montserrat Helvetica, Arial, sans-serif;
+	border: 1px solid black;
+}
+
+h3 {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#meldung {
 	margin : auto;
-	width: 1000px;
+	width: 100%;
 	text-align: center;
 	background-color: #DDDDDD;
-    margin-top: 5px;
-    height: 100%;
-	position: relative;
-	*/
-}
-
-#kopf {
-	width: 100%;
-	margin: auto;
-}
-
-#hline1 {
-	width: 100%;
-	margin: 0px auto 0px;
-	padding-top: 20px;
-	border: 1px solid red;
-}
-
-#h1name {
-	font-size: 148%;
-	clear: both;
-	float: left;
-	width:40%;
-	text-align: left;
-}
-
-#h1right {
-	width: 20%;
-	float: right;
-	borger: 1px solid red;
-}
-
-#h1datum {
-	float: left;
-	margin-top: 9px;
-}
-
-#h1uhr {
-	font-size: 148%;
-	float: right;
-}
-
-#insel {
-	float: left;
-	width: 50%;
-	text-align: left;
-}
-
-#ssel {
-	float: left;
-	width: 90px;
-	margin-top: 5px;
-	font-size: 1.1em;
-	background-color: #0099cc;
-	color: white;
-	text-align: right;
-	padding-right: 5px;
-}
-
-
-#insel label {
-	float: left;
-	font-size: 148%;
-	padding-right: 30px;
-}
-
-#hline2 {
-	width: 100%;
+	padding-top: 30px;
 	height: 100%;
-	margin: 20px auto 0px;
-	clear:both;
-	border: 1px solid blue;
-}
-
-#adresse {
-	float: left;
-	width:40%;
-	height: 1px;
-	text-align: left;
-}
-
-#sbx {
-	float:left;
-}
-
-#sbx label , #sbx select{
-	float: left;
-}
-
-#combo {
-	float: left;
-	width: 150px;
-	background-color: #0099cc;
-	color: white;
-	margin-right:20px;
-}
-
-
-#subtitle {
-	float: right;
-}
-
-#kopf #btnssel {
-    float: left;
-    width: 80px;
-    height: 30px;
-	padding-bottom: 25px;
-    font-size: 1.1em;
+	position: relative;
 }
 
 #buttons {
 	clear: both;
 /*	margin: auto; */
 	margin-top: 10px;
+	margin-right: 20px;
 /*	text-align: right; */
 	width: 100%;
 }
@@ -169,70 +51,46 @@ htnml {
 /*	border: 1px solid blue; */
 }
 
+#buttright {
+	justify-content:flex-end;
+}
 
-button {
-	width: 20%;
-	height: 30px;
-	margin-left: 1.5%;
-/*	margin-top: 15px; */
+nav { display: flex;}
+
+
+#btninfo {
+/*	float: right; */
+	margin-top: 3px;
 }
 
 #btnda, #btnmo, #btnwe {
-/*	width: 80px; */
-	margin-right: 5px;
-}
-
-#btnMap, #btnHelp {
-	width: 70px;
+	width: 80px;
 	margin-right: 10px;
 }
 
-#btnSet {
-	width: 100px;
+.mybuttons{
+	height: 30px;
+	font-size: 95%;
+	margin-bottom: 0px;
+}
+
+.myinputs{
+	height: 30px;
+}
+
+#btnlegende {
+	margin-right: 20px;
+	margin-top: 2px;
+/*	display: none; */
+}
+
+#btnset {
 	margin-right: 10px;
-	display:none;
-}
-
-#btnCent {
-	width: 100px;
-}
-
-#btnBack {
 	display: none;
 }
 
-#btnStat {
-	width: 90px;
-	margin-right: 10px;
-}
-
-
-#btnst {
-	margin-left: 50px;
-	width: 120px;
-	margin-top: -1px;
-	white-space:normal;
-	height: 45px;
-	line-height: 17px;
-	box-sizing: border-box;
-}
-
-
-
-.btn-primary {
-	background: #0099cc;
-	color: #ffffff;
-	font-size: 90%;
-	padding-bottom: 25px;
-}
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-	background: red;
-}
-
-.btn-primary:active, .btn-primary.active {
-	background: #007299;
-	box-shadow: none;
+#btnshwgrafic {
+	magin: auto;
 }
 
 /* Grafik-Fenster */
@@ -270,19 +128,22 @@ button {
 
 #author {
 	font-size:80%;
-	width: 95%;
+	width: 100%;
 	margin: auto;
-	padding-bottom: 30px;
-/*	padding-top: 10px; */
+	padding-bottom: 20px;
+	padding-top: 5px;
+	background: #DDD;
 
 }
 
 #mailadr {
 	float: left;
+	margin-left: 2%;
 }
 
 #versn {
 	float: right;
+	margin-right: 2%;
 }
 
 #help {
@@ -306,22 +167,15 @@ button {
 }
 
 #map {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-}
-/*
-#map {
 	clear: both;
-	height: 700px;
-	width: 95%;
-	margin: 50px auto 10px auto;
-	border: 2px solid blue;
+	height: 90vh;
+	z-index: 0;
+	border-top: solid 1px black;
+	border-bottom: solid 1px black;
 }
-*/
+
+
+
 #mapdate {
 	font-size: 70%;
 }
@@ -530,6 +384,7 @@ radio {
 	line-height: 18px;
 	color: #555;
 	font-size: 110%;
+	display: none;
 }
 
 .legend i {
@@ -558,9 +413,9 @@ img.leaflet-tile {
 #overlay {
 	margin: auto;
 	position: absolute;
-	top: 10px;
+	top: 60px;
 	left: 0px;
-	border: 2px red solid;
+	border: 2px #86bc24 solid;
 	width: 710px;
 	height: 470px;
 	background-color: white;
@@ -630,4 +485,94 @@ select {
 	display: inline-block;
 	width: 130px;
 	height: 40px;
+}
+
+.dropdown-.menue {
+	max-width: max-content;
+}
+
+.navbg {
+	background: #DDD;
+}
+
+
+/*
+.ui-dialog {
+	z-index:1000000000;
+	top: 0; left: 0;
+	margin: auto;
+	position: fixed;
+	max-width: 100%;
+	max-height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+.ui-dialog .ui-dialog-content {
+	flex: 1;
+}
+.ui-dialog .ui-dialog-buttonpane {
+	background:white;
+}
+*/
+
+.has-search .form-control {
+	padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+	position: absolute;
+	z-index: 2;
+	display: block;
+	width: 2.375rem;
+	height: 2.375rem;
+	line-height: 2.375rem;
+	text-align: center;
+	pointer-events: none;
+	color: #aaa;
+}
+
+/*
+@media (max-width: 576px) {
+	.legend {
+		display:none;
+	}
+	#btnlegende {
+		display:inline;
+	}
+}
+*/
+
+.dropdown-menu {
+	white-space: nowrap;
+	padding-right: 10px;
+}
+
+#popuptext, #infoaddr{
+	text-align: center;
+}
+
+#infoBtn {
+	margin: 10px auto;
+}
+
+#newmapcenter {
+	width: 250px;
+	height: 33px;
+	padding-left: 25px;
+}
+
+.spspan {
+	float: right;
+	margin-right: 6px;
+	margin-top: -25px;
+}
+
+.input-icon{
+	position: absolute;
+	left: 5px;
+	top: calc(50% - 0.5em); /* Keep icon in center of input, regardless of the input height */
+}
+.input-wrapper{
+	position: relative;
 }

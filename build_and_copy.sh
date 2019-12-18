@@ -16,6 +16,7 @@
 port=""
 name=geiger-web
 
+
 if [ $# -lt 1 ]
   then
     echo "Usage buildit_and_copy.sh target [port]"
@@ -25,6 +26,7 @@ if [ $# -lt 1 ]
     echo "   port:   ssh port if not 22 < use: '-p xxxx' > (optional)"
     exit
 fi
+
 
  docker build -f Dockerfile_$name -t $name .
 

@@ -6,7 +6,7 @@ $(document).ready(function() {
     const MAXOPTARR = 5;
 
     var active = 'oneday';					// default: plot 1 day
-    var refreshRate = 1;                    // Grafik so oft auffrischen (in Minuten)
+    var refreshRate = 15;                   // Grafik so oft auffrischen (in Minuten)
     var txtMeldung = false;					// falls keine Daten da sind, Text melden
     var korrelation = {};
     var kopf = 'Radioaktivitäts-Messung';
@@ -105,8 +105,7 @@ $(document).ready(function() {
 
 
     function getColor(name,d) {
-        let val = parseInt(d);
-        val = val / 60 * sv_factor[name];
+        let val = parseFloat(d);
         for (let i = 0; i < grades.length; i++) {
             if (val >= grades[i]) {
                 return (colorscale[i]);
@@ -133,6 +132,18 @@ $(document).ready(function() {
         let radiIconUrl = encodeURI("data:image/svg+xml," + radiIcon).replace(new RegExp('#', 'g'), '%23');
         return radiIconUrl;
     }
+
+    $('.btnrohr').click(async function() {
+        if(this.value == "sig") {
+            showOnlySi22G = true;
+        } else {
+            showOnlySi22G = false;
+        }
+        bounds = map.getBounds();
+        await buildMarkers(bounds);
+        console.log('btnrohr:',this.value);
+    });
+
 
     async function plotMap(cid, poly) {
         // if sensor nbr is give, find coordinates, else use Stuttgart center
@@ -193,80 +204,41 @@ $(document).ready(function() {
         };
         legend.addTo(map);
 
-        var infobutton = L.control({position:'bottomright'});
-        infobutton.onAdd = function (map) {
-            let div = L.DomUtil.create('div');
-            div.innerHTML = '<button class="ib infobutt">Info</button>';
-            div .onclick = function() {
-                dialogHelp.dialog('open');
-                console.log("Clicked on 'InfoButton'");
-            }
-            return div;
-        }
-        infobutton.addTo(map);
-
-        var centerbutton = L.control({position:'topleft'});
-        centerbutton.onAdd = function (map) {
-            let div = L.DomUtil.create('div');
-            div.innerHTML = '<button class="cb centerbutt">neu zentrieren</button>';
-            div .onclick = function() {
-                dialogCenter.dialog('open');
-                console.log("Clicked on 'Zentrieren'");
-            }
-            return div;
-        }
-        centerbutton.addTo(map);
-
-        let tubebutton = L.control({position:'topright'});
-        tubebutton.onAdd = function(map) {
-            let div = L.DomUtil.create('div');
-            div.innerHTML = '<select><option value="all">alle Zählrohre</option><option value="sig">nur Si22G</option></select>';
-            div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
-            return div;
-        }
-        tubebutton.addTo(map);
-
-        $('select').change(async function() {
-            if(this.value == "sig") {
-                showOnlySi22G = true;
-            } else {
-                showOnlySi22G = false;
-            }
-            bounds = map.getBounds();
-            await buildMarkers(bounds);
-            console.log(this.value);
-        });
-
-
         if (useStgtBorder) {
             fetchStuttgartBounds();
         }
 
         await buildMarkers(bounds);
 
-        map.on('popupopen', function (e) {
-            let tg = e.popup._source;
-            $('.speciallink').click(function (x, tg) {
-                map.closePopup();
-                showGrafik(clickedSensor);
+        map.on('popupopen', function () {
+            $('#btnshwgrafic').click(function () {
+                console.log('call Grafik');
+    //                map.closePopup();
+                if(window.matchMedia("(orientation:portrait").matches) {
+                    showError(5,"goto Landscape")
+                } else {
+                    showGrafik(clickedSensor);
+                }
             });
         });
-        map.on('click', function (e) {
-            $('#overlay').hide();
-            grafikON = false;
-        });
+    // map.on('click', function (e) {
+    //     $('#overlay').hide();
+    //     grafikON = false;
+    // });
     }
+
+
 
     // With all Markers in cluster (markers) calculate the median
     // of the values. With this median fetch the color and return it.
-    // If there are 'offline' sensors (value == -1) strip then before
+    // If there are 'offline' sensors (value == -1) strip them before
     // calculating the median. If there are only offline sensor, return
     // color of value==-1 (dark gray).
     function getMedian(markers) {
         markers.sort(function(a,b) {                        // first sort, lowest first
             let y1 = a.options.mSvph;
             let y2 = b.options.mSvph;
-            if(y1 < y2) {
+            if(y1 < y2) {999
                 return -1;
             }
             if(y2 < y1) {
@@ -283,10 +255,10 @@ $(document).ready(function() {
         }
         markers.splice(0,i);                                // remove these from array
         let lang = markers.length;
-        let name = markers[0].options.rohr;
         if (lang > 1) {                                     //
+            let name = markers[0].options.rohr;
             if ((lang % 2) == 1) {                          // uneven ->
-                return getColor(name,markers[(Mathfloor(lang / 2))].options.mSvph);  // median is in the middle
+                return getColor(name,markers[(Math.floor(lang / 2))].options.mSvph);  // median is in the middle
             } else {                                        // evaen ->
                 lang = lang / 2;                            // median is mean of both middle mSvphs
                 console.log(lang);
@@ -295,15 +267,30 @@ $(document).ready(function() {
                 return getColor(name,wert);
             }
         } else if (lang == 1) {                             // only one marker -> return its color
+            let name = markers[0].options.rohr;
             return getColor(name,markers[0].options.mSvph);
         }
         return getColor(name,-1);                            // only offlines
     }
 
-    let markersAll;
+
+    /******************************************************
+     * buildMarkers
+     *
+     * fetch data for MArkers from 'mapdata' and create
+     * all the markers, that are visibile within bounds
+     * and plot them on the map.
+     * Use the ClusterGroup-Library to cluster the markers
+     *
+     * params:
+     *      bounds          find markers within this bounds
+     * return:
+     *      all markers plotted on map
+     *******************************************************/
     async function buildMarkers(bounds) {
+        let markersAll;
         let count = 3;
-        let sensors;
+        let sensors = [];
         let alltubes = [];
         let sigtubes = [];
         while (count != 0) {
@@ -313,7 +300,7 @@ $(document).ready(function() {
                     sensors = null;
                 });
             if ((sensors == null) || (sensors.length == 0)) {
-                showError(1, 'Daten Laden', 0);
+//                showError(1, 'Daten Laden', 0);
             } else {
 //            dialogError.dialog("close");
                 break;
@@ -321,7 +308,7 @@ $(document).ready(function() {
             count--;
         }
         if (count == 0) {
-            return;
+            return;                     // ****** <<<< Fehler meldung rein
         }
         if (markersAll) {
             map.removeLayer(markersAll);
@@ -349,32 +336,79 @@ $(document).ready(function() {
                 continue;
             }
             let value = parseInt(x.cpm);
+            let uSvph = value < 0 ? -1 : value / 60 * sv_factor[x.name];
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
-                    iconUrl: buildIcon(getColor(x.name,parseInt(x.cpm))),
+                    iconUrl: buildIcon(getColor(x.name,uSvph)),
                     iconSize: [35, 35]
                 }),
                 value: value,
-                mSvph: value < 0 ? -1 : value / 60 * sv_factor[x.name],
+                mSvph: uSvph,
                 url: '/' + x.id,
                 rohr: x.name,
                 lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
 
-            })
-                .on('click', e => onMarkerClick(e, true)) // define click- and
-                .bindPopup(popuptext);                      // and bind the popup text
+            });
+            let addr = "Adresse";
+            try {
+                let ret = await $.get("api/getprops?sensorid=" +x.id);
+                if(ret.values[0].address.plz == null) {
+                    addr += " unbekannt !"
+                } else {
+                    addr = ret.values[0].address.street + "&nbsp;&nbsp;" + ret.values[0].address.plz + " " + ret.values[0].address.city;
+                }
+            } catch (e) {
+                console.log("onMarker - getpops", e)
+            }
+            console.log("addr:", addr);
+            marker.bindPopup((e) =>  getPopUp(e,addr)); // and bind the popup text
             markersAll.addLayer(marker);
         }
-        markersAll.addTo(map);
+        map.addLayer(markersAll);
     }
 
+     function getPopUp(marker,addr) {
+        clickedSensor = marker.options.name;
+
+        let popuptext = '<div id="popuptext"><div id="infoTitle"><h4>Sensor: ' + clickedSensor + '</h4></div>' +
+            '<div><h6>' + marker.options.rohr + '</h6></div>' +
+            '<div id="infoaddr">' + addr + '</div>' +
+            '<div id="infoTable">' +
+            '<table><tr>';
+        if (marker.options.value < 0) {
+            popuptext += '<td colspan="2" style="text-align:center;"><span style="color:red;font-size:130%;">offline</span></td></tr>' +
+                '<tr><td>Last seen:</td><td>' + marker.options.lastseen + '</td>';
+        } else {
+            popuptext += '<td>' + marker.options.value + '</td><td>cpm</td></tr>' +
+                '<tr><td>' + Math.round(marker.options.mSvph * 100) / 100 + '</td><td>µSv/h</td>';
+        }
+        popuptext +=
+            '</tr></table></div>';
+        popuptext +=
+            '<div id="infoBtn">' +
+            '<button id="btnshwgrafic" class="btn btn-success btn-sm ">Grafik anzeigen</button>' +
+            '</div></div>';
+        return popuptext;
+    }
 
     async function onMarkerClick(e, click) {
         let item = e.target.options;
         clickedSensor = item.name;
+        let addr = "Adresse";
+        let sensortyp = "Radiation-.Typ"
+        // try {
+        //     let ret = await $.get("api/getprops?sensorid=" + item.name);
+        //     addr = ret.values[0].address.street + "&nbsp;&nbsp;" + ret.values[0].address.plz + " " + ret.values[0].address.city;
+        //     sensortyp = ret.values[0].typ;
+        // } catch (e) {
+        //     console.log("onMarker - getpops", e)
+        // }
+        // console.log("addr:", addr);
 
-        let popuptext = '<div id="popuptext"><div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
+        popuptext = '<div id="popuptext"><div id="infoTitle"><h4>Sensor: ' + item.name + '</h4>' +
+            '<div><h6>' + sensortyp.substring(10) + '</h6></div>' +
+            '<div id="infoaddr">' + addr + '</div>' +
             '<div id="infoTable">' +
             '<table><tr>';
         if (item.value < 0) {
@@ -385,107 +419,47 @@ $(document).ready(function() {
                 '<tr><td>' + Math.round(item.mSvph * 100) / 100 + '</td><td>µSv/h</td>';
         }
         popuptext +=
-            '</tr><table>' +
+            '</tr></table></div>';
+        popuptext +=
             '<div id="infoBtn">' +
-            '<a href="#" class="speciallink">Grafik anzeigen</a>' +
-            '</div>' +
-            '</div>' +
+            '<button class="btn btn-success btn-sm btnshwgrafic">Grafik anzeigen</button>' +
             '</div></div>';
         let popup = e.target.getPopup();
         popup.setContent(popuptext);                        // set text into popup
         e.target.openPopup();                               // show the popup
-        if (click == true) {                                // if we clicked
-             e.target.closePopup();                         // show the popup
-        }
     }
-
 
 
 // ********************************************************************************
 // Events
 // ********************************************************************************
-    $('#btnHelp').click(function () {
-        dialogHelp.dialog("open");
+    $('#btninfo').click(function () {
+        $('#modalTitle').html("Infos zur Karte");
+//        dialogHelp.dialog("open");
+        $('.modal-body').load("fsdata/help",function() {
+            $('.modal-body').removeClass('text-danger');
+            $('#myModal').modal({show:true, focus:true});
+         });
     });
 
+    $('#newmapcenter').change(()=>
+        setNewCenter());
 
-    $('#btnCent').click(function () {
-//    infowindow.setContent("");
-//    infowindow.close();								// löschen
-        dialogCenter.dialog("open");
+    $('#btnsearch').click(function () {
+        setNewCenter();
     });
 
+    let showlegend = false;
+    $('#btnlegende').click(function() {
+        if(showlegend === true) {
+            $('.legend').hide();
+            showlegend = false;
+        } else {
+            $('.legend').show();
+            showlegend = true;
+        }
 
-// ********************************************************************************
-// Dialogs
-// ********************************************************************************
-
-    var dialogError = $('#dialogError').dialog({
-        autoOpen: false,
-        width: 750,
-        title: 'Fehler',
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-            consloe.log('DialogError: Opening errorDialog');
-        },
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-//            polygon.remove();
-        },
-    });
-
-    var dialogHelp = $('#dialogWinHelpM').dialog({
-        autoOpen: false,
-        width: 750,
-        title: 'Info',
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-//            polygon.addTo(map);
-            console.log("in DialogHelp-open");
-            $(this).load('/fsdata/help');
-        },
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-//            polygon.remove();
-        },
-    });
-
-    var dialogCenter = $('#dialogCenter').dialog({
-        autoOpen: false,
-        width: 800,
-        title: 'Zentrieren',
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-//            polygon.addTo(map);
-            $(this).load('/fsdata/centermap', function () {
-                $('#newmapcenter').focus();
-            });
-        },
-        buttons: [
-            {
-                text: "OK",
-                class: 'btnOK',
-                click: setNewCenter,
-                style: "margin-right:40px;",
-                width: 100,
-            }, {
-                text: "Abbrechen",
-                click: function () {
-                    dialogCenter.dialog("close");
-                },
-                style: "margin-right:40px;",
-                width: 100,
-            }
-        ],
-        modal: true,
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-//            polygon.remove();
-
-        },
-    });
+    })
 
     $('.dialog').keypress(function (e) {
         if (e.keyCode == 13) {
@@ -503,11 +477,47 @@ $(document).ready(function() {
             }
         } else {
             let coo = await getSensorKoords(x);
-            map.setView([coo.lat,coo.lng]);
+            if (coo.err ==  null) {
+                map.setView([coo.lat, coo.lng]);
+            } else if (coo.err == 'not found') {
+                showError(2,coo.err, x);
+            } else if (coo.err == 'wrong type') {
+                showError(3,coo.err,x);
+            }
         }
-        dialogCenter.dialog("close");
     }
 
+
+    function switchGray(on) {
+        if (on) {
+            $('img.leaflet-tile').css('-webkit-filter', 'brightness(60%)').css('filter', 'brightness(60%)');
+        } else {
+            $('img.leaflet-tile').css('-webkit-filter', 'brightness(100%)').css('filter', 'brightness(100%)');
+        }
+    }
+
+
+    var dialogHelp = $('#dialogWinHelp').dialog({
+        autoOpen: false,
+        width: function () {
+            let breit = $(window).width();
+            return breit * 0.5;
+        },
+        title: 'Info',
+        position: {my: 'center', at: 'top+100px', of: window},
+        open: function () {
+            $('#page-mask').css('visibility', 'visible');
+//            switchGray(true);
+            $(this).load('/fsdata/help', function() {
+                console.log("help geladen");
+            });
+        },
+        close: function () {
+            $('#page-mask').css('visibility', 'hidden');
+//            switchGray(false);
+            $('#btnHelp').css('background', '#0099cc');
+        },
+    });
 
 
     function saveSettings() {
@@ -562,8 +572,8 @@ $(document).ready(function() {
         modal: true,
         close: function () {
             $('#page-mask').css('visibility', 'hidden');
-            $('#btnSet').show();
-            $('#btnSet').css('background', '#0099cc');
+            $('#btnset').show();
+            $('#btnset').css('background', '#0099cc');
         },
     });
 
@@ -618,13 +628,13 @@ $(document).ready(function() {
 
 // ************** Event-Handler **************
 
-    $('#btnMap').click(function () {
+    $('#btnend').click(function () {
         $('#overlay').hide();
         grafikON = false;
     });
 
 
-    $('#btnSet').click(function () {
+    $('#btnset').click(function () {
         dialogSet.dialog("open");
     });
 
@@ -640,21 +650,15 @@ $(document).ready(function() {
             return;
         }
         if (button == 'week') {
-            $('#btnSet').show();
+            $('#btnset').show();
         } else {
-            $('#btnSet').hide();
+            $('#btnset').hide();
         }
         active = 'one' + button;
         doPlot(active, startDay,properties);
 //        switchPlot(active);								// gewählten Plot aktivieren
     });
 
-
-    $('.dialog').keypress(function (e) {
-        if (e.keyCode == 13) {
-            $('.btnOK').focus();
-        }
-    });
 
 // Einstellungen - Eingaben
     $('#in_mapcenter').click(function () {
@@ -679,12 +683,11 @@ $(document).ready(function() {
                 doPlot(active, startDay,properties);						// Tages- und
             } else {
                 if(mapLoaded) {
-                    fetchAktualData(bounds);
+                    buildMarkers(bounds);
                 }
             }
         }
     }
-
 
 
     function showError(err, txt, id) {
@@ -702,26 +705,22 @@ $(document).ready(function() {
             errtxt = "Sensor Nr. " + id + " ist kein Geigerzähler-Sensor";
         } else if (err==4) {
             errtxt = "Stadt " + id + " nicht gefunden";
+        } else if (err==5) {
+            errtxt = "Gerät bitte auf quer drehen!";
         }
         $('#errorDialog').text(errtxt);
-        dialogError.dialog("open");
-    }
-
-    function showNewDate() {
-        moment.locale('de', {
-            months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
-        });
-        if (startDay != '') {
-            let datumtxt = '<span style="color:blue">Anzeige für: ' + moment(startDay).format("D.MMMM YYYY") + '</span>';
-            $('#datumtxt').html(datumtxt);
-        }
+        $('#modalTitle').html("Error");
+//        dialogHelp.dialog("open");
+        $('.modal-body').html(errtxt);
+        $('.modal-body').addClass('text-danger');
+        $('#myModal').modal({show:true});
+//        dialogError.dialog("open");
     }
 
 
     function startPlot(what, d1, d2, sensor, start, live) {
         if (what == 'onemonth') {						    // gleich plotten
             PlotMonth_Geiger(d1, sensor, live);
-            showNewDate();
         } else {
             PlotDayWeek_Geiger(what, d1, sensor, start, live);
         }
@@ -732,7 +731,7 @@ $(document).ready(function() {
     //	Fetch relevant data from the server and plot it
 
     function doPlot(what, start, props) {								// if 'start' not defined,
-//		console.log("doPlot");
+		console.log("doPlot");
         $('placeholderFS_1').html("");
         $('#loading').show();
         let st;
@@ -836,21 +835,6 @@ $(document).ready(function() {
             subtitle: {
                 text: 'Gemessene Werte und ' + avgTime + 'min-gleitende Mittelwerte',
                 align: 'left',
-            },
-            tooltip: {
-                valueDecimals: 1,
-                backgroundColor: 0,
-                borderWidth: 0,
-                borderRadius: 0,
-                useHTML: true,
-                formatter: function () {
-                    return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">' +
-                        moment(this.x).format("DD.MMM,  HH:mm") + ' Uhr<br />' +
-                        '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
-                        this.series.name + ':&nbsp; <b>' +
-                        Highcharts.numberFormat(this.y, 3) +
-                        '</b><br /> &#x2259; Impulse pro Minute: <b>' + Highcharts.numberFormat(this.y*60/faktor, 0) + '</b></div>';
-                }
             },
             xAxis: {
                 type: 'datetime',
@@ -1044,14 +1028,13 @@ $(document).ready(function() {
         let series4 = [];
         var mx1 = [];
 
-        let data = datas.docs;
-
+        let data = datas.radiation;
         if(data.length != 0) {
-            data = data.slice(-32);							// nur einen Monat auswählen
+//            data = data.slice(-32);							// nur einen Monat auswählen
             $.each(data, function (i) {
                 var dat = new Date(this._id).getTime();	// retrieve the date
-                series1.push([dat, this.cpmAV]);
-                mx1.push(this.cpmAV/60*faktor);
+                series1.push([dat, this.uSvphAvg])
+                mx1.push(this.uSvphAvg);
             });
             txtMeldung = false;
         } else {
@@ -1065,16 +1048,6 @@ $(document).ready(function() {
         var localOptions = {
             chart: {
                 type: 'column'
-            },
-            tooltip: {
-                formatter: function () {
-                    return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">' +
-                        '&nbsp;&nbsp;' + moment(this.x).format("DD.MMM") + '<br />' +
-                        '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
-                        this.series.name + ':&nbsp; <b>' +
-                        Highcharts.numberFormat(this.y, 1) +
-                        '</b></div>';
-                }
             },
             xAxis: {
                 plotBands: calcWeekends(data, true),
@@ -1091,9 +1064,24 @@ $(document).ready(function() {
                     }
                 },
             },
+            tooltip: {
+                valueDecimals: 1,
+                backgroundColor: 0,
+                borderWidth: 0,
+                borderRadius: 0,
+                useHTML: true,
+                formatter: function () {
+                    return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">' +
+                        moment(this.x).format("DD.MMM") + '<br />' +
+                        '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+                        this.series.name + ':&nbsp; <b>' +
+                        Highcharts.numberFormat(this.y, 3) +
+                        '</b><br /> &#x2259; Impulse pro Minute: <b>' + Highcharts.numberFormat(this.y*60/faktor, 0) + '</b></div>';
+                }
+            },
             series: [
                 {
-                    name: 'cpm',
+                    name: 'uSvph',
                     data: series1,
                     color: 'blue',
                 },
@@ -1152,7 +1140,7 @@ $(document).ready(function() {
                 formatter: function () {
                     let v = this.axis.defaultLabelFormatter.call(this);
                     let w = parseFloat(v);
-                    let s = Math.round((w * 60 / faktor) * 100) / 100;
+                    let s = Math.round(w * 60 / faktor);
                     return s;
                 }
             },
@@ -1285,12 +1273,29 @@ $(document).ready(function() {
                 formatter: function () {
                     let v = this.axis.defaultLabelFormatter.call(this);
                     let w = parseFloat(v);
-                    let s = Math.round((w * 60 / faktor));
+                    let s = Math.round(w * 60 / faktor);
                     return s;
                 }
             },
         }];
 
+
+        options.tooltip =
+            {
+            valueDecimals: 1,
+                backgroundColor: 0,
+                borderWidth: 0,
+                borderRadius: 0,
+                useHTML: true,
+                formatter: function () {
+                return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">' +
+                    moment(this.x).format("DD.MMM,  HH:mm") + ' Uhr<br />' +
+                    '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+                    this.series.name + ':&nbsp; <b>' +
+                    Highcharts.numberFormat(this.y, 3) +
+                    '</b><br /> &#x2259; Impulse pro Minute: <b>' + Highcharts.numberFormat(this.y*60/faktor, 0) + '</b></div>';
+            }
+        };
 
         options.series = [];
         options.yAxis = [];
@@ -1327,22 +1332,13 @@ $(document).ready(function() {
             } else {
                 options.subtitle.text = 'Impulse pro Minute - Mittelwert über je ' + avt + dau;
             }
-//            if (mitBMP) {
-//                options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Woche';
-//            }
             options.xAxis.tickInterval = 3600 * 6 * 1000;
             options.xAxis.plotBands = calcWeekends(data, false);
             options.xAxis.plotLines = calcDays(data, false);
             var dlt = start.clone();
-            if (live) {
                 options.xAxis.max = dlt.valueOf();
                 dlt.subtract(7, 'd');
                 options.xAxis.min = dlt.valueOf();
-            } else {
-                options.xAxis.min = dlt.valueOf();
-                dlt.add(7, 'd');
-                options.xAxis.max = dlt.valueOf();
-            }
         } else {
             dlt = start.clone();
             if (live) {
@@ -1399,8 +1395,8 @@ $(document).ready(function() {
                 addSensorID2chart(chart, sensor);
                 chart.renderer.label(
                     infoTafel,
-                    50,
-                    chart.chartHeight-80, 'rect', 0, 0, true)
+                    7,
+                    chart.chartHeight-74, 'rect', 0, 0, true)
                     .css({
                         fontSize: '10pt',
                         color: 'green'
@@ -1442,12 +1438,12 @@ $(document).ready(function() {
                 width: 30,
             })
             .on('click', function () {
-                prevHour(time, chart);
+                prevHour(time);
             })
             .add();
     }
 
-    function prevHour(hours, ch) {
+    function prevHour(hours) {
         console.log("Zurück um ", hours, "Stunden");
         let start;
         if (startDay == "") {
@@ -1518,7 +1514,8 @@ $(document).ready(function() {
         }
         return $.getJSON('/mapdata/getaktdata', {start: startDay, box: bnds})
             .fail((jqxhr, textStatus, error) => {
-                alert("fetchAktualData: Fehler  " + error);						// if error, show it
+//                alert("fetchAktualData: Fehler  " + error);						// if error, show it
+                return [];
             })
             .done(docs => docs);
     }
@@ -1571,50 +1568,24 @@ $(document).ready(function() {
             let url = '/api/getprops?sensorid=' + csens;
             $.get(url, (data, err) => {
                 if (err != 'success') {
-                    resolve({lat: 48.784373, lng: 9.182});
+                    resolve({err: 'not found', lat: 48.784373, lng: 9.182});
                 } else {
 //                console.log(data);
-                    if ((data.values.length == 0) || ((data.values[0]==0) && (data.values[1]==0))){
-                        resolve({lat: 48.780045, lng: 9.182646});
+                    if ((data.values.length == 0) || ((data.values[0].lat==0) && (data.values[1].lon==0))){
+                        resolve({err: 'not found', lat: 48.780045, lng: 9.182646});
                     } else {
-                        resolve({lat: data.values[0].lat, lng: data.values[0].lon});
+                        if (!data.values[0].typ.startsWith("Radiation")) {
+                            resolve({err: 'wrong type', lat: 48.780045, lng: 9.182646});
+                        } else {
+                            resolve({err: null, lat: data.values[0].lat, lng: data.values[0].lon});
+                        }
                     }
                 }
-                ;
             });
         });
         return p;
     }
 
-    /*
-    var dialogError = $('#errorDialog').dialog({
-        autoOpen: false,
-        width: 300,
-        position: {my: 'center', at: 'top+100px', of: window},
-        open: function () {
-            $('#page-mask').css('visibility', 'visible');
-        },
-        close: function () {
-            $('#page-mask').css('visibility', 'hidden');
-            $('#btnHelp').css('background', '#0099cc');
-        },
-        title: "Fehler",
-        modat: true,
-    });
-
-
-    function showError(err, txt, id) {
-        console.log("*** Fehler: " + txt + " from id " + id);
-        let errtxt = "";
-        if (err == 1) {
-            errtxt = "Das Laden der Daten dauert etwas länger";
-        } else {
-            errtxt = "Unbekannter Fehler"
-        }
-        $('#errorDialog').text(errtxt);
-        dialogHelp.dialog("open");
-    }
-*/
 
     function showGrafik(sid) {
         active = 'oneday';
@@ -1634,7 +1605,6 @@ $(document).ready(function() {
                 properties = data;
                 // save coordinates in localStorage
                 localStorage.setItem('geiger_curcoord', JSON.stringify(data.location[0].loc.coordinates));
-                doPlot(active, startDay, data);						// Start with plotting one day from now on
                 let breit = $(window).width();
                 gbreit = breit * 0.8;
                 let marg = (breit-gbreit)/2;

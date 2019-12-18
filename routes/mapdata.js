@@ -27,6 +27,7 @@ router.get('/getaktdata/', function (req, res) {
     var east = parseFloat(box[1][0]);
     var west = parseFloat(box[0][0]);
     let st = req.query.start;
+    console.log("getaktdata: S=",south," N=",north," E=",east," W=",west)
     let poly = [];
     if(req.query.poly != undefined) {
         poly = JSON.parse(req.query.poly);
@@ -36,7 +37,7 @@ router.get('/getaktdata/', function (req, res) {
     var now = moment();                                                 // akt. Uhrzeit
     var lastDate = 0;
     let loc;
-//    console.log("fetching data ");
+    console.log("getaktdata: now fetching data from DB");
     if(poly.length != 0) {
         loc = {
             location: {
@@ -65,7 +66,8 @@ router.get('/getaktdata/', function (req, res) {
     try {
         collection.find(loc)                                                 // find all data within map borders (box)
             .toArray(function (err, docs) {
-//        console.log(docs);
+                console.log("getaktdata: data fetched, length=",docs.length);
+                //        console.log(docs);
                 if (docs == null) {
                     console.log("getaktdata: docs==null");
                     res.json({"avgs": [], "lastDate": null});
