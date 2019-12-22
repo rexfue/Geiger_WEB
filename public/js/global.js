@@ -573,7 +573,7 @@ $(document).ready(function() {
         close: function () {
             $('#page-mask').css('visibility', 'hidden');
             $('#btnset').show();
-            $('#btnset').css('background', '#0099cc');
+//            $('#btnset').css('background', '#0099cc');
         },
     });
 
@@ -630,6 +630,7 @@ $(document).ready(function() {
 
     $('#btnend').click(function () {
         $('#overlay').hide();
+        $('#btnset').hide();
         grafikON = false;
     });
 
