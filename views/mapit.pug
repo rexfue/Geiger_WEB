@@ -15,10 +15,10 @@ block content
                 .btn-group
                     button.btn.btn-success.mybuttons  Zählrohre
                     button.btn.btn-success.mybuttons.dropdown-toggle.dropdown-toggle-split(type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-                        span.sr-only Zählrore
+                        span.sr-only Zählrohre
                     .dropdown-menu(aria-labelledby="dropdownMenu2")
                         .custom-control.custom-radio.ml-3
-                            input.custom-control-input.btnrohr#btnall(type="radio" valeu="all" name="rohre" checked)
+                            input.custom-control-input.btnrohr#btnall(type="radio" value="all" name="rohre" checked)
                             label.custom-control-label(for="btnall") Alle Zählrohre anzeigen
                         .custom-control.custom-radio.ml-3
                             input.custom-control-input.btnrohr#btnsig(type="radio" value="sig" name="rohre")
@@ -45,6 +45,7 @@ block content
                     button.btn.btn-success#btnend(value='map') Ende
         #loading Lade die Daten ...
         #placeholderFS_1
+        #placeholderBME
         #dialogWinSet
     #author
         #mailadr
@@ -65,6 +66,5 @@ block content
                     h4#modalTitle.modal-title
                     button.close(type="button" data-dismiss="modal") &times;
                 .modal-body
-                    Hier ist der Body von der blödenMeldung
                 .modal-footer
                     button.btn.btn-default(type="button" data-dismiss="modal") Close

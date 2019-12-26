@@ -213,7 +213,7 @@ $(document).ready(function() {
         map.on('popupopen', function () {
             $('#btnshwgrafic').click(function () {
                 console.log('call Grafik');
-    //                map.closePopup();
+                map.closePopup();
                 if(window.matchMedia("(orientation:portrait").matches) {
                     showError(5,"goto Landscape")
                 } else {
@@ -719,11 +719,16 @@ $(document).ready(function() {
     }
 
 
-    function startPlot(what, d1, d2, sensor, start, live) {
+    function startPlot(what, d1, d2, start, live) {
         if (what == 'onemonth') {						    // gleich plotten
-            PlotMonth_Geiger(d1, sensor, live);
+            PlotMonth_Geiger(d1, live);
         } else {
-            PlotDayWeek_Geiger(what, d1, sensor, start, live);
+            PlotDayWeek_Geiger(what, d1, start, live);
+            if(d1.climate.length != 0) {
+                PlotDayWeek_BME280(what, d1, start, live);
+            } else {
+                $('#placeholderBME').hide();
+            }
         }
     }
 
@@ -734,6 +739,7 @@ $(document).ready(function() {
     function doPlot(what, start, props) {								// if 'start' not defined,
 		console.log("doPlot");
         $('placeholderFS_1').html("");
+        $('placeholderBME').html("");
         $('#loading').show();
         let st;
         let live = true;
@@ -757,7 +763,7 @@ $(document).ready(function() {
             if (err != 'success') {
                 alert("Fehler <br />" + err);						// if error, show it
             } else {
-                startPlot(what, data1, null, {sid:props._id, name:props.name}, st, live);
+                startPlot(what, data1, null,  st, live);
             }
         });
     }
@@ -781,7 +787,7 @@ $(document).ready(function() {
         // Options, die für alle Plots identisch sind
         globObject = {
             chart: {
-                height: 400,
+                height: 350,
                 width: gbreit-5,
                 spacingRight: 20,
                 spacingLeft: 20,
@@ -924,7 +930,7 @@ $(document).ready(function() {
     /******************************************************
      * calcDays
      *
-     * Calulate the day borders. In week oplot every day
+     * Calulate the day borders. In week plot every day
      * border is shown es darker gray vertical line
      * params:
      *      data            array of dates
@@ -937,15 +943,9 @@ $(document).ready(function() {
         if (data.length == 0) {
             return days
         }
-        var oldday = moment(data[0].date).day();
-        if (isyear) {
-            oldday = moment(data[0]._id).day();
-        }
+        let  oldday = moment(data[0]._id).day();
         for (var i = 0; i < data.length; i++) {
-            var m = moment(data[i].date);
-            if (isyear) {
-                m = moment(data[i]._id);
-            }
+            var m = moment(data[i]._id);
             var tag = m.day()
             if (tag != oldday) {
                 m.startOf('day');
@@ -1022,14 +1022,16 @@ $(document).ready(function() {
      * return:
      *      none
      *******************************************************/
-    function PlotMonth_Geiger(datas, sensor, live) {
+    function PlotMonth_Geiger(datas, live) {
         let series1 = [];
         let series2 = [];
         let series3 = [];
         let series4 = [];
         var mx1 = [];
 
-        let data = datas.radiation;
+        let data = datas.radiation.values;
+        let sensor = {sid: datas.radiation.sid, name: datas.radiation.sname};
+
         if(data.length != 0) {
 //            data = data.slice(-32);							// nur einen Monat auswählen
             $.each(data, function (i) {
@@ -1185,7 +1187,7 @@ $(document).ready(function() {
     }
 
     // Geiger
-    function PlotDayWeek_Geiger(what, datas, sensor, start, live) {
+    function PlotDayWeek_Geiger(what, datas, start, live) {
 
         var series1 = [];
         var series2 = [];
@@ -1197,7 +1199,8 @@ $(document).ready(function() {
 
         // Put values into the arrays
         var cnt = 0;
-        var data = datas.radiation;
+        var data = datas.radiation.values;
+        let sensor = {sid:datas.radiation.sid, name:datas.radiation.sname}
 
         if (data.length != 0) {
             $.each(data, function (i) {
@@ -1245,7 +1248,6 @@ $(document).ready(function() {
             },
             visible: true,
         };
-
 
         let maxy = calcMaxY(mx);
 
@@ -1430,6 +1432,318 @@ $(document).ready(function() {
         }
         $('#loading').hide();
     }
+
+    // ************************************************************
+    // Plot BME280
+    function PlotDayWeek_BME280(what, datas, start, live) {
+
+        let series1 = [];
+        let series2 = [];
+        let series3 = [];
+        let mx1 = [];
+        let mx3 = [];
+
+        // Arrays for Berechnung der Min, Max und Mittewerte über die kompletten 24h
+        var aktVal = {};
+
+        // Put values into the arrays
+        var cnt = 0;
+        var data = datas.climate.values;
+        let sensor = {sid:datas.climate.sid, name:datas.climate.sname}
+
+
+        if (data.length != 0) {
+            $.each(data, function (i) {
+                var dat = new Date(this._id).getTime();
+                series1.push([dat, this.tempAvg])
+                mx1.push(this.tempAvg);
+                series2.push([dat, this.humiAvg])
+                if(this.pressSeaAvg != null) {
+                    series3.push([dat, this.pressSeaAvg/100])
+                    mx3.push(this.pressSeaAvg/100);
+                }
+            });
+
+            if (what == 'oneday') {
+                // Aktuelle Werte speichern
+
+                aktVal['temperature'] = data[data.length - 1].tempAvg;
+                aktVal['humidity'] = data[data.length - 1].humiAvg;
+                aktVal['pressure'] = data[data.length - 1].pressSeaAvg/100;
+
+                // InfoTafel füllen
+                var infoTafel =
+                    '<table class="infoTafel"><tr >' +
+                    '<th colspan="3">Aktuelle Werte</th>' +
+                    '</tr><tr>' +
+                    '<td>Temperatur</td><td>' + (aktVal.temperature).toFixed(1) + '</td>' + '<td>°C</td>' +
+                    '</tr><tr>' +
+                    '<td>Feuchte</td><td>' +  (aktVal.humidity).toFixed(0)  + '</td>' + '<td>%</td>' +
+                    '</tr><tr>' +
+                    '<td>Luftdruck</td><td>' +  (aktVal.pressure).toFixed(0)  + '</td>' + '<td>hPa</td>' +
+                '</tr></table>' +
+                '</div>';
+            }
+            txtMeldung = false;
+        } else {
+            txtMeldung = true;
+        }
+
+
+        // Plot-Options
+        var options = createGlobObtions();
+
+        var series_temp = {
+            name: 'Temperatur',
+            type: 'line',
+//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
+            data: series1,
+            color: 'red',
+//            color: (what == 'oneweek') ? 'green' : 'red',
+            yAxis: 0,
+            zIndex: 1,
+            marker: {
+                enabled: false,
+//                enabled: what == 'oneweek' ? false : true,
+                symbol: 'circle',
+            },
+            visible: true,
+        };
+
+        var series_humi = {
+            name: 'Feuchte',
+            type: 'line',
+//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
+            data: series2,
+            color: '#946CBD',
+//            color: (what == 'oneweek') ? 'green' : 'red',
+            yAxis: 1,
+            zIndex: 1,
+            marker: {
+                enabled: false,
+//                enabled: what == 'oneweek' ? false : true,
+                symbol: 'circle',
+            },
+            visible: true,
+        };
+
+        var series_press = {
+            name: 'Luftdruck',
+            type: 'line',
+//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
+            data: series3,
+            color: '#DA9E24',
+//            color: (what == 'oneweek') ? 'green' : 'red',
+            yAxis: 2,
+            zIndex: 1,
+            marker: {
+                enabled: false,
+//                enabled: what == 'oneweek' ? false : true,
+                symbol: 'circle',
+            },
+            visible: true,
+        };
+
+        // Check min/max of temp to arrange y-axis
+        let tmi = Math.min(...mx1);
+        let tma = Math.max(...mx1);
+        let tmid = (tmi+tma) / 2;
+        let loty = tmid - 5;
+        let hity = tmid + 5;
+
+        var yAxis_temp = {													// 1
+            title: {
+                text: 'Temperatur °C',
+                style: {
+                    color: 'red'
+                }
+            },
+            min: loty,
+            max: hity,
+            opposite: true,
+            tickAmount: 11,
+            useHTML: true,
+        };
+
+        var yAxis_hum = {
+            title: {										// 2
+                text: 'rel. Feuchte %',
+                style: {
+                    color: '#946CBD',
+                }
+            },
+            min: 0,
+            max: 100,
+            gridLineColor: 'lightgray',
+            opposite: true,
+            tickAmount: 11,
+        };
+
+        // Check min/max of press to arrange y-axis
+        let pmi = Math.min(...mx3);
+        let pma = Math.max(...mx3);
+        let mid = (pmi+pma) / 2;
+        let lopy = mid - 30;
+        let hipy = mid + 30;
+
+        var yAxis_press = {													// 3
+            title: {
+                text: 'Luftdruck hPa',
+                style: {
+                    color: '#DA9E24',
+                }
+            },
+            gridLineColor: 'lightgray',
+            min: lopy,
+            max: hipy,
+            opposite: true,
+            tickAmount: 11,
+        };
+
+
+        options.tooltip =
+            {
+                valueDecimals: 1,
+                backgroundColor: 0,
+                borderWidth: 0,
+                borderRadius: 0,
+                useHTML: true,
+                formatter: function () {
+                    return '<div style="border: 2px solid ' + this.point.color + '; padding: 3px;">' +
+                        moment(this.x).format("DD.MMM,  HH:mm") + ' Uhr<br />' +
+                        '<span style="color: ' + this.point.color + '">&#9679;&nbsp;</span>' +
+                        this.series.name + ':&nbsp; <b>' +
+                        Highcharts.numberFormat(this.y, 3) +
+                       '</div>';
+                }
+            };
+
+        options.series = [];
+        options.yAxis = [];
+        options.series[0] = series_temp;
+        options.series[1] = series_humi;
+        options.series[2] = series_press;
+        options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Tag';
+        options.subtitle.text = 'Mittelwerte über jeweils 10min';
+//        options.series[2] = series_LAMax;
+//        options.yAxis[2] = yAxis_LAMin;
+        options.yAxis[0] = yAxis_temp;
+        options.yAxis[1] = yAxis_hum;
+        options.yAxis[2] = yAxis_press;
+        options.chart.zoomType = 'x';
+        options.chart.spacingBottom = 40;
+
+        if (what == 'oneweek') {
+            options.plotOptions = {
+                column: {
+                    pointPadding: 0.1,
+                    borderWidth: 0,
+                    groupPadding: 0,
+                    shadow: false
+                }
+            };
+
+            options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Woche';
+            options.subtitle.text = 'Mittelwerte über jeweils 10min';
+            // let dau = ' Minuten';
+            // let avt = avgTime;
+            // if (avgTime >= 60) {
+            //     dau = (avgTime == 60) ? ' Stunde' : ' Stunden';
+            //     avt /= 60;
+            // }
+            // if (movingAVG) {
+            //     options.subtitle.text = 'Impulse pro Minute - gleitender Mittelwert über ' + avt + dau;
+            // } else {
+            //     options.subtitle.text = 'Impulse pro Minute - Mittelwert über je ' + avt + dau;
+            // }
+            options.xAxis.tickInterval = 3600 * 6 * 1000;
+            options.xAxis.plotBands = calcWeekends(data, false);
+            options.xAxis.plotLines = calcDays(data, false);
+            var dlt = start.clone();
+            options.xAxis.max = dlt.valueOf();
+            dlt.subtract(7, 'd');
+            options.xAxis.min = dlt.valueOf();
+        } else {
+            dlt = start.clone();
+            if (live) {
+                options.xAxis.max = dlt.valueOf();
+                dlt.subtract(1, 'd');
+                options.xAxis.min = dlt.valueOf();
+            } else {
+                if (specialDate == 'silvester17') {
+                    dlt = moment("2017-12-31T11:00:00Z");
+                } else if (specialDate == 'silvester18') {
+                    dlt = moment("2018-12-31T11:00:00Z");
+                }
+                options.xAxis.min = dlt.valueOf();
+                dlt.add(1, 'd');
+                options.xAxis.max = dlt.valueOf();
+            }
+        }
+
+        let navx = gbreit-300;
+        let navy = 20;
+        let navbreit = 55;
+        let chr;
+        if (what == 'oneweek') {
+            chr = Highcharts.chart($('#placeholderBME')[0], options, function (chart) {
+                addSensorID2chart(chart, sensor);
+                if (txtMeldung == true) {
+                    var labeText = "";
+                    var errtext = chart.renderer.label(
+                        noDataTafel2,
+                        80,
+                        120, 'rect', 0, 0, true)
+                        .css({
+                            fontSize: '18pt',
+                            color: 'red'
+                        })
+                        .attr({
+                            zIndex: 1000,
+                            stroke: 'black',
+                            'stroke-width': 2,
+                            fill: 'white',
+                            padding: 10,
+                        }).add();
+                }
+            });
+        } else {
+            chr = Highcharts.chart($('#placeholderBME')[0], options, function (chart) {
+                addSensorID2chart(chart, sensor);
+                chart.renderer.label(
+                    infoTafel,
+                    7,
+                    chart.chartHeight-94, 'rect', 0, 0, true)
+                    .css({
+                        fontSize: '8pt',
+                        color: 'green'
+                    })
+                    .attr({
+                        zIndex: 5,
+                    }).add();
+                if (txtMeldung == true) {
+                    var labeText = "";
+                    var errtext = chart.renderer.label(
+                        noDataTafel1,
+                        80,
+                        120, 'rect', 0, 0, true)
+                        .css({
+                            fontSize: '18pt',
+                            color: 'red'
+                        })
+                        .attr({
+                            zIndex: 1000,
+                            stroke: 'black',
+                            'stroke-width': 2,
+                            fill: 'white',
+                            padding: 10,
+                        }).add();
+                }
+            });
+        }
+        $('#loading').hide();
+    }
+
 
     function renderPfeil(n, chart, x, y, txt, time) {
         chart.renderer.button(txt, x, y, null, butOpts[0], butOpts[1], butOpts[2], butOpts[3])

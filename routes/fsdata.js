@@ -141,6 +141,7 @@ async function readRadiationAverages(db, sid, start, end, average, factor) {
                         }
                     },
                     cpmAvg: {$avg: '$counts_per_minute'},
+                    cpmSum: {$sum: '$counts_per_minute'},
                     count: {$sum: 1}
                 }
             },
@@ -168,7 +169,7 @@ async function readClimateAverages(db, sid, start, end, average) {
                         $toDate: {
                             $subtract: [
                                 {$toLong: '$datetime'},
-                                {$mod: [{$toLong: '$datetime'}, 1000 * 60 * 10]}    // aggregate every 10min
+                                {$mod: [{$toLong: '$datetime'}, 1000 * 60 * average]}    // aggregate every average min
                             ]
                         }
                     },
@@ -236,12 +237,12 @@ async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
                         docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
                     }
                     if (docs.length != 0) {
-                        ret['radiation'] = docs;
+                        ret['radiation'] = {sid: sid, sname: sname, values: docs};
                     }
                 } else if (sname == "BME280") {
-                    docs = await readClimateAverages(db, sid, timerange.start, timerange.end, avg);
+                    docs = await readClimateAverages(db, sid, timerange.start, timerange.end, 10);
                     if (docs.length != 0) {
-                        ret['climate'] = docs;
+                        ret['climate'] = {sid: sid, sname: sname, values: docs};
                     }
                 } else {
                     ret['error'] = "Sensor not of right type (unknown)";
