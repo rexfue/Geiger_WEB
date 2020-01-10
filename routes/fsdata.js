@@ -236,9 +236,9 @@ async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
                     } else {
                         docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
                     }
-                    if (docs.length != 0) {
+//                    if (docs.length != 0) {
                         ret['radiation'] = {sid: sid, sname: sname, values: docs};
-                    }
+//                    }
                 } else if (sname == "BME280") {
                     docs = await readClimateAverages(db, sid, timerange.start, timerange.end, 10);
                     if (docs.length != 0) {

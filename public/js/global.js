@@ -22,6 +22,7 @@ $(document).ready(function() {
 
     var map;
     let firstZoom = 11;
+    const MAXZOOM = 17;
     let useStgtBorder = false;
     let popuptext = "";
     let bounds;
@@ -63,8 +64,18 @@ $(document).ready(function() {
     }
 
     let curSensor = -1;                                             // default-Sensor
-    if (!((typeof csid == 'undefined') || (csid == ""))) {
-        curSensor = csid;
+    let startcity = "";
+    if (!((typeof csid == undefined) || (csid == ""))) {
+        if(!isNaN(csid - parseFloat(csid))) {               // check if csid is a number
+            curSensor = csid;
+        } else {
+            startcity = csid;
+        }
+    }
+    if(!((typeof fzoom == undefined) || (fzoom == ""))) {
+        if(fzoom <= MAXZOOM)  {
+            firstZoom = fzoom;
+        }
     }
 
 
@@ -88,7 +99,7 @@ $(document).ready(function() {
 
 
 // Start with plotting the map
-    plotMap(curSensor);
+    plotMap(curSensor, startcity);
 
 
 // ********************************************************************************
@@ -145,14 +156,19 @@ $(document).ready(function() {
     });
 
 
-    async function plotMap(cid, poly) {
-        // if sensor nbr is give, find coordinates, else use Stuttgart center
+    async function plotMap(cid, city) {
+        let pos;
+        // if sensor nbr is giveen, find coordinates, else use Stuttgart center
         let myLatLng;
         if (cid != -1) {
             myLatLng = await getSensorKoords(curSensor);
         } else {
-            let stgt = await getCoords("Stuttgart");
-            myLatLng = {lat: parseFloat(stgt.lat), lng: parseFloat(stgt.lon)};
+            if (city != "") {
+                pos = await getCoords(city);
+            } else {
+                pos = await getCoords("Stuttgart");
+            }
+            myLatLng = {lat: parseFloat(pos.lat), lng: parseFloat(pos.lon)};
         }
 
         map = L.map('map');
@@ -160,7 +176,7 @@ $(document).ready(function() {
         map.setView(myLatLng, firstZoom);
 
         L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
-            maxZoom: 17,
+            maxZoom: MAXZOOM,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
@@ -756,7 +772,7 @@ $(document).ready(function() {
             sensorname: props.name,
             avgTime: avgTime,
             live: live,
-            moving: movingAVG
+            moving: movingAVG,
         };
         faktor = sv_factor[props.name.substring(10)];
         $.getJSON(url, callopts, function (data1, err) {				// AJAX Call
@@ -807,7 +823,7 @@ $(document).ready(function() {
 //						align: 'left',
 //						verticalAlign: 'bottom',
                         x: -30,
-                        y: 350,
+                        y: 300,
                     },
                     relativeTo: 'chart',
                     theme: {

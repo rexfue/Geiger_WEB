@@ -26,6 +26,7 @@ router.get('/', function(req, res, next) {
         stday: req.query.stday,
         showAllMap: req.query.mall,
         csensor: req.query.sid,
+        zoom:req.query.zoom,
         stype: tit
     });
 });
@@ -44,6 +45,7 @@ router.get('/:nam', function(req, res, next) {
     		date : pkg.date,
             param: req.query.addr,
             stday: req.query.stday,
+            zoom:req.query.zoom,
             csensor: name,
     		name: 'map'});
     }
