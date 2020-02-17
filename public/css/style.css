@@ -17,12 +17,13 @@ h3 {
 
 #meldung {
 	margin : auto;
-	width: 100%;
+/*	width: 100%; */
 	text-align: center;
 	background-color: #DDDDDD;
 	padding-top: 30px;
 	height: 100%;
 	position: relative;
+	border: 3px solid red;
 }
 
 #buttons {
