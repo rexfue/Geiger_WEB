@@ -7,28 +7,21 @@ const os = require('os');
 const moment = require('moment');
 
 // Consts
-const DEFAULTPORT = 3005;
-const SUBDOMAIN = "test1";
+const PORT = process.env.SERVERPORT || 3005;											// Port for server
 
-const MONGOBASE = 'Feinstaubi_A';
+const debug = (process.env.DEBUG == "true");
+const MONGOHOST = process.env.MONGOHOST || 'localhost';
+const MONGOPORT = process.env.MONGOPORT || 27017;
+const MONGOAUTH = (process.env.MONGOAUTH == "true");
+const MONGOUSRP = process.env.MONGOUSRP || "";
+const MONGOBASE = process.env.MONGOBASE || 'Feinstaubi_A';
 
-let PORT = process.env.SERVERPORT;											// Port for server
-let MONGOHOST = process.env.MONGOHOST;
-let MONGOPORT = process.env.MONGOPORT;
-let MONGOAUTH = process.env.MONGOAUTH;
-let MONGOUSRP = process.env.MONGOUSRP;
-
-if (MONGOHOST === undefined) { MONGOHOST = 'localhost';}
-if (MONGOPORT === undefined) { MONGOPORT =  27017; }
-if (PORT === undefined) { PORT =  DEFAULTPORT; }
-
-let MONGO_URL = 'mongodb://'+MONGOHOST+':'+MONGOPORT;  	// URL to mongo database
-if (MONGOAUTH == 'true') {
-    MONGO_URL = 'mongodb://'+MONGOUSRP+'@' + MONGOHOST + ':' + MONGOPORT + '/?authSource=admin';          // URL to mongo database
-}
+const MONGO_URL = MONGOAUTH ? 'mongodb://'+MONGOUSRP+'@' + MONGOHOST + ':' + MONGOPORT + '/?authSource=admin' :  'mongodb://'+MONGOHOST+':'+MONGOPORT;	// URL to mongo database
 
 console.log(os.hostname());
-// console.log(MONGO_URL);
+if (debug) {
+    console.log(`MongoURL = "${MONGO_URL}" and Database = ${MONGOBASE}`);
+}
 
 geigerApp.set('views','./views');
 geigerApp.set('view engine','pug');
@@ -44,6 +37,7 @@ async function checkHost(req, res, next) {
         (req.headers.host == 'test1.rexfue.de') ||
         (req.headers.host == 'multigeiger.rexfue.de') ||
         (req.headers.host == 'multigeiger.citysensor.de') ||
+        (req.headers.host == 'test2.citysensor.de') ||
         (req.headers.host == 'localhost:'+PORT) ||
         (req.headers.host == 'nuccy:3005') ||
         (req.headers.host == '213.136.85.253:'+PORT) ||

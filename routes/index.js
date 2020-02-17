@@ -4,11 +4,11 @@ var router = express.Router();
 var pkg = require('../package.json');
 
 
-var MAINT = false;
 var idx = 'index';
 var mapit = 'mapit';
 var tit = 'Geiger';
 
+const MAINT = (process.env.MAINTENANCE=="true");
 
 if (MAINT==true) {
     idx = 'maintenance';
