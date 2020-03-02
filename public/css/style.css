@@ -583,3 +583,8 @@ select {
 .input-wrapper{
 	position: relative;
 }
+
+#indoor {
+	font-weight: bold;
+	text-align:center;
+}

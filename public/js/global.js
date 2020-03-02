@@ -161,7 +161,7 @@ $(document).ready(function() {
         // if sensor nbr is giveen, find coordinates, else use Stuttgart center
         let myLatLng;
         if (cid != -1) {
-            myLatLng = await getSensorKoords(curSensor);
+            myLatLng = await getSensorKoords(cid);
         } else {
             if (city != "") {
                 pos = await getCoords(city);
@@ -213,8 +213,9 @@ $(document).ready(function() {
             for (var i = 0; i < grades.length - 1; i++) {
                 div_color.innerHTML +=
                     '<i style="background:' + colorscale[i] + '"></i>' +
-                    '<u>&nbsp;&nbsp;&nbsp;</u>&nbsp;&nbsp;' + grades[i] + (i == 0 ? "+" : "") + '</upan><br />';
+                    '<u>&nbsp;&nbsp;&nbsp;</u>&nbsp;&nbsp;' + grades[i] + (i == 0 ? "+" : "") + '<br />';
             }
+            div_color.innerHTML += '&nbsp;<i style="background:' + '#87CEEB' + '"></i> indoor<br />';
             div_color.innerHTML += '&nbsp;<i style="background:' + colorscale[colorscale.length - 1] + '"></i> offline';
             return div;
         };
@@ -241,6 +242,9 @@ $(document).ready(function() {
     //     $('#overlay').hide();
     //     grafikON = false;
     // });
+        if(cid != -1) {
+            showGrafik(cid);
+        }
     }
 
 
@@ -250,6 +254,7 @@ $(document).ready(function() {
     // If there are 'offline' sensors (value == -1) strip them before
     // calculating the median. If there are only offline sensor, return
     // color of value==-1 (dark gray).
+    // Do the same with 'indoor' markers.
     function getMedian(markers) {
         markers.sort(function(a,b) {                        // first sort, lowest first
             let y1 = a.options.mSvph;
@@ -262,7 +267,7 @@ $(document).ready(function() {
             }
             return 0;
         });
-        console.log(markers);
+//        console.table(markers);
         let i=0;                                            // now find the 'offlines' (mSvph == -1)
         for(i=0; i<markers.length; i++) {
             if(markers[i].options.mSvph != -1) {
@@ -351,18 +356,22 @@ $(document).ready(function() {
             if ((x.name != "Si22G") && showOnlySi22G) {
                 continue;
             }
+            if ((x.cpm == -2) && (curSensor == -1)) {
+                continue;
+            }
             let value = parseInt(x.cpm);
             let uSvph = value < 0 ? -1 : value / 60 * sv_factor[x.name];
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
-                    iconUrl: buildIcon(getColor(x.name,uSvph)),
+                    iconUrl: buildIcon(x.indoor == 1 ? '#87CEEB' : getColor(x.name,uSvph)),
                     iconSize: [35, 35]
                 }),
                 value: value,
                 mSvph: uSvph,
                 url: '/' + x.id,
                 rohr: x.name,
+                indoor: x.indoor,
                 lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
 
             });
@@ -387,11 +396,26 @@ $(document).ready(function() {
      function getPopUp(marker,addr) {
         clickedSensor = marker.options.name;
 
-        let popuptext = '<div id="popuptext"><div id="infoTitle"><h4>Sensor: ' + clickedSensor + '</h4></div>' +
-            '<div><h6>' + marker.options.rohr + '</h6></div>' +
-            '<div id="infoaddr">' + addr + '</div>' +
-            '<div id="infoTable">' +
-            '<table><tr>';
+
+             let popuptext =
+            `
+            <div id="popuptext">
+                <div id="infoTitle">
+                    <h4>Sensor: ${clickedSensor}</h4>
+                </div>
+                <div>
+                    <h6>${marker.options.rohr}</h6>
+                </div>
+                <div id="infoaddr">
+                    ${addr}
+                </div>
+                <div id="indoor">
+                    ${marker.options.indoor==1 ? 'indoor' : ''}
+                </div>    
+                <div id="infoTable">
+                    <table>
+                        <tr>
+            `
         if (marker.options.value < 0) {
             popuptext += '<td colspan="2" style="text-align:center;"><span style="color:red;font-size:130%;">offline</span></td></tr>' +
                 '<tr><td>Last seen:</td><td>' + marker.options.lastseen + '</td>';
@@ -648,6 +672,8 @@ $(document).ready(function() {
         $('#overlay').hide();
         $('#btnset').hide();
         grafikON = false;
+        $('#placeholderBME').hide();
+        $('#placeholder_FS1').hide();
     });
 
 
@@ -740,10 +766,10 @@ $(document).ready(function() {
             PlotMonth_Geiger(d1, live);
         } else {
             PlotDayWeek_Geiger(what, d1, start, live);
+            $('#placeholder_FS1').show();
             if(d1.climate.length != 0) {
                 PlotDayWeek_BME280(what, d1, start, live);
-            } else {
-                $('#placeholderBME').hide();
+                $('#placeholderBME').show();
             }
         }
     }

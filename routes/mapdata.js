@@ -66,13 +66,12 @@ router.get('/getaktdata/', function (req, res) {
     try {
         collection.find(loc)                                                 // find all data within map borders (box)
             .toArray(function (err, docs) {
-                console.log("getaktdata: data fetched, length=",docs.length);
-                //        console.log(docs);
                 if (docs == null) {
                     console.log("getaktdata: docs==null");
                     res.json({"avgs": [], "lastDate": null});
                     return;
                 }
+                console.log("getaktdata: data fetched, length=",docs.length);
                 for (var i = 0; i < docs.length; i++) {
                     var item = docs[i];
 
@@ -83,14 +82,14 @@ router.get('/getaktdata/', function (req, res) {
                     oneAktData['id'] = item._id;                                // ID des Sensors holen
                     oneAktData['lastSeen'] = item.values.datetime;
                     oneAktData['name'] = item.name.substring(10);
-
- //                   console.log(oneAktData);
+                    oneAktData['indoor'] = item.indoor;
+//                    console.log(oneAktData);
 
                     var dati = item.values.datetime;
                     var dt = new Date(dati);
-                    if ((now - dt) >= 31 * 24 * 3600 * 1000) {                            // älter als 1 Monat ->
+                    if ((now - dt) >= (7  * 24 * 3600 * 1000)) {                  // älter als 1 Woche ->
                         oneAktData['cpm'] = -2;                                 // -2 zurückgeben
-                    } else if ((now - dt) >= 3600 * 1000) {                          // älter als 1 Stunde ->
+                    } else if ((now - dt) >= (3600 * 1000)) {                     // älter als 1 Stunde ->
                         oneAktData['cpm'] = -1;                                 // -1 zurückgeben
                     } else {
                         oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen
