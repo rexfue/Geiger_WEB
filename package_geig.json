@@ -1,7 +1,7 @@
 {
   "name": "feinstaub",
-  "version": "2.6.4",
-  "date": "2020-03-02",
+  "version": "2.6.5",
+  "date": "2020-04-17",
   "description": "",
   "main": "geiger-app.js",
   "scripts": {
