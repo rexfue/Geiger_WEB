@@ -555,7 +555,7 @@ select {
 	padding-right: 10px;
 }
 
-#popuptext, #infoaddr{
+#popuptext, #infoaddr, #akwpopuptext{
 	text-align: center;
 }
 

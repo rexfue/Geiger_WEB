@@ -111,6 +111,90 @@ router.get('/getaktdata/', function (req, res) {
     }
 });
 
+// Fetch the actual out of the dbase
+router.get('/getakwdata/', function (req, res) {
+    var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
+    let box = req.query.box;
+    if ((box == "") || (box == undefined)) {
+        console.log("getaktdata: box undefined");
+        res.json({"akws": []});
+        return;
+    }
+    var south = parseFloat(box[0][1]);
+    var north = parseFloat(box[1][1]);
+    var east = parseFloat(box[1][0]);
+    var west = parseFloat(box[0][0]);
+    let st = req.query.start;
+    console.log("getaktdata: S=",south," N=",north," E=",east," W=",west)
+    let poly = [];
+    if(req.query.poly != undefined) {
+        poly = JSON.parse(req.query.poly);
+    }
+    var collection = db.collection('akws');                         // die 'korrelation' verwenden
+    var aktData = [];                                                   // hier die daten sammeln
+    var now = moment();                                                 // akt. Uhrzeit
+    var lastDate = 0;
+    let loc;
+    console.log("getaktdata: now fetching data from DB");
+    if(poly.length != 0) {
+        loc = {
+            location: {
+                $geoWithin: {
+                    $geometry: {
+                        type: "Polygon",
+                        coordinates: [poly],
+                    }
+                }
+
+            }
+        }
+    } else {
+        loc = {
+            location: {
+                $geoWithin: {
+                    $box: [
+                        [west, south],
+                        [east, north]
+                    ]
+                }
+            },
+        }
+    }
+    try {
+        collection.find(loc)                                                 // find all data within map borders (box)
+            .toArray(function (err, docs) {
+                if (docs == null) {
+                    console.log("getaktdata: docs==null");
+                    res.json({"akws": []});
+                    return;
+                }
+                console.log("getaktdata: data fetched, length=",docs.length);
+                for (var i = 0; i < docs.length; i++) {
+                    var item = docs[i];
+
+//                    console.log(item);
+
+                    var oneAktData = {};
+                    oneAktData['location'] = {
+                        type: 'Point',
+                        coordinates: [item.lon, item.lat]
+                    };
+                    oneAktData['name'] = item.Name;
+                    oneAktData['active'] = item.Status == 'aktiv';
+                    oneAktData['start'] = item.Baujahr;
+                    oneAktData['end'] = item.Stillgeleg;
+                    aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
+                }
+                res.json({"akws": aktData});              // alles bearbeitet -> Array senden
+            });
+    }
+    catch(e) {
+        console.log("Problem mit getakwdata", e);
+        res.json({"avgs": []});
+        return;
+    }
+});
+
 router.get('/getStuttgart/', function (req, res) {
     fs.readFile('public/Stuttgart.gpx',function(err,data) {
         res.send(data);
