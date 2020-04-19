@@ -227,6 +227,10 @@ $(document).ready(function() {
 
         await buildMarkers(bounds);
 
+        // let ndMarker = new L.marker(bounds.getCenter(), {opacity: 0.01});
+        // ndMarker.bindTooltip("Leider z.Zt. keine Daten von sensor.community !", {permanent:true, className: "ndmarker", offset: [250,0]});
+        // ndMarker.addTo(map);
+
         map.on('popupopen', function () {
             $('#btnshwgrafic').click(function () {
                 console.log('call Grafik');
@@ -254,7 +258,6 @@ $(document).ready(function() {
     // If there are 'offline' sensors (value == -1) strip them before
     // calculating the median. If there are only offline sensor, return
     // color of value==-1 (dark gray).
-    // Do the same with 'indoor' markers.
     function getMedian(markers) {
         markers.sort(function(a,b) {                        // first sort, lowest first
             let y1 = a.options.mSvph;
@@ -361,10 +364,11 @@ $(document).ready(function() {
             }
             let value = parseInt(x.cpm);
             let uSvph = value < 0 ? -1 : value / 60 * sv_factor[x.name];
+            let curcolor = getColor(x.name,uSvph);
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
-                    iconUrl: buildIcon(x.indoor == 1 ? '#87CEEB' : getColor(x.name,uSvph)),
+                    iconUrl: buildIcon(x.indoor == 1 ? ((curcolor == '#808080') ? curcolor : '#87CEEB') : curcolor),
                     iconSize: [35, 35]
                 }),
                 value: value,
@@ -388,7 +392,11 @@ $(document).ready(function() {
             }
             console.log("addr:", addr);
             marker.bindPopup((e) =>  getPopUp(e,addr)); // and bind the popup text
-            markersAll.addLayer(marker);
+            if(marker.options.value != -2) {
+                markersAll.addLayer(marker);
+            } else {
+                console.log(`Too old Sensor: ${markers.options.name}`);
+            }
         }
         map.addLayer(markersAll);
     }

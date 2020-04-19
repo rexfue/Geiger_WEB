@@ -588,3 +588,8 @@ select {
 	font-weight: bold;
 	text-align:center;
 }
+
+.ndmarker {
+	position: absolute;
+	font-size: 24px;
+}

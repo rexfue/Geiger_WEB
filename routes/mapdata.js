@@ -5,7 +5,6 @@ var router = express.Router();
 var moment = require('moment');
 const axios = require('axios');
 let $ = require('jquery');
-require('../jquery.csv.js');
 var fs = require('fs');
 
 // URL to get coordinates for cities
@@ -88,9 +87,9 @@ router.get('/getaktdata/', function (req, res) {
                     var dati = item.values.datetime;
                     var dt = new Date(dati);
                     if ((now - dt) >= (7  * 24 * 3600 * 1000)) {                  // älter als 1 Woche ->
-                        oneAktData['cpm'] = -2;                                 // -2 zurückgeben
+                        oneAktData['cpm'] = -2;                                   // -2 zurückgeben
                     } else if ((now - dt) >= (3600 * 1000)) {                     // älter als 1 Stunde ->
-                        oneAktData['cpm'] = -1;                                 // -1 zurückgeben
+                        oneAktData['cpm'] = -1;                                   // -1 zurückgeben
                     } else {
                         oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen
                         if (item.values.hasOwnProperty('counts_per_minute')) {
@@ -102,7 +101,7 @@ router.get('/getaktdata/', function (req, res) {
                     }
                     aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
                 }
-                res.json({"avgs": aktData, "lastDate": lastDate});                                              // alles bearbeitet _> Array senden
+                res.json({"avgs": aktData, "lastDate": lastDate});              // alles bearbeitet -> Array senden
             });
     }
     catch(e) {
