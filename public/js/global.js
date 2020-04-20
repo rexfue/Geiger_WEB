@@ -528,7 +528,7 @@ $(document).ready(function() {
                 icon: new L.Icon({
                     iconUrl: buildAKWIcon(color),
                     iconSize: [40, 40],
-                    iconAnchor: [0,40]
+                    iconAnchor: [10,40]
                 })
             });
             marker.bindPopup((e) => getAKWPopUp(e));
@@ -537,14 +537,11 @@ $(document).ready(function() {
     }
 
     function buildAKWIcon(color) {
+
         let akwIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">' +
-            '<rect width="100" height="550" fill="' + color +'"/>' +
-            '<rect x="150" y="300" width="500" height="250" fill="' + color +'"/>' +
-            '<circle cx="400" cy="300" r="250" fill="' + color +'"/>' +
-            '<rect x="100" y="500" width="100" height="50" fill="' + color +'"/>'
-            // '<path stroke="#000" stroke-width="1" fill="' + color +
-            // '" d="M 0 0 v -500 h 100 v 500 z"/>';
-        akwIcon += '</svg>';
+            '<path fill="' + color + '" stroke="black" stroke-width="5"  ' +
+            'd="M 10 0 v 600 h 650 v -250 a 250 250 0 0 0 -500 0 v 200 h -50 v -550 z" />' +
+            '</svg>';
         let akwIconUrl = encodeURI("data:image/svg+xml," + akwIcon).replace(new RegExp('#', 'g'), '%23');
         return akwIconUrl;
     }
@@ -556,9 +553,12 @@ $(document).ready(function() {
             <h5>${marker.options.name}</h5>
             <br />
             Baujahr: ${marker.options.baujahr}<br />
-            Stillgelegt: ${still}
-        </div>
         `;
+        if (marker.options.stillgelegt !=0 ) {
+            popuptxt +=
+                `Stillgelegt: ${marker.options.stillgelegt}`
+        };
+        popuptxt += '</div>';
         return popuptxt;
     }
 // ********************************************************************************
