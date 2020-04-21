@@ -1,0 +1,75 @@
+<h3 id="toc_1">Allgemein</h3>
+
+<p>Auf der Karte wird jede Zählstation mit dem Radioaktivitäts-Symbol angezeigt. Die Farbe des Symbols ändert sich mit der Zählrate, der Zusammenhang ist rechts oben in der Legende dargestellt.<br>
+    Hat der Sensor seit mind. 1 Stunde keine Daten mehr gesendet, so wird er dunkelgrau eingefärbt. Hat er über eine Woche nicht gesendet, wird er nicht mehr dargestellt.<br>
+    Die Karte ist standardmäßig auf Stuttgart ausgerichtet. Wenn der Aufruf der Webseite mit einer Stadt erfolgt (z.B: <a href="https://multigeiger.citysensor.de/Berlin">https://multigeiger.citysensor.de/Berlin</a>),
+    so wird die Karte auf diese Stadt zentriert. <br />
+    Wird statt dessen eine Sensornummer angegeben, so wird die Karte auf diesen Sensor zentriert und gleich die zugehörige Grafik angezeigt
+    (z.B. für den Sensor Nr. 34188 ist der Aufruf dann: <a href="https://multigeiger.citysensor.de/34188">https://multigeiger.citysensor.de/34188</a>).
+</p>
+
+<h3 id="toc_2">Bedienelemente</h3>
+
+<ul>
+    <li>Die Karte kann mit dem Mausrad oder den  beiden Knöpfen <strong>+/-</strong> in der linken obere Ecke ein- und ausgezoomed werden.</li>
+    <li>Mit gedrückter Maustaste läßt sich die Karte verschieben.</li>
+</ul>
+
+<p>Über der Karte befindet sich die Navigationsleiste  mit folgenden Knöpfen/Eingabefeldern:</p>
+
+<ul>
+    <li><strong>Zählrohre</strong><br>
+        Damit wird umgeschaltet, ob <strong>alle</strong> Sensoren oder nur die Sensoren, die ein <strong>Si22G</strong>-Zählrohr haben, angezeigt werden.</li>
+    <li><strong>Legende</strong><br>
+        Damit wird die Legende ein- oder und ausgeblendet.
+    <li><strong>Ort oder Sensornummer suchen</strong><br>
+        In dieses Eingabefeld kann ein Ort oder eine Sensornummer eingegeben werden. Die Karte wird dann darauf zentriert.</li>
+    <li><strong>Info</strong><br>
+        Es erscheint diese Info-Seite.</li>
+</ul>
+
+<p>Ein Klick auf das Radioaktivitäts-Symbol bringt eine Info-Tafel zur Anzeige. Auf dieser Tafel stehen folgende Informationen:</p>
+
+<ul>
+    <li>Sensor-Nummer</li>
+    <li>Typ des Zählrohres</li>
+    <li>Adresse des Sensors (falls in der Datenbank vorhanden)</li>
+    <li>Aktueller Messwert in cpm (Impulse pro Minute) und µSv/h (Micro-Sievert pro Stunde)</li>
+    <li>Link <strong>Grafik anzeigen</strong></li>
+</ul>
+<p>
+    Außer den Sensoren werden auch die <b>Kernkraftwerke (AKW)</b> angezeigt. Aktive AKWs werden scharz, sillgelegte werden grau dargestellt.
+</p>
+<p>
+    Ein Klick auf ein AKW-Symbol bringt eine kleine Info-Tafel mit folgenden Daten zur Anzeige:
+</p>
+<ul>
+    <li>Name des Kraftwerkes</li>
+    <li>Baujahr</li>
+    <li>Datum der Stilllegung (falls das AKW stillgelegt ist)</li>
+</ul>
+<p>Quellen: <br />Die Daten für die Kerkraftwerke stammen
+    aus folgenden Quellen:
+<ul>
+<li><a href="https://de.wikipedia.org/wiki/Liste_der_Kernkraftwerke">Wikipedia</a>(Liste der Kernkraftwerke)</li>
+<li><a href="https://de.wikipedia.org/wiki/Kernenergie_nach_Ländern">Wikipedia</a>(Kernenergie nach Ländern)</li>
+<li><a href="https://pris.iaea.org/pris/">Power Reactor Information System</a>(aktuelle Infos zu AKWs weltweit)</li>
+<li><a href="https://atomkraftwerkeplag.wikia.org/de/wiki/Atomausstiegselbermachen_Wiki">AtomkraftwerkePlag</a>(Rechercheplattform zur Atomenergie)</li>
+</ul>
+<p>Besten Dank an <a href="https://www.ralf-wessels.de">Ralf Wessels</a>, der die Daten gesammelt und zur Verfügung gestellt hat.
+</p>
+</p>
+
+
+<h3 id="toc_3">Grafik</h3>
+
+<p>Durch Klick auf <strong>Grafik anzeigen</strong> öffnet sich ein Fenster, das den Verlauf der letzten 24 Stunden anzeigt.
+    Die angezeigten Werte sind jeweils der Mittelwert über 10min.<br>
+    Über die Knöpfe <strong>-24h -12h +12h +24h</strong> kann der Zeitstrahl um die jeweilige Anzahl an Stunden verschoben werden.<br />
+    Der Knopf <strong>live</strong> schaltet wieder auf den Live-Mode um, d.h. es werden wieder die Daten der letzten 24 Stunden angezeigt.<br>
+    Über den Knopf <strong>7d</strong> kann der Verlauf einer ganzen Woche betrachtet werden.
+    Auch hier kann der Zeitstrahl verschoben werden, und zwar um 3 bzw. 7 Tage.
+    Außerdem kann über den <strong>Einstellung</strong>-Knopf festgelegt werden, über welchen Zeitraum die Werte gemittelt werden
+    und ob eine gleitende oder statische Mittelwertbildung durchgeführt werden soll.<br>
+    Über den Knopf <strong>30d</strong> wird die Darstellung der Tagesmittelwerte jeden Tages der letzten 30 Tage als Balken-Diagramm angezeigt.<br>
+    Durch Klick auf den Knopf <strong>Ende</strong> wird die Grafik verlassen.</p>

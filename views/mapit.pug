@@ -6,6 +6,9 @@ block content
         var startday='#{stday}';
         var csid = '#{csensor}';
         var fzoom = '#{zoom}';
+        const curversion = '#{version}'
+        const splash = '#{splash}';
+
 
     header
     nav.navbar.navbar-expand-sm.navbar-light.navbg
@@ -68,4 +71,18 @@ block content
                     button.close(type="button" data-dismiss="modal") &times;
                 .modal-body
                 .modal-footer
-                    button.btn.btn-default(type="button" data-dismiss="modal") Close
+                    button.btn.btn-default(type="button" data-dismiss="modal") Schließen
+
+    <!-- Modal Dialog -->
+    #splashModal.modal.fade(role="dialog")
+        .modal-dialog.modal-lg(role="document")
+            <!-- Modal content-->
+            .modal-content
+                .modal-header
+                    h4#modalTitle.modal-title
+                    button.close(type="button" data-dismiss="modal") &times;
+                .modal-body
+                .modal-footer
+                    input#splashCheck(type="checkbox")
+                    label#splashChecklabel(for='splashCheck') Nicht mehr anzeigen
+                    button.btn.btn-default(type="button" data-dismiss="modal") Schließen

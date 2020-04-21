@@ -39,6 +39,9 @@ $(document).ready(function() {
     let faktor;
 
 
+    let showSplashScreen = true;
+    let splashVersion;
+
     let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
     let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
     let cpms = [1482, 741, 296, 148, 74, 30, 0, -999];
@@ -78,6 +81,10 @@ $(document).ready(function() {
         }
     }
 
+    // call with url ....?splash=true
+    if(splash=='true') {
+        localStorage.setItem('geiger_splashscreen',"0");
+    }
 
     let butOpts = [
         {fill: 'lightblue', r: 2},
@@ -100,7 +107,6 @@ $(document).ready(function() {
 
 // Start with plotting the map
     plotMap(curSensor, startcity);
-
 
 // ********************************************************************************
 // MAP
@@ -736,6 +742,11 @@ $(document).ready(function() {
             movingAVG = movAVG == 'true' ? true : false;
         }
         console.log("MovAVG:", movingAVG);
+        let splash = localStorage.getItem('geiger_splashscreen');
+        if (splash != null) {
+            splashVersion = splash;
+        }
+        console.log("SplashScreen:", splashVersion);
     }
 
     getLocalStorage();
@@ -755,6 +766,26 @@ $(document).ready(function() {
 //        $('#average').selectmenu();
     }
 
+// if enabled, show splash screen
+    if (showSplashScreen) {
+        if (splashVersion != curversion) {                        // curversion comes from index.js (package.json)
+            $('#modalTitle').html("Neue Version");
+            $('.modal-body').load("fsdata/splash", function () {
+                $('.modal-body').removeClass('text-danger');
+                $('#splashModal').modal({show: true, focus: true});
+                $('#splashModal').on('hidden.bs.modal', function () {
+                    let sp = $('#splashCheck');
+                    if (sp[0].checked) {
+                        console.log("Checked");
+                        localStorage.setItem('geiger_splashscreen', curversion);
+                    } else {
+                        console.log("NOT Checked");
+                    }
+                });
+            });
+        }
+        ;
+    }
 
 
 // ************** Event-Handler **************

@@ -593,3 +593,8 @@ select {
 	position: absolute;
 	font-size: 24px;
 }
+
+#splashChecklabel {
+	margin-top: 9px;
+	font-size: 110%;
+}

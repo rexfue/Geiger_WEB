@@ -92,6 +92,10 @@ geigerApp.get('/fs/fsdata/help', function(req, res, next) {
 	  res.sendFile(__dirname+'/public/info.html');
 	});
 
+geigerApp.get('/fs/fsdata/splash', function(req, res, next) {
+    res.sendFile(__dirname+'/public/splash.html');
+});
+
 geigerApp.get('/fs/fsdata/setting', function(req, res, next) {
     res.sendFile(__dirname+'/public/settings.html');
 });

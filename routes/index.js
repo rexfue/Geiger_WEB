@@ -27,7 +27,8 @@ router.get('/', function(req, res, next) {
         showAllMap: req.query.mall,
         csensor: req.query.sid,
         zoom:req.query.zoom,
-        stype: tit
+        stype: tit,
+        splash: req.query.splash == 'true',
     });
 });
 
@@ -47,6 +48,7 @@ router.get('/:nam', function(req, res, next) {
             stday: req.query.stday,
             zoom:req.query.zoom,
             csensor: name,
+            splash: req.query.splash == 'true',
     		name: 'map'});
     }
 });
