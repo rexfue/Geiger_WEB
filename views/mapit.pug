@@ -17,16 +17,28 @@ block content
         #navbarSupportContent.collapse.navbar-collapse
             ul.navbar-nav.mr-auto
                 .btn-group
-                    button.btn.btn-success.mybuttons  Zählrohre
+                    button.btn.btn-success.mybuttons  Anzeigen
                     button.btn.btn-success.mybuttons.dropdown-toggle.dropdown-toggle-split(type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-                        span.sr-only Zählrohre
+                        span.sr-only Anzeigen
                     .dropdown-menu(aria-labelledby="dropdownMenu2")
-                        .custom-control.custom-radio.ml-3
-                            input.custom-control-input.btnrohr#btnall(type="radio" value="all" name="rohre" checked)
-                            label.custom-control-label(for="btnall") Alle Zählrohre anzeigen
-                        .custom-control.custom-radio.ml-3
-                            input.custom-control-input.btnrohr#btnsig(type="radio" value="sig" name="rohre")
-                            label.custom-control-label(for="btnsig") nur Si22G anzeigen
+                        .dropdown-header Zählrohre
+                            .custom-control.custom-radio.ml-3
+                                input.custom-control-input.btnrohr#btnall(type="radio" value="all" name="rohre" checked)
+                                label.custom-control-label(for="btnall") Alle Zählrohre anzeigen
+                            .custom-control.custom-radio.ml-3
+                                input.custom-control-input.btnrohr#btnsig(type="radio" value="sig" name="rohre")
+                                label.custom-control-label(for="btnsig") nur Si22G anzeigen
+                        .dropdown-divider
+                        .dropdown-header Kraftwerke
+                            .custom-control.custom-radio.ml-3
+                                input.custom-control-input.btnakw#btnakwno(type="radio" value="no" name="akws" checked)
+                                label.custom-control-label(for="btnakwno") keine Kraftwerke anzeigen
+                            .custom-control.custom-radio.ml-3
+                                input.custom-control-input.btnakw#btnakwact(type="radio" value="activ" name="akws")
+                                label.custom-control-label(for="btnakwact") nur aktive anzeigen
+                            .custom-control.custom-radio.ml-3
+                                input.custom-control-input.btnakw#btnakwall(type="radio" value="all" name="akws")
+                                label.custom-control-label(for="btnakwall") alle Kraftwerke anzeigen
             ul.navbar-nav
                     button.btn.btn-success.ml-4.mybuttons#btnlegende Legende
                     .input-wrapper

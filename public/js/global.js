@@ -21,7 +21,7 @@ $(document).ready(function() {
     let ymax_geig = 100;
 
     var map;
-    let firstZoom = 11;
+    let firstZoom = 8;
     const MAXZOOM = 17;
     let useStgtBorder = false;
     let popuptext = "";
@@ -37,9 +37,11 @@ $(document).ready(function() {
 
     let showOnlySi22G = false;
     let faktor;
+    let showAKWs = 0;                       // 0 -> no, 1 -> only active, 2  -> all
 
 
-    let showSplashScreen = true;
+
+    let showSplashScreen = false;
     let splashVersion;
 
     let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
@@ -161,8 +163,25 @@ $(document).ready(function() {
         console.log('btnrohr:',this.value);
     });
 
+    $('.btnakw').click(async function() {
+        if(this.value == 'no') {
+            showAKWs = 0;                                   // don't show AKWs
+        } else if (this.value == 'activ') {
+            showAKWs = 1;                                   // show only actives
+        } else {
+            showAKWs = 2;                                   // show all
+        }
+        bounds = map.getBounds();
+        await buildAKWs(bounds);
+        console.log('btnawk:',this.value);
+    });
+
+
 
     async function plotMap(cid, city) {
+        let allAKWs = L.layerGroup();
+        let activeAKWs = L.layerGroup();
+
         let pos;
         // if sensor nbr is giveen, find coordinates, else use Stuttgart center
         let myLatLng;
@@ -232,7 +251,8 @@ $(document).ready(function() {
             fetchStuttgartBounds();
         }
 
-        await buildAKWs(bounds);
+        await buildAKWs(bounds,allAKWs,true);
+        await buildAKWs(bounds,activeAKWs,false);
         await buildMarkers(bounds);
 
         // let ndMarker = new L.marker(bounds.getCenter(), {opacity: 0.01});
@@ -250,13 +270,15 @@ $(document).ready(function() {
                 }
             });
         });
-    // map.on('click', function (e) {
-    //     $('#overlay').hide();
-    //     grafikON = false;
-    // });
+
         if(cid != -1) {
             showGrafik(cid);
         }
+        let overlays = {
+            "Alle Kraftwerke":allAKWs,
+            "nur aktive": activeAKWs
+        }
+        L.control.layers(overlays.addTo(map);
     }
 
 
@@ -278,7 +300,6 @@ $(document).ready(function() {
             }
             return 0;
         });
-//        console.table(markers);
         let i=0;                                            // now find the 'offlines' (mSvph == -1)
         for(i=0; i<markers.length; i++) {
             if(markers[i].options.mSvph != -1) {
@@ -384,9 +405,11 @@ $(document).ready(function() {
                 url: '/' + x.id,
                 rohr: x.name,
                 indoor: x.indoor,
-                lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm')
+                lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm'),
 
             });
+            let pos = map.latLngToLayerPoint(marker.getLatLng()).round();
+            marker.setZIndexOffset(100 - pos.y);
             let addr = "Adresse";
             try {
                 let ret = await $.get("api/getprops?sensorid=" +x.id);
@@ -490,7 +513,7 @@ $(document).ready(function() {
      *
      * fetch data for all nuclear power plants and show
      * them on the map.
-     * use red color for active and gray color for inactive
+     * use blackcolor for active and gray color for inactive
      * plants.
      *
      * params:
@@ -498,7 +521,14 @@ $(document).ready(function() {
      * return:
      *      all npp plotted on map
      *******************************************************/
-    async function buildAKWs(bound) {
+    async function buildAKWs(bound,layer,what) {
+        let akwLayer = L.layerGroup();
+        if(showAKWs == 0) {
+            if (akwLayer != null) {
+                akwLayer.clearLayers();
+            }
+            return;
+        }
         let count = 3;
         let kraftwerke = [];
         while (count != 0) {
@@ -519,12 +549,10 @@ $(document).ready(function() {
             return;                     // ****** <<<< Fehler meldung rein
         }
         let akws = kraftwerke.akws;
-        let akwIcon = L.icon ({
-            iconUrl: 'images/akw1.svg',
-            iconSize: [150,150],
-
-        });
         for (let akw of akws) {
+            if ((showAKWs == 1) && !akw.active) {
+                continue;
+            }
             console.log("akw: ",akw.name);
             let color = akw.active ? 'black' : 'gray';
             let marker = L.marker([akw.location.coordinates[1], akw.location.coordinates[0]], {
@@ -533,13 +561,16 @@ $(document).ready(function() {
                 stillgelegt: akw.end,
                 icon: new L.Icon({
                     iconUrl: buildAKWIcon(color),
-                    iconSize: [40, 40],
-                    iconAnchor: [10,40]
-                })
+                    iconSize: [30,30],
+                    iconAnchor: [15,15]
+                }),
+                zIndexOffset: -1000,
+                class: 'akwmarker'
             });
             marker.bindPopup((e) => getAKWPopUp(e));
-            marker.addTo(map);
+            marker.addTo(akwLayer);
         }
+        akwLayer.addTo(map);
     }
 
     function buildAKWIcon(color) {
@@ -560,9 +591,14 @@ $(document).ready(function() {
             <br />
             Baujahr: ${marker.options.baujahr}<br />
         `;
-        if (marker.options.stillgelegt !=0 ) {
+        const thisYear = moment().year();
+        const stillgelegt = marker.options.stillgelegt;
+        if ((stillgelegt < thisYear ) && (stillgelegt > 0)){
             popuptxt +=
                 `Stillgelegt: ${marker.options.stillgelegt}`
+        } else if (stillgelegt >= thisYear) {
+            popuptxt +=
+                `Stilllegung: ${marker.options.stillgelegt} (geplant)`
         };
         popuptxt += '</div>';
         return popuptxt;
