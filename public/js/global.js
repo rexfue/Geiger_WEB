@@ -278,7 +278,7 @@ $(document).ready(function() {
             "Alle Kraftwerke":allAKWs,
             "nur aktive": activeAKWs
         }
-        L.control.layers(overlays.addTo(map);
+        L.control.layers(null,overlays).addTo(map);
     }
 
 
@@ -426,7 +426,7 @@ $(document).ready(function() {
             if(marker.options.value != -2) {
                 markersAll.addLayer(marker);
             } else {
-                console.log(`Too old Sensor: ${markers.options.name}`);
+                console.log(`Too old Sensor: ${marker.options.name}`);
             }
         }
         map.addLayer(markersAll);
