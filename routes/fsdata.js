@@ -21,7 +21,7 @@ router.get('/getfs/:week', function (req, res) {
     let movingAvg = (req.query.moving=='true');
 
     if (week == 'oneday') {
-        getDayWeekData(db, sid, st, 10, live, false, 1)
+        getDayWeekData(db, sid, st, avg, live, movingAvg, 1)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
         getDayWeekData(db, sid, st, avg, live, movingAvg, 7)

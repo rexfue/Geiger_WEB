@@ -11,7 +11,7 @@ $(document).ready(function() {
     var korrelation = {};
     var kopf = 'Radioaktivitäts-Messung';
     var avgTime = 30;						// defaul average time für particulate matter
-    var avgTable = [0, 30, 60, 180, 360, 720, 1440];
+    var avgTable = [0, 10, 30, 60, 180, 360, 720, 1440];
     var specialDate = "";					// extra for 'Silvester'
     var doUpdate = true;					// update every 5 min
     var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
@@ -172,14 +172,14 @@ $(document).ready(function() {
             showAKWs = 2;                                   // show all
         }
         bounds = map.getBounds();
-        await buildAKWs(bounds);
+//        await buildAKWs(bounds);
         console.log('btnawk:',this.value);
     });
 
 
 
     async function plotMap(cid, city) {
-        let allAKWs = L.layerGroup();
+        let decomAKWs = L.layerGroup();
         let activeAKWs = L.layerGroup();
 
         let pos;
@@ -212,7 +212,7 @@ $(document).ready(function() {
         map.on('moveend', async function () {
             bounds = map.getBounds();
             polygon = calcPolygon(bounds);
-            await buildAKWs(bounds);
+//            await buildAKWs(bounds);
             await buildMarkers(bounds);
         });
 
@@ -251,8 +251,8 @@ $(document).ready(function() {
             fetchStuttgartBounds();
         }
 
-        await buildAKWs(bounds,allAKWs,true);
-        await buildAKWs(bounds,activeAKWs,false);
+        await buildAKWs(bounds,activeAKWs,true);
+        await buildAKWs(bounds,decomAKWs,false);
         await buildMarkers(bounds);
 
         // let ndMarker = new L.marker(bounds.getCenter(), {opacity: 0.01});
@@ -275,10 +275,10 @@ $(document).ready(function() {
             showGrafik(cid);
         }
         let overlays = {
-            "Alle Kraftwerke":allAKWs,
-            "nur aktive": activeAKWs
+            "Aktive Kraftwerke": activeAKWs,
+            "stiilgelegte Kraftwerke": decomAKWs
         }
-        L.control.layers(overlays.addTo(map);
+        L.control.layers(null,overlays).addTo(map);
     }
 
 
@@ -422,20 +422,30 @@ $(document).ready(function() {
                 console.log("onMarker - getpops", e)
             }
             console.log("addr:", addr);
-            marker.bindPopup((e) =>  getPopUp(e,addr)); // and bind the popup text
+            marker.bindPopup((e) =>  getPopUp(e),addr); // and bind the popup text
             if(marker.options.value != -2) {
                 markersAll.addLayer(marker);
             } else {
-                console.log(`Too old Sensor: ${markers.options.name}`);
+                console.log(`Too old Sensor: ${marker.options.name}`);
             }
         }
         map.addLayer(markersAll);
     }
 
-     function getPopUp(marker,addr) {
+     async function getPopUp(marker,addr) {
         clickedSensor = marker.options.name;
-
-
+         // let addr = "Adresse";
+         // try {
+         //     let ret = await $.get("api/getprops?sensorid=" + clickedSensor);
+         //     if(ret.values[0].address.plz == null) {
+         //         addr += " unbekannt !"
+         //     } else {
+         //         addr = ret.values[0].address.street + "&nbsp;&nbsp;" + ret.values[0].address.plz + " " + ret.values[0].address.city;
+         //     }
+         // } catch (e) {
+         //     console.log("onMarker - getpops", e)
+         // }
+         // console.log("addr:", addr);
              let popuptext =
             `
             <div id="popuptext">
@@ -522,13 +532,6 @@ $(document).ready(function() {
      *      all npp plotted on map
      *******************************************************/
     async function buildAKWs(bound,layer,what) {
-        let akwLayer = L.layerGroup();
-        if(showAKWs == 0) {
-            if (akwLayer != null) {
-                akwLayer.clearLayers();
-            }
-            return;
-        }
         let count = 3;
         let kraftwerke = [];
         while (count != 0) {
@@ -550,10 +553,10 @@ $(document).ready(function() {
         }
         let akws = kraftwerke.akws;
         for (let akw of akws) {
-            if ((showAKWs == 1) && !akw.active) {
+            if (!((!what && !akw.active) || (what && akw.active))) {
                 continue;
             }
-            console.log("akw: ",akw.name);
+            console.log("akw: ", akw.name);
             let color = akw.active ? 'black' : 'gray';
             let marker = L.marker([akw.location.coordinates[1], akw.location.coordinates[0]], {
                 name: akw.name,
@@ -561,16 +564,15 @@ $(document).ready(function() {
                 stillgelegt: akw.end,
                 icon: new L.Icon({
                     iconUrl: buildAKWIcon(color),
-                    iconSize: [30,30],
-                    iconAnchor: [15,15]
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
                 }),
                 zIndexOffset: -1000,
                 class: 'akwmarker'
             });
             marker.bindPopup((e) => getAKWPopUp(e));
-            marker.addTo(akwLayer);
+            marker.addTo(layer);
         }
-        akwLayer.addTo(map);
     }
 
     function buildAKWIcon(color) {
@@ -850,7 +852,7 @@ $(document).ready(function() {
         if (!((button == 'day') || (button == 'week') || (button == 'month'))) {
             return;
         }
-        if (button == 'week') {
+        if (button != 'month') {
             $('#btnset').show();
         } else {
             $('#btnset').hide();
@@ -936,7 +938,7 @@ $(document).ready(function() {
     //	doPlot
     //	Fetch relevant data from the server and plot it
 
-    function doPlot(what, start, props) {								// if 'start' not defined,
+    async function doPlot(what, start, props) {								// if 'start' not defined,
 		console.log("doPlot");
         $('placeholderFS_1').html("");
         $('placeholderBME').html("");
@@ -959,14 +961,34 @@ $(document).ready(function() {
             moving: movingAVG,
         };
         faktor = sv_factor[props.name.substring(10)];
-        $.getJSON(url, callopts, function (data1, err) {				// AJAX Call
+        try {
+        let data1 = await  $.getJSON(url, callopts);
+        if (what == 'oneday') {
+            callopts.avgTime = 1;
+            let data2 = await $.getJSON(url, callopts)
+            data1.radiation1 = data2.radiation;
+        }
+/*        $.getJSON(url, callopts, function (data1, err) {				// AJAX Call
             if (err != 'success') {
                 alert("Fehler <br />" + err);						// if error, show it
             } else {
-                startPlot(what, data1, null,  st, live);
+                if (what == 'oneday') {
+                    callopts.avgTime = 1;
+                    $.getJSON(url, callopts, function (data2, err) {				// AJAX Call
+                        if (err != 'success') {
+                            alert("Fehler <br />" + err);						// if error, show it
+                        } else {
+                            data1.radiation1 = data2.radiation;
+                        }
+                    });
+                }
+*/
+            startPlot(what, data1, null,  st, live);
             }
-        });
-    }
+            catch(e) {
+                console.log(e);
+            }
+        }
 
 
     //	**************** PLOT *********************************************
@@ -1399,15 +1421,24 @@ $(document).ready(function() {
 
         // Put values into the arrays
         var cnt = 0;
+        let data1 = null;
         var data = datas.radiation.values;
         let sensor = {sid:datas.radiation.sid, name:datas.radiation.sname}
-
+        if (datas.radiation1 != undefined) {
+            data1 = datas.radiation1.values;
+        }
         if (data.length != 0) {
             $.each(data, function (i) {
                 var dat = new Date(this._id).getTime();
-                series1.push([dat, this.uSvphAvg])
+                series2.push([dat, this.uSvphAvg])
                 mx.push(this.uSvphAvg);
             });
+            if ((data1 != null) && (data1.length != 0)) {
+                $.each(data1, function (i) {
+                    var dat = new Date(this._id).getTime();
+                    series1.push([dat, this.uSvphAvg])
+                });
+            }
 
             if (what == 'oneday') {
                 // Aktuelle Werte speichern
@@ -1435,15 +1466,34 @@ $(document).ready(function() {
         // Plot-Options
         var options = createGlobObtions();
 
-        var series_uSvph = {
-            name: 'µSv pro Stunde',
-            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
-            data: series1,
-            color: (what == 'oneweek') ? 'green' : 'red',
+        var series_mavg = {
+            name: 'Mittelwert',
+//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
+            type: 'spline',
+            data: series2,
+            color: 'green',
             yAxis: 0,
             zIndex: 1,
             marker: {
-                enabled: what == 'oneweek' ? false : true,
+//                enabled: what == 'oneweek' ? false : true,
+                enabled: false,
+                symbol: 'circle',
+            },
+            visible: true,
+        };
+
+        var series_uSvph = {
+            name: 'µSv pro Stunde',
+//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
+            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'line',
+            data: series1,
+            color: (what == 'oneweek') ? 'green' : '#9FE8D1',
+            yAxis: 0,
+            zIndex: 1,
+            marker: {
+//                enabled: what == 'oneweek' ? false : true,
+                enabled: false,
+                radius: 2,
                 symbol: 'circle',
             },
             visible: true,
@@ -1458,8 +1508,8 @@ $(document).ready(function() {
                     color: 'red'
                 }
             },
-            min: 0,
-            max: maxy.maxY,
+//            min: 0,
+//            max: maxy.maxval,
 //            tickAmount: 11,
             useHTML: true,
         },{
@@ -1503,7 +1553,7 @@ $(document).ready(function() {
         options.series = [];
         options.yAxis = [];
         options.series[0] = series_uSvph;
-//        options.series[1] = series_LAMin;
+        options.series[1] = series_mavg;
         options.title.text = 'Strahlung über einen Tag';
         options.subtitle.text = 'Impulse pro Minute (Mittelwert über jeweils 10min)';
 //        options.series[2] = series_LAMax;

@@ -54,8 +54,8 @@ async function checkHost(req, res, next) {
     let uri = req.url.substr(3);
     let city = "unknown";
     let dbs = geigerApp.get('dbase');
-    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
-    {
+//    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
+    if (isNaN(uri.substring(1))) {
         city = await apidatas.api.getCity(dbs, parseInt(uri.substring(1)));
     }
 
