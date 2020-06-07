@@ -30,6 +30,7 @@ geigerApp.use(express.static("public"));
 geigerApp.use(express.static("node_modules/bootstrap/dist"));
 geigerApp.use(express.static("node_modules/jquery/dist"));
 geigerApp.use(express.static("node_modules/moment/min"));
+geigerApp.use(express.static("node_modules/leaflet/dist"));
 
 let requested;
 async function checkHost(req, res, next) {
@@ -54,8 +55,8 @@ async function checkHost(req, res, next) {
     let uri = req.url.substr(3);
     let city = "unknown";
     let dbs = geigerApp.get('dbase');
-    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
-    {
+//    if (!isNaN(uri.substring(1) - parseInt(uri.substring(1))))
+    if (isNaN(uri.substring(1))) {
         city = await apidatas.api.getCity(dbs, parseInt(uri.substring(1)));
     }
 
@@ -96,8 +97,12 @@ geigerApp.get('/fs/fsdata/splash', function(req, res, next) {
     res.sendFile(__dirname+'/public/splash.html');
 });
 
-geigerApp.get('/fs/fsdata/setting', function(req, res, next) {
-    res.sendFile(__dirname+'/public/settings.html');
+geigerApp.get('/fs/fsdata/settingW', function(req, res, next) {
+    res.sendFile(__dirname+'/public/settingsW.html');
+});
+
+geigerApp.get('/fs/fsdata/settingD', function(req, res, next) {
+    res.sendFile(__dirname+'/public/settingsD.html');
 });
 
 geigerApp.get('/fs/fsdata/statistik', function(req, res, next) {

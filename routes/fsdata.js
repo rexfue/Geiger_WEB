@@ -21,13 +21,13 @@ router.get('/getfs/:week', function (req, res) {
     let movingAvg = (req.query.moving=='true');
 
     if (week == 'oneday') {
-        getDayWeekData(db, sid, st, 10, live, false, 1)
+        getDWMData(db, sid, st, avg, live, movingAvg, 1)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
-        getDayWeekData(db, sid, st, avg, live, movingAvg, 7)
+        getDWMData(db, sid, st, avg, live, movingAvg, 7)
             .then(erg => res.json(erg));
     } else if (week == 'onemonth') {
-        getDayWeekData(db, sid, st, 1440, false, false, 31)
+        getDWMData(db, sid, st, 1440, false, false, 31)
             .then(erg => res.json(erg));
     } else if (week == 'korr') {
         getSensorProperties(db,sid)
@@ -100,6 +100,7 @@ async function getSensorProperties(db,sid) {
     properties.othersensors = sensorEntries;
     return properties;
 }
+
 
 async function readRadiationMovingAverage(db, sid, start, end, average, factor) {
     let docs = [];
@@ -202,9 +203,9 @@ function calcTimeRange(st, range, live, avg) {
         }
     } else if (range == 7) {                                // one week (7 days)
         if (live == true) {
-            start.subtract(24 * 7, 'h');
+            start.subtract(24 * 8, 'h');
         } else {
-            start.subtract(24 * 7, 'h');
+            start.subtract(24 * 8, 'h');
 //            end.add(24 * 7, 'h');
             console.log(start.format(), end.format());
         }
@@ -212,13 +213,16 @@ function calcTimeRange(st, range, live, avg) {
         start=start.startOf('day');
         end = end.startOf('day');
         start.subtract(33, 'd');
-        end.subtract(1,'d');                    // plot until 'yesterday'
+    } else if (range == 48) {                               // 48 hours
+        if(live == true) {
+            start.subtract(48, 'h')
+        }
     }
     return { start: start, end: end };
 }
 
-// Daten für einen Tag aus der Datenbank holen
-async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
+// get data for one day, one week or one month from the database
+async function getDWMData(db, sensorid, st, avg, live, doMoving, span) {
         let docs = [];
         let ret = {radiation: [], climate: []};
         // first fetch properties for this sensor
@@ -236,9 +240,9 @@ async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
                     } else {
                         docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
                     }
-//                    if (docs.length != 0) {
-                        ret['radiation'] = {sid: sid, sname: sname, values: docs};
-//                    }
+                    timerange = calcTimeRange(st, 48, true, avg);
+                    let avg48_docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, 2880, factor);
+                    ret['radiation'] = {sid: sid, sname: sname, avg48: avg48_docs[0], values: docs};
                 } else if (sname == "BME280") {
                     docs = await readClimateAverages(db, sid, timerange.start, timerange.end, 10);
                     if (docs.length != 0) {
@@ -253,216 +257,6 @@ async function getDayWeekData(db, sensorid, st, avg, live, doMoving, span) {
         }
         return ret;
 }
-
-/*
-// Daten für eine Woche aus der DB holen
-async function getWeekData(db, sensorid, sensorname, altitude , st, mav, live, domoving) {
-    let docs = [];
-    var start = moment(st);
-    var end = moment(st);
-    var colstr = 'data_' + sensorid;
-    var collection = db.collection(colstr);
-    if (live == true) {
-        if (isPM(sensorname)) {
-            start.subtract(24 * 8, 'h');
-        } else {
-            start.subtract(24 * 7, 'h');
-        }
-    } else {
-        start.subtract(24, 'h');
-        end.add(24 * 7, 'h');
-    }
-    if((sensorname.startsWith("Radiation"))  && !domoving && (mav != 0)) {
-        try {
-            let datRange = {datetime: {$gte: new Date(start), $lt: new Date(end)}};
-//            console.log('datrange:', datRange);
-            docs = await collection.aggregate([
-                // {$project: {
-                //     parts: {
-                //         $dateToParts: {
-                //             date: '$datetime',
-                //             timezone: 'Europe/Berlin'
-                //         }
-                //     }
-                //     }},
-                // {$project: {
-                //     date: {
-                //         $dateFromParts: {
-                //             'year': '$parts.year',
-                //             'month': '$parts.month',
-                //             'day': '$parts.day',
-                //             'hour': '$parts.hour',
-                //             'minute': '$parts.minute',
-                //             'second': '$parts.second',
-                //         }
-                //     }}
-                // },
-                {$sort: {datetime: 1 }},
-                {$match: {datetime: {$gte: new Date(start), $lt: new Date(end)}}},
-                {
-                    $group: {
-                        _id: {
-                            $toDate: {
-                                $subtract: [
-                                    {$toLong: '$datetime'},
-                                    {$mod: [{$toLong: '$datetime'}, 1000 * 60 * mav]}
-                                ]
-                            }
-                        },
-                        cpm_mav: {$avg: '$counts_per_minute'},
-                        count: {$sum: 1}
-                    }
-                },
-                {$sort: {_id: 1}}
-            ]).toArray();
-        } catch (e) {
-            console.log(e);
-            docs = [];
-        }
-        return {docs: {RAD: docs}, sensorname: sensorname.substring(10)};
-    } else {
-        try {
-            docs = await collection.find({
-                datetime: {
-                    $gte: new Date(start),
-                    $lt: new Date(end)
-                }
-            }, {sort: {datetime: 1}}).toArray();
-        } catch (e) {
-            console.log(e);
-            docs = [];
-        }
-    }
-//    console.log(docs.length + " Daten gelesen für " + sensorname + ' bei week')
-    if (docs.length == 0) {
-        return ({'docs': [], sensorname: sensorname.substring(10)})
-    } else {
-        if (domoving) {                                        // if moving average
-            let d = await util.calcMovingAverage(db, sensorid, docs, mav, 0, false);
-            return {docs: d, sensorname: sensorname.substring(10)};
-        }
-    }
-}
-
-
-// Daten für ein ganzes Jahr abholen
-function getYearData(db,sensorid,sensorname, st,what) {
-    var p = new Promise(function(resolve,reject) {
-        var start = moment(st);
-        var end = moment(st);
-        var colstr = 'data_' + sensorid;
-        var collection = db.collection(colstr);
-        start=start.startOf('day');
-        end = end.startOf('day');
-        if(what == 'oneyear') {
-            start.subtract(366, 'd');
-        } else {
-            start.subtract(33, 'd');
-        }
-        start.subtract(1,'d');          // plot until 'yesterday'
-        var datRange = {datetime: {$gte: new Date(start), $lt: new Date(end)}};
-//            console.log('datrange:', datRange);
-        var sorting = {datetime: 1};
-        var grpId = {$dateToString: {format: '%Y-%m-%d', date: '$datetime'}};
-        var cursor;
-        var stt = new Date();
-
-
-                if (isPM(sensorname)) {
-                    cursor = collection.aggregate([
-                        {$sort: sorting},
-                        {$match: datRange},
-                        {
-                            $group: {
-                                _id: grpId,
-                                avgP10: {$avg: '$P1'},
-                                avgP2_5: {$avg: '$P2'},
-                                count: {$sum: 1}
-                            }
-                        },
-                        {$sort: {_id: 1}}
-                    ]);
-                    cursor.toArray(function (err, docs) {
-//                    console.log(docs);
-//                        console.log("Dauer SDS:", new Date() - stt)
-                        resolve({'docs': docs});
-                    });
-                } else if (sensorname == 'DHT22') {
-                    cursor = collection.aggregate([
-                        {$sort: sorting},
-                        {$match: datRange},
-                        {
-                            $group: {
-                                _id: grpId,
-                                tempAV: {$avg: '$temperature'},
-                                tempMX: {$max: '$temperature'},
-                                tempMI: {$min: '$temperature'},
-                            }
-                        },
-                        {$sort: {_id: 1}}
-                    ], {cursor: {batchSize: 1}});
-                    cursor.toArray(function (err, docs) {
-                        var min = Infinity, max = -Infinity, x;
-                        for (x in docs) {
-                            if (docs[x].tempMI < min) min = docs[x].tempMI;
-                            if (docs[x].tempMX > max) max = docs[x].tempMX;
-                        }
-//                        console.log("Dauer DHT:", new Date() - stt)
-                        resolve({'docs': docs, 'maxima': {'tmax': max, 'tmin': min}});
-                    });
-                } else if ((sensorname == 'BMP180') || (sensorname == 'BME280')) {
-                    cursor = collection.aggregate([
-                        {$sort: sorting},
-                        {$match: datRange},
-                        {
-                            $group: {
-                                _id: grpId,
-                                pressAV: {$avg: '$pressure'},
-                                tempAV: {$avg: '$temperature'},
-                                tempMX: {$max: '$temperature'},
-                                tempMI: {$min: '$temperature'},
-                            }
-                        },
-                        {$sort: {_id: 1}}
-                    ], {cursor: {batchSize: 1}});
-                    cursor.toArray(function (err, docs) {
-                        var min = Infinity, max = -Infinity, x;
-                        for (x in docs) {
-                            if (docs[x].tempMI < min) min = docs[x].tempMI;
-                            if (docs[x].tempMX > max) max = docs[x].tempMX;
-                        }
-//                        console.log("Dauer BMP/E:", new Date() - stt)
-                        resolve({'docs': docs, 'maxima': {'tmax': max, 'tmin': min}});
-                    });
-                } else if (sensorname.startsWith("Radiation")) {
-                    cursor = collection.aggregate([
-                        {$sort: sorting},
-                        {$match: datRange},
-                        {
-                            $group: {
-                                _id: grpId,
-                                cpmAV: {$avg: '$counts_per_minute'},
-                                cpmMX: {$max: '$counts_per_minute'},
-                                cpmMI: {$min: '$counts_per_minute'},
-                            }
-                        },
-                        {$sort: {_id: 1}}
-                    ], {cursor: {batchSize: 1}});
-                    cursor.toArray(function (err, docs) {
-                        var min = Infinity, max = -Infinity, x;
-                        for (x in docs) {
-                            if (docs[x].cpmMI < min) min = docs[x].cpmMI;
-                            if (docs[x].cpmMX > max) max = docs[x].cpmMX;
-                        }
-//                        console.log("Dauer BMP/E:", new Date() - stt)
-                        resolve({'docs': docs, 'maxima': {'cpmmax': max, 'cpmmin': min}, sensorname: sensorname.substring(10)});
-                    });
-                }
-    });
-    return p;
-}
-
-*/
 
 // für die Wochenanzeige die Daten als gleitenden Mittelwert über 24h durchrechnen
 // und in einem neuen Array übergeben

@@ -87,7 +87,7 @@ nav { display: flex;}
 
 #btnset {
 	margin-right: 10px;
-	display: none;
+/*	display: none; */
 }
 
 #btnshwgrafic {

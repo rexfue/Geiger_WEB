@@ -135,7 +135,7 @@ router.get('/getakwdata/', function (req, res) {
     var now = moment();                                                 // akt. Uhrzeit
     var lastDate = 0;
     let loc;
-    console.log("getaktdata: now fetching data from DB");
+    console.log("getakwdata: now fetching data from DB");
     if(poly.length != 0) {
         loc = {
             location: {
@@ -161,10 +161,10 @@ router.get('/getakwdata/', function (req, res) {
         }
     }
     try {
-        collection.find(loc)                                                 // find all data within map borders (box)
+        collection.find()                                                 // find all data within map borders (box)
             .toArray(function (err, docs) {
                 if (docs == null) {
-                    console.log("getaktdata: docs==null");
+                    console.log("getakwdata: docs==null");
                     res.json({"akws": []});
                     return;
                 }
