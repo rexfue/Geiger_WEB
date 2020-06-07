@@ -97,8 +97,12 @@ geigerApp.get('/fs/fsdata/splash', function(req, res, next) {
     res.sendFile(__dirname+'/public/splash.html');
 });
 
-geigerApp.get('/fs/fsdata/setting', function(req, res, next) {
-    res.sendFile(__dirname+'/public/settings.html');
+geigerApp.get('/fs/fsdata/settingW', function(req, res, next) {
+    res.sendFile(__dirname+'/public/settingsW.html');
+});
+
+geigerApp.get('/fs/fsdata/settingD', function(req, res, next) {
+    res.sendFile(__dirname+'/public/settingsD.html');
 });
 
 geigerApp.get('/fs/fsdata/statistik', function(req, res, next) {

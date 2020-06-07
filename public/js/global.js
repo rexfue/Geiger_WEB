@@ -5,13 +5,21 @@ $(document).ready(function() {
 
     const MAXOPTARR = 5;
 
+    // Colors
+    const COLOR_24H_LIVE="#76D7C4"
+    const COLOR_24H_MAVG="green"
+    const COLOR_7DAY="green"
+    const COLOR_30DAY="blue"
+
     var active = 'oneday';					// default: plot 1 day
     var refreshRate = 15;                   // Grafik so oft auffrischen (in Minuten)
     var txtMeldung = false;					// falls keine Daten da sind, Text melden
     var korrelation = {};
     var kopf = 'Radioaktivitäts-Messung';
-    var avgTime = 30;						// defaul average time für particulate matter
-    var avgTable = [0, 10, 30, 60, 180, 360, 720, 1440];
+    var avgTimeD = 60;						// default average time für particulate matter
+    var avgTimeW = 60;						// default average time für particulate matter
+    var avgTableW = [30, 60, 180, 360, 720, 1440];
+    var avgTableD = [10, 30, 60, 180, 360];
     var specialDate = "";					// extra for 'Silvester'
     var doUpdate = true;					// update every 5 min
     var fstAlarm = false;					// if true then is 'Feinstaubalarm' in Stuttgart
@@ -411,12 +419,21 @@ $(document).ready(function() {
             let pos = map.latLngToLayerPoint(marker.getLatLng()).round();
             marker.setZIndexOffset(100 - pos.y);
 
+            // if clicked on the marker fill popup with address and reaktion to click on 'Grafik anzeigen'
             marker.on ('click', async function() {
                 let addr = await holAddress(marker);
                 marker.getPopup().setContent(getPopUp(marker,addr));
+                $('#btnshwgrafic').click(() => {
+                    map.closePopup();
+                    if(window.matchMedia("(orientation:portrait").matches) {
+                        showError(5,"goto Landscape")
+                    } else {
+                        showGrafik(clickedSensor);
+                    }
+                });
             });
 
-            marker.bindPopup("<p>Halleole</p>").openPopup(); // and bind the popup text
+            marker.bindPopup();                             // and bind the popup
             if(marker.options.value != -2) {
                 markersAll.addLayer(marker);
             } else {
@@ -426,7 +443,7 @@ $(document).ready(function() {
         map.addLayer(markersAll);
     }
 
-
+    // fetch address from properties database
     async function holAddress(marker) {
         let addr = "Adresse";
         try {
@@ -443,8 +460,8 @@ $(document).ready(function() {
         return addr;
     }
 
-
-     function getPopUp(marker,addr) {
+    // build popup text
+    function getPopUp(marker,addr) {
         clickedSensor = marker.options.name;
         let popuptext =
             `
@@ -658,16 +675,23 @@ $(document).ready(function() {
         });
 
 
-        function saveSettings() {
+        function saveSettings(week) {
             let avg = $('#average').val();
-            localStorage.setItem('geiger_averageTime', avg);
-            let avgkind = $('#movingavg').is(':checked')
-            localStorage.setItem('geiger_movAVG', avgkind);
-            if ((avgTime != parseInt(avg)) || (avgkind != movingAVG)) {
-                avgTime = parseInt(avg);
-                movingAVG = avgkind;
-                doPlot(active, startDay,properties);						// Start with plotting one day from now on
-//            switchPlot(active);
+            if(week == 'oneweek') {
+                localStorage.setItem('geiger_averageTimeW', avg);
+                let avgkind = $('#movingavg').is(':checked')
+                localStorage.setItem('geiger_movAVG', avgkind);
+                if ((avgTimeW != parseInt(avg)) || (avgkind != movingAVG)) {
+                    avgTimeW = parseInt(avg);
+                    movingAVG = avgkind;
+                    doPlot(active, startDay, properties);						// Start with plotting one day from now on
+                }
+            } else {
+                localStorage.setItem('geiger_averageTimeD', avg);
+                if (avgTimeD != parseInt(avg)) {
+                    avgTimeD = parseInt(avg);
+                    doPlot(active, startDay, properties);						// Start with plotting one day from now on
+                }
             }
             dialogSet.dialog('close');
         }
@@ -679,23 +703,35 @@ $(document).ready(function() {
             title: 'Einstellungen',
             open:
                 function () {
+                    let week = $('#dialogWinSet').data('week');
                     $('#page-mask').css('visibility', 'visible');
-                    $(this).load('/fsdata/setting', function () {
-                        if (movingAVG) {
-                            $('#movingavg').prop("checked", true).trigger("click");
-                        } else {
-                            $('#staticavg').prop("checked", true).trigger("click");
-                        }
-                        $('#average').focus();
-                        $('#invalid').hide();
-                        buildAverageMenue();
-                    });
+                    if(week == 'oneweek') {
+                        $(this).load('/fsdata/settingW', function () {
+                            if (movingAVG) {
+                                $('#movingavg').prop("checked", true).trigger("click");
+                            } else {
+                                $('#staticavg').prop("checked", true).trigger("click");
+                            }
+                            $('#average').focus();
+                            $('#invalid').hide();
+                            buildAverageMenue(week);
+                        });
+                    } else {
+                        $(this).load('/fsdata/settingD', function () {
+                            $('#average').focus();
+                            $('#invalid').hide();
+                            buildAverageMenue(week);
+                        });
+                    }
                 },
             buttons: [
                 {
                     text: "Übernehmen",
                     class: "btnOK",
-                    click: saveSettings,
+                    click: function() {
+                        let week = $('#dialogWinSet').data('week');
+                        saveSettings(week);
+                    },
                     style: "margin-right:40px;",
                     width: 120,
                 }, {
@@ -711,7 +747,6 @@ $(document).ready(function() {
             close: function () {
                 $('#page-mask').css('visibility', 'hidden');
                 $('#btnset').show();
-//            $('#btnset').css('background', '#0099cc');
             },
         });
 
@@ -733,11 +768,15 @@ $(document).ready(function() {
 
         function getLocalStorage() {
             // fetch the average time
-            var avg = localStorage.getItem('geiger_averageTime');
+            var avg = localStorage.getItem('geiger_averageTimeW');
             if (avg != null) {
-                avgTime = parseInt(localStorage.getItem('geiger_averageTime'));
+                avgTimeW = parseInt(localStorage.getItem('geiger_averageTimeW'));
             }
-            console.log('avgTime = ' + avgTime);
+            avg = localStorage.getItem('geiger_averageTimeD');
+            if (avg != null) {
+                avgTimeD = parseInt(localStorage.getItem('geiger_averageTimeD'));
+            }
+            console.log('avgTimeW = ' + avgTimeW);
             let movAVG = localStorage.getItem('geiger_movAVG');
             if (movAVG != null) {
                 movingAVG = movAVG == 'true' ? true : false;
@@ -755,16 +794,17 @@ $(document).ready(function() {
         $('#sbx label').html('Auswahl der letzten ' + MAXOPTARR);
 
 
-        function buildAverageMenue() {
-            for (var i = 0; i < avgTable.length; i++) {
-                if (avgTime == avgTable[i]) {
-                    var str = '<option selected="selected" value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
+        function buildAverageMenue(week) {
+            let table = (week === 'oneweek') ? avgTableW : avgTableD;
+            let time = (week === 'oneweek') ? avgTimeW : avgTimeD;
+            for (var i = 0; i < table.length; i++) {
+                if (table[i] === time) {
+                    var str = '<option selected="selected" value="' + table[i] + '">' + table[i] + '  min</option>';
                 } else {
-                    str = '<option value="' + avgTable[i] + '">' + avgTable[i] + '  min</option>';
+                    str = '<option value="' + table[i] + '">' + table[i] + '  min</option>';
                 }
                 $('#average').append(str);
             }
-//        $('#average').selectmenu();
         }
 
 // if enabled, show splash screen
@@ -801,7 +841,7 @@ $(document).ready(function() {
 
 
         $('#btnset').click(function () {
-            dialogSet.dialog("open");
+            dialogSet.data('week',active).dialog("open");
         });
 
         /*
@@ -919,7 +959,7 @@ $(document).ready(function() {
                 start: st.format(),
                 sensorid: props._id,
                 sensorname: props.name,
-                avgTime: avgTime,
+                avgTime: what === 'oneday' ? avgTimeD : avgTimeW,
                 live: live,
                 moving: movingAVG,
             };
@@ -931,21 +971,6 @@ $(document).ready(function() {
                     let data2 = await $.getJSON(url, callopts)
                     data1.radiation1 = data2.radiation;
                 }
-                /*        $.getJSON(url, callopts, function (data1, err) {				// AJAX Call
-                            if (err != 'success') {
-                                alert("Fehler <br />" + err);						// if error, show it
-                            } else {
-                                if (what == 'oneday') {
-                                    callopts.avgTime = 1;
-                                    $.getJSON(url, callopts, function (data2, err) {				// AJAX Call
-                                        if (err != 'success') {
-                                            alert("Fehler <br />" + err);						// if error, show it
-                                        } else {
-                                            data1.radiation1 = data2.radiation;
-                                        }
-                                    });
-                                }
-                */
                 startPlot(what, data1, null,  st, live);
             }
             catch(e) {
@@ -1025,7 +1050,7 @@ $(document).ready(function() {
                     useHTML: true,
                 },
                 subtitle: {
-                    text: 'Gemessene Werte und ' + avgTime + 'min-gleitende Mittelwerte',
+                    text: 'Gemessene Werte und ' + avgTimeD + 'min-gleitende Mittelwerte',
                     align: 'left',
                 },
                 xAxis: {
@@ -1071,7 +1096,7 @@ $(document).ready(function() {
         /******************************************************
          * calcWeekends
          *
-         * Calulate the weekends. The ar merked in the plot as
+         * Calulate the weekends. They are marked in the plot as
          * lightgreen bands
          * params:
          *      data            array of dates
@@ -1083,10 +1108,7 @@ $(document).ready(function() {
             var weekend = [];
             var oldDay = 8;
             for (var i = 0; i < data.length; i++) {
-                var mom = moment(data[i].date);
-                if (isyear) {
-                    mom = moment(data[i]._id)
-                }
+                let mom = moment(data[i]._id)
                 var day = mom.day();
                 var st = mom.startOf('day');
                 if (day != oldDay) {
@@ -1202,7 +1224,6 @@ $(document).ready(function() {
          *
          * params:
          *      datas           object with the data to plot#
-         *      sensor          sensor number, whos values this are
          *      live            true => live-data
          * return:
          *      none
@@ -1271,7 +1292,7 @@ $(document).ready(function() {
                     {
                         name: 'uSvph',
                         data: series1,
-                        color: 'blue',
+                        color: COLOR_30DAY,
                     },
                 ],
                 plotOptions: {
@@ -1371,7 +1392,19 @@ $(document).ready(function() {
 
         }
 
-        // Geiger
+    /******************************************************
+     * PlotDayWeek_Geiger
+     *
+     * Plot the geiger values für the last 31 days
+     *
+     * params:
+     *      what            'oneday' or 'week'
+     *      datas           object with the data to plot#
+     *      start           starttime
+     *      live            true => live-data
+     * return:
+     *      none
+     *******************************************************/
         function PlotDayWeek_Geiger(what, datas, start, live) {
 
             var series1 = [];
@@ -1386,6 +1419,7 @@ $(document).ready(function() {
             var cnt = 0;
             let data1 = null;
             var data = datas.radiation.values;
+            let avg48 = datas.radiation.avg48.uSvphAvg;
             let sensor = {sid:datas.radiation.sid, name:datas.radiation.sname}
             if (datas.radiation1 != undefined) {
                 data1 = datas.radiation1.values;
@@ -1431,14 +1465,12 @@ $(document).ready(function() {
 
             var series_mavg = {
                 name: 'Mittelwert',
-//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
-                type: 'spline',
+                type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'line',
                 data: series2,
-                color: 'green',
+                color: (what == 'oneweek') ? COLOR_7DAY : COLOR_24H_MAVG,
                 yAxis: 0,
                 zIndex: 1,
                 marker: {
-//                enabled: what == 'oneweek' ? false : true,
                     enabled: false,
                     symbol: 'circle',
                 },
@@ -1447,14 +1479,12 @@ $(document).ready(function() {
 
             var series_uSvph = {
                 name: 'µSv pro Stunde',
-//            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
-                type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'line',
+                type: 'line',
                 data: series1,
-                color: (what == 'oneweek') ? 'green' : '#9FE8D1',
+                color: COLOR_24H_LIVE,
                 yAxis: 0,
                 zIndex: 1,
                 marker: {
-//                enabled: what == 'oneweek' ? false : true,
                     enabled: false,
                     radius: 2,
                     symbol: 'circle',
@@ -1471,6 +1501,20 @@ $(document).ready(function() {
                         color: 'red'
                     }
                 },
+                plotLines: [
+                    {
+                        color: 'red', // Color value
+                        value: avg48, // Value of where the line will appear
+                        width: 1, // Width of the line
+                        label: {
+                            useHTML: true,
+                            text: 'Mittelwert der letzten 48h (' + avg48.toFixed(3) + ' µSv/h)',
+                            y: -10,
+                            align: 'center',
+                            style: {color: 'red'},
+                        },
+                        zIndex: 8,
+                    }],
 //            min: 0,
 //            max: maxy.maxval,
 //            tickAmount: 11,
@@ -1519,14 +1563,13 @@ $(document).ready(function() {
             options.series[1] = series_mavg;
             options.title.text = 'Strahlung über einen Tag';
             options.subtitle.text = 'Impulse pro Minute (Mittelwert über jeweils 10min)';
-//        options.series[2] = series_LAMax;
-//        options.yAxis[2] = yAxis_LAMin;
             options.yAxis[0] = yAxis_cpm[0];
             if (faktor != 0) {
                 options.yAxis[1] = yAxis_cpm[1];
             }
             options.chart.zoomType = 'x';
-            if (what == 'oneweek') {
+
+        if (what == 'oneweek') {
                 options.plotOptions = {
                     column: {
                         pointPadding: 0.1,
@@ -1538,15 +1581,19 @@ $(document).ready(function() {
 
                 options.title.text = 'Strahlung über eine Woche';
                 let dau = ' Minuten';
-                let avt = avgTime;
-                if (avgTime >= 60) {
-                    dau = (avgTime == 60) ? ' Stunde' : ' Stunden';
+                let avt = avgTimeW;
+                if (avgTimeW >= 60) {
+                    dau = (avgTimeW == 60) ? ' Stunde' : ' Stunden';
                     avt /= 60;
                 }
                 if (movingAVG) {
                     options.subtitle.text = 'Impulse pro Minute - gleitender Mittelwert über ' + avt + dau;
                 } else {
                     options.subtitle.text = 'Impulse pro Minute - Mittelwert über je ' + avt + dau;
+                    if(avgTimeW >= 30) {
+                        options.series[1].marker = { enabled: true, radius: 3, symbol: 'circle'};
+//                        options.series[1].type = 'line';
+                    }
                 }
                 options.xAxis.tickInterval = 3600 * 6 * 1000;
                 options.xAxis.plotBands = calcWeekends(data, false);
@@ -1846,6 +1893,7 @@ $(document).ready(function() {
             options.chart.zoomType = 'x';
             options.chart.spacingBottom = 40;
 
+
             if (what == 'oneweek') {
                 options.plotOptions = {
                     column: {
@@ -1858,17 +1906,6 @@ $(document).ready(function() {
 
                 options.title.text = 'Temperatur / Feuchte / Luftdruck über 1 Woche';
                 options.subtitle.text = 'Mittelwerte über jeweils 10min';
-                // let dau = ' Minuten';
-                // let avt = avgTime;
-                // if (avgTime >= 60) {
-                //     dau = (avgTime == 60) ? ' Stunde' : ' Stunden';
-                //     avt /= 60;
-                // }
-                // if (movingAVG) {
-                //     options.subtitle.text = 'Impulse pro Minute - gleitender Mittelwert über ' + avt + dau;
-                // } else {
-                //     options.subtitle.text = 'Impulse pro Minute - Mittelwert über je ' + avt + dau;
-                // }
                 options.xAxis.tickInterval = 3600 * 6 * 1000;
                 options.xAxis.plotBands = calcWeekends(data, false);
                 options.xAxis.plotLines = calcDays(data, false);
@@ -2289,4 +2326,5 @@ $(document).ready(function() {
         popuptxt += '</div>';
         return popuptxt;
     }
+
 });
