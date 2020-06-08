@@ -34,7 +34,7 @@ $(document).ready(function() {
     let ymax_geig = 100;
 
     var map;
-    let firstZoom = 8;
+    let firstZoom = 12;
     const MAXZOOM = 17;
     let useStgtBorder = false;
     let popuptext = "";
@@ -51,15 +51,15 @@ $(document).ready(function() {
     let showOnlySi22G = false;
     let faktor;
     let showAKWs = 0;                       // 0 -> no, 1 -> only active, 2  -> all
-    let showbandgap = true;
+    let showbandgap = false;
 
 
     let showSplashScreen = false;
     let splashVersion;
 
-    let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
-    let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
-    let cpms = [1482, 741, 296, 148, 74, 30, 0, -999];
+    // let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
+    // let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
+    // let cpms = [1482, 741, 296, 148, 74, 30, 0, -999];
 
     let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.081438};
 
@@ -136,15 +136,22 @@ $(document).ready(function() {
     }
 
 
-    function getColor(name,d) {
-        let val = parseFloat(d);
-        for (let i = 0; i < grades.length; i++) {
-            if (val >= grades[i]) {
-                return (colorscale[i]);
-            }
-        }
-    }
+    // function getColor(name,d) {
+    //     let val = parseFloat(d);
+    //     for (let i = 0; i < grades.length; i++) {
+    //         if (val >= grades[i]) {
+    //             return (colorscale[i]);
+    //         }
+    //     }
+    // }
 
+    function getColor(name,d) {
+        let erg = d3.scaleLinear()
+            .domain([0.05,        0.1,     0.2,      0.5,            5])
+            .range(["#267A45", "#66FA5F", "#F8Fc00","#FF0000","#9000FF"])
+            .clamp(true);
+        return d < -1 ? '#9ECDEA' : d==-1 ? '#7F7F7F' : erg(d);
+    }
     function buildIcon(color,n) {
         let x = 100;
         if (n < 10) {
@@ -230,35 +237,6 @@ $(document).ready(function() {
         });
 
         polygon = calcPolygon(bounds);
-        /*
-            var circle = L.circle([loc.coordinates[1], loc.coordinates[0]], {
-                radius: radius * 1000,
-                color: 'red',
-                opacity: 0.3,
-        //            fillColor: '#f03',
-                fillOpacity: 0,
-                interactive: false,
-            }).addTo(map);
-
-        */
-
-
-        var legend = L.control({position: 'topright'});
-        legend.onAdd = function (map) {
-            let div = L.DomUtil.create('div', 'info legend');
-            let div_color = L.DomUtil.create('div', 'info legend inner', div);
-            div_color.innerHTML += 'µSv/h<br />';
-            // loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length - 1; i++) {
-                div_color.innerHTML +=
-                    '<i style="background:' + colorscale[i] + '"></i>' +
-                    '<u>&nbsp;&nbsp;&nbsp;</u>&nbsp;&nbsp;' + grades[i] + (i == 0 ? "+" : "") + '<br />';
-            }
-            div_color.innerHTML += '&nbsp;<i style="background:' + '#87CEEB' + '"></i> indoor<br />';
-            div_color.innerHTML += '&nbsp;<i style="background:' + colorscale[colorscale.length - 1] + '"></i> offline';
-            return div;
-        };
-        legend.addTo(map);
 
         if (useStgtBorder) {
             fetchStuttgartBounds();
@@ -287,11 +265,6 @@ $(document).ready(function() {
         if(cid != -1) {
             showGrafik(cid);
         }
-        let overlays = {
-            "Aktive Kraftwerke": activeAKWs,
-            "stiilgelegte Kraftwerke": decomAKWs
-        }
-        L.control.layers(null,overlays).addTo(map);
     }
 
 
@@ -406,11 +379,11 @@ $(document).ready(function() {
             }
             let value = parseInt(x.cpm);
             let uSvph = value < 0 ? -1 : value / 60 * sv_factor[x.name];
-            let curcolor = getColor(x.name,uSvph);
+            let curcolor = getColor(x.name,uSvph > 0 ? x.indoor ? -2 : uSvph : uSvph);
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
-                    iconUrl: buildIcon(x.indoor == 1 ? ((curcolor == '#808080') ? curcolor : '#87CEEB') : curcolor),
+                    iconUrl: buildIcon(curcolor),
                     iconSize: [35, 35]
                 }),
                 value: value,
@@ -802,7 +775,7 @@ $(document).ready(function() {
             console.log("SplashScreen:", splashVersion);
             let bandgap = localStorage.getItem('geiger_bandgap');
             if (bandgap != null) {
-                showbandgap = bandgap;
+                showbandgap = bandgap == 'true';
             }
             console.log(`getlocalstorage: showbandgap = ${showbandgap}`)
         }

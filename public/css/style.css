@@ -388,25 +388,6 @@ radio {
 	color: #777;
 }
 
-.legend {
-	line-height: 18px;
-	color: #555;
-	font-size: 110%;
-	display: none;
-}
-
-.legend i {
-	width: 18px;
-	height: 18px;
-	float: left;
-	margin-right: 0px;
-	opacity: 1;
-}
-
-.leglabel {
-	padding-top: 20px;
-}
-
 
 img.leaflet-tile {
     filter: grayscale(85%) saturate(150%) hue-rotate(180deg) contrast(90%) brightness(110%);
@@ -599,3 +580,69 @@ select {
 	margin-top: 9px;
 	font-size: 110%;
 }
+
+.legend {
+	font-family: arial, sans-serif;
+	color:black;
+	font-size: 12px;
+	position: absolute;
+	left: 14px;
+	bottom: 29px;
+	height: 35%;
+	width: 130px;
+	z-index: 999;
+	background-color: rgba(238,238,238,0.50);
+	border: solid 1px black;
+	display: none;
+}
+
+#legend-inner-cpm {
+	position: absolute;
+	left: 20px;
+	bottom: 15px;
+	z-index: 1001;
+	pointer-events: none;
+	height: 90%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	padding-top: 10px;
+}
+
+#legend-inner-cpm .gradient {
+	opacity: 0.8;
+	width: 20px;
+/*	background: -webkit-linear-gradient(bottom, #00796b 0%, #00796b 16%, #f9a825 32%, #e65100 48%, #dd2c00 72%, #dd2c00 80%, #8c0084 100%); */
+	background: -webkit-linear-gradient(bottom, #9ECDEA 0%, #9ECDEA 8%, #7F7F7F 8%, #7F7F7F 16%, #00796b 16%, #f9a825 44%, #e65100 58%, #dd2c00 72%, #dd2c00 86%, #8c0084 100%);
+/*	background: linear-gradient(to top, #00796b 0%, #00796b 16%, #f9a825 32%, #e65100 48%, #dd2c00 72%, #dd2c00 80%, #8c0084 100%); */
+	background: linear-gradient(to top, #9ECDEA 0%, #9ECDEA 8%, #7F7F7F 8%, #7F7F7F 16%,
+		#267A45 16%,
+		#66FA5F 30%,
+		#F8Fc00 44%,
+		#FF0000 58%,
+		#9000FF 100%);
+	position: relative;
+}
+
+#legend-inner-cpm .labels {
+	width: 150px;
+	position: relative;
+}
+
+#legend-inner-cpm .labels .label {
+	position: absolute;
+	-webkit-transform: translateY(50%);
+	transform: translateY(50%);
+}
+
+#legend-inner-cpm .labels .label1 {
+	position: absolute;
+	-webkit-transform: translateY(50%);
+	transform: translateY(50%);
+	margin-left: 10px;
+}
+
+#legend-inner-cpm .labels .label:before {
+	content: '\2013   ';
+}
+

@@ -45,6 +45,20 @@ block content
                         input.form-control#newmapcenter(type="search" placeholder="Stadt oder Sensor suchen" aria_label="Suche")
                         label.fas.fa-search.input-icon(for="newmapcenter")
                     button.btn.btn-success.ml-4.mybuttons#btninfo Info
+    #legendcontainer
+        .legend#legendcpm
+            #legend-inner-cpm
+                .gradient
+                .labels
+                    .label(style="bottom: 100%;") >= 5 &micro;Sv/h
+                    .label(style="bottom: 86%;") 2
+                    .label(style="bottom: 72%;") 1
+                    .label(style="bottom: 58%;") 0.5
+                    .label(style="bottom: 44%;") 0.2
+                    .label(style="bottom: 30%;") 0.1
+                    .label(style="bottom: 17%;") 0.05
+                    .label1(style="bottom: 10%;") offline
+                    .label1(style="bottom: 2%;") indoor
 
     #map
     #overlay
@@ -91,7 +105,7 @@ block content
             <!-- Modal content-->
             .modal-content
                 .modal-header
-                    h4#modalTitle.modal-title
+                    h4#spmodalTitle.modal-title
                     button.close(type="button" data-dismiss="modal") &times;
                 .modal-body
                 .modal-footer

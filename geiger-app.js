@@ -31,6 +31,7 @@ geigerApp.use(express.static("node_modules/bootstrap/dist"));
 geigerApp.use(express.static("node_modules/jquery/dist"));
 geigerApp.use(express.static("node_modules/moment/min"));
 geigerApp.use(express.static("node_modules/leaflet/dist"));
+geigerApp.use(express.static("node_modules/d3/dist"));
 
 let requested;
 async function checkHost(req, res, next) {
