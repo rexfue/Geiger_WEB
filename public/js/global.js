@@ -12,6 +12,7 @@ $(document).ready(function() {
     const COLOR_30DAY="blue"
     const COLOR_48HMEAN="red"
     const COLOR_BANDGAP="#FE6767"
+    const COLOR_OUTOFBAND="#FE6767"
 
     const BAND_GAP=0.15;
 
@@ -1514,6 +1515,15 @@ $(document).ready(function() {
                     symbol: 'circle',
                 },
                 visible: true,
+                zones: [{
+                    value: avg48-(avg48*BAND_GAP),
+                    color: COLOR_OUTOFBAND
+                },{
+                    value: avg48+(avg48*BAND_GAP),
+                    color: COLOR_24H_LIVE
+                },{
+                    color: COLOR_OUTOFBAND
+                }],
             };
 
             let maxy = calcMaxY(mx);
@@ -1649,6 +1659,7 @@ $(document).ready(function() {
                 };
                 if (!showbandgap) {
                     options.yAxis[0].plotLines = [];
+                    options.series[0].zones = [];
                 }
                 dlt = start.clone();
                 if (live) {

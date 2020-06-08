@@ -26,10 +26,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="fixed text in subtitles and legend, added bandgab&#10;&#10;public/css/style.css&#10;   - main graphic windoe with bottom margin&#10;   &#10;public/hs/global.js&#10;   - define colors for bandgap&#10;   - make bandgap selectable&#10;   - adapt different texts&#10;   - switch off legend for 7day and 30day grafics&#10;   - add bandgap&#10;   &#10;public/settingsD.html&#10;   - added switch on/off of bandgap">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/settingsD.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/settingsD.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +63,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="akw_icons_new" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -399,13 +396,6 @@
       <workItem from="1588602077709" duration="17000" />
       <workItem from="1589062630225" duration="4471000" />
       <workItem from="1591259339903" duration="13557000" />
-    </task>
-    <task id="LOCAL-00077" summary="public/js/mapit.js&#10;   - anstelle von schwarzen nun gelbe Scheiben, auch bei problemsensoren">
-      <created>1540103739293</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1540103739294</updated>
     </task>
     <task id="LOCAL-00078" summary="public/js/mapit.js&#10;   - problem-sensors type 5 also ignoring&#10;   &#10;package[_tst].json&#10;   - version and date">
       <created>1540121686660</created>
@@ -743,7 +733,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587898963913</updated>
     </task>
-    <option name="localTasksCounter" value="126" />
+    <task id="LOCAL-00126" summary="fixed text in subtitles and legend, added bandgab&#10;&#10;public/css/style.css&#10;   - main graphic windoe with bottom margin&#10;   &#10;public/hs/global.js&#10;   - define colors for bandgap&#10;   - make bandgap selectable&#10;   - adapt different texts&#10;   - switch off legend for 7day and 30day grafics&#10;   - add bandgap&#10;   &#10;public/settingsD.html&#10;   - added switch on/off of bandgap&#10;&#10;package.json&#10;   - version and date">
+      <created>1591618798387</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1591618798387</updated>
+    </task>
+    <option name="localTasksCounter" value="127" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -871,10 +868,10 @@
     </state>
     <state x="1034" y="491" key="EnvironmentVariablesDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591262286769" />
     <state x="1034" y="491" key="EnvironmentVariablesDialog/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591259725340" />
-    <state width="351" height="640" key="Git.Branch.Popup" timestamp="1591606165491">
+    <state width="351" height="640" key="Git.Branch.Popup" timestamp="1591619389852">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="351" height="640" key="Git.Branch.Popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591606165491" />
+    <state width="351" height="640" key="Git.Branch.Popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591619389852" />
     <state width="231" height="467" key="Git.Branch.Popup/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158273650" />
     <state width="351" height="640" key="Git.Branch.Popup/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556775158" />
     <state width="1594" height="346" key="GridCell.Tab.0.bottom" timestamp="1591607393976">
@@ -1020,12 +1017,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>2197</line>
+          <line>2208</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>265</line>
+          <line>266</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
