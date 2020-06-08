@@ -10,6 +10,10 @@ $(document).ready(function() {
     const COLOR_24H_MAVG="green"
     const COLOR_7DAY="green"
     const COLOR_30DAY="blue"
+    const COLOR_48HMEAN="red"
+    const COLOR_BANDGAP="#FE6767"
+
+    const BAND_GAP=0.15;
 
     var active = 'oneday';					// default: plot 1 day
     var refreshRate = 15;                   // Grafik so oft auffrischen (in Minuten)
@@ -46,7 +50,7 @@ $(document).ready(function() {
     let showOnlySi22G = false;
     let faktor;
     let showAKWs = 0;                       // 0 -> no, 1 -> only active, 2  -> all
-
+    let showbandgap = true;
 
 
     let showSplashScreen = false;
@@ -692,6 +696,13 @@ $(document).ready(function() {
                     avgTimeD = parseInt(avg);
                     doPlot(active, startDay, properties);						// Start with plotting one day from now on
                 }
+                let bandgap = $('#bandgap_in').is(':checked');
+                console.log("localStore: bandgap: " + bandgap);
+                localStorage.setItem('geiger_bandgap', bandgap);
+                if(bandgap != showbandgap) {
+                    showbandgap = bandgap;
+                    doPlot(active, startDay, properties);						// Start with plotting one day from now on
+                }
             }
             dialogSet.dialog('close');
         }
@@ -718,6 +729,7 @@ $(document).ready(function() {
                         });
                     } else {
                         $(this).load('/fsdata/settingD', function () {
+                            $('#bandgap_in').prop('checked',showbandgap);
                             $('#average').focus();
                             $('#invalid').hide();
                             buildAverageMenue(week);
@@ -787,6 +799,11 @@ $(document).ready(function() {
                 splashVersion = splash;
             }
             console.log("SplashScreen:", splashVersion);
+            let bandgap = localStorage.getItem('geiger_bandgap');
+            if (bandgap != null) {
+                showbandgap = bandgap;
+            }
+            console.log(`getlocalstorage: showbandgap = ${showbandgap}`)
         }
 
         getLocalStorage();
@@ -940,21 +957,21 @@ $(document).ready(function() {
 
         //	doPlot
         //	Fetch relevant data from the server and plot it
-
-        async function doPlot(what, start, props) {								// if 'start' not defined,
+        async function doPlot(what, start, props) {
             console.log("doPlot");
-            $('placeholderFS_1').html("");
+            $('placeholderFS_1').html("");                  // clear old plots
             $('placeholderBME').html("");
-            $('#loading').show();
+            $('#loading').show();                           // shoe 'loading' message
             let st;
             let live = true;
-            if ((start === undefined) || (start == "")) {
-                st = moment();										// then start 'now'
+            if ((start === undefined) || (start == "")) {   // if start is not defined ..
+                st = moment();							    // .. then use 'now'
             } else {
                 st = moment(start);
                 live = false;
             }
             var url = '/fsdata/getfs/' + what;
+            movingAVG = what == 'oneday' ? true : movingAVG
             var callopts = {
                 start: st.format(),
                 sensorid: props._id,
@@ -965,13 +982,13 @@ $(document).ready(function() {
             };
             faktor = sv_factor[props.name.substring(10)];
             try {
-                let data1 = await  $.getJSON(url, callopts);
-                if (what == 'oneday') {
-                    callopts.avgTime = 1;
-                    let data2 = await $.getJSON(url, callopts)
-                    data1.radiation1 = data2.radiation;
+                let data1 = await  $.getJSON(url, callopts); // fetch average data
+                if (what == 'oneday') {                     // for day graphs ..
+                    callopts.avgTime = 1;                   // ..also fetch ..
+                    let data2 = await $.getJSON(url, callopts) // .. plain data ..
+                    data1.radiation1 = data2.radiation;     // .. and return it in 'radiation1'
                 }
-                startPlot(what, data1, null,  st, live);
+                startPlot(what, data1, null,  st, live); // now plot it
             }
             catch(e) {
                 console.log(e);
@@ -1071,7 +1088,7 @@ $(document).ready(function() {
                     },
                 },
                 legend: {
-                    enabled: true,
+                    enabled: false,
                     layout: 'horizontal',
 //				verticalAlign: 'top',
                     borderWidth: 1,
@@ -1309,7 +1326,7 @@ $(document).ready(function() {
                     text: "Strahlung Tagesmittelwerte",
                 },
                 subtitle: {
-                    text: 'Tagesmittelwert jeweils von 0h00 bis 23h59'
+                    text: 'Tagesmittelwerte jeweils von 0h00 bis 23h59'
                 },
             }
 
@@ -1415,7 +1432,14 @@ $(document).ready(function() {
             // Arrays for Berechnung der Min, Max und Mittewerte über die kompletten 24h
             var aktVal = {};
 
-            // Put values into the arrays
+            let dau = ' Minuten';
+            let avt = what == 'oneday' ? avgTimeD : avgTimeW;
+            if (avt >= 60) {
+                dau = (avt == 60) ? ' Stunde' : ' Stunden';
+                avt /= 60;
+            }
+
+        // Put values into the arrays
             var cnt = 0;
             let data1 = null;
             var data = datas.radiation.values;
@@ -1464,7 +1488,7 @@ $(document).ready(function() {
             var options = createGlobObtions();
 
             var series_mavg = {
-                name: 'Mittelwert',
+                name: `${movingAVG ? 'gleit. ' : ''}Mittelwert über ${avt} ${dau}`,
                 type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'line',
                 data: series2,
                 color: (what == 'oneweek') ? COLOR_7DAY : COLOR_24H_MAVG,
@@ -1478,7 +1502,7 @@ $(document).ready(function() {
             };
 
             var series_uSvph = {
-                name: 'µSv pro Stunde',
+                name: 'alle Werte',
                 type: 'line',
                 data: series1,
                 color: COLOR_24H_LIVE,
@@ -1501,20 +1525,44 @@ $(document).ready(function() {
                         color: 'red'
                     }
                 },
-                plotLines: [
+                plotLines: what === 'oneday' ? [
                     {
-                        color: 'red', // Color value
+                        color: COLOR_48HMEAN, // Color value
                         value: avg48, // Value of where the line will appear
+                        width: 2, // Width of the line
+                        label: {
+                            useHTML: true,
+                            text: 'Mittelwert der letzten 48h ab jetzt (' + avg48.toFixed(3) + ' µSv/h)',
+                            y: -10,
+                            align: 'center',
+                            style: {color: COLOR_48HMEAN},
+                        },
+                        zIndex: 8,
+                    },{
+                        color: COLOR_BANDGAP, // Color value
+                        value: avg48+(avg48*BAND_GAP), // Value of where the line will appear
                         width: 1, // Width of the line
                         label: {
                             useHTML: true,
-                            text: 'Mittelwert der letzten 48h (' + avg48.toFixed(3) + ' µSv/h)',
+                            text: `+${BAND_GAP*100}%`,
                             y: -10,
                             align: 'center',
-                            style: {color: 'red'},
+                            style: {color: COLOR_BANDGAP},
                         },
                         zIndex: 8,
-                    }],
+                    },{
+                        color: COLOR_BANDGAP, // Color value
+                        value: avg48-(avg48*BAND_GAP), // Value of where the line will appear
+                        width: 1, // Width of the line
+                        label: {
+                            useHTML: true,
+                            text: `-${BAND_GAP*100}%`,
+                            y: +15,
+                            align: 'center',
+                            style: {color: COLOR_BANDGAP},
+                        },
+                        zIndex: 8,
+                    }] : [],
 //            min: 0,
 //            max: maxy.maxval,
 //            tickAmount: 11,
@@ -1559,10 +1607,14 @@ $(document).ready(function() {
 
             options.series = [];
             options.yAxis = [];
-            options.series[0] = series_uSvph;
-            options.series[1] = series_mavg;
+            if (what == 'oneday') {
+                options.series[0] = series_uSvph;
+                options.series[1] = series_mavg;
+            } else {
+                options.series[0] = series_mavg;
+            }
             options.title.text = 'Strahlung über einen Tag';
-            options.subtitle.text = 'Impulse pro Minute (Mittelwert über jeweils 10min)';
+            options.subtitle.text = 'Impulse pro Minute (bzw. µSv pro Stunde)';
             options.yAxis[0] = yAxis_cpm[0];
             if (faktor != 0) {
                 options.yAxis[1] = yAxis_cpm[1];
@@ -1580,21 +1632,7 @@ $(document).ready(function() {
                 };
 
                 options.title.text = 'Strahlung über eine Woche';
-                let dau = ' Minuten';
-                let avt = avgTimeW;
-                if (avgTimeW >= 60) {
-                    dau = (avgTimeW == 60) ? ' Stunde' : ' Stunden';
-                    avt /= 60;
-                }
-                if (movingAVG) {
-                    options.subtitle.text = 'Impulse pro Minute - gleitender Mittelwert über ' + avt + dau;
-                } else {
-                    options.subtitle.text = 'Impulse pro Minute - Mittelwert über je ' + avt + dau;
-                    if(avgTimeW >= 30) {
-                        options.series[1].marker = { enabled: true, radius: 3, symbol: 'circle'};
-//                        options.series[1].type = 'line';
-                    }
-                }
+                options.subtitle.text = `${movingAVG ? 'Gleitender ' : ''}Mittelwert über ${avt} ${dau}`;
                 options.xAxis.tickInterval = 3600 * 6 * 1000;
                 options.xAxis.plotBands = calcWeekends(data, false);
                 options.xAxis.plotLines = calcDays(data, false);
@@ -1603,6 +1641,15 @@ $(document).ready(function() {
                 dlt.subtract(7, 'd');
                 options.xAxis.min = dlt.valueOf();
             } else {
+                options.legend = {
+                    enabled: true,
+                    layout: 'horizontal',
+                    borderWidth: 1,
+                    align: 'center',
+                };
+                if (!showbandgap) {
+                    options.yAxis[0].plotLines = [];
+                }
                 dlt = start.clone();
                 if (live) {
                     options.xAxis.max = dlt.valueOf();
