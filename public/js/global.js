@@ -14,6 +14,12 @@ $(document).ready(function() {
     const COLOR_BANDGAP="#FE6767"
     const COLOR_OUTOFBAND="#FE6767"
 
+    const COLOR_AKW="#B80000"
+    const COLOR_RESEARCH="#EA7C00"
+    const COLOR_DEPOT="AE00D5"
+
+
+
     var active = 'oneday';					// default: plot 1 day
     var refreshRate = 15;                   // Grafik so oft auffrischen (in Minuten)
     var txtMeldung = false;					// falls keine Daten da sind, Text melden
@@ -32,7 +38,7 @@ $(document).ready(function() {
     let ymax_geig = 100;
 
     var map;
-    let firstZoom = 12;
+    let firstZoom = 7;                      // best: 12
     const MAXZOOM = 17;
     let useStgtBorder = false;
     let popuptext = "";
@@ -56,6 +62,9 @@ $(document).ready(function() {
 
     let showSplashScreen = false;
     let splashVersion;
+
+    let decomAKWs = L.layerGroup();
+    let activeAKWs = L.layerGroup();
 
     // let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
     // let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
@@ -186,9 +195,18 @@ $(document).ready(function() {
     $('.btnakw').click(async function() {
         if(this.value == 'no') {
             showAKWs = 0;                                   // don't show AKWs
+            map.removeLayer(decomAKWs);
+            map.removeLayer(activeAKWs);
         } else if (this.value == 'activ') {
+            map.removeLayer(decomAKWs);
+            map.removeLayer(activeAKWs);
+            map.addLayer(activeAKWs);
             showAKWs = 1;                                   // show only actives
         } else {
+            map.removeLayer(decomAKWs);
+            map.removeLayer(activeAKWs);
+            map.addLayer(activeAKWs);
+            map.addLayer(decomAKWs);
             showAKWs = 2;                                   // show all
         }
         bounds = map.getBounds();
@@ -199,8 +217,6 @@ $(document).ready(function() {
 
 
     async function plotMap(cid, city) {
-        let decomAKWs = L.layerGroup();
-        let activeAKWs = L.layerGroup();
 
         let pos;
         // if sensor nbr is giveen, find coordinates, else use Stuttgart center
@@ -241,6 +257,11 @@ $(document).ready(function() {
         if (useStgtBorder) {
             fetchStuttgartBounds();
         }
+
+        map.on('zoomend', () => {
+            let zfaktor = (2 * map.getZoom())+'px';
+            $('.akwIcon').css({'width':zfaktor,'height':zfaktor});
+        });
 
         await buildAKWs(bounds,activeAKWs,true);
         await buildAKWs(bounds,decomAKWs,false);
@@ -490,6 +511,8 @@ $(document).ready(function() {
          *      all npp plotted on map
          *******************************************************/
         async function buildAKWs(bound,layer,what) {
+            let isize = (2*map.getZoom());
+            console.log(`isze=${isize}`);
             let count = 3;
             let kraftwerke = [];
             while (count != 0) {
@@ -515,15 +538,15 @@ $(document).ready(function() {
                     continue;
                 }
                 console.log("akw: ", akw.name);
-                let color = akw.active ? 'black' : 'gray';
                 let marker = L.marker([akw.location.coordinates[1], akw.location.coordinates[0]], {
                     name: akw.name,
                     baujahr: akw.start,
                     stillgelegt: akw.end,
                     icon: new L.Icon({
-                        iconUrl: buildAKWIcon(color),
-                        iconSize: [30, 30],
-                        iconAnchor: [15, 15]
+                        iconUrl: buildAKWIcon(akw.active),
+                        iconSize: [isize, isize],
+                        iconAnchor: [isize/2, isize/2],
+                        className: 'akwIcon'
                     }),
                     zIndexOffset: -1000,
                     class: 'akwmarker'
@@ -531,19 +554,27 @@ $(document).ready(function() {
                 marker.bindPopup((e) => getAKWPopUp(e));
                 marker.addTo(layer);
             }
+            map.addLayer(layer);
         }
 
-        function buildAKWIcon(color) {
+    let iconform = [
+        `r="200" fill="${COLOR_AKW}"`,
+        `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"`,
+    ];
 
-            let akwIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">' +
-                '<path fill="' + color + '" stroke="black" stroke-width="5"  ' +
-                'd="M 10 0 v 600 h 650 v -250 a 250 250 0 0 0 -500 0 v 200 h -50 v -550 z" />' +
-                '</svg>';
-            let akwIconUrl = encodeURI("data:image/svg+xml," + akwIcon).replace(new RegExp('#', 'g'), '%23');
-            return akwIconUrl;
-        }
+    function buildAKWIcon(type) {
+        let index = type == true ? 0 : 1;
+        let akwIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">' +
+            // '<path fill="' + color + '" stroke="black" stroke-width="5"  ' +
+            // 'd="M 10 0 v 600 h 650 v -250 a 250 250 0 0 0 -500 0 v 200 h -50 v -550 z" />' +
+            '<circle cx="200" cy="200" ' +
+            iconform[index] + '></circle>' +
+            '</svg>';
+        let akwIconUrl = encodeURI("data:image/svg+xml," + akwIcon).replace(new RegExp('#', 'g'), '%23');
+        return akwIconUrl;
+    }
 
-        function getAKWPopUp(marker) {
+    function getAKWPopUp(marker) {
             let still = marker.options.stillgelegt==0 ? 'unbekannt' : marker.options.stillgelegt;
             let popuptxt =
                 `<div id="akwpopuptext">
@@ -563,6 +594,8 @@ $(document).ready(function() {
             popuptxt += '</div>';
             return popuptxt;
         }
+
+
 // ********************************************************************************
 // Events
 // ********************************************************************************
@@ -2311,93 +2344,5 @@ $(document).ready(function() {
         e.target.openPopup();                               // show the popup
     }
 
-
-    /******************************************************
-     * buildAKWs
-     *
-     * fetch data for all nuclear power plants and show
-     * them on the map.
-     * use blackcolor for active and gray color for inactive
-     * plants.
-     *
-     * params:
-     *      bounds          find npp within this bounds
-     * return:
-     *      all npp plotted on map
-     *******************************************************/
-    async function buildAKWs(bound,layer,what) {
-        let count = 3;
-        let kraftwerke = [];
-        while (count != 0) {
-            kraftwerke = await fetchAKWData(bounds)
-                .catch(e => {
-                    console.log(e);
-                    kraftwerke = null;
-                });
-            if ((kraftwerke == null) || (kraftwerke.length == 0)) {
-//                showError(1, 'Daten Laden', 0);
-            } else {
-//            dialogError.dialog("close");
-                break;
-            }
-            count--;
-        }
-        if (count == 0) {
-            return;                     // ****** <<<< Fehler meldung rein
-        }
-        let akws = kraftwerke.akws;
-        for (let akw of akws) {
-            if (!((!what && !akw.active) || (what && akw.active))) {
-                continue;
-            }
-            console.log("akw: ", akw.name);
-            let color = akw.active ? 'black' : 'gray';
-            let marker = L.marker([akw.location.coordinates[1], akw.location.coordinates[0]], {
-                name: akw.name,
-                baujahr: akw.start,
-                stillgelegt: akw.end,
-                icon: new L.Icon({
-                    iconUrl: buildAKWIcon(color),
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15]
-                }),
-                zIndexOffset: -1000,
-                class: 'akwmarker'
-            });
-            marker.bindPopup((e) => getAKWPopUp(e));
-            marker.addTo(layer);
-        }
-    }
-
-    function buildAKWIcon(color) {
-
-        let akwIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">' +
-            '<path fill="' + color + '" stroke="black" stroke-width="5"  ' +
-            'd="M 10 0 v 600 h 650 v -250 a 250 250 0 0 0 -500 0 v 200 h -50 v -550 z" />' +
-            '</svg>';
-        let akwIconUrl = encodeURI("data:image/svg+xml," + akwIcon).replace(new RegExp('#', 'g'), '%23');
-        return akwIconUrl;
-    }
-
-    function getAKWPopUp(marker) {
-        let still = marker.options.stillgelegt==0 ? 'unbekannt' : marker.options.stillgelegt;
-        let popuptxt =
-        `<div id="akwpopuptext">
-            <h5>${marker.options.name}</h5>
-            <br />
-            Baujahr: ${marker.options.baujahr}<br />
-        `;
-        const thisYear = moment().year();
-        const stillgelegt = marker.options.stillgelegt;
-        if ((stillgelegt < thisYear ) && (stillgelegt > 0)){
-            popuptxt +=
-                `Stillgelegt: ${marker.options.stillgelegt}`
-        } else if (stillgelegt >= thisYear) {
-            popuptxt +=
-                `Stilllegung: ${marker.options.stillgelegt} (geplant)`
-        };
-        popuptxt += '</div>';
-        return popuptxt;
-    }
 
 });
