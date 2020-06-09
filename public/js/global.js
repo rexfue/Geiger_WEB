@@ -14,8 +14,6 @@ $(document).ready(function() {
     const COLOR_BANDGAP="#FE6767"
     const COLOR_OUTOFBAND="#FE6767"
 
-    const BAND_GAP=0.15;
-
     var active = 'oneday';					// default: plot 1 day
     var refreshRate = 15;                   // Grafik so oft auffrischen (in Minuten)
     var txtMeldung = false;					// falls keine Daten da sind, Text melden
@@ -52,6 +50,8 @@ $(document).ready(function() {
     let faktor;
     let showAKWs = 0;                       // 0 -> no, 1 -> only active, 2  -> all
     let showbandgap = false;
+    let bandgapvalue = 48;                  // mean over this many hours
+    let bandgaprange = 15;                  // threshold around this mean
 
 
     let showSplashScreen = false;
@@ -673,8 +673,16 @@ $(document).ready(function() {
                 let bandgap = $('#bandgap_in').is(':checked');
                 console.log("localStore: bandgap: " + bandgap);
                 localStorage.setItem('geiger_bandgap', bandgap);
-                if(bandgap != showbandgap) {
+                let bgval = $('#bandgapval').val();
+                    localStorage.setItem('geiger_bandgapval', bgval);
+                    bandgapvalue = parseInt(bgval);
+                let bgran = $('#bandgapran_in').val();
+                    localStorage.setItem('geiger_bandgaprange', bgran);
+                    bandgaprange = parseInt(bgran);
+                if((bandgap != showbandgap) || (bgval != bandgapvalue) || (bgran != bandgaprange)) {
                     showbandgap = bandgap;
+                    bandgapvalue = parseInt(bgval);
+                    bandgaprange = parseInt(bgran);
                     doPlot(active, startDay, properties);						// Start with plotting one day from now on
                 }
             }
@@ -704,9 +712,13 @@ $(document).ready(function() {
                     } else {
                         $(this).load('/fsdata/settingD', function () {
                             $('#bandgap_in').prop('checked',showbandgap);
+                            doShowBandGapValues();
                             $('#average').focus();
                             $('#invalid').hide();
                             buildAverageMenue(week);
+                            $('#bandgap_in').click(()=> {
+                                doShowBandGapValues()
+                            });
                         });
                     }
                 },
@@ -735,6 +747,23 @@ $(document).ready(function() {
                 $('#btnset').show();
             },
         });
+
+        function doShowBandGapValues() {
+            $('#bandgapval').val(bandgapvalue+' h');
+            $('#bandgapran_in').val(bandgaprange);
+            let checked = $('#bandgap_in').is(':checked');
+            console.log(`checked: ${checked}`);
+            if (checked) {
+                $('#bandgapregion').css('color', 'black');
+                $('#bandgapval').prop("disabled", false);
+                $('#bandgapran_in').prop("disabled", false);
+            } else {
+                $('#bandgapregion').css('color', 'gray');
+                $('#bandgapval').prop("disabled", true);
+                $('#bandgapran_in').prop("disabled", true);
+            }
+        }
+
 
 
         // change moment, so theat toJSON returns local Time
@@ -778,6 +807,16 @@ $(document).ready(function() {
                 showbandgap = bandgap == 'true';
             }
             console.log(`getlocalstorage: showbandgap = ${showbandgap}`)
+            let bgval = localStorage.getItem('geiger_bandgapval');
+            if (bgval != null) {
+                bandgapvalue = parseInt(bgval);
+            }
+            console.log(`getlocalstorage: bandgapvalue = ${bandgapvalue}`)
+            let bgran = localStorage.getItem('geiger_bandgaprange');
+            if (bgran != null) {
+                bandgaprange = parseInt(bgran);
+            }
+            console.log(`getlocalstorage: bandgaprange = ${bandgaprange}`)
         }
 
         getLocalStorage();
@@ -953,6 +992,7 @@ $(document).ready(function() {
                 avgTime: what === 'oneday' ? avgTimeD : avgTimeW,
                 live: live,
                 moving: movingAVG,
+                longAVG: bandgapvalue
             };
             faktor = sv_factor[props.name.substring(10)];
             try {
@@ -1417,7 +1457,7 @@ $(document).ready(function() {
             var cnt = 0;
             let data1 = null;
             var data = datas.radiation.values;
-            let avg48 = datas.radiation.avg48.uSvphAvg;
+            let avg48 = datas.radiation.avg48 == null ? null : datas.radiation.avg48.uSvphAvg;
             let sensor = {sid:datas.radiation.sid, name:datas.radiation.sname}
             if (datas.radiation1 != undefined) {
                 data1 = datas.radiation1.values;
@@ -1488,15 +1528,15 @@ $(document).ready(function() {
                     symbol: 'circle',
                 },
                 visible: true,
-                zones: [{
-                    value: avg48-(avg48*BAND_GAP),
-                    color: COLOR_OUTOFBAND
-                },{
-                    value: avg48+(avg48*BAND_GAP),
-                    color: COLOR_24H_LIVE
-                },{
-                    color: COLOR_OUTOFBAND
-                }],
+                // zones: avg48 != null ? [{
+                //     value: avg48-(avg48*(bandgaprange/100)),
+                //     color: COLOR_OUTOFBAND
+                // },{
+                //     value: avg48+(avg48*(bandgaprange/100)),
+                //     color: COLOR_24H_LIVE
+                // },{
+                //     color: COLOR_OUTOFBAND
+                // }] : [],
             };
 
             let maxy = calcMaxY(mx);
@@ -1508,14 +1548,14 @@ $(document).ready(function() {
                         color: 'red'
                     }
                 },
-                plotLines: what === 'oneday' ? [
+                plotLines: avg48 != null ? [
                     {
                         color: COLOR_48HMEAN, // Color value
                         value: avg48, // Value of where the line will appear
                         width: 2, // Width of the line
                         label: {
                             useHTML: true,
-                            text: 'Mittelwert der letzten 48h ab jetzt (' + avg48.toFixed(3) + ' µSv/h)',
+                            text: `Mittelwert der letzten ${bandgapvalue}h ab jetzt ( ${avg48.toFixed(3)} µSv/h)`,
                             y: -10,
                             align: 'center',
                             style: {color: COLOR_48HMEAN},
@@ -1523,11 +1563,11 @@ $(document).ready(function() {
                         zIndex: 8,
                     },{
                         color: COLOR_BANDGAP, // Color value
-                        value: avg48+(avg48*BAND_GAP), // Value of where the line will appear
+                        value: avg48+(avg48*(bandgaprange/100)), // Value of where the line will appear
                         width: 1, // Width of the line
                         label: {
                             useHTML: true,
-                            text: `+${BAND_GAP*100}%`,
+                            text: `+${bandgaprange}%`,
                             y: -10,
                             align: 'center',
                             style: {color: COLOR_BANDGAP},
@@ -1535,11 +1575,11 @@ $(document).ready(function() {
                         zIndex: 8,
                     },{
                         color: COLOR_BANDGAP, // Color value
-                        value: avg48-(avg48*BAND_GAP), // Value of where the line will appear
+                        value: avg48-(avg48*(bandgaprange/100)), // Value of where the line will appear
                         width: 1, // Width of the line
                         label: {
                             useHTML: true,
-                            text: `-${BAND_GAP*100}%`,
+                            text: `-${bandgaprange}%`,
                             y: +15,
                             align: 'center',
                             style: {color: COLOR_BANDGAP},
@@ -1623,6 +1663,8 @@ $(document).ready(function() {
                 options.xAxis.max = dlt.valueOf();
                 dlt.subtract(7, 'd');
                 options.xAxis.min = dlt.valueOf();
+                options.yAxis[0].plotLines = [];
+//                options.series[0].zones = [];
             } else {
                 options.legend = {
                     enabled: true,
@@ -1632,7 +1674,7 @@ $(document).ready(function() {
                 };
                 if (!showbandgap) {
                     options.yAxis[0].plotLines = [];
-                    options.series[0].zones = [];
+//                    options.series[0].zones = [];
                 }
                 dlt = start.clone();
                 if (live) {

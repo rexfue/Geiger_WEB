@@ -467,13 +467,13 @@ button.btnlink {
 }
 
 select {
-	background-color: #86bc24;
-	opacity: 0.8;
+/*	background-color: #86bc24;
+	opacity: 0.8;  */
 	font-size: 130%;
 	text-align: center;
 	display: inline-block;
 	width: 130px;
-	height: 40px;
+	height: 30px;
 }
 
 .dropdown-.menue {
@@ -646,3 +646,7 @@ select {
 	content: '\2013   ';
 }
 
+#bandgapregion {
+	margin-left: 50px;
+	color: gray;
+}

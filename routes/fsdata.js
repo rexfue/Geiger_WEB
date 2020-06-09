@@ -19,9 +19,10 @@ router.get('/getfs/:week', function (req, res) {
     let avg = req.query.avgTime;
     let live = (req.query.live == 'true');
     let movingAvg = (req.query.moving=='true');
+    let longAVG = req.query.longAVG;
 
     if (week == 'oneday') {
-        getDWMData(db, sid, st, avg, live, movingAvg, 1)
+        getDWMData(db, sid, st, avg, live, movingAvg, 1, longAVG)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
         getDWMData(db, sid, st, avg, live, movingAvg, 7)
@@ -213,16 +214,16 @@ function calcTimeRange(st, range, live, avg) {
         start=start.startOf('day');
         end = end.startOf('day');
         start.subtract(33, 'd');
-    } else if (range == 48) {                               // 48 hours
+    } else if (range >= 48) {                               // 48 hours
         if(live == true) {
-            start.subtract(48, 'h')
+            start.subtract(range, 'h')
         }
     }
     return { start: start, end: end };
 }
 
 // get data for one day, one week or one month from the database
-async function getDWMData(db, sensorid, st, avg, live, doMoving, span) {
+async function getDWMData(db, sensorid, st, avg, live, doMoving, span, longAVG) {
         let docs = [];
         let ret = {radiation: [], climate: []};
         // first fetch properties for this sensor
@@ -240,9 +241,13 @@ async function getDWMData(db, sensorid, st, avg, live, doMoving, span) {
                     } else {
                         docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, avg, factor);
                     }
-                    timerange = calcTimeRange(st, 48, true, avg);
-                    let avg48_docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, 2880, factor);
-                    ret['radiation'] = {sid: sid, sname: sname, avg48: avg48_docs[0], values: docs};
+                    let avg48 = null;
+                    if (longAVG != undefined) {
+                        timerange = calcTimeRange(st, longAVG, true, avg);
+                        let avg48_docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, longAVG*60, factor);
+                        avg48 = avg48_docs[0];
+                    }
+                    ret['radiation'] = {sid: sid, sname: sname, avg48: avg48, values: docs};
                 } else if (sname == "BME280") {
                     docs = await readClimateAverages(db, sid, timerange.start, timerange.end, 10);
                     if (docs.length != 0) {
