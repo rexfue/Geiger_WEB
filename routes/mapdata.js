@@ -111,86 +111,70 @@ router.get('/getaktdata/', function (req, res) {
     }
 });
 
-// Fetch the actual out of the dbase
-router.get('/getakwdata/', function (req, res) {
-    var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
-    let box = req.query.box;
-    if ((box == "") || (box == undefined)) {
-        console.log("getaktdata: box undefined");
-        res.json({"akws": []});
-        return;
-    }
-    var south = parseFloat(box[0][1]);
-    var north = parseFloat(box[1][1]);
-    var east = parseFloat(box[1][0]);
-    var west = parseFloat(box[0][0]);
-    let st = req.query.start;
-    console.log("getaktdata: S=",south," N=",north," E=",east," W=",west)
-    let poly = [];
-    if(req.query.poly != undefined) {
-        poly = JSON.parse(req.query.poly);
-    }
-    var collection = db.collection('akws');                         // die 'korrelation' verwenden
-    var aktData = [];                                                   // hier die daten sammeln
-    var now = moment();                                                 // akt. Uhrzeit
-    var lastDate = 0;
-    let loc;
+// Fetch all akw data out of the dbase
+router.get('/getakwdata/', async function (req, res) {
+    const db = req.app.get('dbase');                        // db wird in req übergeben (von app.js)
+    let collection = db.collection('akws');                 // die 'korrelation' verwenden
+    let erg = [];
+    let docs = [];
     console.log("getakwdata: now fetching data from DB");
-    if(poly.length != 0) {
-        loc = {
-            location: {
-                $geoWithin: {
-                    $geometry: {
-                        type: "Polygon",
-                        coordinates: [poly],
-                    }
-                }
-
+    try {
+        docs = await collection.find().toArray();                                // find all
+        if (docs == null) {
+            console.log("getakwdata: docs==null");
+            res.json(erg);
+            return;
+        }
+        console.log("getawkdata: data fetched, length=",docs.length);
+        for (var i = 0; i < docs.length; i++) {
+            var item = docs[i];
+            var oneAktData = {};
+            oneAktData['location'] = {
+                type: 'Point',
+                coordinates: [item.lon, item.lat]
+            };
+            oneAktData['name'] = item.Name;
+            oneAktData['active'] = item.Status == 'aktiv';
+            oneAktData['start'] = item.Baujahr;
+            oneAktData['end'] = item.Stillgeleg;
+            oneAktData['type']='akw';
+            erg.push(oneAktData);                  // dies ganzen Werte nun in das Array
+        }
+        collection = db.collection('th_akws');
+        docs = await collection.find().toArray();
+        if (docs == null) {
+            console.log("getakwdata: docs==null");
+            res.json(erg);
+            return;
+        }
+        console.log("getawkdata: data fetched from th_akws, length=", docs.length);
+        for (let i = 0; i < docs.length; i++) {
+            const item = docs[i];
+            let oneAktData = {};
+            let loc = item.geo.substr(6).split(' ');
+            let lon = parseFloat(loc[0]);
+            let lat = parseFloat(loc[1]);
+            oneAktData['location'] = {
+                type: 'Point',
+                coordinates: [lon, lat]
+            };
+            oneAktData['name'] = item.name;
+            if(item.types.includes('research')) {
+                oneAktData['type'] = 'research';
+                erg.push(oneAktData);
+            } else if (item.types.includes('Fusion')) {
+                oneAktData['type'] = 'fusion';
+                erg.push(oneAktData);
+            } else if (item.types.includes('facility')) {
+                oneAktData['type'] = 'facility';
+                erg.push(oneAktData);
             }
         }
-    } else {
-        loc = {
-            location: {
-                $geoWithin: {
-                    $box: [
-                        [west, south],
-                        [east, north]
-                    ]
-                }
-            },
-        }
-    }
-    try {
-        collection.find()                                                 // find all data within map borders (box)
-            .toArray(function (err, docs) {
-                if (docs == null) {
-                    console.log("getakwdata: docs==null");
-                    res.json({"akws": []});
-                    return;
-                }
-                console.log("getaktdata: data fetched, length=",docs.length);
-                for (var i = 0; i < docs.length; i++) {
-                    var item = docs[i];
-
-//                    console.log(item);
-
-                    var oneAktData = {};
-                    oneAktData['location'] = {
-                        type: 'Point',
-                        coordinates: [item.lon, item.lat]
-                    };
-                    oneAktData['name'] = item.Name;
-                    oneAktData['active'] = item.Status == 'aktiv';
-                    oneAktData['start'] = item.Baujahr;
-                    oneAktData['end'] = item.Stillgeleg;
-                    aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
-                }
-                res.json({"akws": aktData});              // alles bearbeitet -> Array senden
-            });
+        res.json(erg);
     }
     catch(e) {
         console.log("Problem mit getakwdata", e);
-        res.json({"avgs": []});
+        res.json({"akws": [], "research": [], "fusion": [], "waste": [],});
         return;
     }
 });

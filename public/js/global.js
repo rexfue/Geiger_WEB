@@ -17,6 +17,7 @@ $(document).ready(function() {
     const COLOR_AKW="#B80000"
     const COLOR_RESEARCH="#EA7C00"
     const COLOR_DEPOT="AE00D5"
+    const COLOR_FUSION="0000FF"
 
 
 
@@ -63,8 +64,12 @@ $(document).ready(function() {
     let showSplashScreen = false;
     let splashVersion;
 
-    let decomAKWs = L.layerGroup();
-    let activeAKWs = L.layerGroup();
+    let layer_activeAKW = L.layerGroup();
+    let layer_decomAKW = L.layerGroup();
+    let layer_fusionAKW = L.layerGroup();
+    let layer_researchAKW = L.layerGroup();
+    let layer_facilityAKW = L.layerGroup();
+
 
     // let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
     // let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
@@ -263,8 +268,7 @@ $(document).ready(function() {
             $('.akwIcon').css({'width':zfaktor,'height':zfaktor});
         });
 
-        await buildAKWs(bounds,activeAKWs,true);
-        await buildAKWs(bounds,decomAKWs,false);
+        await buildAKWs();
         await buildMarkers(bounds);
 
         // let ndMarker = new L.marker(bounds.getCenter(), {opacity: 0.01});
@@ -497,6 +501,35 @@ $(document).ready(function() {
         return popuptext;
     }
 
+        const akwlayers = [
+            { type: 'akw', active: true, layer: layer_activeAKW, icondef: `r="200" fill="${COLOR_AKW}"`},
+            { type: 'akw', active: false, layer: layer_decomAKW, icondef: `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"` },
+            { type: 'research', active: true, layer: layer_researchAKW, icondef: `r="200" fill="${COLOR_RESEARCH}"` },
+            { type: 'facility', active: true, layer: layer_facilityAKW, icondef: `r="200" fill="${COLOR_DEPOT}"` },
+            { type: 'fusion', active: true, layer: layer_fusionAKW, icondef: `r="200" fill="${COLOR_FUSION}"` },
+        ]
+    let iconform = [
+        `r="200" fill="${COLOR_AKW}"`,
+        `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"`,
+    ];
+
+
+    function findLayer(type, active) {
+            for (let al of akwlayers) {
+                if ((al.type === type) && (al.active === active)) {
+                    return al.layer;
+                }
+            }
+        }
+
+        function findAKWtype(type) {
+            for (let al of akwlayers) {
+                if(al.type == type) {
+                    return(al.icondef);
+                }
+            }
+        }
+
         /******************************************************
          * buildAKWs
          *
@@ -510,7 +543,7 @@ $(document).ready(function() {
          * return:
          *      all npp plotted on map
          *******************************************************/
-        async function buildAKWs(bound,layer,what) {
+        async function buildAKWs() {
             let isize = (2*map.getZoom());
             console.log(`isze=${isize}`);
             let count = 3;
@@ -532,18 +565,16 @@ $(document).ready(function() {
             if (count == 0) {
                 return;                     // ****** <<<< Fehler meldung rein
             }
-            let akws = kraftwerke.akws;
-            for (let akw of akws) {
-                if (!((!what && !akw.active) || (what && akw.active))) {
-                    continue;
-                }
-                console.log("akw: ", akw.name);
+            let layer;
+            for (let akw of kraftwerke) {
+                if(akw.active == undefined) akw.active == true;
+                layer = findLayer(akw.type, akw.active);
                 let marker = L.marker([akw.location.coordinates[1], akw.location.coordinates[0]], {
                     name: akw.name,
                     baujahr: akw.start,
                     stillgelegt: akw.end,
                     icon: new L.Icon({
-                        iconUrl: buildAKWIcon(akw.active),
+                        iconUrl: buildAKWIcon(findAKWtype(akw.type)),
                         iconSize: [isize, isize],
                         iconAnchor: [isize/2, isize/2],
                         className: 'akwIcon'
@@ -551,24 +582,22 @@ $(document).ready(function() {
                     zIndexOffset: -1000,
                     class: 'akwmarker'
                 });
-                marker.bindPopup((e) => getAKWPopUp(e));
-                marker.addTo(layer);
+                marker.bindPopup((e) => getAKWPopUp(e, akw.type));
+                layer.addLayer(marker);
             }
-            map.addLayer(layer);
+            map.addLayer(layer_activeAKW);
+            map.addLayer(layer_dcomAKW);
+            map.addLayer(layer_fusionAKW);
+            map.addLayer(layer_researchAKW);
+            map.addLayer(layer_facilityAKW);
         }
 
-    let iconform = [
-        `r="200" fill="${COLOR_AKW}"`,
-        `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"`,
-    ];
-
-    function buildAKWIcon(type) {
-        let index = type == true ? 0 : 1;
+    function buildAKWIcon(iconstr) {
         let akwIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">' +
             // '<path fill="' + color + '" stroke="black" stroke-width="5"  ' +
             // 'd="M 10 0 v 600 h 650 v -250 a 250 250 0 0 0 -500 0 v 200 h -50 v -550 z" />' +
             '<circle cx="200" cy="200" ' +
-            iconform[index] + '></circle>' +
+            iconstr + '></circle>' +
             '</svg>';
         let akwIconUrl = encodeURI("data:image/svg+xml," + akwIcon).replace(new RegExp('#', 'g'), '%23');
         return akwIconUrl;
