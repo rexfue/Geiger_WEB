@@ -14,10 +14,10 @@ $(document).ready(function() {
     const COLOR_BANDGAP="#FE6767"
     const COLOR_OUTOFBAND="#FE6767"
 
-    const COLOR_AKW="#B80000"
+    const COLOR_AKW="#E80000"
     const COLOR_RESEARCH="#EA7C00"
-    const COLOR_DEPOT="AE00D5"
-    const COLOR_FUSION="0000FF"
+    const COLOR_DEPOT="#AE00D5"
+    const COLOR_FUSION="#0000FF"
 
 
 
@@ -55,7 +55,6 @@ $(document).ready(function() {
 
     let showOnlySi22G = false;
     let faktor;
-    let showAKWs = 0;                       // 0 -> no, 1 -> only active, 2  -> all
     let showbandgap = false;
     let bandgapvalue = 48;                  // mean over this many hours
     let bandgaprange = 15;                  // threshold around this mean
@@ -64,11 +63,11 @@ $(document).ready(function() {
     let showSplashScreen = false;
     let splashVersion;
 
-    let layer_activeAKW = L.layerGroup();
-    let layer_decomAKW = L.layerGroup();
-    let layer_fusionAKW = L.layerGroup();
-    let layer_researchAKW = L.layerGroup();
-    let layer_facilityAKW = L.layerGroup();
+    let markersAll;
+
+    let layer_activeAKW = new L.layerGroup();
+    let layer_decomAKW = new L.layerGroup();
+    let layer_facilityAKW = new L.layerGroup();
 
 
     // let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
@@ -198,25 +197,24 @@ $(document).ready(function() {
     });
 
     $('.btnakw').click(async function() {
-        if(this.value == 'no') {
-            showAKWs = 0;                                   // don't show AKWs
-            map.removeLayer(decomAKWs);
-            map.removeLayer(activeAKWs);
-        } else if (this.value == 'activ') {
-            map.removeLayer(decomAKWs);
-            map.removeLayer(activeAKWs);
-            map.addLayer(activeAKWs);
-            showAKWs = 1;                                   // show only actives
+        if($('#btnakwact').is(':checked')) {
+            map.removeLayer(layer_activeAKW);
+            map.addLayer(layer_activeAKW);
         } else {
-            map.removeLayer(decomAKWs);
-            map.removeLayer(activeAKWs);
-            map.addLayer(activeAKWs);
-            map.addLayer(decomAKWs);
-            showAKWs = 2;                                   // show all
+            map.removeLayer(layer_activeAKW);
         }
-        bounds = map.getBounds();
-//        await buildAKWs(bounds);
-        console.log('btnawk:',this.value);
+        if($('#btnakwstill').is(':checked')) {
+            map.removeLayer(layer_decomAKW);
+            map.addLayer(layer_decomAKW);
+        } else {
+            map.removeLayer(layer_decomAKW);
+        }
+        if($('#btnakwrest').is(':checked')) {
+            map.removeLayer(layer_facilityAKW);
+            map.addLayer(layer_facilityAKW);
+        } else {
+            map.removeLayer(layer_facilityAKW);
+        }
     });
 
 
@@ -352,7 +350,6 @@ $(document).ready(function() {
      *      all markers plotted on map
      *******************************************************/
     async function buildMarkers(bounds) {
-        let markersAll;
         let count = 3;
         let sensors = [];
         let alltubes = [];
@@ -502,24 +499,18 @@ $(document).ready(function() {
     }
 
         const akwlayers = [
-            { type: 'akw', active: true, layer: layer_activeAKW, icondef: `r="200" fill="${COLOR_AKW}"`},
-            { type: 'akw', active: false, layer: layer_decomAKW, icondef: `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"` },
-            { type: 'research', active: true, layer: layer_researchAKW, icondef: `r="200" fill="${COLOR_RESEARCH}"` },
-            { type: 'facility', active: true, layer: layer_facilityAKW, icondef: `r="200" fill="${COLOR_DEPOT}"` },
-            { type: 'fusion', active: true, layer: layer_fusionAKW, icondef: `r="200" fill="${COLOR_FUSION}"` },
+            { type: 'akw_a', active: true, layer: layer_activeAKW, icondef: `r="200" fill="${COLOR_AKW}"`, popup: ""},
+            { type: 'akw_s', active: false, layer: layer_decomAKW, icondef: `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"`, popup: "" },
+            { type: 'other', active: true, layer: layer_facilityAKW, icondef: `r="200" fill="${COLOR_DEPOT}"`, popup: 'Nukleare Anlage <br />(unspezifiziert)' },
         ]
-    let iconform = [
-        `r="200" fill="${COLOR_AKW}"`,
-        `r="170" fill="white" stroke="${COLOR_AKW}" stroke-width="60"`,
-    ];
 
-
-    function findLayer(type, active) {
-            for (let al of akwlayers) {
-                if ((al.type === type) && (al.active === active)) {
-                    return al.layer;
+        function findLayer(type, active) {
+            for (let x of akwlayers) {
+                if (x.type === type) {
+                    return x.layer;
                 }
             }
+            return layer_facilityAKW;
         }
 
         function findAKWtype(type) {
@@ -554,10 +545,7 @@ $(document).ready(function() {
                         console.log(e);
                         kraftwerke = null;
                     });
-                if ((kraftwerke == null) || (kraftwerke.length == 0)) {
-//                showError(1, 'Daten Laden', 0);
-                } else {
-//            dialogError.dialog("close");
+                if (!((kraftwerke == null) || (kraftwerke.length == 0))) {
                     break;
                 }
                 count--;
@@ -565,10 +553,9 @@ $(document).ready(function() {
             if (count == 0) {
                 return;                     // ****** <<<< Fehler meldung rein
             }
-            let layer;
             for (let akw of kraftwerke) {
-                if(akw.active == undefined) akw.active == true;
-                layer = findLayer(akw.type, akw.active);
+                if(akw.active == undefined) akw.active = true;
+                let layer = findLayer(akw.type, akw.active);
                 let marker = L.marker([akw.location.coordinates[1], akw.location.coordinates[0]], {
                     name: akw.name,
                     baujahr: akw.start,
@@ -580,15 +567,14 @@ $(document).ready(function() {
                         className: 'akwIcon'
                     }),
                     zIndexOffset: -1000,
-                    class: 'akwmarker'
+                    type: akw.type,
+                    text: akw.typeText
                 });
                 marker.bindPopup((e) => getAKWPopUp(e, akw.type));
-                layer.addLayer(marker);
+                    marker.addTo(layer);
             }
             map.addLayer(layer_activeAKW);
-            map.addLayer(layer_dcomAKW);
-            map.addLayer(layer_fusionAKW);
-            map.addLayer(layer_researchAKW);
+            map.addLayer(layer_decomAKW);
             map.addLayer(layer_facilityAKW);
         }
 
@@ -608,22 +594,25 @@ $(document).ready(function() {
             let popuptxt =
                 `<div id="akwpopuptext">
             <h5>${marker.options.name}</h5>
-            <br />
-            Baujahr: ${marker.options.baujahr}<br />
-        `;
-            const thisYear = moment().year();
-            const stillgelegt = marker.options.stillgelegt;
-            if ((stillgelegt < thisYear ) && (stillgelegt > 0)){
-                popuptxt +=
-                    `Stillgelegt: ${marker.options.stillgelegt}`
-            } else if (stillgelegt >= thisYear) {
-                popuptxt +=
-                    `Stilllegung: ${marker.options.stillgelegt} (geplant)`
-            };
+            <br />`;
+            if(marker.options.type != 'other') {
+                popuptxt += `Year of construction: ${marker.options.baujahr}<br />`;
+                const thisYear = moment().year();
+                const stillgelegt = marker.options.stillgelegt;
+                if ((stillgelegt < thisYear) && (stillgelegt > 0)) {
+                    popuptxt +=
+                        `Shut down: ${marker.options.stillgelegt}`
+                } else if (stillgelegt >= thisYear) {
+                    popuptxt +=
+                        `Will be shut down: ${marker.options.stillgelegt}`
+                }
+                ;
+            } else {
+                popuptxt += marker.options.text;
+            }
             popuptxt += '</div>';
             return popuptxt;
         }
-
 
 // ********************************************************************************
 // Events

@@ -137,7 +137,7 @@ router.get('/getakwdata/', async function (req, res) {
             oneAktData['active'] = item.Status == 'aktiv';
             oneAktData['start'] = item.Baujahr;
             oneAktData['end'] = item.Stillgeleg;
-            oneAktData['type']='akw';
+            oneAktData['type'] = item.Status === 'aktiv' ? 'akw_a' : 'akw_s';
             erg.push(oneAktData);                  // dies ganzen Werte nun in das Array
         }
         collection = db.collection('th_akws');
@@ -159,14 +159,9 @@ router.get('/getakwdata/', async function (req, res) {
                 coordinates: [lon, lat]
             };
             oneAktData['name'] = item.name;
-            if(item.types.includes('research')) {
-                oneAktData['type'] = 'research';
-                erg.push(oneAktData);
-            } else if (item.types.includes('Fusion')) {
-                oneAktData['type'] = 'fusion';
-                erg.push(oneAktData);
-            } else if (item.types.includes('facility')) {
-                oneAktData['type'] = 'facility';
+            oneAktData['typeText'] = item.types;
+            oneAktData['type'] = 'other';
+            if(item.types != 'Nuclear power plant') {
                 erg.push(oneAktData);
             }
         }
