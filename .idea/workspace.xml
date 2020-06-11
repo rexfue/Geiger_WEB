@@ -24,14 +24,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="built new legend with color gradient&#10;&#10;public/css/style.css&#10;   - new legend css entries added&#10;   &#10;public/js/global.js&#10;   - default bandgap = false&#10;   - calc color with d3 scaleLinear&#10;   &#10;views/leayout.pug&#10;   - added d3&#10;      &#10;views/mapit.pug&#10;   - added new legend&#10;   &#10;geiger-app.js&#10;   - added dirrectory for d3">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="info changed&#10;&#10;public/info.htm&#10;   - adapted for new features&#10;   &#10;build_and_copy.sh&#10;   - ist now possible to change the name">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geiger-app.js" beforeDir="false" afterPath="$PROJECT_DIR$/geiger-app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/mapit.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/mapit.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +64,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="akw_new_icon" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -402,48 +397,10 @@
       <workItem from="1588602077709" duration="17000" />
       <workItem from="1589062630225" duration="4471000" />
       <workItem from="1591259339903" duration="13557000" />
-    </task>
-    <task id="LOCAL-00078" summary="public/js/mapit.js&#10;   - problem-sensors type 5 also ignoring&#10;   &#10;package[_tst].json&#10;   - version and date">
-      <created>1540121686660</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1540121686660</updated>
-    </task>
-    <task id="LOCAL-00079" summary="Averages move to middle of time range&#10;&#10;routes/fsdata.js&#10;   - avg as paramater on week calulations&#10;   - wrong parameter count corrected&#10;   &#10;routes/utilities-js&#10;   - shift averages half average time to the left&#10;   &#10;docker-compose.yml&#10;   - link log for probsens&#10;   - change name of nginx-web   &#10;   &#10;package[_tst].json&#10;   - version and date">
-      <created>1540294699173</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1540294699173</updated>
-    </task>
-    <task id="LOCAL-00080" summary="avg for 7d-graph now seletable&#10;&#10;css/style.css&#10;   - two select boxes&#10;   &#10;public/js/global.js&#10;   - extra avgTome fpr 7d and 24h grafics&#10;   - cleaning&#10;   &#10;settings.html&#10;   - two select boxes for average times&#10;   &#10;routes/fsdata.js&#10;   -  calc different averages also for week data">
-      <created>1540299139330</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1540299139330</updated>
-    </task>
-    <task id="LOCAL-00081" summary="public/js/mapit.js&#10;   - all problemsensors a skipped">
-      <created>1540360065309</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1540360065310</updated>
-    </task>
-    <task id="LOCAL-00082" summary="Anpassungen für leaflet.js&#10;&#10;many changes !!!!">
-      <created>1540932540883</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1540932540884</updated>
-    </task>
-    <task id="LOCAL-00083" summary="marker to test">
-      <created>1541067603270</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1541067603271</updated>
+      <workItem from="1591686737060" duration="20105000" />
+      <workItem from="1591717633523" duration="7007000" />
+      <workItem from="1591771957451" duration="13634000" />
+      <workItem from="1591870370312" duration="2197000" />
     </task>
     <task id="LOCAL-00084" summary="Anpassungen an leaflet">
       <created>1542123989692</created>
@@ -746,7 +703,49 @@
       <option name="project" value="LOCAL" />
       <updated>1591618798387</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <task id="LOCAL-00127" summary="built new legend with color gradient&#10;&#10;public/css/style.css&#10;   - new legend css entries added&#10;   &#10;public/js/global.js&#10;   - default bandgap = false&#10;   - calc color with d3 scaleLinear&#10;   &#10;views/leayout.pug&#10;   - added d3&#10;      &#10;views/mapit.pug&#10;   - added new legend&#10;   &#10;geiger-app.js&#10;   - added dirrectory for d3&#10;   &#10;package[-lock].json&#10;   - version updated">
+      <created>1591645585209</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1591645585210</updated>
+    </task>
+    <task id="LOCAL-00128" summary="added long time mean and band&#10;&#10;public/css/style.css&#10;   - add margin for settings of band&#10;   &#10;public/js/global.js&#10;   - band as variable and changable by dialog&#10;   - plot tha long time mean and the band&#10;   &#10;public/settingsD.html&#10;   - form to enter/change band data&#10;&#10;routes/fsdata.js&#10;   - make long time mean as param for call&#10;   &#10;views/leayout.pug&#10;   - change order of call 1.jquery, 2. bootstrap, 3. jquery-ui">
+      <created>1591704997313</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1591704997314</updated>
+    </task>
+    <task id="LOCAL-00129" summary="set red circles as akw icons&#10;&#10;public/js/global.js&#10;   - akw icons as circles&#10;   - size of icons change with zoom level">
+      <created>1591712959961</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1591712959961</updated>
+    </task>
+    <task id="LOCAL-00130" summary="WIP WIP WIP&#10;&#10;einlesen ALLER AKWs etc von beiden DBs&#10;&#10;Eintragen in die Layer geht nicht ???">
+      <created>1591725362011</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1591725362012</updated>
+    </task>
+    <task id="LOCAL-00131" summary="all nuclear facilities shown&#10;&#10;public/js/global.js&#10;   - show nuclear facilities from both databases&#10;   - select what to show via layers&#10;   &#10;routes/mapdata.js&#10;   - fetch data from second database (th_akws)&#10;   &#10;views/mapit.pug&#10;   - changed selection for nuclear plants from radio to checkbutton">
+      <created>1591783557159</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1591783557159</updated>
+    </task>
+    <task id="LOCAL-00132" summary="public/css/styles.css&#10;   - margins of legend left and bottom to 0&#10;&#10;public/js/global.js&#10;   - button 'Einstellung' always on at starting of graph&#10;&#10;public/info.htm&#10;   - adapted on new features&#10;   &#10;views/mapit.pug&#10;   - legend within map      &#10;      &#10;build_and_copy.sh      &#10;   - now use getopts to enter cmd line parameters&#10;&#10;package.json&#10;   - version and date">
+      <created>1591876990448</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1591876990449</updated>
+    </task>
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -826,12 +825,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Viel rumgebastelt, vor Allem die MAP auf OpenStreetMap gebracht" />
-    <MESSAGE value="public/css/style.css&#10;   - map hegth = 590&#10;   - set button hidden&#10;   &#10;public/js/global.js&#10;   - navigation buttons at day display&#10;   - set button only at week display&#10;   - cosmetic&#10;      &#10;public/js/mapit.js&#10;   - use svg icons&#10; &#10;routes/fsdata.js&#10;   - return 10min avg at getday&#10;   &#10;views/index.pug&#10;   - order of buttons&#10;   &#10;views/mapit.pug&#10;   - header adapted&#10;   &#10;app.js&#10;   - PORT via environment&#10;   &#10;package.json package_geiger.json&#10;   - version" />
-    <MESSAGE value="public/images&#10;   - favicon added&#10;   &#10;views/layout.pug&#10;   - show favicon" />
-    <MESSAGE value="public/global.js&#10;   - ymax calculated from max of series&#10;   &#10;package-geig.json, package.json&#10;   - version" />
-    <MESSAGE value="public/css/styl.css&#10;   - headeline changed&#10;  &#10;public/mapit.js&#10;   - new construction of markers&#10;   - add legend to map&#10;   &#10;routes/index.js   &#10;   - changed title to tit&#10;   &#10;views/index.pug /views/mapit.pug&#10;   - added typeofSensor&#10;   &#10;app.js&#10;   - added defaultport&#10;   &#10;package_geig.json package.json&#10;   - version" />
-    <MESSAGE value="routes/mapdata.js&#10;   - getaktdata: if box is empty, return epty array. dito if docs is null" />
     <MESSAGE value="first shot" />
     <MESSAGE value="halbfertigproduzkt" />
     <MESSAGE value="public/js/global.js&#10;   - color of Einstellung button now green&#10;   - hide Einstellung button with Ende" />
@@ -851,7 +844,13 @@
     <MESSAGE value="only for Testing" />
     <MESSAGE value="fixed text in subtitles and legend, added bandgab&#10;&#10;public/css/style.css&#10;   - main graphic windoe with bottom margin&#10;   &#10;public/hs/global.js&#10;   - define colors for bandgap&#10;   - make bandgap selectable&#10;   - adapt different texts&#10;   - switch off legend for 7day and 30day grafics&#10;   - add bandgap&#10;   &#10;public/settingsD.html&#10;   - added switch on/off of bandgap" />
     <MESSAGE value="differen color for graphics line segments&#10;&#10;public/js/global.js&#10;   - added line zones" />
-    <option name="LAST_COMMIT_MESSAGE" value="differen color for graphics line segments&#10;&#10;public/js/global.js&#10;   - added line zones" />
+    <MESSAGE value="added long time mean and band&#10;&#10;public/css/style.css&#10;   - add margin for settings of band&#10;   &#10;public/js/global.js&#10;   - band as variable and changable by dialog&#10;   - plot tha long time mean and the band&#10;   &#10;public/settingsD.html&#10;   - form to enter/change band data&#10;&#10;routes/fsdata.js&#10;   - make long time mean as param for call&#10;   &#10;views/leayout.pug&#10;   - change order of call 1.jquery, 2. bootstrap, 3. jquery-ui" />
+    <MESSAGE value="set red circles as akw icons&#10;&#10;public/js/global.js&#10;   - akw icons as circles&#10;   - size of icons change with zoom level" />
+    <MESSAGE value="WIP WIP WIP&#10;&#10;einlesen ALLER AKWs etc von beiden DBs&#10;&#10;Eintragen in die Layer geht nicht ???" />
+    <MESSAGE value="all nuclear facilities shown&#10;&#10;public/js/global.js&#10;   - show nuclear facilities from both databases&#10;   - select what to show via layers&#10;   &#10;routes/mapdata.js&#10;   - fetch data from second database (th_akws)&#10;   &#10;views/mapit.pug&#10;   - changed selection for nuclear plants from radio to checkbutton" />
+    <MESSAGE value="info changed&#10;&#10;public/info.htm&#10;   - adapted for new features&#10;   &#10;build_and_copy.sh&#10;   - ist now possible to change the name" />
+    <MESSAGE value="public/css/styles.css&#10;   - margins of legend left and bottom to 0&#10;&#10;public/js/global.js&#10;   - button 'Einstellung' always on at starting of graph&#10;&#10;public/info.htm&#10;   - adapted on new features&#10;   &#10;views/mapit.pug&#10;   - legend within map      &#10;      &#10;build_and_copy.sh      &#10;   - now use getopts to enter cmd line parameters&#10;&#10;package.json&#10;   - version and date" />
+    <option name="LAST_COMMIT_MESSAGE" value="public/css/styles.css&#10;   - margins of legend left and bottom to 0&#10;&#10;public/js/global.js&#10;   - button 'Einstellung' always on at starting of graph&#10;&#10;public/info.htm&#10;   - adapted on new features&#10;   &#10;views/mapit.pug&#10;   - legend within map      &#10;      &#10;build_and_copy.sh      &#10;   - now use getopts to enter cmd line parameters&#10;&#10;package.json&#10;   - version and date" />
   </component>
   <component name="WindowStateProjectService">
     <state x="744" y="383" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1591262288137">
@@ -859,176 +858,154 @@
     </state>
     <state x="744" y="383" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591262288137" />
     <state x="744" y="383" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591259727403" />
-    <state x="400" y="136" width="1241" height="1193" key="CommitChangelistDialog2" timestamp="1591645508684">
+    <state x="968" y="463" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1591717585414">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state x="400" y="136" width="1241" height="1193" key="CommitChangelistDialog2/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591645508684" />
-    <state x="2823" y="489" width="1417" height="857" key="CommitChangelistDialog2/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583156111617" />
-    <state x="507" y="133" width="2048" height="1152" key="DiffContextDialog" timestamp="1591645473894">
+    <state x="968" y="463" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591717585414" />
+    <state x="400" y="136" width="1241" height="1193" key="CommitChangelistDialog2" timestamp="1591876990246">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="400" y="136" width="1241" height="1193" key="CommitChangelistDialog2/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591876990246" />
+    <state x="507" y="133" width="2048" height="1152" key="DiffContextDialog" timestamp="1591705147829">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="507" y="133" width="2048" height="1152" key="DiffContextDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591645473894" />
-    <state x="507" y="133" width="2048" height="1152" key="DiffContextDialog/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591259727742" />
+    <state x="507" y="133" width="2048" height="1152" key="DiffContextDialog/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591705147829" />
     <state x="1034" y="491" key="EnvironmentVariablesDialog" timestamp="1591262286769">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="1034" y="491" key="EnvironmentVariablesDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591262286769" />
     <state x="1034" y="491" key="EnvironmentVariablesDialog/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591259725340" />
-    <state width="351" height="640" key="Git.Branch.Popup" timestamp="1591626127361">
+    <state width="351" height="640" key="Git.Branch.Popup" timestamp="1591783585070">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="351" height="640" key="Git.Branch.Popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591619389852" />
-    <state width="231" height="467" key="Git.Branch.Popup/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158273650" />
+    <state width="351" height="640" key="Git.Branch.Popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591783585070" />
     <state width="351" height="640" key="Git.Branch.Popup/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591626127361" />
-    <state width="1593" height="346" key="GridCell.Tab.0.bottom" timestamp="1591643758181">
+    <state width="1589" height="346" key="GridCell.Tab.0.bottom" timestamp="1591877364881">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.0.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758181" />
-    <state width="1063" height="241" key="GridCell.Tab.0.bottom/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277895" />
+    <state width="1589" height="346" key="GridCell.Tab.0.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364881" />
     <state width="1594" height="346" key="GridCell.Tab.0.bottom/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820897" />
-    <state width="1100" height="333" key="GridCell.Tab.0.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970420" />
-    <state width="1593" height="346" key="GridCell.Tab.0.center" timestamp="1591643758179">
+    <state width="1591" height="346" key="GridCell.Tab.0.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469954" />
+    <state width="1589" height="346" key="GridCell.Tab.0.center" timestamp="1591877364878">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.0.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758179" />
-    <state width="1063" height="241" key="GridCell.Tab.0.center/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277891" />
+    <state width="1589" height="346" key="GridCell.Tab.0.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364878" />
     <state width="1594" height="346" key="GridCell.Tab.0.center/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820894" />
-    <state width="1100" height="333" key="GridCell.Tab.0.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970419" />
-    <state width="1593" height="346" key="GridCell.Tab.0.left" timestamp="1591643758177">
+    <state width="1591" height="346" key="GridCell.Tab.0.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469952" />
+    <state width="1589" height="346" key="GridCell.Tab.0.left" timestamp="1591877364876">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.0.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758177" />
-    <state width="1063" height="241" key="GridCell.Tab.0.left/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277888" />
+    <state width="1589" height="346" key="GridCell.Tab.0.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364876" />
     <state width="1594" height="346" key="GridCell.Tab.0.left/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820893" />
-    <state width="1100" height="333" key="GridCell.Tab.0.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970418" />
-    <state width="1593" height="346" key="GridCell.Tab.0.right" timestamp="1591643758180">
+    <state width="1591" height="346" key="GridCell.Tab.0.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469951" />
+    <state width="1589" height="346" key="GridCell.Tab.0.right" timestamp="1591877364879">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.0.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758180" />
-    <state width="1063" height="241" key="GridCell.Tab.0.right/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277893" />
+    <state width="1589" height="346" key="GridCell.Tab.0.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364879" />
     <state width="1594" height="346" key="GridCell.Tab.0.right/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820895" />
-    <state width="1100" height="333" key="GridCell.Tab.0.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970419" />
-    <state width="1593" height="346" key="GridCell.Tab.1.bottom" timestamp="1591643758069">
+    <state width="1591" height="346" key="GridCell.Tab.0.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469953" />
+    <state width="1589" height="346" key="GridCell.Tab.1.bottom" timestamp="1591877364785">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.1.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758069" />
-    <state width="1063" height="241" key="GridCell.Tab.1.bottom/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277904" />
-    <state width="1594" height="346" key="GridCell.Tab.1.bottom/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591607406598" />
-    <state width="1100" height="333" key="GridCell.Tab.1.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970422" />
-    <state width="1064" height="241" key="GridCell.Tab.1.bottom/0.23.2560.1417/2560.413.1680.1027@2560.413.1680.1027" timestamp="1582992804455" />
-    <state width="1593" height="346" key="GridCell.Tab.1.center" timestamp="1591643758066">
+    <state width="1589" height="346" key="GridCell.Tab.1.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364785" />
+    <state width="1591" height="346" key="GridCell.Tab.1.bottom/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591778145887" />
+    <state width="1591" height="346" key="GridCell.Tab.1.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469957" />
+    <state width="1589" height="346" key="GridCell.Tab.1.center" timestamp="1591877364782">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.1.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758066" />
-    <state width="1063" height="241" key="GridCell.Tab.1.center/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277900" />
-    <state width="1594" height="346" key="GridCell.Tab.1.center/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591607406596" />
-    <state width="1100" height="333" key="GridCell.Tab.1.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970421" />
-    <state width="1064" height="241" key="GridCell.Tab.1.center/0.23.2560.1417/2560.413.1680.1027@2560.413.1680.1027" timestamp="1582992804450" />
-    <state width="1593" height="346" key="GridCell.Tab.1.left" timestamp="1591643758065">
+    <state width="1589" height="346" key="GridCell.Tab.1.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364782" />
+    <state width="1591" height="346" key="GridCell.Tab.1.center/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591778145886" />
+    <state width="1591" height="346" key="GridCell.Tab.1.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469956" />
+    <state width="1589" height="346" key="GridCell.Tab.1.left" timestamp="1591877364781">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.1.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758065" />
-    <state width="1063" height="241" key="GridCell.Tab.1.left/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277898" />
-    <state width="1594" height="346" key="GridCell.Tab.1.left/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591607406594" />
-    <state width="1100" height="333" key="GridCell.Tab.1.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970420" />
-    <state width="1064" height="241" key="GridCell.Tab.1.left/0.23.2560.1417/2560.413.1680.1027@2560.413.1680.1027" timestamp="1582992804447" />
-    <state width="1593" height="346" key="GridCell.Tab.1.right" timestamp="1591643758067">
+    <state width="1589" height="346" key="GridCell.Tab.1.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364781" />
+    <state width="1591" height="346" key="GridCell.Tab.1.left/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591778145885" />
+    <state width="1591" height="346" key="GridCell.Tab.1.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469955" />
+    <state width="1589" height="346" key="GridCell.Tab.1.right" timestamp="1591877364783">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.1.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758067" />
-    <state width="1063" height="241" key="GridCell.Tab.1.right/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277902" />
-    <state width="1594" height="346" key="GridCell.Tab.1.right/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591607406597" />
-    <state width="1100" height="333" key="GridCell.Tab.1.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970421" />
-    <state width="1064" height="241" key="GridCell.Tab.1.right/0.23.2560.1417/2560.413.1680.1027@2560.413.1680.1027" timestamp="1582992804453" />
-    <state width="1593" height="346" key="GridCell.Tab.2.bottom" timestamp="1591643758072">
+    <state width="1589" height="346" key="GridCell.Tab.1.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364783" />
+    <state width="1591" height="346" key="GridCell.Tab.1.right/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591778145886" />
+    <state width="1591" height="346" key="GridCell.Tab.1.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469957" />
+    <state width="1589" height="346" key="GridCell.Tab.2.bottom" timestamp="1591877364790">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.2.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758072" />
-    <state width="1063" height="241" key="GridCell.Tab.2.bottom/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277912" />
+    <state width="1589" height="346" key="GridCell.Tab.2.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364790" />
     <state width="1594" height="346" key="GridCell.Tab.2.bottom/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820773" />
-    <state width="1100" height="333" key="GridCell.Tab.2.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970424" />
-    <state width="1593" height="346" key="GridCell.Tab.2.center" timestamp="1591643758071">
+    <state width="1591" height="346" key="GridCell.Tab.2.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469961" />
+    <state width="1589" height="346" key="GridCell.Tab.2.center" timestamp="1591877364787">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.2.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758071" />
-    <state width="1063" height="241" key="GridCell.Tab.2.center/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277908" />
+    <state width="1589" height="346" key="GridCell.Tab.2.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364787" />
     <state width="1594" height="346" key="GridCell.Tab.2.center/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820770" />
-    <state width="1100" height="333" key="GridCell.Tab.2.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970423" />
-    <state width="1593" height="346" key="GridCell.Tab.2.left" timestamp="1591643758070">
+    <state width="1591" height="346" key="GridCell.Tab.2.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469959" />
+    <state width="1589" height="346" key="GridCell.Tab.2.left" timestamp="1591877364786">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.2.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758070" />
-    <state width="1063" height="241" key="GridCell.Tab.2.left/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277906" />
+    <state width="1589" height="346" key="GridCell.Tab.2.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364786" />
     <state width="1594" height="346" key="GridCell.Tab.2.left/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820768" />
-    <state width="1100" height="333" key="GridCell.Tab.2.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970422" />
-    <state width="1593" height="346" key="GridCell.Tab.2.right" timestamp="1591643758071">
+    <state width="1591" height="346" key="GridCell.Tab.2.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469958" />
+    <state width="1589" height="346" key="GridCell.Tab.2.right" timestamp="1591877364788">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.2.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758071" />
-    <state width="1063" height="241" key="GridCell.Tab.2.right/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277910" />
+    <state width="1589" height="346" key="GridCell.Tab.2.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364788" />
     <state width="1594" height="346" key="GridCell.Tab.2.right/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820771" />
-    <state width="1100" height="333" key="GridCell.Tab.2.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970423" />
-    <state width="1593" height="346" key="GridCell.Tab.3.bottom" timestamp="1591643758077">
+    <state width="1591" height="346" key="GridCell.Tab.2.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469960" />
+    <state width="1589" height="346" key="GridCell.Tab.3.bottom" timestamp="1591877364794">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.3.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758077" />
-    <state width="1063" height="241" key="GridCell.Tab.3.bottom/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277921" />
+    <state width="1589" height="346" key="GridCell.Tab.3.bottom/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364794" />
     <state width="1594" height="346" key="GridCell.Tab.3.bottom/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820779" />
-    <state width="1100" height="333" key="GridCell.Tab.3.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970425" />
-    <state width="1593" height="346" key="GridCell.Tab.3.center" timestamp="1591643758075">
+    <state width="1591" height="346" key="GridCell.Tab.3.bottom/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469964" />
+    <state width="1589" height="346" key="GridCell.Tab.3.center" timestamp="1591877364792">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.3.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758075" />
-    <state width="1063" height="241" key="GridCell.Tab.3.center/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277917" />
+    <state width="1589" height="346" key="GridCell.Tab.3.center/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364792" />
     <state width="1594" height="346" key="GridCell.Tab.3.center/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820776" />
-    <state width="1100" height="333" key="GridCell.Tab.3.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970424" />
-    <state width="1593" height="346" key="GridCell.Tab.3.left" timestamp="1591643758073">
+    <state width="1591" height="346" key="GridCell.Tab.3.center/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469962" />
+    <state width="1589" height="346" key="GridCell.Tab.3.left" timestamp="1591877364791">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.3.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758073" />
-    <state width="1063" height="241" key="GridCell.Tab.3.left/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277914" />
+    <state width="1589" height="346" key="GridCell.Tab.3.left/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364791" />
     <state width="1594" height="346" key="GridCell.Tab.3.left/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820775" />
-    <state width="1100" height="333" key="GridCell.Tab.3.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970424" />
-    <state width="1593" height="346" key="GridCell.Tab.3.right" timestamp="1591643758076">
+    <state width="1591" height="346" key="GridCell.Tab.3.left/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469961" />
+    <state width="1589" height="346" key="GridCell.Tab.3.right" timestamp="1591877364793">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state width="1593" height="346" key="GridCell.Tab.3.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591643758076" />
-    <state width="1063" height="241" key="GridCell.Tab.3.right/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158277919" />
+    <state width="1589" height="346" key="GridCell.Tab.3.right/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591877364793" />
     <state width="1594" height="346" key="GridCell.Tab.3.right/0.0.2560.1440/2560.413.1680.1027@0.0.2560.1440" timestamp="1591556820777" />
-    <state width="1100" height="333" key="GridCell.Tab.3.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584258970425" />
+    <state width="1591" height="346" key="GridCell.Tab.3.right/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1591861469963" />
     <state x="1321" y="437" key="RollbackChangesDialog" timestamp="1587892929130">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="1321" y="437" key="RollbackChangesDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1587892929130" />
-    <state x="1089" y="462" key="VcsDiffUtil.ChangesDialog" timestamp="1591259639212">
+    <state x="1089" y="462" key="VcsDiffUtil.ChangesDialog" timestamp="1591705102069">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state x="1089" y="462" key="VcsDiffUtil.ChangesDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591259639212" />
+    <state x="1089" y="462" key="VcsDiffUtil.ChangesDialog/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591705102069" />
     <state x="788" y="306" width="645" height="656" key="find.popup" timestamp="1587296980413">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="788" y="306" width="645" height="656" key="find.popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1587296980413" />
     <state x="788" y="497" width="645" height="472" key="find.popup/0.23.2560.1417/2560.413.1680.1027@0.23.2560.1417" timestamp="1584098973749" />
-    <state x="3255" y="810" key="git4idea.ui.GitTagDialog" timestamp="1583158255841">
-      <screen x="2560" y="390" width="1680" height="1050" />
-    </state>
-    <state x="3255" y="810" key="git4idea.ui.GitTagDialog/0.0.2560.1440/2560.390.1680.1050@2560.390.1680.1050" timestamp="1583158255841" />
-    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup" timestamp="1586622320522">
+    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup" timestamp="1591690218470">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1586622320522" />
+    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup/0.0.2560.1440/2560.390.1680.1050@0.0.2560.1440" timestamp="1591690218470" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>2181</line>
+          <line>2274</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>244</line>
+          <line>263</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>

@@ -40,11 +40,11 @@ block content
                                 input.custom-control-input.btnakw#btnakwrest(type="checkbox" checked)
                                 label.custom-control-label(for="btnakwrest") sonstige Anlagen
             ul.navbar-nav
-                    button.btn.btn-success.ml-4.mybuttons#btnlegende Legende
-                    .input-wrapper
+                    button.btn.btn-success.mybuttons#btnlegende Legende
+                    .input-wrapper.mr-3
                         input.form-control#newmapcenter(type="search" placeholder="Stadt oder Sensor suchen" aria_label="Suche")
                         label.fas.fa-search.input-icon(for="newmapcenter")
-                    button.btn.btn-success.ml-4.mybuttons#btninfo Info
+                    button.btn.btn-success.mybuttons#btninfo Info
     #map
         #legendcontainer
             .legend#legendcpm
@@ -70,7 +70,7 @@ block content
                     button.btn.btn-success#btnmo(value="month") 30 d
                     button.btn.btn-success#btnwe(value="week") 7 d
                     button.btn.btn-success#btnda(autofocus="true",value="day") 24 h
-                ul.navbar-nav
+                ul.navbar-nav.mr-auto
                     button.btn.btn-success#btnset(value='set') Einstellung
                     button.btn.btn-success#btnend(value='map') Ende
         #loading Lade die Daten ...
