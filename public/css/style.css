@@ -586,15 +586,29 @@ select {
 	color:black;
 	font-size: 12px;
 	position: absolute;
-	left: 14px;
-	bottom: 29px;
+	left: 0px;
+	bottom: 0px;
 	height: 35%;
 	width: 130px;
 	z-index: 999;
-	background-color: rgba(238,238,238,0.50);
+	background-color: rgba(238,238,238,0.80);
 	border: solid 1px black;
 	display: none;
 }
+/*
+.legend {
+	font-family: arial, sans-serif;
+	color:black;
+	font-size: 15px;
+	position: absolute;
+	left: 20px;
+	bottom: 0px;
+	height: 40%;
+	width: 250px;
+	z-index: 999;
+	background-color: rgba(238,238,238,0.0);
+}
+*/
 
 #legend-inner-cpm {
 	position: absolute;

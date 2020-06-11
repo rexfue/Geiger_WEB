@@ -18,8 +18,13 @@
 <p>Über der Karte befindet sich die Navigationsleiste  mit folgenden Knöpfen/Eingabefeldern:</p>
 
 <ul>
-    <li><strong>Zählrohre</strong><br>
-        Damit wird umgeschaltet, ob <strong>alle</strong> Sensoren oder nur die Sensoren, die ein <strong>Si22G</strong>-Zählrohr haben, angezeigt werden.</li>
+    <li><strong>Anzeigen</strong><br>
+        Es klappt ein Menü mit 2 Teilbereichen auf:
+        <ul>
+            <li>Im oberen Teil
+        wird umgeschaltet, ob <strong>alle</strong> Sensoren oder nur die Sensoren, die ein <strong>Si22G</strong>-Zählrohr haben, angezeigt werden.</li>
+            <li>Im unteren Teil kann ausgewählt werden, welche Kraftwerke bzw. andere Nuklear-Anlagen angezeigt werden</li>
+        </ul>
     <li><strong>Legende</strong><br>
         Damit wird die Legende ein- oder und ausgeblendet.
     <li><strong>Ort oder Sensornummer suchen</strong><br>
@@ -38,15 +43,17 @@
     <li>Link <strong>Grafik anzeigen</strong></li>
 </ul>
 <p>
-    Außer den Sensoren werden auch die <b>Kernkraftwerke (AKW)</b> angezeigt. Aktive AKWs werden scharz, sillgelegte werden grau dargestellt.
+    Außer den Sensoren werden auch die <b>Kernkraftwerke (AKW)</b> angezeigt. Aktive AKWs werden rot, sillgelegte werden
+    als roter Ring und sonstige Nuklearanlagen werden in violett dargestellt.
 </p>
 <p>
     Ein Klick auf ein AKW-Symbol bringt eine kleine Info-Tafel mit folgenden Daten zur Anzeige:
 </p>
 <ul>
     <li>Name des Kraftwerkes</li>
-    <li>Baujahr</li>
-    <li>Datum der Stilllegung (falls das AKW stillgelegt ist)</li>
+    <li>Baujahr (wenn bekannt)</li>
+    <li>Datum der Stilllegung (falls das AKW stillgelegt ist/wird)</li>
+    <li>Bei den anderen Anlagen die Art der Anlage</li>
 </ul>
 <p>Quellen: <br />Die Daten für die Kerkraftwerke stammen
     aus folgenden Quellen:
@@ -64,12 +71,21 @@
 <h3 id="toc_3">Grafik</h3>
 
 <p>Durch Klick auf <strong>Grafik anzeigen</strong> öffnet sich ein Fenster, das den Verlauf der letzten 24 Stunden anzeigt.
-    Die angezeigten Werte sind jeweils der Mittelwert über 10min.<br>
+    Es werden alle Messwerte (Wert alle 2.5min) angezeigt und zusätzlich ein gleitender Mittelwert. Der Zeitbereich für diesen Mittelwerrt
+    kann über <strong>Einstellung</strong> im Bereich von 10min bis 6 Stunden geändert werden.
+    Zusätzlich kann über das <strong>Einstell</strong>-Menü ein Langzeitmittelwert (48h bis 120h) mit Bereichsgrenzen (+/-5% bis +/-50%)
+    eingeblendet werden.<br />
+
     Über die Knöpfe <strong>-24h -12h +12h +24h</strong> kann der Zeitstrahl um die jeweilige Anzahl an Stunden verschoben werden.<br />
     Der Knopf <strong>live</strong> schaltet wieder auf den Live-Mode um, d.h. es werden wieder die Daten der letzten 24 Stunden angezeigt.<br>
+</p>
+<p>
     Über den Knopf <strong>7d</strong> kann der Verlauf einer ganzen Woche betrachtet werden.
     Auch hier kann der Zeitstrahl verschoben werden, und zwar um 3 bzw. 7 Tage.
     Außerdem kann über den <strong>Einstellung</strong>-Knopf festgelegt werden, über welchen Zeitraum die Werte gemittelt werden
     und ob eine gleitende oder statische Mittelwertbildung durchgeführt werden soll.<br>
+</p>
+<p>
     Über den Knopf <strong>30d</strong> wird die Darstellung der Tagesmittelwerte jeden Tages der letzten 30 Tage als Balken-Diagramm angezeigt.<br>
+</p>
     Durch Klick auf den Knopf <strong>Ende</strong> wird die Grafik verlassen.</p>

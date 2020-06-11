@@ -2319,6 +2319,7 @@ $(document).ready(function() {
                     $('#overlay').show();
                     grafikON = true;
                     doPlot(active, startDay, data);						// Start with plotting one day from now on
+                    $('#btnset').show();
                 }
             });
         }
