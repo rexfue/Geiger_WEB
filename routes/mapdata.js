@@ -138,9 +138,11 @@ router.get('/getakwdata/', async function (req, res) {
             oneAktData['start'] = item.Baujahr;
             oneAktData['end'] = item.Stillgeleg;
             oneAktData['type'] = item.Status === 'aktiv' ? 'akw_a' : 'akw_s';
+            oneAktData['link'] = item.Wiki_Link;
             erg.push(oneAktData);                  // dies ganzen Werte nun in das Array
         }
-        collection = db.collection('th_akws');
+
+        collection = db.collection('th1_akws');
         docs = await collection.find().toArray();
         if (docs == null) {
             console.log("getakwdata: docs==null");
@@ -160,7 +162,14 @@ router.get('/getakwdata/', async function (req, res) {
             };
             oneAktData['name'] = item.name;
             oneAktData['typeText'] = item.types;
-            oneAktData['type'] = 'other';
+            oneAktData['type'] = item.types == "Nuclear power plant" ? 'akw_a' : 'other';
+            oneAktData['link'] = item.item;
+            if (item.itemServiceretirement != undefined) {
+                oneAktData['ende'] = item.itemServiceretirement.substr(0,4);
+            }
+            if (item.itemServiceentry != undefined) {
+                oneAktData['begin'] = item.itemServiceentry.substr(0,4);
+            }
             if(item.types != 'Nuclear power plant') {
                 erg.push(oneAktData);
             }

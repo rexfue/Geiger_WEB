@@ -642,6 +642,9 @@ $(document).ready(function() {
                     name: akw.name,
                     baujahr: akw.start,
                     stillgelegt: akw.end,
+                    begin: akw.begin,
+                    ende: akw.ende,
+                    link: akw.link,
                     icon: new L.Icon({
                         iconUrl: buildAKWIcon(findAKWtype(akw.type)),
                         iconSize: [isize, isize],
@@ -677,8 +680,11 @@ $(document).ready(function() {
                 `<div id="akwpopuptext">
             <h5>${marker.options.name}</h5>
             <br />`;
+            if(marker.options.link != undefined) {
+                popuptxt += `<a href="${marker.options.link}">Link to wikipedia</a><br />`;
+            }
             if(marker.options.type != 'other') {
-                popuptxt += `Year of construction: ${marker.options.baujahr}<br />`;
+                popuptxt += `Construction: ${marker.options.baujahr}<br />`;
                 const thisYear = moment().year();
                 const stillgelegt = marker.options.stillgelegt;
                 if ((stillgelegt < thisYear) && (stillgelegt > 0)) {
@@ -690,6 +696,15 @@ $(document).ready(function() {
                 }
                 ;
             } else {
+                if(marker.options.link != undefined) {
+                    popuptxt += `<a href="${marker.options.link}">Link to wikidata</a><br />`;
+                }
+                if(marker.options.begin != undefined) {
+                    popuptxt += `Start of duty: ${marker.options.begin}<br />`;
+                }
+                if(marker.options.ende != undefined) {
+                    popuptxt += `End of duty: ${marker.options.ende}<br />`;
+                }
                 popuptxt += marker.options.text;
             }
             popuptxt += '</div>';
