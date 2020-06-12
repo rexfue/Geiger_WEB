@@ -39,7 +39,7 @@ $(document).ready(function() {
     let ymax_geig = 100;
 
     var map;
-    let firstZoom = 7;                      // best: 12
+    let firstZoom = 17;                      // best: 12
     const MAXZOOM = 17;
     let useStgtBorder = false;
     let popuptext = "";
@@ -68,6 +68,42 @@ $(document).ready(function() {
     let layer_activeAKW = new L.layerGroup();
     let layer_decomAKW = new L.layerGroup();
     let layer_facilityAKW = new L.layerGroup();
+
+    let geojsonFeature =
+        {
+            "type":"FeatureCollection",
+            "features":
+                [
+                    {
+                        "type":"Feature",
+                        "properties":{
+                            "marker-symbol":"star",
+                            "marker-color":"#47b66b",
+                            "marker-size":"small",
+                            "radiation_cpm":122
+                        },
+                        "geometry":{
+                            "type":"Point",
+                            "coordinates":
+                                [9.210858643054962,48.7457919369427]
+                        }
+                        },
+                    {
+                        "type":"Feature",
+                        "properties":{
+                            "marker-symbol":"star",
+                            "marker-color":"#30e10f",
+                            "marker-size":"small",
+                            "radiation_cpm":108
+                        },
+                        "geometry":{
+                            "type":"Point",
+                            "coordinates":
+                                [9.211220741271973,48.74570527294977]
+                        }
+                    }
+                ]
+        };
 
 
     // let colorscale = ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850', '#808080'];
@@ -246,7 +282,7 @@ $(document).ready(function() {
 
         bounds = map.getBounds();
 
-//        map.scrollWheelZoom.disable();
+        map.scrollWheelZoom.disable();
 
         map.on('moveend', async function () {
             bounds = map.getBounds();
@@ -264,6 +300,7 @@ $(document).ready(function() {
         map.on('zoomend', () => {
             let zfaktor = (2 * map.getZoom())+'px';
             $('.akwIcon').css({'width':zfaktor,'height':zfaktor});
+            console.log(`New zoom: ${map.getZoom()}`);
         });
 
         await buildAKWs();
@@ -288,6 +325,31 @@ $(document).ready(function() {
         if(cid != -1) {
             showGrafik(cid);
         }
+
+
+        // GeoJson
+        // ****************
+
+        function onEachFeature(feature, layer) {
+            layer.bindTooltip(`cpm: ${feature.properties.radiation_cpm}`);
+        }
+
+        var geojsonMarkerOptions = {
+            radius: 8,
+            fillColor: "#ff7800",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        L.geoJSON(geojsonFeature, {
+            pointToLayer: function (feature, latlng) {
+                geojsonMarkerOptions.fillColor = feature.properties['marker-color'];
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            },
+             onEachFeature: onEachFeature
+        }).addTo(map);
     }
 
 

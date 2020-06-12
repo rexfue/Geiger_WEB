@@ -1,7 +1,7 @@
 {
   "name": "feinstaub",
-  "version": "2.6.7",
-  "date": "2020-04-22",
+  "version": "2.7.5",
+  "date": "2020-06-12",
   "description": "",
   "main": "geiger-app.js",
   "scripts": {
@@ -12,17 +12,21 @@
   "license": "ISC",
   "dependencies": {
     "@google/maps": "^0.3.1",
+    "axios": "^0.19.2",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.3.1",
+    "d3": "^5.16.0",
     "express": "^4.16.4",
     "gauss": "^0.2.12",
     "gpx-parse": "^0.10.4",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.1",
     "jquery-ui": "^1.12.1",
+    "leaflet": "^1.6.0",
     "math": "0.0.3",
     "mathjs": "^5.7.0",
     "moment": "^2.24.0",
     "mongodb": "^3.1.0",
+    "npm": "^6.14.5",
     "pug": "^2.0.0-rc.4",
     "xml-js": "^1.6.11"
   }
