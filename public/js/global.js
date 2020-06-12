@@ -680,10 +680,10 @@ $(document).ready(function() {
                 `<div id="akwpopuptext">
             <h5>${marker.options.name}</h5>
             <br />`;
-            if(marker.options.link != undefined) {
-                popuptxt += `<a href="${marker.options.link}">Link to wikipedia</a><br />`;
-            }
             if(marker.options.type != 'other') {
+                if(marker.options.link != undefined) {
+                    popuptxt += `<a href="${marker.options.link}">Link to wikipedia</a><br />`;
+                }
                 popuptxt += `Construction: ${marker.options.baujahr}<br />`;
                 const thisYear = moment().year();
                 const stillgelegt = marker.options.stillgelegt;
