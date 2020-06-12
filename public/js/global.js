@@ -39,7 +39,7 @@ $(document).ready(function() {
     let ymax_geig = 100;
 
     var map;
-    let firstZoom = 17;                      // best: 12
+    let firstZoom = 10;                      // best: 12
     const MAXZOOM = 17;
     let useStgtBorder = false;
     let popuptext = "";
@@ -85,7 +85,7 @@ $(document).ready(function() {
                         "geometry":{
                             "type":"Point",
                             "coordinates":
-                                [9.210858643054962,48.7457919369427]
+                                [9.210858643054962,48.7458999369427]
                         }
                         },
                     {
@@ -282,7 +282,7 @@ $(document).ready(function() {
 
         bounds = map.getBounds();
 
-        map.scrollWheelZoom.disable();
+//        map.scrollWheelZoom.disable();
 
         map.on('moveend', async function () {
             bounds = map.getBounds();
@@ -343,6 +343,22 @@ $(document).ready(function() {
             fillOpacity: 0.8
         };
 
+        function connectDots(data) {
+            var features = data.features,
+                feature,
+                c = [],
+                i;
+
+            for (i = 0; i < features.length; i += 1) {
+                feature = features[i];
+                // Make sure this feature is a point.
+                if (feature.geometry.type === "Point") {
+                    c.push([feature.geometry.coordinates[1],feature.geometry.coordinates[0]]);
+                }
+            }
+            return c;
+        }
+
         L.geoJSON(geojsonFeature, {
             pointToLayer: function (feature, latlng) {
                 geojsonMarkerOptions.fillColor = feature.properties['marker-color'];
@@ -350,6 +366,9 @@ $(document).ready(function() {
             },
              onEachFeature: onEachFeature
         }).addTo(map);
+
+        L.polyline(connectDots(geojsonFeature)).addTo(map);
+
     }
 
 
@@ -496,6 +515,7 @@ $(document).ready(function() {
             });
 
             marker.bindPopup();                             // and bind the popup
+
             if(marker.options.value != -2) {
                 markersAll.addLayer(marker);
             } else {
@@ -1187,6 +1207,9 @@ $(document).ready(function() {
                         }
                     }
                 },
+                credits: {
+                    enabled: false
+                },
                 title: {
                     text: 'Feinstaub über 1 Tag',
                     align: 'left',
@@ -1842,10 +1865,11 @@ $(document).ready(function() {
                 let navtime = [-24, -12, 0, 12, 24];
                 chr = Highcharts.chart($('#placeholderFS_1')[0], options, function (chart) {
                     addSensorID2chart(chart, sensor);
+                    console.log(`ChartHeigt: ${chart.chartHeight}`);
                     chart.renderer.label(
                         infoTafel,
                         7,
-                        chart.chartHeight-74, 'rect', 0, 0, true)
+                        chart.chartHeight-80, 'rect', 0, 0, true, false)
                         .css({
                             fontSize: '10pt',
                             color: 'green'
