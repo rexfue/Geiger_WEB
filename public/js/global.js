@@ -69,6 +69,8 @@ $(document).ready(function() {
     let layer_decomAKW = new L.layerGroup();
     let layer_facilityAKW = new L.layerGroup();
 
+    let OSName = "Unknown OS";
+
     let geojsonFeature =
         {
             "type":"FeatureCollection",
@@ -168,6 +170,15 @@ $(document).ready(function() {
         }
     });
 
+// Getting th operating system
+    const getosName = function() {
+            if (navigator.userAgent.indexOf("Win") != -1) OSName = "Windows";
+            if (navigator.userAgent.indexOf("Mac") != -1) OSName = "Macintosh";
+            if (navigator.userAgent.indexOf("Linux") != -1) OSName = "Linux";
+            if (navigator.userAgent.indexOf("Android") != -1) OSName = "Android";
+            if (navigator.userAgent.indexOf("like Mac") != -1) OSName = "iOS";
+            console.log('Your OS: ' + OSName);
+    }();
 
 // Start with plotting the map
     plotMap(curSensor, startcity);
@@ -500,7 +511,7 @@ $(document).ready(function() {
             let pos = map.latLngToLayerPoint(marker.getLatLng()).round();
             marker.setZIndexOffset(100 - pos.y);
 
-            // if clicked on the marker fill popup with address and reaktion to click on 'Grafik anzeigen'
+            // if clicked on the marker fill popup with address and reaction to click on 'Grafik anzeigen'
             marker.on ('click', async function() {
                 let addr = await holAddress(marker);
                 marker.getPopup().setContent(getPopUp(marker,addr));
@@ -514,7 +525,7 @@ $(document).ready(function() {
                 });
             });
 
-            marker.bindPopup();                             // and bind the popup
+            marker.bindPopup().openPopup();                             // and bind the popup
 
             if(marker.options.value != -2) {
                 markersAll.addLayer(marker);
@@ -1140,7 +1151,8 @@ $(document).ready(function() {
                 avgTime: what === 'oneday' ? avgTimeD : avgTimeW,
                 live: live,
                 moving: movingAVG,
-                longAVG: bandgapvalue
+                longAVG: bandgapvalue,
+                os: OSName
             };
             faktor = sv_factor[props.name.substring(10)];
             try {
@@ -1843,7 +1855,7 @@ $(document).ready(function() {
                     options.xAxis.max = dlt.valueOf();
                 }
             }
-
+            let infoOffset = OSName == "Macintosh" ? 74 : OSName == "Windows" ? 80 : OSName == "iOS" ? 75 : 74;
             let navx = gbreit-300;
             let navy = 20;
             let navbreit = 55;
@@ -1884,7 +1896,7 @@ $(document).ready(function() {
                     chart.renderer.label(
                         infoTafel,
                         7,
-                        chart.chartHeight-80, 'rect', 0, 0, true, false)
+                        chart.chartHeight-infoOffset, 'rect', 0, 0, true, false)
                         .css({
                             fontSize: '10pt',
                             color: 'green'

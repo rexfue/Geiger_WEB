@@ -20,8 +20,10 @@ router.get('/getfs/:week', function (req, res) {
     let live = (req.query.live == 'true');
     let movingAvg = (req.query.moving=='true');
     let longAVG = req.query.longAVG;
+    let system = req.query.os;
 
     if (week == 'oneday') {
+        console.log(`Operating System = ${system}`);
         getDWMData(db, sid, st, avg, live, movingAvg, 1, longAVG)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
