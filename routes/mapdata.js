@@ -16,27 +16,25 @@ const NOMINATIM_URL="https://nominatim.openstreetmap.org/search?format=json&limi
 router.get('/getaktdata/', function (req, res) {
     var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
     let box = req.query.box;
-    if ((box == "") || (box == undefined)) {
-        console.log("getaktdata: box undefined");
-        res.json({"avgs": [], "lastDate": null});
-        return;
-    }
-    var south = parseFloat(box[0][1]);
-    var north = parseFloat(box[1][1]);
-    var east = parseFloat(box[1][0]);
-    var west = parseFloat(box[0][0]);
-    let st = req.query.start;
-    console.log("getaktdata: S=",south," N=",north," E=",east," W=",west)
     let poly = [];
-    if(req.query.poly != undefined) {
-        poly = JSON.parse(req.query.poly);
-    }
     var collection = db.collection('mapdata');                         // die 'korrelation' verwenden
     var aktData = [];                                                   // hier die daten sammeln
     var now = moment();                                                 // akt. Uhrzeit
     var lastDate = 0;
-    let loc;
+    let south=null,north=null,east=null,west=null;
+    let loc = {};
+    if(req.query.poly != undefined) {
+        poly = JSON.parse(req.query.poly);
+    }
+    if (!((box == "") || (box == undefined))) {
+        south = parseFloat(box[0][1]);
+        north = parseFloat(box[1][1]);
+        east = parseFloat(box[1][0]);
+        west = parseFloat(box[0][0]);
+        console.log("getaktdata: S=", south, " N=", north, " E=", east, " W=", west)
+    }
     console.log("getaktdata: now fetching data from DB");
+
     if(poly.length != 0) {
         loc = {
             location: {
@@ -49,7 +47,7 @@ router.get('/getaktdata/', function (req, res) {
 
             }
         }
-        } else {
+    } else if (south !== null) {
         loc = {
             location: {
                 $geoWithin: {
@@ -61,9 +59,13 @@ router.get('/getaktdata/', function (req, res) {
             },
             name: /Radiation/,
         }
+    } else {
+        loc = {
+            name: /Radiation/,
+        }
     }
     try {
-        collection.find(loc)                                                 // find all data within map borders (box)
+        collection.find(loc)                                              // find all data within map borders (box)
             .toArray(function (err, docs) {
                 if (docs == null) {
                     console.log("getaktdata: docs==null");

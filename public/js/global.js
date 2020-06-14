@@ -299,7 +299,7 @@ $(document).ready(function() {
             bounds = map.getBounds();
             polygon = calcPolygon(bounds);
 //            await buildAKWs(bounds);
-            await buildMarkers(bounds);
+//            await buildMarkers(bounds);
         });
 
         polygon = calcPolygon(bounds);
@@ -321,17 +321,20 @@ $(document).ready(function() {
         // ndMarker.bindTooltip("Leider z.Zt. keine Daten von sensor.community !", {permanent:true, className: "ndmarker", offset: [250,0]});
         // ndMarker.addTo(map);
 
-        map.on('popupopen', function () {
-            $('#btnshwgrafic').click(function () {
-                console.log('call Grafik');
-                map.closePopup();
-                if(window.matchMedia("(orientation:portrait").matches) {
-                    showError(5,"goto Landscape")
-                } else {
-                    showGrafik(clickedSensor);
-                }
-            });
-        });
+        // map.on('popupopen', async function (target) {
+        //     let addr = await holAddress(marker);
+        //     $('#infoaddr').html(addr);
+
+            //     $('#btnshwgrafic').click(function () {
+        //         console.log('call Grafik');
+        //         map.closePopup();
+        //         if(window.matchMedia("(orientation:portrait").matches) {
+        //             showError(5,"goto Landscape")
+        //         } else {
+        //             showGrafik(clickedSensor);
+        //         }
+        //     });
+        // });
 
         if(cid != -1) {
             showGrafik(cid);
@@ -447,7 +450,7 @@ $(document).ready(function() {
         let alltubes = [];
         let sigtubes = [];
         while (count != 0) {
-            sensors = await fetchAktualData(bounds)
+            sensors = await fetchAktualData()
                 .catch(e => {
                     console.log(e);
                     sensors = null;
@@ -471,12 +474,12 @@ $(document).ready(function() {
             showCoverageOnHover: false,
             zoomToBoundsOnClick: true,
             disableClusteringAtZoom: 14,
-            iconCreateFunction: function(cluster) {
+            iconCreateFunction: function (cluster) {
                 let mymarkers = cluster.getAllChildMarkers();
                 let color = getMedian(mymarkers);           // calc median of markers in cluster and use that color
 //                return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
                 return new L.Icon({
-                    iconUrl: buildIcon(color,cluster.getChildCount()),
+                    iconUrl: buildIcon(color, cluster.getChildCount()),
                     iconSize: [35, 35]
                 });
             }
@@ -493,7 +496,7 @@ $(document).ready(function() {
             }
             let value = parseInt(x.cpm);
             let uSvph = value < 0 ? -1 : value / 60 * sv_factor[x.name];
-            let curcolor = getColor(x.name,uSvph > 0 ? x.indoor ? -2 : uSvph : uSvph);
+            let curcolor = getColor(x.name, uSvph > 0 ? x.indoor ? -2 : uSvph : uSvph);
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
@@ -509,28 +512,26 @@ $(document).ready(function() {
 
             });
             let pos = map.latLngToLayerPoint(marker.getLatLng()).round();
-            marker.setZIndexOffset(100 - pos.y);
 
-            // if clicked on the marker fill popup with address and reaction to click on 'Grafik anzeigen'
-            marker.on ('click', async function() {
+            marker.setZIndexOffset(100 - pos.y);
+            // if clicked on the marker fill popup with address and click function
+            marker.on('click', async function () {
                 let addr = await holAddress(marker);
-                marker.getPopup().setContent(getPopUp(marker,addr));
+                marker.setPopupContent((getPopUp(marker,addr)));
                 $('#btnshwgrafic').click(() => {
                     map.closePopup();
-                    if(window.matchMedia("(orientation:portrait").matches) {
-                        showError(5,"goto Landscape")
-                    } else {
-                        showGrafik(clickedSensor);
-                    }
+                    // if(window.matchMedia("(orientation:portrait").matches) {
+                    //     showError(5,"goto Landscape")
+                    // } else {
+                    showGrafik(clickedSensor);
+//                    }
                 });
             });
-
-            marker.bindPopup().openPopup();                             // and bind the popup
-
-            if(marker.options.value != -2) {
+            marker.bindPopup(`Loading adresse data`); // and bind the popup text
+            if (marker.options.value != -2) {
                 markersAll.addLayer(marker);
             } else {
-                console.log(`Too old Sensor: ${marker.options.name}`);
+                console.log(`Too old Sensor: ${markers.options.name}`);
             }
         }
         map.addLayer(markersAll);
@@ -538,7 +539,7 @@ $(document).ready(function() {
 
     // fetch address from properties database
     async function holAddress(marker) {
-        let addr = "Adresse";
+        let addr = "Addr";
         try {
             let ret = await $.get("api/getprops?sensorid=" + marker.options.name);
             if(ret.values[0].address.plz == null) {
@@ -553,24 +554,23 @@ $(document).ready(function() {
         return addr;
     }
 
-    // build popup text
-    function getPopUp(marker,addr) {
+    function getPopUp(marker,a) {
         clickedSensor = marker.options.name;
         let popuptext =
             `
             <div id="popuptext">
                 <div id="infoTitle">
-                    <h4>Sensor: ${clickedSensor}</h4>
+                    <h6>Sensor: ${clickedSensor}</h6>
                 </div>
-                <div>
-                    <h6>${marker.options.rohr}</h6>
+                <div id="inforohr">
+                    ${marker.options.rohr}
                 </div>
                 <div id="infoaddr">
-                    ${addr}
+                    ${a}
                 </div>
                 <div id="indoor">
                     ${marker.options.indoor==1 ? 'indoor' : ''}
-                </div>    
+                </div>
                 <div id="infoTable">
                     <table>
                         <tr>
@@ -666,8 +666,8 @@ $(document).ready(function() {
                     type: akw.type,
                     text: akw.typeText
                 });
-                marker.bindPopup((e) => getAKWPopUp(e, akw.type));
-                    marker.addTo(layer);
+                marker.bindPopup((m) => getAKWPopUp(m));
+                marker.addTo(layer);
             }
             map.addLayer(layer_activeAKW);
             map.addLayer(layer_decomAKW);
@@ -1050,6 +1050,7 @@ $(document).ready(function() {
                 $('#btnset').hide();
             }
             active = 'one' + button;
+            startDay = "";
             doPlot(active, startDay,properties);
 //        switchPlot(active);								// gewählten Plot aktivieren
         });
@@ -2050,10 +2051,14 @@ $(document).ready(function() {
 
             var yAxis_temp = {													// 1
                 title: {
-                    text: 'Temperatur °C',
+                    text: 'T °C',
                     style: {
                         color: 'red'
-                    }
+                    },
+                    align: 'high',
+                    offset: 0,
+                    rotation: 0,
+                    y: -15
                 },
                 min: loty,
                 max: hity,
@@ -2064,10 +2069,14 @@ $(document).ready(function() {
 
             var yAxis_hum = {
                 title: {										// 2
-                    text: 'rel. Feuchte %',
+                    text: 'F %',
                     style: {
                         color: '#946CBD',
-                    }
+                    },
+                    align: 'high',
+                    offset: 10,
+                    rotation: 0,
+                    y: -15,
                 },
                 min: 0,
                 max: 100,
@@ -2085,10 +2094,14 @@ $(document).ready(function() {
 
             var yAxis_press = {													// 3
                 title: {
-                    text: 'Luftdruck hPa',
+                    text: 'D hPa',
                     style: {
                         color: '#DA9E24',
-                    }
+                    },
+                    align: 'high',
+                    offset: 10,
+                    rotation: 0,
+                    y: -15,
                 },
                 gridLineColor: 'lightgray',
                 min: lopy,
@@ -2129,6 +2142,13 @@ $(document).ready(function() {
             options.yAxis[2] = yAxis_press;
             options.chart.zoomType = 'x';
             options.chart.spacingBottom = 40;
+            options.legend = {
+                enabled: true,
+                layout: 'horizontal',
+                borderWidth: 1,
+                align: 'center',
+            };
+
 
 
             if (what == 'oneweek') {
@@ -2314,7 +2334,7 @@ $(document).ready(function() {
                     [box.getEast(), box.getNorth()]
                 ];
             }
-            return $.getJSON('/mapdata/getaktdata', {start: startDay, box: bnds})
+            return $.getJSON('/mapdata/getaktdata', {box: bnds})
                 .fail((jqxhr, textStatus, error) => {
 //                alert("fetchAktualData: Fehler  " + error);						// if error, show it
                     return [];
