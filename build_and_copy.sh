@@ -24,7 +24,7 @@ usage()
     echo "Params:"
     echo "   target: Where to copy the container to "
     echo "   -p port:   ssh port  (default 22)"
-    echo "   -n name:   new name for container (default: $name)"
+    echo "   -n name:   new name for container (default: $orgName)"
 }
 
 while getopts n:p:h? o

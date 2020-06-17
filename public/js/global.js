@@ -60,7 +60,7 @@ $(document).ready(function() {
     let bandgaprange = 15;                  // threshold around this mean
 
 
-    let showSplashScreen = false;
+    let showSplashScreen = true;
     let splashVersion;
 
     let markersAll;
@@ -372,7 +372,7 @@ $(document).ready(function() {
             }
             return c;
         }
-
+/*
         L.geoJSON(geojsonFeature, {
             pointToLayer: function (feature, latlng) {
                 geojsonMarkerOptions.fillColor = feature.properties['marker-color'];
@@ -382,7 +382,7 @@ $(document).ready(function() {
         }).addTo(map);
 
         L.polyline(connectDots(geojsonFeature)).addTo(map);
-
+*/
     }
 
 
