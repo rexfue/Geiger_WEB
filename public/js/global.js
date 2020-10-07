@@ -531,7 +531,7 @@ $(document).ready(function() {
             if (marker.options.value != -2) {
                 markersAll.addLayer(marker);
             } else {
-                console.log(`Too old Sensor: ${markers.options.name}`);
+                console.log(`Too old Sensor: ${marker.options.name}`);
             }
         }
         map.addLayer(markersAll);

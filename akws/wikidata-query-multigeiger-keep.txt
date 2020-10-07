@@ -1,0 +1,147 @@
+*Without aggregation. with dates
+
+# Wikidata SPARQL-Query for nuclear power plants, research reactors, waste facilities
+# regardless of their status
+
+# one result line per location - check columns count and types
+# 20200612 with service entry/retirement dates; no aggregation
+# 20200518
+# 20200509 initial version
+
+# Paste this code into the code input box of https://query.wikidata.org/
+# Then click the blue arrow to start the query and 
+# to get in a few seconds about 480 results in the #defaultView:Map
+
+#defaultView:Table # select this as the result default view
+# defaultView:Map
+
+# Display item details by clicking onto clickable items in the mid column.
+# Once you have results, you can change the result view from "Table" to "Map" to visualize the locations.
+# You will be directed to the wikidata entry.
+# In the upper right corner of that wikidata entry you find links to wikipedia entries for that itme in the available languages.
+
+SELECT DISTINCT ?country ?name ?item ?geo ?itemType ?types ?itemInception ?itemStarttime ?itemServiceentry ?itemServiceretirement ?itemEndtime
+
+WITH
+{
+  SELECT ?item
+  WHERE
+  {
+    {
+    ?item wdt:P31/wdt:P279* wd:Q1739545.
+    }
+    UNION
+    {
+    ?item wdt:P31/wdt:P279* wd:Q1438105.
+    }
+  }
+} AS %allitems
+WHERE
+{
+  INCLUDE %allitems
+
+  ?item wdt:P31/wdt:P279* wd:Q1739545.
+  ?item wdt:P625 ?geo.
+  ?item wdt:P31 ?itemType.
+  OPTIONAL { ?item wdt:P17 ?itemCountry. }
+  OPTIONAL { ?item wdt:P729 ?itemServiceentry. }
+  OPTIONAL { ?item wdt:P730 ?itemServiceretirement. }
+  OPTIONAL { ?item wdt:P582 ?itemEndtime }
+  OPTIONAL { ?item wdt:P571 ?itemInception }
+  OPTIONAL { ?item wdt:P580 ?itemStarttime }
+  
+  
+
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q134447}, "Nuclear power plant, ", "") AS ?itemType1)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q1438105}, "Nuclear research reactor, ", "") AS ?itemType2)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q21493801}, "Nuclear waste facility, ", "") AS ?itemType3)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q14510027}, "Fusion reactor, ", "") AS ?itemType4)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q1298668}, "Nuclear research project, ", "") AS ?itemType5)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q1229765}, "Vessel, ", "") AS ?itemType6)
+
+  BIND( CONCAT(?itemType1, ?itemType2, ?itemType3, ?itemType4, ?itemType5, ?itemType6) AS ?itemType123456)
+  BIND( IF(STRLEN(?itemType123456)=0, "Nuclear facility (unspecified), ", ?itemType123456) AS ?types1)
+
+  BIND( SUBSTR( ?types1, 1, STRLEN($types1)-2 ) AS $types )
+  
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+    ?itemCountry rdfs:label ?country.
+    ?item rdfs:label ?name.
+  }
+}
+ORDER BY ?country ?name
+
+
+
+
+*WIth aggregation
+
+
+# Wikidata SPARQL-Query for nuclear power plants, research reactors, waste facilities
+# regardless of their status
+
+# one result line per location - check columns count and types
+# 20200518
+# 20200509 initial version
+
+# Paste this code into the code input box of https://query.wikidata.org/
+# Then click the blue arrow to start the query and 
+# to get in a few seconds about 480 results in the #defaultView:Map
+
+#defaultView:Table # select this as the result default view
+# defaultView:Map
+
+# Display item details by clicking onto clickable items in the mid column.
+# Once you have results, you can change the result view from "Table" to "Map" to visualize the locations.
+# You will be directed to the wikidata entry.
+# In the upper right corner of that wikidata entry you find links to wikipedia entries for that itme in the available languages.
+
+# The Query aggregates different item types at the same location into a single result entry
+SELECT DISTINCT ?country ?name ?item ?geo (COUNT(?itemType) AS ?count) ?types
+
+WITH
+{
+  SELECT ?item
+  WHERE
+  {
+    {
+    ?item wdt:P31/wdt:P279* wd:Q1739545.
+    }
+    UNION
+    {
+    ?item wdt:P31/wdt:P279* wd:Q1438105.
+    }
+  }
+} AS %allitems
+WHERE
+{
+  INCLUDE %allitems
+
+  ?item wdt:P31/wdt:P279* wd:Q1739545.
+  ?item wdt:P625 ?geo.
+  ?item wdt:P31 ?itemType.
+  OPTIONAL { ?item wdt:P17 ?itemCountry. }
+  OPTIONAL { ?item wdt:P729 ?itemServiceentry. }
+  OPTIONAL { ?item wdt:P730 ?itemServiceretirement. }
+
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q134447}, "Nuclear power plant, ", "") AS ?itemType1)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q1438105}, "Nuclear research reactor, ", "") AS ?itemType2)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q21493801}, "Nuclear waste facility, ", "") AS ?itemType3)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q14510027}, "Fusion reactor, ", "") AS ?itemType4)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q1298668}, "Nuclear research project, ", "") AS ?itemType5)
+  BIND( IF(EXISTS {?item wdt:P31/wdt:P279* wd:Q1229765}, "Vessel, ", "") AS ?itemType6)
+
+  BIND( CONCAT(?itemType1, ?itemType2, ?itemType3, ?itemType4, ?itemType5, ?itemType6) AS ?itemType123456)
+  BIND( IF(STRLEN(?itemType123456)=0, "Nuclear facility (unspecified), ", ?itemType123456) AS ?types1)
+
+  BIND( SUBSTR( ?types1, 1, STRLEN($types1)-2 ) AS $types )
+  
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+    ?itemCountry rdfs:label ?country.
+    ?item rdfs:label ?name.
+  }
+} GROUP BY ?item ?itemType ?types ?name ?geo ?country
+ORDER BY ?country ?name
+
