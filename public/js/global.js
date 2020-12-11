@@ -60,7 +60,7 @@ $(document).ready(function() {
     let bandgaprange = 15;                  // threshold around this mean
 
 
-    let showSplashScreen = true;
+    let showSplashScreen = false;
     let splashVersion;
 
     let markersAll;
@@ -664,7 +664,8 @@ $(document).ready(function() {
                     }),
                     zIndexOffset: -1000,
                     type: akw.type,
-                    text: akw.typeText
+                    text: akw.typeText,
+                    active: akw.active
                 });
                 marker.bindPopup((m) => getAKWPopUp(m));
                 marker.addTo(layer);
@@ -698,7 +699,7 @@ $(document).ready(function() {
                 popuptxt += `Construction: ${marker.options.baujahr}<br />`;
                 const thisYear = moment().year();
                 const stillgelegt = marker.options.stillgelegt;
-                if ((stillgelegt < thisYear) && (stillgelegt > 0)) {
+                if (((stillgelegt < thisYear) && (stillgelegt > 0)) || (marker.options.active == false)) {
                     popuptxt +=
                         `Shut down: ${marker.options.stillgelegt}`
                 } else if (stillgelegt >= thisYear) {

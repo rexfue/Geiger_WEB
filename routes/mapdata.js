@@ -172,9 +172,10 @@ router.get('/getakwdata/', async function (req, res) {
             if (item.itemServiceentry != undefined) {
                 oneAktData['begin'] = item.itemServiceentry.substr(0,4);
             }
-            if(item.types != 'Nuclear power plant') {
+            // Push only NOT 'Nuclear Power Plants' into data array
+//            if(item.types != 'Nuclear power plant') {
                 erg.push(oneAktData);
-            }
+//            }
         }
         res.json(erg);
     }
