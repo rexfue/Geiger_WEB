@@ -542,10 +542,11 @@ $(document).ready(function() {
         let addr = "Addr";
         try {
             let ret = await $.get("api/getprops?sensorid=" + marker.options.name);
-            if(ret.values[0].address.plz == null) {
+            if(ret.values[0].address.city == null) {
                 addr += " unbekannt !"
             } else {
-                addr = ret.values[0].address.street + "&nbsp;&nbsp;" + ret.values[0].address.plz + " " + ret.values[0].address.city;
+                let akt = ret.values[0].address;
+                addr = (akt.street ? akt.street : "") + "&nbsp;&nbsp;" + (akt.plz ? akt.plz : "") + " " + akt.city;
             }
         } catch (e) {
             console.log("onMarker - getpops", e)
