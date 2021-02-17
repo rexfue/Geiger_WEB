@@ -2412,7 +2412,7 @@ $(document).ready(function() {
                         resolve({err: 'not found', lat: 48.784373, lng: 9.182});
                     } else {
 //                console.log(data);
-                        if ((data.values.length == 0) || ((data.values[0].lat==0) && (data.values[1].lon==0))){
+                        if ((data.values.length == 0) || ((data.values[0].lat==0) && (data.values[0].lon==0))){
                             resolve({err: 'not found', lat: 48.780045, lng: 9.182646});
                         } else {
                             if (!data.values[0].typ.startsWith("Radiation")) {
