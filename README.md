@@ -1,4 +1,4 @@
-# Feinstaub_WEB
-Verschiedene Grafiken zur Auswertung der Feinstaub-Senoren
+# Geiger_WEB
+Verschiedene Grafiken zur Auswertung des Multigeiger.
 
-Beschreibung folgt ...
+Beschreibung folgt ... irgendwann.
