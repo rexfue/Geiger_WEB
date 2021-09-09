@@ -29,8 +29,7 @@
       <change beforePath="$PROJECT_DIR$/html/Feinstaub_API.pdf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/html/copy2server.sh" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/html/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/mapdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/mapdata.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -414,14 +413,8 @@
       <workItem from="1616866428447" duration="1436000" />
       <workItem from="1617723770305" duration="1727000" />
       <workItem from="1617773628978" duration="5052000" />
-      <workItem from="1631171343939" duration="1866000" />
-    </task>
-    <task id="LOCAL-00086" summary="Changes in index.html for rexfue.de&#10;Feinstaub-API.pdf - newest Version">
-      <created>1543398853205</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1543398853206</updated>
+      <workItem from="1631171343939" duration="2066000" />
+      <workItem from="1631177415401" duration="404000" />
     </task>
     <task id="LOCAL-00087" summary="docker-compose.yml updated">
       <created>1543398960182</created>
@@ -759,7 +752,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614958453017</updated>
     </task>
-    <option name="localTasksCounter" value="135" />
+    <task id="LOCAL-00135" summary="public/js/global.js&#10;   - don't show BME280 with id 31123, sensor defective&#10;   &#10;routes/mapdata.js&#10;   - set time limit for 'offline' to 2 hours">
+      <created>1631174884503</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1631174884503</updated>
+    </task>
+    <option name="localTasksCounter" value="136" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -839,7 +839,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="public/js/global.js&#10;   - color of Einstellung button now green&#10;   - hide Einstellung button with Ende" />
     <MESSAGE value="package_geig.json&#10;   - version and date (SemVer !)" />
     <MESSAGE value="if available, show BME data as graphics&#10;new version in package_geig.json" />
     <MESSAGE value="public/js/global.js&#10;   - city in URL centers map&#10;   - URL can have '?zoom=xx' for start zomm factor&#10;   &#10;routes/fsdata.js&#10;   - return always sid and sname, even if there is no data   &#10;   &#10;routes/index.js&#10;   - added zoom parameter&#10;   &#10;views/mapit.pug&#10;   -  added zoom" />
@@ -864,7 +863,8 @@
     <MESSAGE value="public/css/styles.css&#10;   - margins of legend left and bottom to 0&#10;&#10;public/js/global.js&#10;   - button 'Einstellung' always on at starting of graph&#10;&#10;public/info.htm&#10;   - adapted on new features&#10;   &#10;views/mapit.pug&#10;   - legend within map      &#10;      &#10;build_and_copy.sh      &#10;   - now use getopts to enter cmd line parameters&#10;&#10;package.json&#10;   - version and date" />
     <MESSAGE value="fixes lat=0/lon=0" />
     <MESSAGE value="Fixed readme.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed readme.md" />
+    <MESSAGE value="public/js/global.js&#10;   - don't show BME280 with id 31123, sensor defective&#10;   &#10;routes/mapdata.js&#10;   - set time limit for 'offline' to 2 hours" />
+    <option name="LAST_COMMIT_MESSAGE" value="public/js/global.js&#10;   - don't show BME280 with id 31123, sensor defective&#10;   &#10;routes/mapdata.js&#10;   - set time limit for 'offline' to 2 hours" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

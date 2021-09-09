@@ -1,7 +1,7 @@
 {
   "name": "multigeiger",
-  "version": "2.8.4",
-  "date": "2021-02-17",
+  "version": "2.8.5",
+  "date": "2021-09-09",
   "description": "Graphics for multigeiger sensors",
   "main": "geiger-app.js",
   "scripts": {
