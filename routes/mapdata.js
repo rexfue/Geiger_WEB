@@ -90,7 +90,7 @@ router.get('/getaktdata/', function (req, res) {
                     var dt = new Date(dati);
                     if ((now - dt) >= (7  * 24 * 3600 * 1000)) {                  // älter als 1 Woche ->
                         oneAktData['cpm'] = -2;                                   // -2 zurückgeben
-                    } else if ((now - dt) >= (3600 * 1000)) {                     // älter als 1 Stunde ->
+                    } else if ((now - dt) >= (2 * 3600 * 1000)) {                 // älter als 2 Stunde ->
                         oneAktData['cpm'] = -1;                                   // -1 zurückgeben
                     } else {
                         oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen

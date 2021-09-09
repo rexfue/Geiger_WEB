@@ -1123,8 +1123,10 @@ $(document).ready(function() {
                 PlotDayWeek_Geiger(what, d1, start, live);
                 $('#placeholder_FS1').show();
                 if(d1.climate.length != 0) {
-                    PlotDayWeek_BME280(what, d1, start, live);
-                    $('#placeholderBME').show();
+                    if(d1.climate.sid !== 31123) {                  // dont show rxf BME sensor
+                        PlotDayWeek_BME280(what, d1, start, live);
+                        $('#placeholderBME').show();
+                    }
                 }
             }
         }
