@@ -268,18 +268,20 @@ $(document).ready(function() {
 
     async function plotMap(cid, city) {
 
-        let pos;
+        let pos = {};
         // if sensor nbr is giveen, find coordinates, else use Stuttgart center
-        let myLatLng;
+        let myLatLng = {lat: 48.7784485, lng: 9.1800132};
         if (cid != -1) {
             myLatLng = await getSensorKoords(cid);
         } else {
             if (city != "") {
-                pos = await getCoords(city);
-            } else {
-                pos = await getCoords("Stuttgart");
+                showError(6, "", "");
             }
-            myLatLng = {lat: parseFloat(pos.lat), lng: parseFloat(pos.lon)};
+//                pos = await getCoords(city);
+//             } else {
+//                 pos = await getCoords("Stuttgart");
+//            }
+//            myLatLng = {lat: parseFloat(pos.lat), lng: parseFloat(pos.lon)};
         }
 
         map = L.map('map');
@@ -1105,6 +1107,8 @@ $(document).ready(function() {
                 errtxt = "Stadt " + id + " nicht gefunden";
             } else if (err==5) {
                 errtxt = "Gerät bitte auf quer drehen!";
+            } else if (err==6) {
+                errtxt = "Die Suche nach einer Stadt ist im Moment nicht möglich.<br />Die Karte wird auf Stuttgart zentriert";
             }
             $('#errorDialog').text(errtxt);
             $('#modalTitle').html("Error");

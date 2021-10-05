@@ -24,12 +24,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="fixes lat=0/lon=0">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/Feinstaub_API.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/copy2server.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build_and_copy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build_and_copy.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -414,14 +413,9 @@
       <workItem from="1617723770305" duration="1727000" />
       <workItem from="1617773628978" duration="5052000" />
       <workItem from="1631171343939" duration="2066000" />
-      <workItem from="1631177415401" duration="404000" />
-    </task>
-    <task id="LOCAL-00087" summary="docker-compose.yml updated">
-      <created>1543398960182</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
-      <option name="project" value="LOCAL" />
-      <updated>1543398960182</updated>
+      <workItem from="1631177415401" duration="443000" />
+      <workItem from="1633159410285" duration="355000" />
+      <workItem from="1633421450256" duration="4620000" />
     </task>
     <task id="LOCAL-00088" summary="public/js/mapit.js&#10;   - fetch properties data via apüi on localhost&#10;   &#10;routes/apidata.js&#10;   - return latest location of property at /api/getprops">
       <created>1543570295728</created>
@@ -759,7 +753,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631174884503</updated>
     </task>
-    <option name="localTasksCounter" value="136" />
+    <task id="LOCAL-00136" summary="package.json&#10;   - Version und Datum">
+      <created>1631178394814</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1631178394814</updated>
+    </task>
+    <option name="localTasksCounter" value="137" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -839,7 +840,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="package_geig.json&#10;   - version and date (SemVer !)" />
     <MESSAGE value="if available, show BME data as graphics&#10;new version in package_geig.json" />
     <MESSAGE value="public/js/global.js&#10;   - city in URL centers map&#10;   - URL can have '?zoom=xx' for start zomm factor&#10;   &#10;routes/fsdata.js&#10;   - return always sid and sname, even if there is no data   &#10;   &#10;routes/index.js&#10;   - added zoom parameter&#10;   &#10;views/mapit.pug&#10;   -  added zoom" />
     <MESSAGE value="public/js/global.js&#10;   - introdued 'map=all' in URL&#10;   - supress sensors that are not seen for more than 1 monthroutres/index.js&#10;   &#10;routes/index.js&#10;   - interpret map=all in URL&#10;   &#10;views/map.oug&#10;   - copy showAllMap to javascript" />
@@ -864,18 +864,8 @@
     <MESSAGE value="fixes lat=0/lon=0" />
     <MESSAGE value="Fixed readme.md" />
     <MESSAGE value="public/js/global.js&#10;   - don't show BME280 with id 31123, sensor defective&#10;   &#10;routes/mapdata.js&#10;   - set time limit for 'offline' to 2 hours" />
-    <option name="LAST_COMMIT_MESSAGE" value="public/js/global.js&#10;   - don't show BME280 with id 31123, sensor defective&#10;   &#10;routes/mapdata.js&#10;   - set time limit for 'offline' to 2 hours" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/public/js/global.js</url>
-          <line>263</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="package.json&#10;   - Version und Datum" />
+    <option name="LAST_COMMIT_MESSAGE" value="package.json&#10;   - Version und Datum" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

@@ -52,5 +52,12 @@ done
 docker build -f Dockerfile_$orgName -t $name .
 
 dat=`date +%Y%m%d%H%M`
+
+if [ "$target" == "localhost" ]
+then
+  docker tag $name $name:V_$dat
+  exit
+fi
+
 ssh $port $target "docker tag $name $name:V_$dat"
 docker save $name | bzip2 | pv | ssh $port $target 'bunzip2 | docker load'
