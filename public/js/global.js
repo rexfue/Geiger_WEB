@@ -2053,9 +2053,8 @@ $(document).ready(function() {
             // Check min/max of temp to arrange y-axis
             let tmi = Math.min(...mx1);
             let tma = Math.max(...mx1);
-            let tmid = (tmi+tma) / 2;
-            let loty = tmid - 5;
-            let hity = tmid + 5;
+            let loty = tmi - 2;
+            let hity = tma + 2;
 
             var yAxis_temp = {													// 1
                 title: {

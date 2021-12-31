@@ -26,7 +26,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/mapit.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/mapit.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/fsdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/fsdata.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -413,14 +415,9 @@
       <workItem from="1631171343939" duration="2066000" />
       <workItem from="1631177415401" duration="443000" />
       <workItem from="1633159410285" duration="355000" />
-      <workItem from="1633421450256" duration="5618000" />
-    </task>
-    <task id="LOCAL-00089" summary="package.json&#10;   - version und date (2018-11-30)">
-      <created>1543570438994</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1543570438994</updated>
+      <workItem from="1633421450256" duration="5721000" />
+      <workItem from="1635352226377" duration="1101000" />
+      <workItem from="1640964297639" duration="2026000" />
     </task>
     <task id="LOCAL-00090" summary="Schwarm-Rechnung dabei">
       <created>1544540285024</created>
@@ -758,7 +755,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633431617142</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="views/mapit.pug&#10;   - search field changed to 'Sensor suchen'">
+      <created>1633434976369</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1633434976369</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -838,7 +842,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="public/js/global.js&#10;   - city in URL centers map&#10;   - URL can have '?zoom=xx' for start zomm factor&#10;   &#10;routes/fsdata.js&#10;   - return always sid and sname, even if there is no data   &#10;   &#10;routes/index.js&#10;   - added zoom parameter&#10;   &#10;views/mapit.pug&#10;   -  added zoom" />
     <MESSAGE value="public/js/global.js&#10;   - introdued 'map=all' in URL&#10;   - supress sensors that are not seen for more than 1 monthroutres/index.js&#10;   &#10;routes/index.js&#10;   - interpret map=all in URL&#10;   &#10;views/map.oug&#10;   - copy showAllMap to javascript" />
     <MESSAGE value="legend: blue for indoor" />
     <MESSAGE value="public/css/style.css&#10;   - red border if maintenanc&#10;   &#10;routes/indrex.js&#10;   - MAINT as environment variabvle&#10;   &#10;views/maintenance.pug&#10;   - coreect multiuline text&#10;   &#10;geiger-app.js&#10;   - compare DEBUG ans MONGIAITH with &quot;true&quot;&#10;   - add test2.citysensor.de" />
@@ -863,7 +866,8 @@
     <MESSAGE value="public/js/global.js&#10;   - don't show BME280 with id 31123, sensor defective&#10;   &#10;routes/mapdata.js&#10;   - set time limit for 'offline' to 2 hours" />
     <MESSAGE value="package.json&#10;   - Version und Datum" />
     <MESSAGE value="public/js/global.js&#10;   - search fpr city disabled&#10;&#10;package.json&#10;   - Version and date&#10;   &#10;build_and_copy&#10;   - localhost also possible" />
-    <option name="LAST_COMMIT_MESSAGE" value="public/js/global.js&#10;   - search fpr city disabled&#10;&#10;package.json&#10;   - Version and date&#10;   &#10;build_and_copy&#10;   - localhost also possible" />
+    <MESSAGE value="views/mapit.pug&#10;   - search field changed to 'Sensor suchen'" />
+    <option name="LAST_COMMIT_MESSAGE" value="views/mapit.pug&#10;   - search field changed to 'Sensor suchen'" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

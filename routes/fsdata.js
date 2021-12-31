@@ -245,8 +245,8 @@ async function getDWMData(db, sensorid, st, avg, live, doMoving, span, longAVG) 
                     }
                     let avg48 = null;
                     if (longAVG != undefined) {
-                        timerange = calcTimeRange(st, longAVG, true, avg);
-                        let avg48_docs = await readRadiationAverages(db, sid, timerange.start, timerange.end, longAVG*60, factor);
+                        let tr = calcTimeRange(st, longAVG, true, avg);
+                        let avg48_docs = await readRadiationAverages(db, sid, tr.start, tr.end, longAVG*60, factor);
                         avg48 = avg48_docs[0];
                     }
                     ret['radiation'] = {sid: sid, sname: sname, avg48: avg48, values: docs};
