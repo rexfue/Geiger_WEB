@@ -7,9 +7,14 @@ RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 WORKDIR /opt/app
 ADD . /opt/app
 
+RUN apk update
+RUN apk upgrade
+
 RUN apk add --no-cache tzdata
 ENV TZ Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apk add curl
 
 RUN touch cmds.sh \
 	&& echo 'npm start' >>cmds.sh
