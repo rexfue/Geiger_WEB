@@ -26,7 +26,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile_geiger-web" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile_geiger-web" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/apidata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/apidata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/mapdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/mapdata.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +68,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -417,14 +418,8 @@
       <workItem from="1633421450256" duration="5721000" />
       <workItem from="1635352226377" duration="1101000" />
       <workItem from="1640964297639" duration="6533000" />
-      <workItem from="1642105805849" duration="6663000" />
-    </task>
-    <task id="LOCAL-00092" summary="added Silverster 2018/19">
-      <created>1546436461459</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1546436461460</updated>
+      <workItem from="1642105805849" duration="6772000" />
+      <workItem from="1642176540896" duration="2314000" />
     </task>
     <task id="LOCAL-00093" summary="public/js/global.js&#10;   - added 50g line again for day plot&#10;   - change ymax only on linear yaxis&#10;   &#10;public/help.html&#10;   - adapted to new features">
       <created>1553770963906</created>
@@ -762,7 +757,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642150873940</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="search for city now with curl&#10;&#10;routes/mapdata.js&#10;   - call curl instead of using axios (was problem with certificate)">
+      <created>1642169184005</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1642169184005</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -842,7 +844,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="public/css/style.css&#10;   - red border if maintenanc&#10;   &#10;routes/indrex.js&#10;   - MAINT as environment variabvle&#10;   &#10;views/maintenance.pug&#10;   - coreect multiuline text&#10;   &#10;geiger-app.js&#10;   - compare DEBUG ans MONGIAITH with &quot;true&quot;&#10;   - add test2.citysensor.de" />
     <MESSAGE value="public/css/style.css&#10;   - added style for 'indoor'&#10;    &#10;public/js/global.js&#10;   - if called with sensornumber show grafic atonce&#10;   - add light blue to legend&#10;   - don't shoe sensors older than one week&#10;   - mark indoor sensors in blue color   &#10;   - show 'indoor' on popup&#10;   &#10;routes/mapdata.js&#10;   - extract 'indoor' from data&#10;   - skip sensor older than 14 days" />
     <MESSAGE value="package[_geig].json&#10;   - date and version" />
     <MESSAGE value="a few minor changes" />
@@ -867,7 +868,8 @@
     <MESSAGE value="views/mapit.pug&#10;   - search field changed to 'Sensor suchen'" />
     <MESSAGE value="timerange problem with BME280&#10;&#10;public/js/global.js&#10;   - temp range adapted&#10;   &#10;routes/fsdata.js&#10;  - extra timerange variable fpr longAVG&#10;  &#10;package.json&#10;   - version and date" />
     <MESSAGE value="search for city enabled again&#10;&#10;public/js/global.js&#10;   - call to getCoords enabled&#10;&#10;package.json&#10;   - version and date" />
-    <option name="LAST_COMMIT_MESSAGE" value="search for city enabled again&#10;&#10;public/js/global.js&#10;   - call to getCoords enabled&#10;&#10;package.json&#10;   - version and date" />
+    <MESSAGE value="search for city now with curl&#10;&#10;routes/mapdata.js&#10;   - call curl instead of using axios (was problem with certificate)" />
+    <option name="LAST_COMMIT_MESSAGE" value="search for city now with curl&#10;&#10;routes/mapdata.js&#10;   - call curl instead of using axios (was problem with certificate)" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

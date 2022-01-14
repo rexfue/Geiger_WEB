@@ -7,9 +7,7 @@ const axios = require('axios');
 let $ = require('jquery');
 var fs = require('fs');
 
-const util = require('util')
-const  exec = util.promisify(require('child_process').exec)
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // URL to get coordinates for cities
 const NOMINATIM_URL="https://nominatim.openstreetmap.org/search?format=json&limit=3&q=";
@@ -250,25 +248,18 @@ router.get('/storeSensors/', function (req, res) {
     });
 });
 
-
-async function getCoordinates(city) {
-    let start = moment()
-    let url = NOMINATIM_URL + city;
-    const {stdout, stderr} = await exec(`curl "${url}"`)
-    const data = JSON.parse(stdout);
-    console.log(`Holen der Stadt: ${(moment()-start)/1000} sec`)
-    return data[0];
-}
-
-/*
 async function getCoordinates(city) {
     let start = moment()
     let url = NOMINATIM_URL + city;
     const response = await axios.get(encodeURI(url));
     const data = response.data;
-    console.log(`Holen der Stadt: ${(moment()-start)/1000} sec`)
-    return data[0];
+    if(data.length !== 0) {
+        console.log(`Fetching of city ${city} needs ${(moment() - start) / 1000} seconds.`)
+        return data[0];
+    } else {
+        console.log(`City ${city} not found` )
+        return {lat: 0, lon: 0}
+    }
 }
-*/
 
 module.exports = router;

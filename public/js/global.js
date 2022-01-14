@@ -277,6 +277,10 @@ $(document).ready(function() {
             if (city != "") {
                 pos = await getCoords(city);
                 myLatLng = {lat: parseFloat(pos.lat), lng: parseFloat(pos.lon)};
+                if((myLatLng.lat == 0) && (myLatLng.lng == 0)) {
+                    showError(6,"City not found", city)
+                    myLatLng = {lat: 48.7784485, lng: 9.1800132};
+                }
              }
         }
 
@@ -1104,7 +1108,7 @@ $(document).ready(function() {
             } else if (err==5) {
                 errtxt = "Gerät bitte auf quer drehen!";
             } else if (err==6) {
-                errtxt = "Die Suche nach einer Stadt ist im Moment nicht möglich.<br />Die Karte wird auf Stuttgart zentriert";
+                errtxt = `Die Stadt ${id} wurde nicht gefunden.<br />Die Karte wird auf Stuttgart zentriert`;
             }
             $('#errorDialog').text(errtxt);
             $('#modalTitle').html("Error");
