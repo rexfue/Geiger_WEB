@@ -24,11 +24,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="search for city enabled again&#10;&#10;public/js/global.js&#10;   - call to getCoords enabled&#10;&#10;package.json&#10;   - version and date">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/fsdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/fsdata.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -417,14 +416,8 @@
       <workItem from="1633159410285" duration="355000" />
       <workItem from="1633421450256" duration="5721000" />
       <workItem from="1635352226377" duration="1101000" />
-      <workItem from="1640964297639" duration="2026000" />
-    </task>
-    <task id="LOCAL-00090" summary="Schwarm-Rechnung dabei">
-      <created>1544540285024</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1544540285025</updated>
+      <workItem from="1640964297639" duration="6533000" />
+      <workItem from="1642105805849" duration="2175000" />
     </task>
     <task id="LOCAL-00091" summary="public/css/style.css&#10;   - width-definition for placeholder-div&#10;   &#10;public/fehlersensoren.htm&#10;   - writing mistake corrected  &#10;   &#10;package_web.json&#10;   - date and version">
       <created>1544623875705</created>
@@ -762,7 +755,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633434976369</updated>
     </task>
-    <option name="localTasksCounter" value="139" />
+    <task id="LOCAL-00139" summary="timerange problem with BME280&#10;&#10;public/js/global.js&#10;   - temp range adapted&#10;   &#10;routes/fsdata.js&#10;  - extra timerange variable fpr longAVG&#10;  &#10;package.json&#10;   - version and date">
+      <created>1640967357486</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1640967357486</updated>
+    </task>
+    <option name="localTasksCounter" value="140" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -842,7 +842,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="public/js/global.js&#10;   - introdued 'map=all' in URL&#10;   - supress sensors that are not seen for more than 1 monthroutres/index.js&#10;   &#10;routes/index.js&#10;   - interpret map=all in URL&#10;   &#10;views/map.oug&#10;   - copy showAllMap to javascript" />
     <MESSAGE value="legend: blue for indoor" />
     <MESSAGE value="public/css/style.css&#10;   - red border if maintenanc&#10;   &#10;routes/indrex.js&#10;   - MAINT as environment variabvle&#10;   &#10;views/maintenance.pug&#10;   - coreect multiuline text&#10;   &#10;geiger-app.js&#10;   - compare DEBUG ans MONGIAITH with &quot;true&quot;&#10;   - add test2.citysensor.de" />
     <MESSAGE value="public/css/style.css&#10;   - added style for 'indoor'&#10;    &#10;public/js/global.js&#10;   - if called with sensornumber show grafic atonce&#10;   - add light blue to legend&#10;   - don't shoe sensors older than one week&#10;   - mark indoor sensors in blue color   &#10;   - show 'indoor' on popup&#10;   &#10;routes/mapdata.js&#10;   - extract 'indoor' from data&#10;   - skip sensor older than 14 days" />
@@ -867,7 +866,8 @@
     <MESSAGE value="package.json&#10;   - Version und Datum" />
     <MESSAGE value="public/js/global.js&#10;   - search fpr city disabled&#10;&#10;package.json&#10;   - Version and date&#10;   &#10;build_and_copy&#10;   - localhost also possible" />
     <MESSAGE value="views/mapit.pug&#10;   - search field changed to 'Sensor suchen'" />
-    <option name="LAST_COMMIT_MESSAGE" value="views/mapit.pug&#10;   - search field changed to 'Sensor suchen'" />
+    <MESSAGE value="timerange problem with BME280&#10;&#10;public/js/global.js&#10;   - temp range adapted&#10;   &#10;routes/fsdata.js&#10;  - extra timerange variable fpr longAVG&#10;  &#10;package.json&#10;   - version and date" />
+    <option name="LAST_COMMIT_MESSAGE" value="timerange problem with BME280&#10;&#10;public/js/global.js&#10;   - temp range adapted&#10;   &#10;routes/fsdata.js&#10;  - extra timerange variable fpr longAVG&#10;  &#10;package.json&#10;   - version and date" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

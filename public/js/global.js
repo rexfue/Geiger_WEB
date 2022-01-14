@@ -275,13 +275,9 @@ $(document).ready(function() {
             myLatLng = await getSensorKoords(cid);
         } else {
             if (city != "") {
-                showError(6, "", "");
-            }
-//                pos = await getCoords(city);
-//             } else {
-//                 pos = await getCoords("Stuttgart");
-//            }
-//            myLatLng = {lat: parseFloat(pos.lat), lng: parseFloat(pos.lon)};
+                pos = await getCoords(city);
+                myLatLng = {lat: parseFloat(pos.lat), lng: parseFloat(pos.lon)};
+             }
         }
 
         map = L.map('map');
