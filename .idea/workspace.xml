@@ -25,20 +25,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="search for city again with axios&#10;&#10;routes/global.js&#10;   - check lat/lon, if 0,0 then show error&#10;   &#10;routes/apidata&#10;   - don't include mongodb&#10;   &#10;routes/mapdata&#10;   - set env variable NODE_TLS_REJECT_UNAUTHORIZED to 0&#10;   - if city not found, return lat/lon = 0/0&#10;   &#10;package.json&#10;   - version">
-      <change afterPath="$PROJECT_DIR$/public/css/leaflet-velocity.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/leaflet-velocity.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/akws/build_akws.js" beforeDir="false" afterPath="$PROJECT_DIR$/akws/build_akws.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geiger-app.js" beforeDir="false" afterPath="$PROJECT_DIR$/geiger-app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/info.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/info.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/apidata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/apidata.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/data.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/data.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/utilities.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/utilities.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/mapit.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/mapit.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +47,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="addWind" />
+  </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
@@ -78,10 +68,11 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="addWind" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>
@@ -892,7 +883,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/routes/index.js</url>
           <line>19</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
