@@ -1,8 +1,5 @@
 "use strict";
 const moment = require('moment');
-const mathe = require('mathjs');
-
-
 
 // *********************************************
 // Calculate moving average over the data array.

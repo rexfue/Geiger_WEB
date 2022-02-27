@@ -69,6 +69,7 @@ $(document).ready(function() {
     let layer_decomAKW = new L.layerGroup();
     let layer_facilityAKW = new L.layerGroup();
 
+
     let OSName = "Unknown OS";
 
     let geojsonFeature =
@@ -262,9 +263,27 @@ $(document).ready(function() {
         } else {
             map.removeLayer(layer_facilityAKW);
         }
+        switchWindLayer()
     });
 
+    const switchWindLayer = () => {
+        if($('#btnwind').is(':checked')) {
+            $(".velocity-overlay").css("visibility", "visible")
+        } else {
+            $(".velocity-overlay").css("visibility", "hidden")
+        }
+    }
 
+    /*
+    function switchWindLayer() {
+        if (d3.select("#cb_wind").property("checked")) {
+            d3.selectAll(".velocity-overlay").style("visibility", "visible");
+        } else {
+            d3.selectAll(".velocity-overlay").style("visibility", "hidden");
+        }
+        setQueryString();
+    }
+*/
 
     async function plotMap(cid, city) {
 
@@ -285,7 +304,11 @@ $(document).ready(function() {
         }
 
         map = L.map('map');
-        map.on('load',function() { mapLoaded = true; });
+        map.on('load',function() {
+            mapLoaded = true;
+            // Add Wind
+            wind.getData('https://maps.sensor.community/data/v1/wind.json', map)
+        });
         map.setView(myLatLng, firstZoom);
 
         L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
@@ -318,6 +341,7 @@ $(document).ready(function() {
 
         await buildAKWs();
         await buildMarkers(bounds);
+
 
         // let ndMarker = new L.marker(bounds.getCenter(), {opacity: 0.01});
         // ndMarker.bindTooltip("Leider z.Zt. keine Daten von sensor.community !", {permanent:true, className: "ndmarker", offset: [250,0]});
@@ -725,6 +749,7 @@ $(document).ready(function() {
             popuptxt += '</div>';
             return popuptxt;
         }
+
 
 // ********************************************************************************
 // Events
@@ -2503,5 +2528,51 @@ $(document).ready(function() {
         e.target.openPopup();                               // show the popup
     }
 
+
+    let wind = {
+
+        getData: async function (URL, map, switchLayer) {
+
+            function checkStatus(response) {
+                if (response.status >= 200 && response.status < 300) {
+                    return response
+                } else {
+                    var error = new Error(response.statusText)
+                    error.response = response
+                    throw error
+                }
+            }
+
+            fetch(URL)
+                .then(checkStatus)
+                .then((response) => response.json())
+                .then((data) => {
+
+                    var velocityLayer = L.velocityLayer({
+                        displayValues: true,
+                        displayOptions: {
+                            velocityType: "Global Wind",
+                            displayPosition: "bottomleft",
+                            displayEmptyString: "No wind data"
+                        },
+                        data: data,
+                        velocityScale: 0.008,
+                        opacity: 0.5,
+                        colorScale: ["rgb(255,120,120)","rgb(255,50,50)"],
+                        minVelocity: 0,
+                        maxVelocity: 10,
+                        overlayName: 'wind_layer',
+                        onAdd: switchLayer,
+                    })
+                        .addTo(map);
+
+//				layerControl.addOverlay(velocityLayer, "Wind - Global");
+
+                })
+                .catch(function(error) {
+                    console.log('request failed', error)
+                })
+        }
+    }
 
 });

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-moment = require('moment');
+var moment = require('moment');
 
 // Get latest 10 readings out from the database
 router.get('/latest10', function(req,res) {

@@ -5,9 +5,6 @@ const moment = require('moment');
 const mathe = require('mathjs');
 const fs = require('fs');
 const $ = require('jquery');
-// const MongoClient1 = require('mongodb').MongoClient;
-
-const fsdata = require('./fsdata');
 const util = require('./utilities');
 
 
@@ -29,7 +26,7 @@ async function getCity(db, sensorid) {
     return addr;
 }
 
-
+/*
 // API to put data into dBase
 router.post('/putdata/:what', function(req,res) {
     let db = req.app.get('dbase');
@@ -45,7 +42,7 @@ router.post('/putdata/:what', function(req,res) {
         res.send ( {error:'wrong call'})
     }
 });
-
+*/
 
 
 //API to read all datas from the database
@@ -135,6 +132,7 @@ router.get('/getcities', (req,res) => {
 // return:
 //      error, if not correctly saved, else null
 // ***********************************************************
+/*
 async function putAPIproblemdata(db, cmd, data) {
 //    console.log("putAPIproblemdata","  Länge: ", data.length);
     let collection = db.collection('problemsensors');
@@ -159,7 +157,7 @@ async function putAPIproblemdata(db, cmd, data) {
     }
     return { error: 'wrong command'};
 }
-
+*/
 // ***********************************************************
 // getAPIprobSensors -  Get data for problematic sensors
 //
@@ -169,7 +167,7 @@ async function putAPIproblemdata(db, cmd, data) {
 // return:
 //      JSON Dokument mit den angefragten Werten
 // ***********************************************************
-
+/*
 async function getAPIprobSensors(db,pnr,only,withTxt) {
     let coll = db.collection('problemsensors');
     let query = {_id: {$gt: 0}};
@@ -206,7 +204,7 @@ async function getAPIprobSensors(db,pnr,only,withTxt) {
     }
     return ret
 }
-
+*/
 
 
 // ***********************************************************
@@ -223,7 +221,7 @@ async function getAPIprobSensors(db,pnr,only,withTxt) {
 // return:
 //      JSON Dokument mit den angefragten Werten
 // ***********************************************************
-
+/*
 async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
     let st = moment(start).startOf('day');               // clone start/end ..
     let en = moment(end).startOf('day');                 // .. and set to start of day
@@ -283,7 +281,7 @@ async function getAPIdataNew(db,sid,mavg,dauer,start,end, gstart) {
     }
     return retur;
 }
-
+*/
 
 // ******************************************************************
 // getAPITN  -  Get data direct via API for all sensors in a town

@@ -1,7 +1,7 @@
 // After doing a wikidata query use the file query.json to build or rebuild the databae th1_akws
 // 2020-10-07
 
-const {MongoClient} = require('mongodb');
+const { MongoClient } = require('mongodb');
 const fs = require('fs').promises;
 
 // Consts

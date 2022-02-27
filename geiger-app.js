@@ -74,7 +74,6 @@ async function checkHost(req, res, next) {
     next();
 }
 
-
 geigerApp.get('*', checkHost);
 geigerApp.post('*', checkHost);
 
