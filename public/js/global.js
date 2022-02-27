@@ -205,7 +205,8 @@ $(document).ready(function() {
                         displayOptions: {
                             velocityType: "Global Wind",
                             displayPosition: "bottomleft",
-                            displayEmptyString: "No wind data"
+                            displayEmptyString: "No wind data",
+                            speedUnit: 'k/h'
                         },
                         data: data,
                         velocityScale: 0.008,

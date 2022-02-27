@@ -24,7 +24,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="search for city again with axios&#10;&#10;routes/global.js&#10;   - check lat/lon, if 0,0 then show error&#10;   &#10;routes/apidata&#10;   - don't include mongodb&#10;   &#10;routes/mapdata&#10;   - set env variable NODE_TLS_REJECT_UNAUTHORIZED to 0&#10;   - if city not found, return lat/lon = 0/0&#10;   &#10;package.json&#10;   - version">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -427,13 +427,6 @@
       <workItem from="1642357729650" duration="1129000" />
       <workItem from="1645795920163" duration="13989000" />
     </task>
-    <task id="LOCAL-00094" summary="Wenn daten fehlen, das Array-Elemnt löschen (BME280)">
-      <created>1564578517461</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1564578517461</updated>
-    </task>
     <task id="LOCAL-00095" summary="Wenn daten fehlen, das Array-Elemnt löschen (BME280)&#10;50ug-Linie für Tag und Woche getrennt&#10;Debugmessages auskommentiert&#10;Versionsnummer angepasst">
       <created>1564580862995</created>
       <option name="number" value="00095" />
@@ -770,7 +763,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642179438149</updated>
     </task>
-    <option name="localTasksCounter" value="143" />
+    <task id="LOCAL-00143" summary="fixed call w/o city or number&#10;&#10;public/js/global.js&#10;   - changed order: first define wind&#10;   &#10;package.json&#10;  &quot;version&quot;: &quot;2.9.1&quot;,&#10;  &quot;date&quot;: &quot;2022-02-27&quot;,">
+      <created>1645981947087</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1645981947087</updated>
+    </task>
+    <option name="localTasksCounter" value="144" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -850,7 +850,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="package[_geig].json&#10;   - date and version" />
     <MESSAGE value="a few minor changes" />
     <MESSAGE value="update version and date" />
     <MESSAGE value="added AKWs in map" />
@@ -875,18 +874,8 @@
     <MESSAGE value="search for city enabled again&#10;&#10;public/js/global.js&#10;   - call to getCoords enabled&#10;&#10;package.json&#10;   - version and date" />
     <MESSAGE value="search for city now with curl&#10;&#10;routes/mapdata.js&#10;   - call curl instead of using axios (was problem with certificate)" />
     <MESSAGE value="search for city again with axios&#10;&#10;routes/global.js&#10;   - check lat/lon, if 0,0 then show error&#10;   &#10;routes/apidata&#10;   - don't include mongodb&#10;   &#10;routes/mapdata&#10;   - set env variable NODE_TLS_REJECT_UNAUTHORIZED to 0&#10;   - if city not found, return lat/lon = 0/0&#10;   &#10;package.json&#10;   - version" />
-    <option name="LAST_COMMIT_MESSAGE" value="search for city again with axios&#10;&#10;routes/global.js&#10;   - check lat/lon, if 0,0 then show error&#10;   &#10;routes/apidata&#10;   - don't include mongodb&#10;   &#10;routes/mapdata&#10;   - set env variable NODE_TLS_REJECT_UNAUTHORIZED to 0&#10;   - if city not found, return lat/lon = 0/0&#10;   &#10;package.json&#10;   - version" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/index.js</url>
-          <line>19</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="fixed call w/o city or number&#10;&#10;public/js/global.js&#10;   - changed order: first define wind&#10;   &#10;package.json&#10;  &quot;version&quot;: &quot;2.9.1&quot;,&#10;  &quot;date&quot;: &quot;2022-02-27&quot;," />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed call w/o city or number&#10;&#10;public/js/global.js&#10;   - changed order: first define wind&#10;   &#10;package.json&#10;  &quot;version&quot;: &quot;2.9.1&quot;,&#10;  &quot;date&quot;: &quot;2022-02-27&quot;," />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
