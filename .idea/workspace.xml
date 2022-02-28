@@ -26,7 +26,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -428,13 +427,6 @@
       <workItem from="1642357729650" duration="1129000" />
       <workItem from="1645795920163" duration="13989000" />
     </task>
-    <task id="LOCAL-00097" summary="public/js/global.js&#10;   - wenn Koordinaten=0/0 sind, in der Adresszeile eine Fehlermeldung anzeigen&#10;       &#10;package_web.json&#10;   - Version angepasst">
-      <created>1565336360248</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1565336360249</updated>
-    </task>
     <task id="LOCAL-00098" summary="Erste Version von Geiger - läuft z.Zt. so auf tst1.rexfue.de">
       <created>1567535110069</created>
       <option name="number" value="00098" />
@@ -771,7 +763,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646045787739</updated>
     </task>
-    <option name="localTasksCounter" value="146" />
+    <task id="LOCAL-00146" summary="length of win arrows changed n global.js">
+      <created>1646046951349</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1646046951349</updated>
+    </task>
+    <option name="localTasksCounter" value="147" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -851,7 +850,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added AKWs in map" />
     <MESSAGE value="changed building of AKW symbols" />
     <MESSAGE value="public/css/style.css&#10;   - format checkbox at splashscreen&#10;&#10;punlic/global.js&#10;   - splashscreen added&#10;   &#10;routes/index.js&#10;   - parameter splash accepted&#10;   &#10;vies(index.pug vies(mapit.pug&#10;   - accept splash parameter" />
     <MESSAGE value="only for Testing" />
@@ -876,7 +874,8 @@
     <MESSAGE value="fixed call w/o city or number&#10;&#10;public/js/global.js&#10;   - changed order: first define wind&#10;   &#10;package.json&#10;  &quot;version&quot;: &quot;2.9.1&quot;,&#10;  &quot;date&quot;: &quot;2022-02-27&quot;," />
     <MESSAGE value="set windspeed&#10;&#10;public/js/global.js&#10;   - set windspeed to k/h" />
     <MESSAGE value="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple" />
-    <option name="LAST_COMMIT_MESSAGE" value="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple" />
+    <MESSAGE value="length of win arrows changed n global.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="length of win arrows changed n global.js" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
