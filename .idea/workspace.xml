@@ -428,13 +428,6 @@
       <workItem from="1642357729650" duration="1129000" />
       <workItem from="1645795920163" duration="13989000" />
     </task>
-    <task id="LOCAL-00096" summary="routes/fsdata.js&#10;   - Fehlende Daten aus dem Array löschen (Tag und woche, BME280)&#10;   &#10;package-web.json&#10;   - Version angepasst">
-      <created>1564989413646</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1564989413647</updated>
-    </task>
     <task id="LOCAL-00097" summary="public/js/global.js&#10;   - wenn Koordinaten=0/0 sind, in der Adresszeile eine Fehlermeldung anzeigen&#10;       &#10;package_web.json&#10;   - Version angepasst">
       <created>1565336360248</created>
       <option name="number" value="00097" />
@@ -771,7 +764,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645982802277</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <task id="LOCAL-00145" summary="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple">
+      <created>1646045787739</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1646045787739</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -851,7 +851,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="update version and date" />
     <MESSAGE value="added AKWs in map" />
     <MESSAGE value="changed building of AKW symbols" />
     <MESSAGE value="public/css/style.css&#10;   - format checkbox at splashscreen&#10;&#10;punlic/global.js&#10;   - splashscreen added&#10;   &#10;routes/index.js&#10;   - parameter splash accepted&#10;   &#10;vies(index.pug vies(mapit.pug&#10;   - accept splash parameter" />
@@ -876,7 +875,8 @@
     <MESSAGE value="search for city again with axios&#10;&#10;routes/global.js&#10;   - check lat/lon, if 0,0 then show error&#10;   &#10;routes/apidata&#10;   - don't include mongodb&#10;   &#10;routes/mapdata&#10;   - set env variable NODE_TLS_REJECT_UNAUTHORIZED to 0&#10;   - if city not found, return lat/lon = 0/0&#10;   &#10;package.json&#10;   - version" />
     <MESSAGE value="fixed call w/o city or number&#10;&#10;public/js/global.js&#10;   - changed order: first define wind&#10;   &#10;package.json&#10;  &quot;version&quot;: &quot;2.9.1&quot;,&#10;  &quot;date&quot;: &quot;2022-02-27&quot;," />
     <MESSAGE value="set windspeed&#10;&#10;public/js/global.js&#10;   - set windspeed to k/h" />
-    <option name="LAST_COMMIT_MESSAGE" value="set windspeed&#10;&#10;public/js/global.js&#10;   - set windspeed to k/h" />
+    <MESSAGE value="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple" />
+    <option name="LAST_COMMIT_MESSAGE" value="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

@@ -211,7 +211,7 @@ $(document).ready(function() {
                             speedUnit: 'k/h'
                         },
                         data: data,
-                        velocityScale: 0.008,
+                        velocityScale: 0.01,
                         opacity: 0.5,
 //                        colorScale: ["rgb(255,120,120)","rgb(255,50,50)"],
                         colorScale: ["rgb(174,00,213)","rgb(80,00,100)"],
