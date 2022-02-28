@@ -200,6 +200,8 @@ $(document).ready(function() {
                 .then((response) => response.json())
                 .then((data) => {
 
+                    console.log("Wind-Datum: ", data[0].header.refTime)
+
                     var velocityLayer = L.velocityLayer({
                         displayValues: true,
                         displayOptions: {
@@ -211,7 +213,8 @@ $(document).ready(function() {
                         data: data,
                         velocityScale: 0.008,
                         opacity: 0.5,
-                        colorScale: ["rgb(255,120,120)","rgb(255,50,50)"],
+//                        colorScale: ["rgb(255,120,120)","rgb(255,50,50)"],
+                        colorScale: ["rgb(174,00,213)","rgb(80,00,100)"],
                         minVelocity: 0,
                         maxVelocity: 10,
                         overlayName: 'wind_layer',
