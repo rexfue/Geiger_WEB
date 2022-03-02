@@ -24,8 +24,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="3 buttons at nav line&#10;&#10;public/css/style.css&#10;   - margin for the 3 buttons&#10;   &#10;public/js/global.js&#10;   - switch wind on/off moved&#10;   - call wind with switchwind function   &#10;&#10;public/info.html&#10;   - description of 3 new buttons&#10;   &#10;views/mapit.pug&#10;   - 3 buttons">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/info.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/info.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/mapit.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/mapit.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +73,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="addWind" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -79,6 +84,9 @@
     <exe-path />
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/velocity/leaflet-velocity/package.json" />
   </component>
   <component name="ProjectId" id="1PMNZ8uMYHxPVEvap77eN4wa1PX" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -426,13 +434,8 @@
       <workItem from="1642176540896" duration="3129000" />
       <workItem from="1642357729650" duration="1129000" />
       <workItem from="1645795920163" duration="13989000" />
-    </task>
-    <task id="LOCAL-00098" summary="Erste Version von Geiger - läuft z.Zt. so auf tst1.rexfue.de">
-      <created>1567535110069</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1567535110069</updated>
+      <workItem from="1646124870728" duration="409000" />
+      <workItem from="1646167745843" duration="2504000" />
     </task>
     <task id="LOCAL-00099" summary="Erste Versuche mit Openstreetmap - geht noch nix">
       <created>1567924644238</created>
@@ -770,7 +773,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646046951349</updated>
     </task>
-    <option name="localTasksCounter" value="147" />
+    <task id="LOCAL-00147" summary="color of arrows now black">
+      <created>1646047756945</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1646047756945</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -850,7 +860,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="changed building of AKW symbols" />
     <MESSAGE value="public/css/style.css&#10;   - format checkbox at splashscreen&#10;&#10;punlic/global.js&#10;   - splashscreen added&#10;   &#10;routes/index.js&#10;   - parameter splash accepted&#10;   &#10;vies(index.pug vies(mapit.pug&#10;   - accept splash parameter" />
     <MESSAGE value="only for Testing" />
     <MESSAGE value="fixed text in subtitles and legend, added bandgab&#10;&#10;public/css/style.css&#10;   - main graphic windoe with bottom margin&#10;   &#10;public/hs/global.js&#10;   - define colors for bandgap&#10;   - make bandgap selectable&#10;   - adapt different texts&#10;   - switch off legend for 7day and 30day grafics&#10;   - add bandgap&#10;   &#10;public/settingsD.html&#10;   - added switch on/off of bandgap" />
@@ -875,7 +884,8 @@
     <MESSAGE value="set windspeed&#10;&#10;public/js/global.js&#10;   - set windspeed to k/h" />
     <MESSAGE value="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple" />
     <MESSAGE value="length of win arrows changed n global.js" />
-    <option name="LAST_COMMIT_MESSAGE" value="length of win arrows changed n global.js" />
+    <MESSAGE value="color of arrows now black" />
+    <option name="LAST_COMMIT_MESSAGE" value="color of arrows now black" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

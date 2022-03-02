@@ -233,7 +233,15 @@ $(document).ready(function() {
     }
 
 
-// Start with plotting the map
+    const switchWindLayer = () => {
+        if($('#btnwind').is(':checked')) {
+            $(".velocity-overlay").css("visibility", "visible")
+        } else {
+            $(".velocity-overlay").css("visibility", "hidden")
+        }
+    }
+
+    // Start with plotting the map
     plotMap(curSensor, startcity);
 
 // ********************************************************************************
@@ -318,25 +326,6 @@ $(document).ready(function() {
         switchWindLayer()
     });
 
-    const switchWindLayer = () => {
-        if($('#btnwind').is(':checked')) {
-            $(".velocity-overlay").css("visibility", "visible")
-        } else {
-            $(".velocity-overlay").css("visibility", "hidden")
-        }
-    }
-
-    /*
-    function switchWindLayer() {
-        if (d3.select("#cb_wind").property("checked")) {
-            d3.selectAll(".velocity-overlay").style("visibility", "visible");
-        } else {
-            d3.selectAll(".velocity-overlay").style("visibility", "hidden");
-        }
-        setQueryString();
-    }
-*/
-
     async function plotMap(cid, city) {
 
         let pos = {};
@@ -359,7 +348,7 @@ $(document).ready(function() {
         map.on('load',function() {
             mapLoaded = true;
             // Add Wind
-            wind.getData('https://maps.sensor.community/data/v1/wind.json', map)
+            wind.getData('https://maps.sensor.community/data/v1/wind.json', map, switchWindLayer)
         });
         map.setView(myLatLng, firstZoom);
 

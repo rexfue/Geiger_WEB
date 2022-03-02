@@ -666,3 +666,7 @@ select {
 	margin-left: 50px;
 	color: gray;
 }
+
+#kraftw, #togwind {
+	margin-left: 30px;
+}

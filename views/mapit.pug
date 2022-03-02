@@ -16,10 +16,10 @@ block content
             span.navbar-toggler-icon
         #navbarSupportContent.collapse.navbar-collapse
             ul.navbar-nav.mr-auto
-                .btn-group
-                    button.btn.btn-success.mybuttons  Anzeigen
+                .btn-group#zrohr
+                    button.btn.btn-success.mybuttons  Zählrohre
                     button.btn.btn-success.mybuttons.dropdown-toggle.dropdown-toggle-split(type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-                        span.sr-only Anzeigen
+                        span.sr-only Zählrohre
                     .dropdown-menu(aria-labelledby="dropdownMenu2")
                         .dropdown-header Zählrohre
                             .custom-control.custom-radio.ml-3
@@ -28,22 +28,33 @@ block content
                             .custom-control.custom-radio.ml-3
                                 input.custom-control-input.btnrohr#btnsig(type="radio" value="sig" name="rohre")
                                 label.custom-control-label(for="btnsig") nur Si22G anzeigen
-                        .dropdown-divider
-                        .dropdown-header Kraftwerke anzeigen
-                            .custom-control.custom-checkbox.ml-3
-                                input.custom-control-input.btnakw#btnakwact(type="checkbox" checked)
-                                label.custom-control-label(for="btnakwact") aktive
-                            .custom-control.custom-checkbox.ml-3
-                                input.custom-control-input.btnakw#btnakwstill(type="checkbox" checked)
-                                label.custom-control-label(for="btnakwstill") stillgelegte
-                            .custom-control.custom-checkbox.ml-3
-                                input.custom-control-input.btnakw#btnakwrest(type="checkbox" checked)
-                                label.custom-control-label(for="btnakwrest") sonstige Anlagen
-                        .dropdown-divider
-                        .dropdown-header Wind-Layer
-                            .custom-control.custom-checkbox.ml-3
-                                input.custom-control-input.btnakw#btnwind(type="checkbox" checked)
-                                label.custom-control-label(for="btnwind") Wind anzeigen
+
+                    .btn-group#kraftw
+                        button.btn.btn-success.mybuttons  AKWs/Anlagen
+                        button.btn.btn-success.mybuttons.dropdown-toggle.dropdown-toggle-split(type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                            span.sr-only AKWs/Anlagen
+                        .dropdown-menu(aria-labelledby="dropdownMenu3")
+                            .dropdown-header Kraftwerke anzeigen
+                                .custom-control.custom-checkbox.ml-3
+                                    input.custom-control-input.btnakw#btnakwact(type="checkbox" checked)
+                                    label.custom-control-label(for="btnakwact") aktive
+                                .custom-control.custom-checkbox.ml-3
+                                    input.custom-control-input.btnakw#btnakwstill(type="checkbox" checked)
+                                    label.custom-control-label(for="btnakwstill") stillgelegte
+                                .custom-control.custom-checkbox.ml-3
+                                    input.custom-control-input.btnakw#btnakwrest(type="checkbox" checked)
+                                    label.custom-control-label(for="btnakwrest") sonstige Anlagen
+
+                        .btn-group#togwind
+                            button.btn.btn-success.mybuttons  Wind
+                            button.btn.btn-success.mybuttons.dropdown-toggle.dropdown-toggle-split(type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                                span.sr-only Wind
+                            .dropdown-menu(aria-labelledby="dropdownMenu4")
+                                .dropdown-header Wind-Layer
+                                    .custom-control.custom-checkbox.ml-3
+                                        input.custom-control-input.btnakw#btnwind(type="checkbox")
+                                        label.custom-control-label(for="btnwind") Wind anzeigen
+
             ul.navbar-nav
                     button.btn.btn-success.mybuttons#btnlegende Legende
                     .input-wrapper.mr-3
