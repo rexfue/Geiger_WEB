@@ -138,14 +138,17 @@ $(document).ready(function() {
     if (!((typeof csid == undefined) || (csid == ""))) {
         if(!isNaN(csid - parseFloat(csid))) {               // check if csid is a number
             curSensor = csid;
-        } else {
-            startcity = csid;
         }
     }
+
     if(!((typeof fzoom == undefined) || (fzoom == ""))) {
         if(fzoom <= MAXZOOM)  {
             firstZoom = fzoom;
         }
+    }
+
+    if(!((typeof city == undefined) || (city == ""))) {
+        startcity = city
     }
 
     // call with url ....?splash=true

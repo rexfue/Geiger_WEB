@@ -24,12 +24,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="3 buttons at nav line&#10;&#10;public/css/style.css&#10;   - margin for the 3 buttons&#10;   &#10;public/js/global.js&#10;   - switch wind on/off moved&#10;   - call wind with switchwind function   &#10;&#10;public/info.html&#10;   - description of 3 new buttons&#10;   &#10;views/mapit.pug&#10;   - 3 buttons">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/info.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/info.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/mapit.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/mapit.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,7 +51,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="addWind" />
+    <option name="BRANCH" value="angzeige_menue_in_3" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -436,6 +434,7 @@
       <workItem from="1645795920163" duration="13989000" />
       <workItem from="1646124870728" duration="409000" />
       <workItem from="1646167745843" duration="2504000" />
+      <workItem from="1647001665288" duration="1779000" />
     </task>
     <task id="LOCAL-00099" summary="Erste Versuche mit Openstreetmap - geht noch nix">
       <created>1567924644238</created>

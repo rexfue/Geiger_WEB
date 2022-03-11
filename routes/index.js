@@ -27,6 +27,7 @@ router.get('/', function(req, res, next) {
         showAllMap: req.query.mall,
         csensor: req.query.sid,
         zoom:req.query.zoom,
+        city:req.query.city,
         stype: tit,
         splash: req.query.splash == 'true',
     });
@@ -47,6 +48,7 @@ router.get('/:nam', function(req, res, next) {
             param: req.query.addr,
             stday: req.query.stday,
             zoom:req.query.zoom,
+            city:req.query.city,
             csensor: name,
             splash: req.query.splash == 'true',
     		name: 'map'});
