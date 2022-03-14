@@ -155,7 +155,7 @@ var apidatas = require('./routes/apidata');
 geigerApp.use('/fs/api',apidatas);
 
 
-const connect = MongoClient.connect(MONGO_URL, {poolSize:20, useNewUrlParser: true ,useUnifiedTopology: true});
+const connect = MongoClient.connect(MONGO_URL, {useNewUrlParser: true ,useUnifiedTopology: true});
 connect
     .then(client => {
         geigerApp.set('dbase', client.db(MONGOBASE));								    // Übergabe von db

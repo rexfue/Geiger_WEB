@@ -129,7 +129,7 @@ router.get('/getakwdata/', async function (req, res) {
             res.json(erg);
             return;
         }
-        console.log("getawkdata: data fetched, length=",docs.length);
+        console.log("getawkdata: data fetched from akws, length=",docs.length);
         for (var i = 0; i < docs.length; i++) {
             var item = docs[i];
             var oneAktData = {};
