@@ -1190,6 +1190,7 @@ $(document).ready(function() {
 
 
         function startPlot(what, d1, d2, start, live) {
+            $('#placeholderBME').hide();
             if (what == 'onemonth') {						    // gleich plotten
                 PlotMonth_Geiger(d1, live);
             } else {

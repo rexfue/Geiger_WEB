@@ -24,12 +24,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="color of arrows now black">
+    <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geiger-app.js" beforeDir="false" afterPath="$PROJECT_DIR$/geiger-app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/mapdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/mapdata.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile_geiger-web" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile_geiger-web" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -437,13 +435,6 @@
       <workItem from="1646167745843" duration="2504000" />
       <workItem from="1647001665288" duration="1779000" />
     </task>
-    <task id="LOCAL-00099" summary="Erste Versuche mit Openstreetmap - geht noch nix">
-      <created>1567924644238</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1567924644238</updated>
-    </task>
     <task id="LOCAL-00100" summary="Größere Anpassungen&#10;Darstellung für 7 tage und 30 Tage">
       <created>1568578116955</created>
       <option name="number" value="00100" />
@@ -780,7 +771,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646047756945</updated>
     </task>
-    <option name="localTasksCounter" value="148" />
+    <task id="LOCAL-00148" summary="updated node modules&#10;&#10;geiger-apps.js&#10;   - call to mongoconnect adated&#10;   &#10;routes/mapdata.js&#10;   - comment changes&#10;   &#10;package.json&#10;   - nodemodules updated&#10;     &quot;version&quot;: &quot;2.9.4&quot;,&#10;     &quot;date&quot;: &quot;2022-03-14&quot;,">
+      <created>1647280937554</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1647280937555</updated>
+    </task>
+    <option name="localTasksCounter" value="149" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -860,7 +858,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="public/css/style.css&#10;   - format checkbox at splashscreen&#10;&#10;punlic/global.js&#10;   - splashscreen added&#10;   &#10;routes/index.js&#10;   - parameter splash accepted&#10;   &#10;vies(index.pug vies(mapit.pug&#10;   - accept splash parameter" />
     <MESSAGE value="only for Testing" />
     <MESSAGE value="fixed text in subtitles and legend, added bandgab&#10;&#10;public/css/style.css&#10;   - main graphic windoe with bottom margin&#10;   &#10;public/hs/global.js&#10;   - define colors for bandgap&#10;   - make bandgap selectable&#10;   - adapt different texts&#10;   - switch off legend for 7day and 30day grafics&#10;   - add bandgap&#10;   &#10;public/settingsD.html&#10;   - added switch on/off of bandgap" />
     <MESSAGE value="differen color for graphics line segments&#10;&#10;public/js/global.js&#10;   - added line zones" />
@@ -885,7 +882,8 @@
     <MESSAGE value="color of wind changed&#10;&#10;public/global.js&#10;   - color of wind now purple" />
     <MESSAGE value="length of win arrows changed n global.js" />
     <MESSAGE value="color of arrows now black" />
-    <option name="LAST_COMMIT_MESSAGE" value="color of arrows now black" />
+    <MESSAGE value="updated node modules&#10;&#10;geiger-apps.js&#10;   - call to mongoconnect adated&#10;   &#10;routes/mapdata.js&#10;   - comment changes&#10;   &#10;package.json&#10;   - nodemodules updated&#10;     &quot;version&quot;: &quot;2.9.4&quot;,&#10;     &quot;date&quot;: &quot;2022-03-14&quot;," />
+    <option name="LAST_COMMIT_MESSAGE" value="updated node modules&#10;&#10;geiger-apps.js&#10;   - call to mongoconnect adated&#10;   &#10;routes/mapdata.js&#10;   - comment changes&#10;   &#10;package.json&#10;   - nodemodules updated&#10;     &quot;version&quot;: &quot;2.9.4&quot;,&#10;     &quot;date&quot;: &quot;2022-03-14&quot;," />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
