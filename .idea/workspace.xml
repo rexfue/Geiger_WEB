@@ -26,8 +26,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile_geiger-web" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile_geiger-web" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,9 +82,6 @@
     <exe-path />
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
-  </component>
-  <component name="PackageJsonUpdateNotifier">
-    <dismissed value="$PROJECT_DIR$/velocity/leaflet-velocity/package.json" />
   </component>
   <component name="ProjectId" id="1PMNZ8uMYHxPVEvap77eN4wa1PX" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -825,10 +823,9 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="COLUMN_WIDTH">
+              <option name="COLUMN_ID_WIDTH">
                 <map>
-                  <entry key="2" value="17" />
-                  <entry key="3" value="16" />
+                  <entry key="Table.Default.Author.ColumnIdWidth" value="17" />
                 </map>
               </option>
             </State>
