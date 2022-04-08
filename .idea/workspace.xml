@@ -26,7 +26,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c9bf19e4-b272-49ec-802f-3c927b97b456" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile_geiger-web" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile_geiger-web" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/global.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,6 +74,17 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/views/index.pug" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/node_modules/express/lib/router/layer.js" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/routes/utilities.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/public/css/style.css" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/routes/fsdata.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/public/js/global.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/geiger-app.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/routes/apidata.js" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/views/layout.pug" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>

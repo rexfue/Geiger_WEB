@@ -2104,7 +2104,7 @@ $(document).ready(function() {
             };
 
             var series_press = {
-                name: 'Luftdruck',
+                name: 'Luftdruck (normiert auf NN)',
                 type: 'line',
 //            type: ((what == 'oneweek') && !movingAVG) ? 'column' : 'spline',
                 data: series3,
