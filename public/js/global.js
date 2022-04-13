@@ -445,26 +445,19 @@ $(document).ready(function() {
      *      all markers plotted on map
      *******************************************************/
     async function buildMarkers(bounds) {
-        let count = 3;
-        let sensors = [];
+        let sensors
         let alltubes = [];
         let sigtubes = [];
-        while (count != 0) {
+        try {
             sensors = await fetchAktualData()
-                .catch(e => {
-                    console.log(e);
-                    sensors = null;
-                });
-            if ((sensors == null) || (sensors.length == 0)) {
-//                showError(1, 'Daten Laden', 0);
-            } else {
-//            dialogError.dialog("close");
-                break;
-            }
-            count--;
+        } catch(e) {
+            // ToDo: Fehlermeldung machen
+            console.log("Read Error from Database\n" + e)
+            return
         }
-        if (count == 0) {
-            return;                     // ****** <<<< Fehler meldung rein
+        if(sensors.error) {
+            console.log("Error from 'fetchActualData'\n" + sensors.errortext)
+            return
         }
         if (markersAll) {
             map.removeLayer(markersAll);
@@ -484,31 +477,31 @@ $(document).ready(function() {
                 });
             }
         });
-        for (let x of sensors.avgs) {
+        for (let x of sensors.values) {
+            let name = x.name.slice(10)
             if (x.location == undefined) {                   // if there is no location defined ...
                 continue;                                    // ... skip this sensor
             }                                               // otherwise create marker
             if ((x.name != "Si22G") && showOnlySi22G) {
                 continue;
             }
-            if ((x.cpm == -2) && (curSensor == -1)) {
+            if ((x.value == -2) && (curSensor == -1)) {
                 continue;
             }
-            let value = parseInt(x.cpm);
-            let uSvph = value < 0 ? -1 : value / 60 * sv_factor[x.name];
-            let curcolor = getColor(x.name, uSvph > 0 ? x.indoor ? -2 : uSvph : uSvph);
+            let uSvph = x.value < 0 ? -1 : x.value / 60 * sv_factor[name];
+            let curcolor = getColor(name, uSvph > 0 ? x.indoor ? -2 : uSvph : uSvph);
             let marker = L.marker([x.location[1], x.location[0]], {
                 name: x.id,
                 icon: new L.Icon({
                     iconUrl: buildIcon(curcolor),
                     iconSize: [35, 35]
                 }),
-                value: value,
+                value: x.value,
                 mSvph: uSvph,
                 url: '/' + x.id,
-                rohr: x.name,
+                rohr: name,
                 indoor: x.indoor,
-                lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm'),
+//                lastseen: moment(x.lastSeen).format('YYYY-MM-DD HH:mm'),
 
             });
             let pos = map.latLngToLayerPoint(marker.getLatLng()).round();
@@ -1148,7 +1141,7 @@ $(document).ready(function() {
             var url = '/fsdata/getfs/' + what;
             movingAVG = what == 'oneday' ? true : movingAVG
             var callopts = {
-                start: st.format(),
+                start: st.toISOString(),
                 sensorid: props._id,
                 sensorname: props.name,
                 avgTime: what === 'oneday' ? avgTimeD : avgTimeW,
@@ -1373,7 +1366,7 @@ $(document).ready(function() {
          *      none
          *******************************************************/
         function addSensorID2chart(chart, sensor) {
-            let sn = (sensor.name.startsWith("Radiation")) ? sensor.name.substring(10) : sensor.name;
+            let sn = (sensor.name.startsWith("Radiation")) ? sensor.name.slice(10) : sensor.name;
             var sens = chart.renderer.label(
                 'Sensor: ' + sensor.sid + ' - ' + sn,
                 400, 55,
@@ -1630,22 +1623,27 @@ $(document).ready(function() {
             }
             if (data.length != 0) {
                 $.each(data, function (i) {
-                    var dat = new Date(this._id).getTime();
-                    series2.push([dat, this.uSvphAvg])
-                    mx.push(this.uSvphAvg);
+                    var dat = new Date(this.datetime).getTime();
+                    series2.push([dat, this.uSvph])
+                    mx.push(this.uSvph);
+//                    var dat = new Date(this._id).getTime();
+//                    series2.push([dat, this.uSvphAvg])
+//                    mx.push(this.uSvphAvg);
                 });
                 if ((data1 != null) && (data1.length != 0)) {
                     $.each(data1, function (i) {
-                        var dat = new Date(this._id).getTime();
-                        series1.push([dat, this.uSvphAvg])
+                        var dat = new Date(this.datetime).getTime();
+                        series1.push([dat, this.uSvph])
+//                        var dat = new Date(this._id).getTime();
+//                        series1.push([dat, this.uSvphAvg])
                     });
                 }
 
                 if (what == 'oneday') {
                     // Aktuelle Werte speichern
 
-                    aktVal['cpm'] = data[data.length - 1].cpmAvg;
-                    aktVal['uSvph'] = data[data.length - 1].uSvphAvg;
+                    aktVal['cpm'] = data[data.length - 1].counts_per_minute;
+                    aktVal['uSvph'] = data[data.length - 1].uSvph;
 
                     // InfoTafel füllen
                     var infoTafel =
@@ -2336,7 +2334,7 @@ $(document).ready(function() {
                     [box.getEast(), box.getNorth()]
                 ];
             }
-            return $.getJSON('/mapdata/getaktdata', {box: bnds})
+            return $.getJSON('/mapdata/getaktdata', {box: bnds, type:'radioactivity'})
                 .fail((jqxhr, textStatus, error) => {
 //                alert("fetchAktualData: Fehler  " + error);						// if error, show it
                     return [];

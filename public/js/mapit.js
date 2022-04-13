@@ -717,7 +717,7 @@ function fetchAktualData(box) {
             [box.getEast(), box.getNorth()]
         ];
     }
-    return $.getJSON('/mapdata/getaktdata', {start:startDay, box:bnds})
+    return $.getJSON('/mapdata/getaktdata', {start:startDay, box:bnds, type: 'radioactivity'})
         .fail((jqxhr, textStatus, error) => {
             alert("fetchAktualData: Fehler  " + error);						// if error, show it
         })

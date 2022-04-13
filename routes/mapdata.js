@@ -3,8 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
-const axios = require('axios');
-let $ = require('jquery');
+let axios = require('axios');
 var fs = require('fs');
 
 // URL to get coordinates for cities
@@ -13,103 +12,15 @@ const NOMINATIM_URL="https://nominatim.openstreetmap.org/search?format=json&limi
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
 // Fetch the actual out of the dbase
-router.get('/getaktdata/', function (req, res) {
-    var db = req.app.get('dbase');                                      // db wird in req übergeben (von app.js)
-    let box = req.query.box;
-    let poly = [];
-    var collection = db.collection('mapdata');                         // die 'korrelation' verwenden
-    var aktData = [];                                                   // hier die daten sammeln
-    var now = moment();                                                 // akt. Uhrzeit
-    var lastDate = 0;
-    let south=null,north=null,east=null,west=null;
-    let loc = {};
-    if(req.query.poly != undefined) {
-        poly = JSON.parse(req.query.poly);
-    }
-    if (!((box == "") || (box == undefined))) {
-        south = parseFloat(box[0][1]);
-        north = parseFloat(box[1][1]);
-        east = parseFloat(box[1][0]);
-        west = parseFloat(box[0][0]);
-        console.log("getaktdata: S=", south, " N=", north, " E=", east, " W=", west)
-    }
-    console.log("getaktdata: now fetching data from DB");
-
-    if(poly.length != 0) {
-        loc = {
-            location: {
-                $geoWithin: {
-                    $geometry: {
-                        type: "Polygon",
-                        coordinates: [poly],
-                    }
-                }
-
-            }
-        }
-    } else if (south !== null) {
-        loc = {
-            location: {
-                $geoWithin: {
-                    $box: [
-                        [west, south],
-                        [east, north]
-                    ]
-                }
-            },
-            name: /Radiation/,
-        }
-    } else {
-        loc = {
-            name: /Radiation/,
-        }
-    }
+router.get('/getaktdata/', async function (req, res) {
+// fetch data from API Interface with http
+    const url = 'http://localhost:3000/getdata4maps'
+    const data = {box: req.query.box, type: req.query.type}
     try {
-        collection.find(loc)                                              // find all data within map borders (box)
-            .toArray(function (err, docs) {
-                if (docs == null) {
-                    console.log("getaktdata: docs==null");
-                    res.json({"avgs": [], "lastDate": null});
-                    return;
-                }
-                console.log("getaktdata: data fetched, length=",docs.length);
-                for (var i = 0; i < docs.length; i++) {
-                    var item = docs[i];
-
-//                    console.log(item);
-
-                    var oneAktData = {};
-                    oneAktData['location'] = item.location.coordinates;
-                    oneAktData['id'] = item._id;                                // ID des Sensors holen
-                    oneAktData['lastSeen'] = item.values.datetime;
-                    oneAktData['name'] = item.name.substring(10);
-                    oneAktData['indoor'] = item.indoor;
-//                    console.log(oneAktData);
-
-                    var dati = item.values.datetime;
-                    var dt = new Date(dati);
-                    if ((now - dt) >= (7  * 24 * 3600 * 1000)) {                  // älter als 1 Woche ->
-                        oneAktData['cpm'] = -2;                                   // -2 zurückgeben
-                    } else if ((now - dt) >= (3600 * 1000)) {                     // älter als 1 Stunde ->
-                        oneAktData['cpm'] = -1;                                   // -1 zurückgeben
-                    } else {
-                        oneAktData['cpm'] = -5;                                 // bedutet -> nicht anzeigen
-                        if (item.values.hasOwnProperty('counts_per_minute')) {
-                            oneAktData['cpm'] = item.values.counts_per_minute.toFixed(0);    // und merken
-                        }
-                        if (dati > lastDate) {
-                            lastDate = dati;
-                        }
-                    }
-                    aktData.push(oneAktData);                                   // dies ganzen Werte nun in das Array
-                }
-                res.json({"avgs": aktData, "lastDate": lastDate});              // alles bearbeitet -> Array senden
-            });
-    }
-    catch(e) {
-        console.log("Problem mit getaktdata", e);
-        res.json({"avgs": [], "lastDate": null});
-        return;
+        const response = await axios.post(encodeURI(url), data);
+        res.json(response.data)
+    } catch(e) {
+        res.json({error: true, errortext: e})
     }
 });
 

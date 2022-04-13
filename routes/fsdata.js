@@ -4,6 +4,7 @@ const router = express.Router();
 const moment = require('moment');
 const mathe = require('mathjs');
 const util = require('./utilities');
+const axios = require('axios')
 
 // Mongo wird in app.js geöffnet und verbunden und bleibt immer verbunden !!
 
@@ -24,7 +25,7 @@ router.get('/getfs/:week', function (req, res) {
 
     if (week == 'oneday') {
         console.log(`Operating System = ${system}`);
-        getDWMData(db, sid, st, avg, live, movingAvg, 1, longAVG)
+        getDWMData(db, sid, st, avg, live, movingAvg, 1, longAVG, sname)
             .then(erg => res.json(erg));
     } else if (week == 'oneweek') {
         getDWMData(db, sid, st, avg, live, movingAvg, 7)
@@ -225,7 +226,28 @@ function calcTimeRange(st, range, live, avg) {
 }
 
 // get data for one day, one week or one month from the database
-async function getDWMData(db, sensorid, st, avg, live, doMoving, span, longAVG) {
+async function getDWMData(db, sensorid, st, avg, live, doMoving, span, longAVG, sname) {
+    let erg = {}
+    let response
+
+    let url = `http://localhost:3000/getactdata?sensorid=${sensorid}&span=${span}&datetime=${st}`
+    if(avg != 1) {
+        url = `http://localhost:3000/getmovavg?sensorid=${sensorid}&span=${span}&datetime=${st}&movavg=${avg}`
+    }
+    try {
+        response = await axios.get(encodeURI(url));
+    } catch(e) {
+        return{error: true, errortext: e}
+        return
+    }
+    const factor = sv_factor[sname.slice(10)] / 60;
+    erg.radiation = {values: response.data.values, sid: response.data.sid, sname: sname}
+    erg.radiation.values.map((x) => {
+        x.uSvph = x.counts_per_minute * factor
+    })
+    return erg
+/*
+
         let docs = [];
         let ret = {radiation: [], climate: []};
         // first fetch properties for this sensor
@@ -263,6 +285,8 @@ async function getDWMData(db, sensorid, st, avg, live, doMoving, span, longAVG) 
             }
         }
         return ret;
+
+ */
 }
 
 // für die Wochenanzeige die Daten als gleitenden Mittelwert über 24h durchrechnen
