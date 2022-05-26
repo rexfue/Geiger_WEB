@@ -42,6 +42,7 @@ async function checkHost(req, res, next) {
         (req.headers.host == 'test2.citysensor.de') ||
         (req.headers.host == 'localhost:'+PORT) ||
         (req.headers.host == 'nuccy:3005') ||
+        (req.headers.host == 'h2953026.stratoserver.net:8082') ||
         (req.headers.host == '213.136.85.253:'+PORT) ||
         (req.headers.host == '192.168.178.78:'+PORT) ||
         (req.headers.host == 'macbig:'+PORT)                 //Port is important if the url has it

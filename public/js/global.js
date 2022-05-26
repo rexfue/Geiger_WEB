@@ -113,7 +113,7 @@ $(document).ready(function() {
     // let grades = [10, 5, 2, 1, 0.5, 0.2, 0, -999];
     // let cpms = [1482, 741, 296, 148, 74, 30, 0, -999];
 
-    let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.081438};
+    let sv_factor = {'SBM-20': 1 / 2.47, 'SBM-19': 1 / 9.81888, 'Si22G': 0.081438, 'J306': 0.06536};
 
     // Variable selName is defined via index.js and index.pug
     if (typeof selName == 'undefined') {
@@ -274,7 +274,7 @@ $(document).ready(function() {
             .domain([0.05,        0.1,     0.2,      0.5,            5])
             .range(["#267A45", "#66FA5F", "#F8Fc00","#FF0000","#9000FF"])
             .clamp(true);
-        return d < -1 ? '#9ECDEA' : d==-1 ? '#7F7F7F' : erg(d);
+        return d < -1 ? '#9ECDEA' : d==-1 ? '#7F7F7F' : d==0 ? '#333333' : erg(d);
     }
     function buildIcon(color,n) {
         let x = 100;
@@ -560,6 +560,9 @@ $(document).ready(function() {
             }                                               // otherwise create marker
             if ((x.name != "Si22G") && showOnlySi22G) {
                 continue;
+            }
+            if(isNaN(x.cpm)) {
+                x.cpm = 0
             }
             if ((x.cpm == -2) && (curSensor == -1)) {
                 continue;
